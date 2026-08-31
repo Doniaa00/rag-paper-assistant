@@ -1,0 +1,1626 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">Streaming Active Learning Strategies for Real-Life Credit Card Fraud Detection: Assessment and Visualization</title>
+				<funder ref="#_7yKECYd">
+					<orgName type="full">Fonds de la Recherche Scientifique de Belgique (F.R.S.-FNRS)</orgName>
+				</funder>
+				<funder ref="#_6eewDkP">
+					<orgName type="full">INNOVIRIS (Brussels Institute</orgName>
+				</funder>
+				<funder>
+					<orgName type="full">Consortium des quipements de Calcul Intensif</orgName>
+					<orgName type="abbreviated">CCI</orgName>
+				</funder>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability  status="unknown">
+					<licence/>
+				</availability>
+				<date type="published" when="2018-04-20">20 Apr 2018</date>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><forename type="first">Fabrizio</forename><surname>Carcillo</surname></persName>
+						</author>
+						<author>
+							<persName><forename type="first">Yann-Aël</forename><surname>Le Borgne</surname></persName>
+						</author>
+						<author role="corresp">
+							<persName><forename type="first">Olivier</forename><surname>Caelen</surname></persName>
+							<email>olivier.caelen@worldline.com</email>
+						</author>
+						<author>
+							<persName><forename type="first">Gianluca</forename><surname>Bontempi</surname></persName>
+						</author>
+						<author>
+							<affiliation key="aff0">
+								<orgName type="department">Department Faculty of Sciences</orgName>
+								<orgName type="laboratory">Machine Learning Group Computer Science</orgName>
+								<orgName type="institution">ULB Université Libre de Bruxelles</orgName>
+								<address>
+									<settlement>Brussels</settlement>
+									<country key="BE">Belgium</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<affiliation key="aff1">
+								<orgName type="institution" key="instit1">R&amp;D</orgName>
+								<orgName type="institution" key="instit2">Worldline Brussels</orgName>
+								<address>
+									<country key="BE">Belgium</country>
+								</address>
+							</affiliation>
+						</author>
+						<title level="a" type="main">Streaming Active Learning Strategies for Real-Life Credit Card Fraud Detection: Assessment and Visualization</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date type="published" when="2018-04-20">20 Apr 2018</date>
+						</imprint>
+					</monogr>
+					<idno type="MD5">2C2AAF03621EA2BBBAF06FBEBC7CF85B</idno>
+					<idno type="arXiv">arXiv:1804.07481v1[cs.LG]</idno>
+					<note type="submission">Received: 13 November 2017 / Accepted: 22 March 2018</note>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.2-SNAPSHOT" ident="GROBID" when="2026-08-31T18:09+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<textClass>
+				<keywords>
+					<term>active learning</term>
+					<term>fraud detection</term>
+					<term>selection bias</term>
+					<term>semi-supervised learning</term>
+				</keywords>
+			</textClass>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>Credit card fraud detection is a very challenging problem because of the specific nature of transaction data and the labeling process. The transaction data is peculiar because they are obtained in a streaming fashion, they are strongly imbalanced and prone to non-stationarity. The labeling is the outcome of an active learning process, as every day human investigators contact only a small number of cardholders (associated to the riskiest transactions) and obtain the class (fraud or genuine) of the related transactions. An adequate selection of the set of cardholders is therefore crucial for an efficient fraud detection process. In this paper, we present a number of active learning strategies and we investigate their fraud detection accuracies. We compare different criteria (supervised, semi-supervised and unsupervised) to query unlabeled transactions. Finally, we highlight the existence of an exploitation/exploration trade-off for active learning in the context of fraud detection, which has so far been overlooked in the literature.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1">Introduction</head><p>The use of machine learning for credit card fraud detection requires to address a number of challenges. Some of them are related to the data distribution, notably the class imbalance of the training set (many more genuine transactions than fraudulent ones), the non-stationarity of the phenomenon (due to changes in the behavior of customers as well as in fraudsters), the large dimensionality and the overlapping classes (while fraudsters try to emulate cardholders behavior, genuine behaviors of cardholders might look strange or anomalous). The labeling process is constrained, as every day human investigators may contact only a small number of cardholders associated with the riskiest transactions and obtain the class (fraud or genuine) of the related transactions. The high cost of human labour, for assessing the transaction labels, leads to the labeling bottleneck <ref type="bibr" target="#b1">[2]</ref>. In this context, an automatic Fraud Detection System (FDS) should support the activity of the investigators by letting them focus on the transactions with the highest fraud probability. From the perspective of the transactional service company, this is crucial in order to reduce the costs of the investigation activity and to retain the customer confidence. From a machine learning perspective it is important to keep an adequate balance between exploitation and exploration, i.e. between the short-term needs of providing good alerts to investigators, and the long-term goal of maintaining a high accuracy of the system (e.g. in the presence of concept drift). The issue of labeling the most informative data by minimizing the cost has been extensively addressed by active learning which can be considered as a specific instance of semi-supervised learning <ref type="bibr" target="#b7">[8,</ref><ref type="bibr" target="#b40">41]</ref>, the domain studying how unlabeled and labeled data can both contribute to a better learning process. The Active Learning (AL) literature have proposed a number of techniques to select, within a large set of unlabeled instances, the most informative to label. AL can be typically described by the iteration of three steps <ref type="bibr" target="#b40">[41]</ref>:</p><p>1. Selection: given a query budget of size k, a model is used to choose which k data points, once labeled, could better describe the data generating process; 2. Querying: selected points are submitted to an oracle (in our case an investigator) for labeling; 3. Training: the labeled data points are used to train and update the model;</p><p>The Selection and Querying steps differentiate active learning from conventional (passive) learning, which is limited to the Training step. Note also that, in order to bootstrap the procedure, a random initialization or an unsupervised model is used <ref type="bibr" target="#b40">[41]</ref>.</p><p>A first classification of AL methods can be done according to the model used for the Selection step. In this paper, we will distinguish between methods using only supervised information and methods integrating other sources of information, notably unsupervised or semisupervised. Additionally, according to the nature of the dataset, we can distinguish between two main AL approaches: pool-based and streaming AL. In pool-based AL, the algorithm performs queries in the same set of unlabeled points, while in stream-based AL, the set of unlabeled data points is periodically updated. The accuracy of a pool-based AL classifier is expected to grow in time, since more and more labeled data points, from the original dataset, are used for the Training. This is not always true in the case of the streaming approach, since data received in different periods may differ significantly (e.g. concept drift). Though AL is widely addressed in the literature <ref type="bibr" target="#b10">[11,</ref><ref type="bibr" target="#b24">25]</ref>, few articles mention the aspects of credit card fraud detection (Section 2.2), notably the class imbalance <ref type="bibr" target="#b16">[17,</ref><ref type="bibr" target="#b55">56]</ref> (in our case study approximately only 0.2% of transactions<ref type="foot" target="#foot_1">foot_1</ref> are fraudulent), the restricted labeling budget <ref type="bibr" target="#b36">[37,</ref><ref type="bibr" target="#b48">49]</ref> and the specific nature of the assessment <ref type="bibr" target="#b41">[42]</ref>. It is worth to remark that in credit card fraud detection, though the observations are at the level of transactions, the ultimate goal is to detect fraudulent cards. There exists a one-to-many relation between cards and transactions.</p><p>A peculiarity of fraud detection is that the labeling and the assessment phase are coincident and consequently strongly dependent. For the transactional ser-vice provider it is important that the investigations are as successful as possible (i.e. low false positive rate). This means that the accuracy of a FDS is measured in terms of precision over the top k alerted credit cards <ref type="bibr" target="#b4">[5,</ref><ref type="bibr" target="#b32">33]</ref>. This is not always the case in other AL tasks where the labels of the k queried points are not directly related to the accuracy of the training process. In a FDS, it is not only important to minimize the labeling cost but also that this labeling allows to discover as many frauds as possible. The nature and the intensity of the exploration step has a strong impact on the final accuracy of detection and, accordingly, the set of stateof-the-art AL strategies which are effective in practice is much more limited than expected. In other terms no real-life FDS can afford a totally random labeling process since this would necessarily imply an unacceptable short-term random performance. This exploitation/exploration trade-off inherent to fraud detection, to the best of our knowledge, has not been addressed in the research literature.</p><p>The contributions of this article are: i) a taxonomy of streaming AL strategies (and a number of their variants) for credit card fraud detection, ii) an extensive comparison of these techniques for the detection of both fraudulent transactions and cards, iii) an experimental assessment on the basis of a massive set of 12 million transactions in terms of real-life criteria (defined by our industrial partner, Worldline, a leader company in transactional services) and iv) a two-dimensional visualisation of the effects of active learning on the distribution of the training set. The outcome is an original analysis of the exploitation/exploration trade-off in the context of a real-world FDS. In particular, we expect that visualization represents a valuable insight on the evolution of the training set during active learning. In fact, though the rationale of active learning is explicit, it is not always evident to understand how active learning modifies the distribution of the training set, notably in a task, like credit card fraud detection, characterized by large noise, nonlinearity and non separability. Also, we expect that potential bias of AL sampling strategies are easier to assess in a visual setting.</p><p>The work is organized as follows. Section 2 presents the related state-of-the-art. Section 3 provides the general outline of our Fraud Detection System. Section 4 introduces the visualization technique used throughout the manuscript. Section 5 discusses a number of AL strategies (as well as possible variants) for dealing with streaming credit card transactions. Finally, Section 6 presents an extensive experimental session based on a real stream of transactions.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2">Related work</head><p>In this section, we will present some important state-ofthe-art works in fraud-detection. The review of conventional passive learning for fraud detection is presented in the Section 2.1, while active learning techniques and their application to fraud detection are introduced in Section 2.2.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.1">Passive learning for fraud detection</head><p>Credit card fraud detection belongs to the largest domain of outlier detection <ref type="bibr" target="#b0">[1,</ref><ref type="bibr" target="#b6">7,</ref><ref type="bibr" target="#b31">32]</ref> also called anomaly or novelty detection. The main approaches to anomaly detection are: 1. Classification based: these supervised techniques make the assumption that a classifier of anomalies can be learnt from a training set and that the test set distribution is not significantly different from the training one. Several supervised machine learning algorithms have been discussed in literature <ref type="bibr" target="#b39">[40,</ref><ref type="bibr" target="#b42">43,</ref><ref type="bibr" target="#b52">53]</ref>. In most cases an optimal detection can be obtained by combining multiple supervised machine learning techniques. For instance, Wei et al. <ref type="bibr" target="#b50">[51]</ref> introduce ContrastMiner, a fraud detection framework which combine the use of contrast pattern mining, neural network and decision forest to have a high precision in the detection. In our previous research we have used and assessed several binary classifiers for fraud detection <ref type="bibr" target="#b32">[33,</ref><ref type="bibr" target="#b12">13]</ref>. Also one-class classifiers, like one-class SVM and Isolation Forest, belong to this category. One-class SVM <ref type="bibr" target="#b37">[38]</ref> fits a boundary around the known set of normal points, and then classifies as outlier everything which stands over the boundary. The Isolation Forest <ref type="bibr" target="#b26">[27]</ref> uses the length of the path between the root and the leaves in the trees of a Random forest as outlier score.  <ref type="bibr" target="#b15">[16,</ref><ref type="bibr" target="#b18">19,</ref><ref type="bibr" target="#b25">26,</ref><ref type="bibr" target="#b54">55]</ref> are commonly used in this context because of their flexible semi-parametric nature. Hidden Markov Models have been used in <ref type="bibr" target="#b44">[45]</ref> for credit card outlier detection. Bolton et al. <ref type="bibr" target="#b2">[3]</ref> presented two statistical approaches which rely on monitoring the anomalous behavior of a cardholder compared to a group of peers (peer group analysis) or to cardholder behavior (break point analysis). 5. Information theoretic: they rely on the fact that anomalies create irregularities in the dataset and can be detected with information theoretic measures.  <ref type="bibr" target="#b28">[29]</ref>. This approach improved the outlier detection rates while substantially reducing the number of features by 46% (on average). The same authors proposed a novel wrapper-based outlier detection framework <ref type="bibr" target="#b29">[30]</ref> to iteratively optimize the feature subset selection and the outlier score. The results showed that the framework improved not only the AUC-ROC, but also the precision over the top-n ranked instances.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.2">Active learning</head><p>Unlike passive learning, active learning modifies the size and nature of the training set by choosing from a unlabeled set a subset of points whose label is expected to improve the classifier. The AL setting is particularly promising in fraud detection because of the cost and the delay related to the labeling of instances. However, the adaptation of active learning to the specific characteristics of fraud detection data has only been partially addressed in the research literature. Fan et al. <ref type="bibr" target="#b17">[18]</ref> carried out an empirical analysis on a fraud detection dataset to assess AL approach in presence of concept drift. They have focused on the adaptation ability of the AL strategy, but did not address the detection accuracy. Pichara et al. <ref type="bibr" target="#b30">[31]</ref> tested a large scale anomaly detection approach in a synthetic dataset emulating the fraud process. Their AL schema has been able to detect the whole subset of frauds using a number of queries smaller than a Bayesian Network detection approach. Multiple tests were repeated using different data-noise levels, and their AL approach consistently outperformed the other techniques. However, the use a synthetic dataset reduces the impact of these results. The relationship between active learning and streaming data, notably the sampling bias issue, is discussed in <ref type="bibr" target="#b13">[14]</ref>. The authors showed that in stream-based active learning, the estimated input-output dependency changes over time and depends on the instances previously queried. Since those instances are typically selected next to the class decision boundary of the classifier, this may lead to a biased representation of the underlying data distribution. AL and concept drift is also addressed in <ref type="bibr" target="#b56">[57]</ref>. Here, the authors stressed how concept drift may be missed in regions far from where AL queries normally take place (e.g. boundary regions between classes). The authors showed that techniques based on classical uncertainty sampling favor close concept drift adaptation while techniques based on random sampling are more effective in dealing with remote concept drift. The best performing techniques can strongly depend on the characteristics of the data and the size of the query budget. The issue of sampling bias is specifically discussed in <ref type="bibr" target="#b19">[20]</ref>. Jacobusse and Veenman present multiple solutions to tackle the sampling bias on highly imbalanced datasets and screening applications. In such conditions, a small group of targets need to be detected among the non-targets vast majority. A random selection would lead to a very poor detection. So, usually an expert knowledge driven selection is preferred (medical screening application, law enforcement, screening of job applicants, ...). The authors emphasize that this selection is prone to suffer of a strong bias towards the previous knowledge of the expert, causing the classifier to be trained on a non representative dataset. A similar problem is faced in fraud detection, since only a small subset of transactions can be labeled in the short term and the selection of this subset corresponds to the riskiest credit card transactions. The integration of AL and semi-supervised learning is discussed in Xie and Xiong <ref type="bibr" target="#b51">[52]</ref>. They introduced a Stochastic Semi-Supervised Learning (SSSL) process to infer labels in case of large imbalanced datasets with small proportion of labeled points. The approach relies on the consideration that since the number of unlabeled points is huge and the minority class is rare, the probability of making a wrong majority assignment is very low. Consequently, they proposed the assignment of the majority class to random selection of points and adopted it with success in the context of a data competition.</p><p>Finally, an original approach that may be used to deal with the one-to-many relationships between cards and transactions is discussed in <ref type="bibr" target="#b41">[42]</ref>. They present an AL approach for multiple-instance problems where instances are organized into bags. Typical examples of multipleinstance problems are found in text classification and content-based image retrieval. In these type of problems a bag is said to be positive if it includes at least one instance which is positive, while the bag is negative if no positive instances are observed in it.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3">The fraud detection system classifier</head><p>Let us consider a Fraud Detection System (FDS) whose goal is to detect automatically frauds in a stream of transactions. Let x ∈ R n be the vector coding the transaction (e.g. including features like the transaction amount, the terminal) and y ∈ {+, -} the associated label, where + denotes a fraud and -a genuine transaction. A detection strategy needs a measure of risk (score) associated to any transaction. In a machine learning approach this score is typically provided by the estimation of the a posteriori probability P C (+|x) returned by a classifier C. We consider a streaming setting where unlabeled transactions arrive one at a time or in small batches. The FDS goal is to raise every day a fixed and small number of k alerts. In our industrial case study, n = 32 and k is set to 100 on the basis of cost and work organization considerations. The issuing of those alerts has two consequences: the trigger of an investigation and the consequent labeling of the associated transactions. The outcome of the investigation determines both the success rate of the FDS and the new set of labeled transactions. We will present in section 6 two levels of experimental validations: the first concerns the detection of fraud-ulent transactions, while the second focuses on fraudulent cards. In the first experiment, the classifier C is implemented by a conventional Random Forest, while in the second, we use a more complex approach (ensemble of classifiers) dictated by the more challenging nature of the detection tasks. This approach has been presented in <ref type="bibr" target="#b4">[5,</ref><ref type="bibr" target="#b32">33]</ref> and consists of the weighted average of two classifiers</p><formula xml:id="formula_0">P C (+|x) = w A P Dt (+|x) + (1 -w A )P Ft (+|x)<label>(1)</label></formula><p>where This architecture is the result of an extensive model selection and assessment procedure which has been discussed in our previous work <ref type="bibr" target="#b4">[5,</ref><ref type="bibr" target="#b32">33]</ref>. The aim of this paper is to discuss the impact of different AL strategies, so we will not take into consideration alternative classifier architectures.</p><formula xml:id="formula_1">D</formula></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4">Dataset visualization</head><p>Credit Card Fraud Detection deals with high-volume (millions of transactions) and large dimensionality (n = 32 in our example) datasets. So, it is difficult to have a visual insight of the data distribution and the nature (e.g. non-separability) of the classification task. As a consequence most papers rely only on predictive accuracy (e.g. ROC curves) to assess the difficulty of the task. Given the dynamic and sampling nature of AL , it is however relevant to visualize the location of the selected query points with respect to the original data distribution in order to better illustrate the differences between alternative strategies. In the following section we will complement the presentation of the different AL strategies with a visual representation of our experimental dataset (details are in Section 6) in the space of the two first Principal Components (denoted by PC1 and PC2). Fig. <ref type="figure" target="#fig_0">1</ref> shows the Class Conditional distributions of the two classes (Fraud in red and Genuine in blue) in the PC1/PC2 space. This visualization provides interesting insights about the distribution of Frauds and Genuine transactions: i) the two classes appear to be only partially overlapping in the space, ii) the density of the fraudulent set appears to have a higher variance than the genuine set and iii) as far as the first principal component is concerned, frauds have a distribution skewed to the left. However, the class-conditional nature plot should not mislead us to the conclusion that the problem is easy to solve. In fact, given the high imbalance of the classes, a large number of genuine transactions still occur in the left part of the plot (mostly red).</p><p>In Section 5 we will use Fig. <ref type="figure" target="#fig_0">1</ref>  </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5">Active learning strategies</head><p>The rationale of AL is to select (on the basis of current information) unlabeled training samples which, once labeled, can improve the accuracy. However, there are two main unknowns concerning the effectiveness of AL in credit card fraud detection. The first concerns the strong imbalance of the class distribution: as the selection of adequate queries is the most important step of an AL procedure. This step should take into account that in such a large imbalanced problem, selecting majority class points will inevitably have a negligible impact on accuracy. The second concerns the definition of accuracy: measures of detection accuracy are strictly related to the capacity of discovering frauds, i.e. querying minority class samples. This means that an AL strategy for fraud detection requires some specific tuning for being successful.  To illustrate the impact of AL on FDS, we will start by considering a baseline strategy which simply queries the highest risk transactions on the basis of the cur-rent classification model. This strategy will be denoted as the Highest Risk Querying (HRQ). Thereafter, we will introduce and assess a number of modifications of HRQ according to several principles. In order to make the comparison easier we will define each AL strategy as an instance of a generic AL strategy detailed in Algorithm 1. The Algorithm requires the specification of three parameters: the budget k of queries (i.e. maximum number of transactions that can be investigated per day), the number of q queries defined for exploration purposes and the number m of unlabeled transactions that can be set as genuine without investigation (see 5.3). When q &gt; 0, the choice of the queries demands a selection criterion which plays a major role in the final accuracy of AL. Note that the criteria used by the methods discussed in the following sections can be regrouped in three classes: supervised (i.e. relying on labeled data), unsupervised and semi-supervised. The entire list of discussed AL strategies is presented in Table 1.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.1">Highest risk querying</head><p>The idea of Highest Risk Querying (HRQ) is simple: given a classifier C and a budget of queries, HRQ returns the unlabeled transactions with the highest estimated a posteriori probability P C (+|x i ). HRQ is the most in-tuitive active learning strategy for our problem if we consider that the final FDS accuracy depends on the amount of minority class querying. Note that in terms of the pseudocode in Algorithm 1, HRQ is obtained by setting q = 0 and m = 0. HRQ is expected to have a positive impact on accuracy by discovering new instances from the minority class and improving consequently the balance of the training set. It has also some drawbacks: since its querying strategy relies on the classifier accuracy, this selection step could be inaccurate especially at the very beginning. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.2">Exploratory active learning</head><p>Exploratory Active Learning (EAL) strategies modify HRQ by trading exploitation for exploration. The idea is to convert a subset of the labeling budget in explorative queries. The size of the exploration budget is represented by 0 &lt; q ≤ k in Algorithm 1.</p><p>We may consider a number of exploration techniques for selecting the q exploratory transactions. The simplest one is random querying (denoted by EAL-R) which consists in choosing randomly the q query points. This selection is unsupervised and sub-optimal since it may query points for which the classifier is already highly confident about the class. A less naive unsupervised strategy (denoted by EAL-P) consists in using an unsupervised algorithm (e.g. PCA) to select the q queries. An alternative with a supervised selection criterion is represented by uncertainty querying (EAL-U) which returns unlabeled data points for which the current classifier has low confidence <ref type="bibr" target="#b23">[24]</ref>. The selection criterion is therefore supervised: given a binary classifier C, the uncertainty querying strategy gives priority to the transactions x i for which P C (+|x i ) ≈ 0.5. This value may be affected by class imbalance and an higher threshold may be chosen in the fraud detection setting. Nevertheless, it is a good practice to balance the dataset before training the classifier. In the experimental section, we will implicitly refer to a classifier C which is trained on a balanced dataset.  The transactions are expected to be selected in areas where the classifier C is the most uncertain. As a consequence, selected transactions will lie in areas which present a high density for both classes.</p><p>Žliobaitė et al. <ref type="bibr" target="#b56">[57]</ref> proposed the mix of the two techniques, uncertainty querying and randomization, to tackle remote concept drift (Section 2). The technique (denoted by EAL-M) consists in querying by uncertainty most of the points and in querying random points from time to time.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.3">Stochastic semi-supervised learning</head><p>The Stochastic Semi-Supervised Learning (SSSL) strategy has been introduced by Xie and Xiong <ref type="bibr" target="#b51">[52]</ref> to infer labels in case of highly imbalanced datasets with a large number of unlabeled points. The strategy relies on a simple consideration: since the ratio between the number of frauds and the total number of transactions is very small, the probability of randomly selecting a fraud is very low. The resulting AL learning schema is made of four steps:</p><p>1. Selection: the current model is used to annotate all unlabeled transactions with an estimated risk; 2. Querying: the highest risk transactions are labeled by the investigators; 3. Majority assumption: a number of transactions are labeled as genuine by majority assumption; in this paper we explore a number of criteria to attribute the majority class: pure random attribution (SR), uncertainty (SU), mix of randomness and uncertainty (SM) and low predicted risk (SE). 4. Training: the labeled data points, obtained by the previous steps, are used to train/update a supervised model.</p><p>Though the selection strategy is supervised as in EAL, SSSL differs in terms of the usage of the current model C: the predicted risk is not only used to alert and trigger the investigation but also to label (without investigation) a number of low risk transactions. In order to illustrate the reliability of the majority assumption, we report in Fig. <ref type="figure" target="#fig_4">4</ref> the distribution of the scores P C (+|x i ) over 15 days. In particular the histograms (a), (b) and (c) refer to the score distribution for all transactions, genuine and fraudulent transactions, respectively. The plot (d) represents the proportion of fraudulent and genuine transactions for a given score in the range [0, 1]. Note that, though the a priori proportion of fraudulent cards in the dataset is 0.13%, it becomes 23.33% for scores higher than 0.95 and 61.90% for scores beyond 0.99. Note also that, in the area of maximal uncertainty for C (e.g between 0.49 and 0.51), we find only 0.35% of frauds. On the basis of those considerations, it is possible to define a number of Stochastic Semi-Supervised strategies: -SR: no exploration budget (q = 0) and attribution of the majority class to m &gt; 0 random transactions; -SU: no exploration budget (q = 0) and attribution of the majority class to the m &gt; 0 most uncertain points; -SM: no exploration budget (q = 0) and attribution of the majority class to the 0.7 × m most uncertain points and to 0.3 × m random points; -SE: no exploration budget (q = 0) and attribution of the majority class to the m &gt; 0 lowest risk points;</p><p>Additional variants can be created by simply allowing an exploration budget (q &gt; 0). The SR-U, SR-R and SR-M strategies are hybrid strategies which combine an exploration strategy (e.g. U in SR-U) and a SSSL strategy (e.g. SR in SR-U). Fig. <ref type="figure" target="#fig_5">5</ref> represents the set of 200 transactions selected by an SR approach. The transactions are selected ran- domly, and independently of the classifier C. It is important to note that this sampling strategy basically follows the class conditional density of the Genuine class. This is a consequence of the high imbalance of the dataset, since the distribution of frauds is negligible compared to the distribution of genuine transactions.</p><p>In <ref type="bibr" target="#b19">[20]</ref>, Jacobusse and Veenman presented additional variants of the SSSL. They partition the original dataset D under study in three subsets:</p><p>-D + : the subset of known positive samples, which corresponds in our scenario to the subset of frauds in the feedback set received by the investigators; -D -: the subset of known negative samples, which corresponds to the subset of genuine transactions in the feedback set received by the investigators; -D 0 : the subset of unlabeled samples, which corresponds to the set of unlabeled transactions.</p><p>While SSSL proposes to add part of the samples in D 0 and all the labeled samples in D + and D -, the variant proposed by Jacobusse and Veenman suggests to remove D -or part of it. The idea is to reduce the selection bias which can arise when the process of selection is driven in an expert knowledge way. In our context the expert knowledge selection is replaced by the classifier C. In the experimental section, we will refer to this approach as SRN[p], with p being the percentage of negative samples retained from the feedback set.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.4">Oversampling</head><p>It is worth noting that a side-effect of the adoption of SSSL (Section 5.3) is to add a number of majority class samples to the training set. This goal is typically achieved by oversampling techniques, with the main difference that here the target class is the majority class and not the minority one. In order to assess how SSSL situates with respect to conventional oversampling, we also consider a comparison with the two main oversampling techniques: Random Oversample (ROS) <ref type="bibr" target="#b20">[21]</ref> and SMOTE <ref type="bibr" target="#b8">[9]</ref>. ROS consists in duplicating some random instances from the class to be oversampled until a given sample size is reached. SMOTE creates artificial instances from the target class in the following manner: once the k nearest neighbors from the same class have been identified, new artificial transactions are generated moving along the line segment joining the original instance and its k neighbors.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.5">Multiple instance learning</head><p>This section deals with another specificity of the credit card fraud detection problem: the observations take place at the level of transactions but what is relevant for the company is the detection at the card level, since the investigation is performed at the card level and not at the transaction level.</p><p>From an AL perspective, since multiple transactions map to the same card, we could select query points by taking advantage of such one-to-many relationship.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.5.1">Querying by frequent uncertainty</head><p>The rationale of Querying by Frequent Uncertainty (QFU) boils down to query those cards which are mapped to the largest number of uncertain transactions. We associate to each card c a counter representing how many of its associated transactions x i ∈ c are uncertain, i.e. have a score</p><formula xml:id="formula_2">P Ct (+|x i ) ∈ [0.5 -v, 0.5 + v]</formula><p>where v determines the size of the uncertainty range.</p><p>The counters are updated in real-time and the AL selection returns the k cards with the highest counters.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.5.2">Combining function</head><p>A more advanced strategy to deal with card detection is inspired by <ref type="bibr" target="#b41">[42]</ref>. A combining function can be used to aggregate all the posterior probabilities p c i = P C (+|x i ) of the transactions x i ∈ c and derive the posterior probability P C (+|c).</p><p>The simplest combining function is the max function (denoted MF), which returns</p><formula xml:id="formula_3">P M F C (+|c) = max xi∈c p c i (2)</formula><p>Alternatively, authors in <ref type="bibr" target="#b41">[42]</ref> propose the softmax combining function:</p><formula xml:id="formula_4">P SM C (+|c) = xi p c i e αp c i xi e αp c i<label>(3)</label></formula><p>where α is a constant that determines the extent to which softmax approximates a max function.</p><p>In order to i) increase the sensitivity of the card risk to high risk transactions and to ii) reduce its sensitivity to low risk transactions, we propose a logarithmic combining function returning the score</p><formula xml:id="formula_5">xi∈c - 1 log s c i (4)</formula><p>where</p><formula xml:id="formula_6">s c i = p c i - if p c i &gt; 0.5 otherwise</formula><p>and is a very small number.  Table <ref type="table" target="#tab_7">3</ref> illustrates the scores associated to the transactions of Table <ref type="table" target="#tab_6">2</ref> for the three combining functions presented above. It appears that, unlike the max function, the other two functions are able to take into account the impact of multiple risky transactions on the overall risk of a card. In other terms two high risk transactions weight more than a simple one with a marginal higher risk. However, the softmax and the logarithmic functions differ in the importance they give to low risk transactions. Suppose we add a low risk transaction (Table <ref type="table" target="#tab_8">4</ref>) for card "B" to the set of transactions of Table <ref type="table" target="#tab_6">2</ref>.</p><p>Table <ref type="table" target="#tab_9">5</ref> shows that the sensitivity of the card risk to such additional transaction is much larger in the softmax than in the logarithmic case. The counter-intuitive consequence is that according to the softmax function the card "B" becomes now less risky than the card "A".  </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="6">Experiments</head><p>This section relies on a large imbalanced dataset of 12 million credit card transactions provided by our industrial partner Worldline.</p><p>In this realistic case-study, only a very small number (k = 100) of cards per day can be queried, amounting to roughly 0.2% of labeled points. The dataset has 32 features and it covers 60 days, each day including roughly 200K transactions. Two sets of experiments are performed: the first measures the detection accuracy at the level of the transactions, while the second measures the detection accuracy at the card level. In the first study, for the sake of simplicity, the classification model C is a conventional random forest model RF while a more realistic model A (discussed in <ref type="bibr" target="#b32">[33]</ref> and in Section 3) is used for the cards <ref type="foot" target="#foot_2">3</ref> . Since the randomization process in RF and A may induce variability in the accuracy assessment, we present the results of twenty repetitions of the streaming.</p><p>All the AL strategies are compared in identical situations and initialized with the same random and balanced set (initial training set D presented in algorithm 1). The results are presented as box-plots summarizing the fraud detection performance over the 60 days.</p><p>In particular we have considered the following accuracy measures: Top100 Precision, Area Under the Precision-Recall Curve (AUC-PR) and Area Under the Receiver Operator Characteristic Curve (AUC-ROC). In all the plots, the dark boxes are used to denote the most accurate AL strategy as well as the ones which do not differ significantly from it (paired Wilcoxon signed rank test with 5% significance level). The precision over the Top100 alerts is expected to be larger for RF than A since multiple positive alerts for the same card will be accounted as several true positives in the transaction case but as a single success in the card case. We made all the code available on Github<ref type="foot" target="#foot_3">foot_3</ref> .</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="6.1">Transaction-based fraud detection</head><p>In order to better situate the results of AL techniques, we start by reporting the accuracy of several passive (Section 2.1) unsupervised methods. In Fig. <ref type="figure" target="#fig_6">6</ref>, we show the accuracy of six state-of-the-art unsupervised outlier detection techniques: One-class Support Vector Machine (SVM), Local Outlier Factor (LOF), Isolation Forest (IF), Gaussian Mixture Models (GMM), First Component of the PCA (PCA-F) and Last Component of the PCA (PCA-L). Though PCA-F works better in terms of Top100 Precision, AUC-PR and AUC-ROC, overall the accuracy of passive unsupervised learning is very low. In Fig. <ref type="figure">7</ref>, we report the fraud detection accuracy of the AL techniques discussed in Section 5. A horizontal line is added in order to make the comparison with the baseline strategy HRQ easier. The experiments are performed with k = 100, q = 5 and m = 1000. These hyper-parameters have been set by trial-and-error and are compatible with the kind of exploration effort that our industrial partner could ask to its investigators. The first remark is that AL (Fig. <ref type="figure">7</ref>) significantly outperforms passive learning unsupervised techniques (Fig. <ref type="figure" target="#fig_6">6</ref>).</p><p>Second, it appears that exploratory AL alone is not able to outperform the standard HRQ strategy. In particular unsupervised explorations are of no use: the PCA based exploration EAL-P as well as random exploration EAR are significantly worse than the baseline HRQ. The highest accuracy is obtained by SSSL (SR) or by combining SSSL with uncertainty sampling (SR-U). The SR strategy leads to an improvement in precision of 5.84%, while SR-U leads to an improvement of 5.15%. Similar improvement are observed for the AUC-PR (Fig. <ref type="figure">7b</ref>), while a wider range of techniques per-  form better in terms of AUC-ROC curve (Fig. <ref type="figure">7c</ref>). The most efficient combination in our setting is therefore obtained by a combination of stochastic semi-supervised approach with the standard HRQ strategy for active learning (Fig. <ref type="figure">9</ref>). </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>First Component of PCA Second Component of PCA</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Genuine</head><p>Fraud HRQ SSSL Fig. <ref type="figure">9</ref>: Class conditional distributions in the PC1/PC2 space and the transactions selected by the SR strategy, the best one in our experimental comparison. A set of 100 transactions is selected using the Highest Risk Querying approach (green dots), and a random set of 1000 transactions is selected and labeled as the genuine class (SSSL, purple dots).</p><p>We have also compared the semi-supervised technique SR with the standard Random Oversample and SMOTE oversampling techniques. As shown in Fig. <ref type="figure" target="#fig_7">8</ref>, SR appears to be better in terms of Top100 Precision, AUC-PR and AUC-ROC. ROS and SMOTE outperform HRQ only in terms of AUC-ROC. In Fig. <ref type="figure" target="#fig_0">10</ref>, a comparison between SR and SRN[p] with different values of p is reported (where p is the percentage of genuine transactions retained from the feedback set). SR is statistically better than the SRN[p] strategies in terms of Precision, AUC-PR and AUC-ROC and for all p ∈ {75, 50, 25, 0}. Our findings are similar to the results of Jacobusse and Veenman <ref type="bibr" target="#b19">[20]</ref>. They have used a synthetic dataset with an imbalance ratio of 1% and they have observed a higher AUC-ROC for the SRN[p] strategy in case of very small p. In Fig. <ref type="figure" target="#fig_0">12</ref>, we report the impact on precision of the proportion of daily transactions selected by SR. The SR experiments reported in Fig. <ref type="figure">7</ref> refer to a selection of 1000 points (0.50% of the daily transactions) while the highest precision (statistically significant) is attained for 2% of the daily transactions. The figure shows then the existence of a trade-off in precision between a configuration corresponding to HRQ (i.e. no additional selected points, on the left-side) and a configuration with many added points (right side). Our interpretation is that both selection bias (left-side configuration) and excessive imbalance (right-side configuration) may be detrimental to precision. An accurate tuning of such trade-off is expected to be beneficial for the final performance.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="6.2">Card-based fraud detection</head><p>In this second case study, we retain the most promising techniques form the transaction assessment (namely, SR and SR-U), and we compare them with the Multiple Instance Learning strategies described in Section 5.5.1 (v = 0.05) and 5.5.2 ( = 1e -3). Fig. <ref type="figure" target="#fig_9">11</ref> summarizes the results for the card detection study, using Top100 Card Precision, AUC-PR and AUC-ROC as accuracy metrics.</p><p>When the Top100 Precision is considered as performance metric, stochastic semi-supervised with random labeling and max combining function (MF-SR) returns the best result with a detection improved by 3.21%. The strategy also performs well in terms of AUC-ROC, but is outperformed (by a small margin) by the logarithmic combining function when considering AUC-PR as the performance metric.</p><p>Similarly to the results obtained at the transaction level, the best strategies are those combining the baseline High Risk Querying with stochastic semisupervised with random labeling (SR) or uncertainty labeling (SU). The addition of an exploratory part (QFU, or SR-U strategies) did not allow to improve the detection accuracy. The performances are even slightly decreased in terms of Top100 Precision for SR-U strategies.</p><p>The results show that the combining function plays an important role. While the max and logarithmic performed best overall, the softmax clearly hampered the fraud detection accuracy. In Fig. <ref type="figure" target="#fig_10">13</ref> we show the impact on money savings related to the adoption of the MF-HRQ and MF-SR techniques respectively. Fig. <ref type="figure" target="#fig_10">13a</ref> reports the daily amount of fraudulent money detected by two approaches (as a percentage of daily transacted money). Fig. <ref type="figure" target="#fig_10">13b</ref>    (as a percentage of daily fraudulent transacted money). However, we are not able to measure the amount of fraudulent transactions detected later than our partner since from the historical data we cannot reconstruct if the fraud was indeed detected by the industrial FDS (or labeled after a claim of the cardholder).</p><p>To conclude, stochastic semi-supervised labeling (SR and SU) combined with HRQ remained the best strategies, confirming the results obtained at the transaction level. Regarding the combining functions, the logarithmic function provided the best performance in terms of AUC-ROC, but the max function significantly outperformed in terms of Top100 Precision. Overall, the max combining function was observed to provide the most stable improvement throughout the range of explored performance metrics.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="7">Conclusion and future work</head><p>This paper investigates the impact of active learning strategies on the fraud detection accuracy in credit cards. Using a real-world dataset of several millions of transactions over sixty days, we provided an extensive analysis and comparison of different strategies, involving standard active learning, exploratory active learning, semi-supervised learning and combining functions <ref type="foot" target="#foot_4">5</ref> .</p><p>In particular we assessed the importance of different selection criteria (supervised, unsupervised or semisupervised). Moreover, we provided a two-dimensional visualization of the complexity (e.g. non separability) of the fraud detection problem as well as a visualization of the distribution of the query points issued by the different strategies.</p><p>Our results show that unsupervised outlier detection has very low accuracy in the context of credit card fraud detection. This is especially true for a context where only a very small number of cards can be investigated every day and high precision is required. Furthermore we find that the baseline active learning for fraud detection, the Highest Risk Querying, can be noticeably improved by combining it with Stochastic Semi-supervised Learning, thereby allowing to increase the fraud detection accuracy by up to five percent. Exploratory active learning techniques (including supervised or unsupervised selection criteria) have not improved the fraud detection task. This can be attributed to the highly imbalanced nature of the data and the small exploration budget that can be reasonably allocated in a fraud detection system. Last, our results on combining functions for bags of transactions showed that the baseline strategy, implemented with the max strategy, was the most stable across different accuracy metrics, but that alternative functions could be worth considering. Future work will focus on two main directions, the stratification of the dataset according to the properties of transactions or cardholders, the design and assessment of hybrid strategies to combine unsupervised (notably outlier detection) and supervised methods. </p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head>Fig. 1 :</head><label>1</label><figDesc>Fig. 1: Class conditional distributions (level curves of Frauds in red and of Genuine in blue) of transactions in the PC1/PC2 space. The dataset of transactions is collected on 15 consecutive days.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head>Fig. 2 Fig. 2 :</head><label>22</label><figDesc>Fig. 2: Class conditional distributions in the PC1/PC2 space and the set of 200 transactions queried by the HRQ approach.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_2"><head>Fig. 3 :</head><label>3</label><figDesc>Fig. 3: Class conditional distributions in the PC1/PC2 space and the set of 200 transactions queried by the Uncertainty Sampling approach.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_3"><head>Fig. 3</head><label>3</label><figDesc>Fig.3presents the visualization of a set of 200 transactions selected by the Uncertainty Sampling approach. The transactions are expected to be selected in areas where the classifier C is the most uncertain. As a consequence, selected transactions will lie in areas which present a high density for both classes.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_4"><head>Fig. 4 :</head><label>4</label><figDesc>Fig. 4: Distribution of the scores obtained by P At (+|x i ) in a range of 15 days involving 2.4 millions of cards for: all the transactions (a), only genuine transactions (b) and only fraudulent transactions (c). In (d), the proportion of genuine and fraudulent transactions is plotted while changing the score obtained by P At (+|x i ).</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_5"><head>Fig. 5 :</head><label>5</label><figDesc>Fig. 5: Class conditional distributions in PC1/PC2 space and the set of 200 transactions selected using the Stochastic Semi-supervised Learning (SR) approach.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_6"><head>Fig. 6 :</head><label>6</label><figDesc>Fig. 6: Transaction-based case study with unsupervised passive learning. Box-plots summarize the accuracy measures obtained over 60 days and 20 trials. Black points indicate the mean value for each box. Comparison in terms of: Top100 Precision (a), Area Under the Precision-Recall Curve (b) and Area Under the Receiver Operator Characteristic Curve (c). Dark boxes indicate the best strategy (paired Wilcoxon test).</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_7"><head>Fig. 8 :</head><label>8</label><figDesc>Fig. 8: Transaction-based case study. Comparison in terms of: Top100 Precision (a), Area Under the Precision-Recall Curve (b) and Area Under the Receiver Operator Characteristic Curve (c). Dark boxes indicate the best strategy and those which are not statistically different (paired Wilcoxon test).</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_9"><head>Fig. 11 :</head><label>11</label><figDesc>Fig. 11: Card-based case study. Comparison in terms of: Top100 Precision (a), Area Under the Precision-Recall Curve (b) and Area Under the Receiver Operator Characteristic Curve (c). Dark boxes indicate the best strategy and those which are not statistically different (paired Wilcoxon test).</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_10"><head>Fig. 13 :</head><label>13</label><figDesc>Fig. 13: Card-based case study. Daily amount of detected fraudulent money (percentage of daily transacted money) (a). Daily amount of fraudulent money detected before than the industrial FDS (b). Dark boxes indicate the significantly better strategy (paired Wilcoxon test).</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_3"><head></head><label></label><figDesc>t and F t stand for Delayed classifier and Feedback classifier respectively and w A ∈ [0, 1] is the weight controlling the contribution of the two classifiers. D t is implemented as an ensemble of Balanced Random Trees<ref type="bibr" target="#b9">[10,</ref><ref type="bibr" target="#b34">35]</ref> trained on old transactions for which we can reasonably consider the class as known. F t is trained on recently alerted transactions, for which a Feedback was returned by investigators. It is therefore alimented by the active learning component of the fraud detection system. This Feedback component is very important to address concept drift.</figDesc><table /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_4"><head></head><label></label><figDesc>as a template for illustrating the distribution of the queries issued by the different AL strategies taken into consideration.</figDesc><table><row><cell cols="3">Algorithm 1 Active Learning process</cell></row><row><cell cols="2">Require: k</cell><cell>total number of alerts</cell></row><row><cell cols="2">Require: q</cell><cell>exploration budget</cell></row><row><cell cols="2">Require: m</cell><cell>SSSL budget</cell></row><row><cell cols="2">Require: D</cell><cell>initial training set</cell></row><row><cell cols="2">1: for any new day do</cell><cell></cell></row><row><cell>2:</cell><cell>C ← learning(D)</cell><cell></cell></row><row><cell>3:</cell><cell>inT rx ← unlabeled set</cell><cell></cell></row><row><cell>4:</cell><cell>scores ← {P scores</cell><cell>HRQ</cell></row><row><cell>6:</cell><cell>if (q &gt; 0) then</cell><cell>EAL</cell></row><row><cell>7:</cell><cell cols="2">Esel ← q explorative points</cell></row><row><cell>8:</cell><cell>sel ← {sel, Esel}</cell><cell></cell></row><row><cell>9:</cell><cell>end if</cell><cell></cell></row><row><cell>10:</cell><cell cols="2">queries ← investigator labeling of sel</cell></row><row><cell>11:</cell><cell>if (m &gt; 0) then</cell><cell>SSSL</cell></row><row><cell>12:</cell><cell cols="2">SSSLset ← m points based on a SSSL criterion</cell></row><row><cell>13:</cell><cell cols="2">SSSLset ← set label y(SSSLset) = 0</cell></row><row><cell>14:</cell><cell cols="2">queries ← {queries, SSSLset}</cell></row><row><cell>15:</cell><cell>end if</cell><cell></cell></row><row><cell>16:</cell><cell>D ← {D, queries}</cell><cell></cell></row><row><cell cols="2">17: end for</cell><cell></cell></row></table><note><p><p>C (x), x ∈ inT rx} 5:</p>sel ← selection of the k -q points with highest risk</p></note></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_5"><head>Table 1 :</head><label>1</label><figDesc>Summary of active learning and semi-supervised strategies described in the paper</figDesc><table><row><cell>Id</cell><cell>Strategy</cell><cell>Type</cell></row><row><cell>HRQ</cell><cell>Highest Risk Querying</cell><cell>Baseline / BL (Section 5.1)</cell></row><row><cell>R</cell><cell>Random Querying</cell><cell></cell></row><row><cell>P</cell><cell>Unsupervised (PCA) Querying</cell><cell></cell></row><row><cell>U</cell><cell>Uncertainty Querying</cell><cell>Exploratory Active Learning / EAL (Section 5.2)</cell></row><row><cell>M</cell><cell>Mix of Random and Uncertainty Querying</cell><cell></cell></row><row><cell>SR</cell><cell>SSSL on Random points</cell><cell></cell></row><row><cell>SU</cell><cell>SSSL on Uncertain points</cell><cell>Stochastic Semi-Supervised Learning /</cell></row><row><cell>SM</cell><cell>SSSL on Random/Uncertain points</cell><cell>SSSL (Section 5.3)</cell></row><row><cell>SE</cell><cell>SSSL on points most likely to be genuine</cell><cell></cell></row><row><cell>SR-U</cell><cell>SSSL on Uncertain points + Random Sampling</cell><cell></cell></row><row><cell>SR-R</cell><cell>SSSL on Random points + Random Sampling</cell><cell>SSSL + EAL (Section 5.3)</cell></row><row><cell>SR-M</cell><cell>SSSL on Random/Uncertain points + Random Sampling</cell><cell></cell></row><row><cell>SRN[p]</cell><cell>SR with reduced x% of Negative Feedback</cell><cell>Modified SSSL (Sections 5.3)</cell></row><row><cell>ROS SMOTE</cell><cell>Random Oversample SMOTE</cell><cell>Oversample (Section 5.</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_6"><head>Table 2 :</head><label>2</label><figDesc>Scoring of transactions</figDesc><table><row><cell>Rank</cell><cell>Card Id</cell><cell>Trx Id</cell><cell>p c i</cell></row><row><cell>1</cell><cell>A</cell><cell>A7</cell><cell>0.90</cell></row><row><cell>2</cell><cell>B</cell><cell>B3</cell><cell>0.88</cell></row><row><cell>3</cell><cell>B</cell><cell>B5</cell><cell>0.87</cell></row><row><cell>4</cell><cell>A</cell><cell>A2</cell><cell>0.83</cell></row><row><cell>...</cell><cell>...</cell><cell>...</cell><cell>...</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_7"><head>Table 3 :</head><label>3</label><figDesc>Scoring of cards on the basis of transactions from Table2with three combining functions</figDesc><table><row><cell>Card</cell><cell>max(p c i )</cell><cell>softmax(p c i )</cell><cell>log. (p c i )</cell></row><row><cell>A</cell><cell>0.90</cell><cell>0.87</cell><cell>34.21</cell></row><row><cell>B</cell><cell>0.88</cell><cell>0.88</cell><cell>34.55</cell></row><row><cell>...</cell><cell>...</cell><cell>...</cell><cell>...</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_8"><head>Table 4 :</head><label>4</label><figDesc>Additional transaction</figDesc><table><row><cell>Rank</cell><cell>Card Id</cell><cell>Trx Id</cell><cell>p c i</cell></row><row><cell>20000</cell><cell>B</cell><cell>B6</cell><cell>0.20</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_9"><head>Table 5 :</head><label>5</label><figDesc>Scoring of cards on the basis of transaction from Tables2 and 4with three combining functions</figDesc><table><row><cell>Card</cell><cell>max(p c i )</cell><cell>softmax(p c i )</cell><cell>log. (p c i )</cell></row><row><cell>A</cell><cell>0.90</cell><cell>0.87</cell><cell>34.21</cell></row><row><cell>B</cell><cell>0.88</cell><cell>0.74</cell><cell>34.55</cell></row><row><cell>...</cell><cell>...</cell><cell>...</cell><cell>...</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_10"><head></head><label></label><figDesc>Fig. 7: Transaction-based case study. Box-plots summarize the accuracy measures obtained over 60 days and 20 trials. Black points indicate the mean value for each box and the horizontal line indicates the mean for the baseline HRQ. The extended names for the strategies listed on the horizontal axes can be found in Table 1. Comparison in terms of: Top100 Precision (a), Area Under the Precision-Recall Curve (b) and Area Under the Receiver Operator Characteristic Curve (c). Dark boxes indicate the best strategy and those which are not statistically different (paired Wilcoxon test).</figDesc><table><row><cell></cell><cell>1.00</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>1.0</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>Top100 Precision</cell><cell>0.25 0.50 0.75</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>AU-PRC</cell><cell>0.6 0.2 0.4</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>AU-ROC</cell><cell>0.9 0.8</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>0.7</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell>0.00</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>0.0</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell>HRQ</cell><cell>R</cell><cell>P</cell><cell>U</cell><cell>M</cell><cell>SR</cell><cell>SU</cell><cell>SM</cell><cell>SE</cell><cell>SR-U</cell><cell>SR-R</cell><cell>SR-M</cell><cell>HRQ</cell><cell>R</cell><cell>P</cell><cell>U</cell><cell>M</cell><cell>SR</cell><cell>SU</cell><cell>SM</cell><cell>SE</cell><cell>SR-U</cell><cell>SR-R</cell><cell>SR-M</cell><cell>HRQ</cell><cell>R</cell><cell>P</cell><cell>U</cell><cell>M</cell><cell>SR</cell><cell>SU</cell><cell>SM</cell><cell>SE</cell><cell>SR-U</cell><cell>SR-R</cell><cell>SR-M</cell></row><row><cell></cell><cell>BL</cell><cell></cell><cell cols="2">EAL</cell><cell></cell><cell></cell><cell cols="2">SSSL</cell><cell></cell><cell cols="3">SSSL+EAL</cell><cell>BL</cell><cell></cell><cell cols="2">EAL</cell><cell></cell><cell></cell><cell cols="2">SSSL</cell><cell></cell><cell cols="3">SSSL+EAL</cell><cell>BL</cell><cell></cell><cell cols="2">EAL</cell><cell></cell><cell></cell><cell cols="2">SSSL</cell><cell></cell><cell cols="3">SSSL+EAL</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell cols="4">Strategies</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell cols="6">Strategies</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell cols="6">Strategies</cell><cell></cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>(a)</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell cols="2">(b)</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell cols="2">(c)</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_11"><head></head><label></label><figDesc>reports the daily amount of fraudulent money which would have been saved if the AL technique would have been used instead of the FDS implemented by our industrial partner</figDesc><table><row><cell></cell><cell>1.00</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>0.6</cell><cell></cell><cell></cell><cell></cell><cell>0.95</cell></row><row><cell>Top100 Precision</cell><cell>0.25 0.50 0.75</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>AUC-PR</cell><cell>0.2 0.4</cell><cell></cell><cell></cell><cell></cell><cell>AUC-ROC</cell><cell>0.85 0.90</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>0.80</cell></row><row><cell></cell><cell>0.00</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>0.0</cell><cell></cell><cell></cell><cell></cell><cell>0.75</cell></row><row><cell></cell><cell></cell><cell>SR</cell><cell></cell><cell>SRN[75]</cell><cell></cell><cell>SRN[50]</cell><cell>SRN[25]</cell><cell></cell><cell>SRN[0]</cell><cell></cell><cell>SR</cell><cell>SRN[75]</cell><cell>SRN[50]</cell><cell>SRN[25]</cell><cell>SRN[0]</cell><cell>SR</cell><cell>SRN[75]</cell><cell>SRN[50]</cell><cell>SRN[25]</cell><cell>SRN[0]</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell cols="3">Strategies</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell cols="3">Strategies</cell><cell>Strategies</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>(a)</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>(b)</cell><cell></cell><cell></cell><cell>(c)</cell></row><row><cell></cell><cell>0.6</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>Top100 Card Precision</cell><cell>0.2 0.4</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell>0.0</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell>QFU</cell><cell>MF-HRQ</cell><cell>MF-SR</cell><cell>MF-SR-U</cell><cell>SM-HRQ</cell><cell>SM-SR</cell><cell>SM-SR-U</cell><cell>LF-HRQ</cell><cell>LF-SR</cell><cell>LF-SR-U</cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell cols="10">Multiple Instance Learning Strategies</cell><cell></cell><cell></cell><cell></cell><cell></cell></row></table><note><p>Fig. 10: Transaction-based case study. Comparison of sampling strategies SRN[p] for different p values: percentage of retained negative samples from the feedback set. Note that SR corresponds to SRN[p] with p=100. Comparison in terms of: Top100 Precision (a), Area Under the Precision-Recall Curve (b) and Area Under the Receiver Operator Characteristic Curve (c). Dark boxes indicate the best strategy and those which are not statistically different (paired Wilcoxon test).</p></note></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_12"><head></head><label></label><figDesc>Transaction-based case study. Top100 Precision when varying the number of points selected in SR. The dark box indicates the best strategy (paired Wilcoxon test).</figDesc><table><row><cell></cell><cell>1.00</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>Top100 Precision</cell><cell>0.50 0.75</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell>0.25</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell>0.00</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell>0.00%</cell><cell>0.13%</cell><cell>0.25%</cell><cell>0.50%</cell><cell>1.00%</cell><cell>1.50%</cell><cell>2.00%</cell><cell>2.50%</cell><cell>3.00%</cell><cell>3.50%</cell><cell>4.00%</cell><cell>4.50%</cell><cell>5.00%</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell cols="5">Selected points</cell><cell></cell><cell></cell><cell></cell></row><row><cell cols="2">Fig. 12:</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row></table></figure>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot" n="1" xml:id="foot_0"><p>This paper is an extension version of the DSAA'2017 Application Track paper titled: "An Assessment of Streaming Active Learning Strategies for Real-Life Credit Card Fraud Detection"<ref type="bibr" target="#b5">[6]</ref> </p></note>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot" n="2" xml:id="foot_1"><p>Though some papers on fraud detection present datasets with still lower rates (0.01% in<ref type="bibr" target="#b14">[15]</ref>, 0.005% in<ref type="bibr" target="#b1">[2]</ref>, 0.02% in<ref type="bibr" target="#b50">[51]</ref> and 0.004% in<ref type="bibr" target="#b35">[36]</ref>) our dataset is inline with other recent works on fraud detection (<ref type="bibr" target="#b46">[47]</ref>,<ref type="bibr" target="#b21">[22]</ref> and<ref type="bibr" target="#b38">[39]</ref> have a class imbalance rate of 0.8%, 0.5% and 0.4% respectively).</p></note>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot" n="3" xml:id="foot_2"><p>The use of two different learning strategies is justified by the need to assess the robustness of the AL strategies with respect to different learning methods and different detection tasks (transaction-based and card-based).</p></note>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot" n="4" xml:id="foot_3"><p>https://github.com/fabriziocarcillo/ StreamingActiveLearningStrategies</p></note>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot" n="5" xml:id="foot_4"><p>We made the StreamingActiveLearningStrategies repository available in github.com/fabriziocarcillo/</p></note>
+		</body>
+		<back>
+
+			<div type="acknowledgement">
+<div><p>Acknowledgements The authors FC, YLB and GB acknowledge the funding of the <rs type="projectName">Brufence</rs> project (Scalable machine learning for automating defense system) supported by <rs type="funder">INNOVIRIS (Brussels Institute</rs> for the encouragement of scientific research and innovation). Computational resources have been provided by the <rs type="funder">Consortium des quipements de Calcul Intensif (CCI)</rs>, funded by the <rs type="funder">Fonds de la Recherche Scientifique de Belgique (F.R.S.-FNRS)</rs> under Grant No. 2.<rs type="grantNumber">5020.11</rs>. This is a pre-print of an article published in the <rs type="projectName">International Journal of Data Science and Analytics</rs>. The final authenticated version is available online at: <ref type="url" target="https://doi.org/">https://doi.org/</ref>[DOI: 10.1007/s41060-018-0116-z] On behalf of all authors, the corresponding author states that there is no conflict of interest.</p></div>
+			</div>
+			<listOrg type="funding">
+				<org type="funded-project" xml:id="_6eewDkP">
+					<orgName type="project" subtype="full">Brufence</orgName>
+				</org>
+				<org type="funded-project" xml:id="_7yKECYd">
+					<idno type="grant-number">5020.11</idno>
+					<orgName type="project" subtype="full">International Journal of Data Science and Analytics</orgName>
+				</org>
+			</listOrg>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<analytic>
+		<title level="a" type="main">Outlier analysis</title>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">C</forename><surname>Aggarwal</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Data mining</title>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2015">2015</date>
+			<biblScope unit="page" from="237" to="263" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Aggarwal, C.C.: Outlier analysis. In: Data mining, pp. 237-263. Springer (2015)</note>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<analytic>
+		<title level="a" type="main">Data mining for credit card fraud: A comparative study</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Bhattacharyya</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Jha</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Tharakunnel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">C</forename><surname>Westland</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Decision Support Systems</title>
+		<imprint>
+			<biblScope unit="volume">50</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="602" to="613" />
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Bhattacharyya, S., Jha, S., Tharakunnel, K., Westland, J.C.: Data mining for credit card fraud: A comparative study. Decision Support Systems 50(3), 602-613 (2011)</note>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<analytic>
+		<title level="a" type="main">Unsupervised profiling methods for fraud detection</title>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">J</forename><surname>Bolton</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">J</forename><surname>Hand</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Credit Scoring and Credit Control</title>
+		<imprint>
+			<biblScope unit="volume">VII</biblScope>
+			<biblScope unit="page" from="235" to="255" />
+			<date type="published" when="2001">2001</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Bolton, R.J., Hand, D.J., et al.: Unsupervised profiling methods for fraud detection. Credit Scoring and Credit Control VII pp. 235-255 (2001)</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<analytic>
+		<title level="a" type="main">Lof: identifying density-based local outliers</title>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">M</forename><surname>Breunig</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><forename type="middle">P</forename><surname>Kriegel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">T</forename><surname>Ng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Sander</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">ACM sigmod record</title>
+		<imprint>
+			<biblScope unit="volume">29</biblScope>
+			<biblScope unit="page" from="93" to="104" />
+			<date type="published" when="2000">2000</date>
+			<publisher>ACM</publisher>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Breunig, M.M., Kriegel, H.P., Ng, R.T., Sander, J.: Lof: identifying density-based local outliers. In: ACM sigmod record, vol. 29, pp. 93-104. ACM (2000)</note>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<analytic>
+		<title level="a" type="main">Scarff: a scalable framework for streaming credit card fraud detection with spark</title>
+		<author>
+			<persName><forename type="first">F</forename><surname>Carcillo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Dal Pozzolo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><forename type="middle">A</forename><surname>Le Borgne</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">O</forename><surname>Caelen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Mazzer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Bontempi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Information fusion</title>
+		<imprint>
+			<biblScope unit="volume">41</biblScope>
+			<biblScope unit="page" from="182" to="194" />
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Carcillo, F., Dal Pozzolo, A., Le Borgne, Y.A., Cae- len, O., Mazzer, Y., Bontempi, G.: Scarff: a scalable framework for streaming credit card fraud detection with spark. Information fusion 41, 182-194 (2018)</note>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<analytic>
+		<title level="a" type="main">An assessment of streaming active learning strategies for real-life credit card fraud detection</title>
+		<author>
+			<persName><forename type="first">F</forename><surname>Carcillo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><forename type="middle">A</forename><surname>Le Borgne</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">O</forename><surname>Caelen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Bontempi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">DSAA-The 4th IEEE International Conference on Data Science and Advanced Analytics</title>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+			<biblScope unit="volume">7</biblScope>
+			<biblScope unit="page" from="783" to="790" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Carcillo, F., Le Borgne, Y.A., Caelen, O., Bontempi, G.: An assessment of streaming active learning strategies for real-life credit card fraud detection. In: DSAA-The 4th IEEE International Conference on Data Science and Ad- vanced Analytics, vol. 7, pp. 783-790 (2017)</note>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<analytic>
+		<title level="a" type="main">Anomaly detection: A survey</title>
+		<author>
+			<persName><forename type="first">V</forename><surname>Chandola</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Banerjee</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">V</forename><surname>Kumar</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">ACM computing surveys (CSUR)</title>
+		<imprint>
+			<biblScope unit="volume">41</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page">15</biblScope>
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Chandola, V., Banerjee, A., Kumar, V.: Anomaly detec- tion: A survey. ACM computing surveys (CSUR) 41(3), 15 (2009)</note>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<analytic>
+		<title level="a" type="main">Semi-supervised learning</title>
+		<author>
+			<persName><forename type="first">O</forename><surname>Chapelle</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Scholkopf</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Zien</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Neural Networks</title>
+		<editor>chapelle, o. et al.</editor>
+		<imprint>
+			<biblScope unit="volume">20</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="542" to="542" />
+			<date type="published" when="2006">2006. 2009</date>
+		</imprint>
+	</monogr>
+	<note>book reviews</note>
+	<note type="raw_reference">Chapelle, O., Scholkopf, B., Zien, A.: Semi-supervised learning (chapelle, o. et al., eds.; 2006)[book reviews]. IEEE Transactions on Neural Networks 20(3), 542-542 (2009)</note>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">Smote: synthetic minority over-sampling technique</title>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">V</forename><surname>Chawla</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">W</forename><surname>Bowyer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><forename type="middle">O</forename><surname>Hall</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><forename type="middle">P</forename><surname>Kegelmeyer</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of artificial intelligence research</title>
+		<imprint>
+			<biblScope unit="volume">16</biblScope>
+			<biblScope unit="page" from="321" to="357" />
+			<date type="published" when="2002">2002</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Chawla, N.V., Bowyer, K.W., Hall, L.O., Kegelmeyer, W.P.: Smote: synthetic minority over-sampling tech- nique. Journal of artificial intelligence research 16, 321- 357 (2002)</note>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<monogr>
+		<title level="m" type="main">Using random forest to learn imbalanced data</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Liaw</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Breiman</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2004">2004</date>
+			<biblScope unit="volume">110</biblScope>
+			<pubPlace>Berkeley</pubPlace>
+		</imprint>
+		<respStmt>
+			<orgName>University of California</orgName>
+		</respStmt>
+	</monogr>
+	<note type="raw_reference">Chen, C., Liaw, A., Breiman, L.: Using random forest to learn imbalanced data. University of California, Berkeley 110 (2004)</note>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<analytic>
+		<title level="a" type="main">Improving generalization with active learning</title>
+		<author>
+			<persName><forename type="first">D</forename><surname>Cohn</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Atlas</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Ladner</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Machine learning</title>
+		<imprint>
+			<biblScope unit="volume">15</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="201" to="221" />
+			<date type="published" when="1994">1994</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Cohn, D., Atlas, L., Ladner, R.: Improving generalization with active learning. Machine learning 15(2), 201-221 (1994)</note>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<analytic>
+		<title level="a" type="main">A weighted principal component analysis and its application to gene expression data</title>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">F</forename><surname>Pinto Da Costa</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Alonso</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Roque</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE/ACM Transactions on Computational Biology and Bioinformatics (TCBB)</title>
+		<imprint>
+			<biblScope unit="volume">8</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="246" to="252" />
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Pinto da Costa, J.F., Alonso, H., Roque, L.: A weighted principal component analysis and its application to gene expression data. IEEE/ACM Transactions on Computa- tional Biology and Bioinformatics (TCBB) 8(1), 246-252 (2011)</note>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<analytic>
+		<title level="a" type="main">Learned lessons in credit card fraud detection from a practitioner perspective</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Dal Pozzolo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">O</forename><surname>Caelen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><forename type="middle">A</forename><surname>Le Borgne</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Waterschoot</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Bontempi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Expert systems with applications</title>
+		<imprint>
+			<biblScope unit="volume">41</biblScope>
+			<biblScope unit="issue">10</biblScope>
+			<biblScope unit="page" from="4915" to="4928" />
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Dal Pozzolo, A., Caelen, O., Le Borgne, Y.A., Water- schoot, S., Bontempi, G.: Learned lessons in credit card fraud detection from a practitioner perspective. Expert systems with applications 41(10), 4915-4928 (2014)</note>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<analytic>
+		<title level="a" type="main">Two faces of active learning</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Dasgupta</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Theoretical computer science</title>
+		<imprint>
+			<biblScope unit="volume">412</biblScope>
+			<biblScope unit="issue">19</biblScope>
+			<biblScope unit="page" from="1767" to="1781" />
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Dasgupta, S.: Two faces of active learning. Theoretical computer science 412(19), 1767-1781 (2011)</note>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<analytic>
+		<title level="a" type="main">Neural fraud detection in credit card operations</title>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">R</forename><surname>Dorronsoro</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Ginel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Sgnchez</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Cruz</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE transactions on neural networks</title>
+		<imprint>
+			<biblScope unit="volume">8</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="827" to="834" />
+			<date type="published" when="1997">1997</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Dorronsoro, J.R., Ginel, F., Sgnchez, C., Cruz, C.: Neural fraud detection in credit card operations. IEEE transac- tions on neural networks 8(4), 827-834 (1997)</note>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<analytic>
+		<title level="a" type="main">Novelty detection and segmentation based on gaussian mixture models: A case study in 3d robotic laser mapping</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Drews</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Núñez</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">P</forename><surname>Rocha</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Campos</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Dias</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Robotics and Autonomous Systems</title>
+		<imprint>
+			<biblScope unit="volume">61</biblScope>
+			<biblScope unit="issue">12</biblScope>
+			<biblScope unit="page" from="1696" to="1709" />
+			<date type="published" when="2013">2013</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Drews, P., Núñez, P., Rocha, R.P., Campos, M., Dias, J.: Novelty detection and segmentation based on gaus- sian mixture models: A case study in 3d robotic laser mapping. Robotics and Autonomous Systems 61(12), 1696-1709 (2013)</note>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<analytic>
+		<title level="a" type="main">Learning on the border: active learning in imbalanced data classification</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Ertekin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Huang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Bottou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Giles</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the sixteenth ACM conference on Conference on information and knowledge management</title>
+		<meeting>the sixteenth ACM conference on Conference on information and knowledge management</meeting>
+		<imprint>
+			<publisher>ACM</publisher>
+			<date type="published" when="2007">2007</date>
+			<biblScope unit="page" from="127" to="136" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ertekin, S., Huang, J., Bottou, L., Giles, L.: Learning on the border: active learning in imbalanced data classifica- tion. In: Proceedings of the sixteenth ACM conference on Conference on information and knowledge management, pp. 127-136. ACM (2007)</note>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<analytic>
+		<title level="a" type="main">Active mining of data streams</title>
+		<author>
+			<persName><forename type="first">W</forename><surname>Fan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><forename type="middle">A</forename><surname>Huang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><forename type="middle">S</forename><surname>Yu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 2004 SIAM International Conference on Data Mining</title>
+		<meeting>the 2004 SIAM International Conference on Data Mining</meeting>
+		<imprint>
+			<publisher>SIAM</publisher>
+			<date type="published" when="2004">2004</date>
+			<biblScope unit="page" from="457" to="461" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Fan, W., Huang, Y.a., Wang, H., Yu, P.S.: Active min- ing of data streams. In: Proceedings of the 2004 SIAM International Conference on Data Mining, pp. 457-461. SIAM (2004)</note>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<analytic>
+		<title level="a" type="main">Gaussian mixture pdf in one-class classification: computing and utilizing confidence values</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Ilonen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Paalanen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">K</forename><surname>Kamarainen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Kalviainen</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">ICPR 2006. 18th International Conference on</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2006">2006. 2006</date>
+			<biblScope unit="volume">2</biblScope>
+			<biblScope unit="page" from="577" to="580" />
+		</imprint>
+	</monogr>
+	<note>Pattern Recognition</note>
+	<note type="raw_reference">Ilonen, J., Paalanen, P., Kamarainen, J.K., Kalviainen, H.: Gaussian mixture pdf in one-class classification: com- puting and utilizing confidence values. In: Pattern Recog- nition, 2006. ICPR 2006. 18th International Conference on, vol. 2, pp. 577-580. IEEE (2006)</note>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<analytic>
+		<title level="a" type="main">On selection bias with imbalanced classes</title>
+		<author>
+			<persName><forename type="first">G</forename><surname>Jacobusse</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Veenman</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Discovery Science</title>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2016">2016</date>
+			<biblScope unit="page" from="325" to="340" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Jacobusse, G., Veenman, C.: On selection bias with im- balanced classes. In: International Conference on Discov- ery Science, pp. 325-340. Springer (2016)</note>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<analytic>
+		<title level="a" type="main">The class imbalance problem: A systematic study</title>
+		<author>
+			<persName><forename type="first">N</forename><surname>Japkowicz</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Stephen</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Intelligent data analysis</title>
+		<imprint>
+			<biblScope unit="volume">6</biblScope>
+			<biblScope unit="issue">5</biblScope>
+			<biblScope unit="page" from="429" to="449" />
+			<date type="published" when="2002">2002</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Japkowicz, N., Stephen, S.: The class imbalance problem: A systematic study. Intelligent data analysis 6(5), 429- 449 (2002)</note>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<analytic>
+		<title level="a" type="main">Sequence classification for credit-card fraud detection</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Jurgovsky</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Granitzer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Ziegler</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Calabretto</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><forename type="middle">E</forename><surname>Portier</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>He-Guelton</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">O</forename><surname>Caelen</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Expert Systems with Applications</title>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Jurgovsky, J., Granitzer, M., Ziegler, K., Calabretto, S., Portier, P.E., He-Guelton, L., Caelen, O.: Sequence clas- sification for credit-card fraud detection. Expert Systems with Applications (2018)</note>
+</biblStruct>
+
+<biblStruct xml:id="b22">
+	<analytic>
+		<title level="a" type="main">Loop: Local outlier probabilities</title>
+		<author>
+			<persName><forename type="first">H</forename><forename type="middle">P</forename><surname>Kriegel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Kröger</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Schubert</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Zimek</surname></persName>
+		</author>
+		<idno type="DOI">10.1145/1645953.1646195</idno>
+		<ptr target="http://doi.acm.org/10.1145/1645953.1646195" />
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 18th ACM Conference on Information and Knowledge Management, CIKM &apos;09</title>
+		<meeting>the 18th ACM Conference on Information and Knowledge Management, CIKM &apos;09<address><addrLine>New York, NY, USA</addrLine></address></meeting>
+		<imprint>
+			<publisher>ACM</publisher>
+			<date type="published" when="2009">2009</date>
+			<biblScope unit="page" from="1649" to="1652" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Kriegel, H.P., Kröger, P., Schubert, E., Zimek, A.: Loop: Local outlier probabilities. In: Proceedings of the 18th ACM Conference on Information and Knowledge Man- agement, CIKM &apos;09, pp. 1649-1652. ACM, New York, NY, USA (2009). DOI 10.1145/1645953.1646195. URL http://doi.acm.org/10.1145/1645953.1646195</note>
+</biblStruct>
+
+<biblStruct xml:id="b23">
+	<analytic>
+		<title level="a" type="main">Heterogeneous uncertainty sampling for supervised learning</title>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">D</forename><surname>Lewis</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Catlett</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the Eleventh International Conference on Machine Learning</title>
+		<meeting>the Eleventh International Conference on Machine Learning</meeting>
+		<imprint>
+			<publisher>Morgan Kaufmann</publisher>
+			<date type="published" when="1994">1994</date>
+			<biblScope unit="page" from="148" to="156" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Lewis, D.D., Catlett, J.: Heterogeneous uncertainty sam- pling for supervised learning. In: In Proceedings of the Eleventh International Conference on Machine Learning, pp. 148-156. Morgan Kaufmann (1994)</note>
+</biblStruct>
+
+<biblStruct xml:id="b24">
+	<analytic>
+		<title level="a" type="main">A sequential algorithm for training text classifiers</title>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">D</forename><surname>Lewis</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><forename type="middle">A</forename><surname>Gale</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 17th annual international ACM SIGIR conference on Research and development in information retrieval</title>
+		<meeting>the 17th annual international ACM SIGIR conference on Research and development in information retrieval<address><addrLine>New York, Inc</addrLine></address></meeting>
+		<imprint>
+			<publisher>Springer-Verlag</publisher>
+			<date type="published" when="1994">1994</date>
+			<biblScope unit="page" from="3" to="12" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Lewis, D.D., Gale, W.A.: A sequential algorithm for training text classifiers. In: Proceedings of the 17th annual international ACM SIGIR conference on Re- search and development in information retrieval, pp. 3- 12. Springer-Verlag New York, Inc. (1994)</note>
+</biblStruct>
+
+<biblStruct xml:id="b25">
+	<analytic>
+		<title level="a" type="main">Anomaly detection via a gaussian mixture model for flight operation and safety monitoring</title>
+		<author>
+			<persName><forename type="first">L</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">J</forename><surname>Hansman</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Palacios</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Welsch</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Transportation Research Part C: Emerging Technologies</title>
+		<imprint>
+			<biblScope unit="volume">64</biblScope>
+			<biblScope unit="page" from="45" to="57" />
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Li, L., Hansman, R.J., Palacios, R., Welsch, R.: Anomaly detection via a gaussian mixture model for flight oper- ation and safety monitoring. Transportation Research Part C: Emerging Technologies 64, 45-57 (2016)</note>
+</biblStruct>
+
+<biblStruct xml:id="b26">
+	<analytic>
+		<title level="a" type="main">Isolation forest</title>
+		<author>
+			<persName><forename type="first">F</forename><forename type="middle">T</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">M</forename><surname>Ting</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><forename type="middle">H</forename><surname>Zhou</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">ICDM&apos;08. Eighth IEEE International Conference on</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2008">2008. 2008</date>
+			<biblScope unit="page" from="413" to="422" />
+		</imprint>
+	</monogr>
+	<note>Data Mining</note>
+	<note type="raw_reference">Liu, F.T., Ting, K.M., Zhou, Z.H.: Isolation forest. In: Data Mining, 2008. ICDM&apos;08. Eighth IEEE International Conference on, pp. 413-422. IEEE (2008)</note>
+</biblStruct>
+
+<biblStruct xml:id="b27">
+	<analytic>
+		<title level="a" type="main">Burst detection in water networks using principal component analysis</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Palau</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Arregui</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Carlos</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Water Resources Planning and Management</title>
+		<imprint>
+			<biblScope unit="volume">138</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="47" to="54" />
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Palau, C., Arregui, F., Carlos, M.: Burst detection in wa- ter networks using principal component analysis. Journal of Water Resources Planning and Management 138(1), 47-54 (2011)</note>
+</biblStruct>
+
+<biblStruct xml:id="b28">
+	<analytic>
+		<title level="a" type="main">Unsupervised feature selection for outlier detection by modelling hierarchical value-feature couplings</title>
+		<author>
+			<persName><forename type="first">G</forename><surname>Pang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Cao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Liu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">IEEE 16th International Conference on</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2016">2016. 2016</date>
+			<biblScope unit="page" from="410" to="419" />
+		</imprint>
+	</monogr>
+	<note>Data Mining (ICDM)</note>
+	<note type="raw_reference">Pang, G., Cao, L., Chen, L., Liu, H.: Unsupervised fea- ture selection for outlier detection by modelling hierar- chical value-feature couplings. In: Data Mining (ICDM), 2016 IEEE 16th International Conference on, pp. 410- 419. IEEE (2016)</note>
+</biblStruct>
+
+<biblStruct xml:id="b29">
+	<analytic>
+		<title level="a" type="main">Learning homophily couplings from non-iid data for joint feature selection and noise-resilient outlier detection</title>
+		<author>
+			<persName><forename type="first">G</forename><surname>Pang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Cao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Liu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 26th International Joint Conference on Artificial Intelligence</title>
+		<meeting>the 26th International Joint Conference on Artificial Intelligence</meeting>
+		<imprint>
+			<publisher>AAAI Press</publisher>
+			<date type="published" when="2017">2017</date>
+			<biblScope unit="page" from="2585" to="2591" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Pang, G., Cao, L., Chen, L., Liu, H.: Learning homophily couplings from non-iid data for joint feature selection and noise-resilient outlier detection. In: Proceedings of the 26th International Joint Conference on Artificial Intelli- gence, pp. 2585-2591. AAAI Press (2017)</note>
+</biblStruct>
+
+<biblStruct xml:id="b30">
+	<analytic>
+		<title level="a" type="main">Detection of anomalies in large datasets using an active learning scheme based on dirichlet distributions</title>
+		<author>
+			<persName><forename type="first">K</forename><surname>Pichara</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Soto</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Araneda</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Ibero-American Conference on Artificial Intelligence</title>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2008">2008</date>
+			<biblScope unit="page" from="163" to="172" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Pichara, K., Soto, A., Araneda, A.: Detection of anoma- lies in large datasets using an active learning scheme based on dirichlet distributions. In: Ibero-American Con- ference on Artificial Intelligence, pp. 163-172. Springer (2008)</note>
+</biblStruct>
+
+<biblStruct xml:id="b31">
+	<analytic>
+		<title level="a" type="main">A review of novelty detection</title>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">A</forename><surname>Pimentel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">A</forename><surname>Clifton</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Clifton</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Tarassenko</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Signal Processing</title>
+		<imprint>
+			<biblScope unit="volume">99</biblScope>
+			<biblScope unit="page" from="215" to="249" />
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Pimentel, M.A., Clifton, D.A., Clifton, L., Tarassenko, L.: A review of novelty detection. Signal Processing 99, 215-249 (2014)</note>
+</biblStruct>
+
+<biblStruct xml:id="b32">
+	<analytic>
+		<title level="a" type="main">Credit card fraud detection: A realistic modeling and a novel learning strategy</title>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">D</forename><surname>Pozzolo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Boracchi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">O</forename><surname>Caelen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Alippi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Bontempi</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/TNNLS.2017.2736643</idno>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Neural Networks and Learning Systems PP</title>
+		<imprint>
+			<biblScope unit="volume">99</biblScope>
+			<biblScope unit="page" from="1" to="14" />
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Pozzolo, A.D., Boracchi, G., Caelen, O., Alippi, C., Bon- tempi, G.: Credit card fraud detection: A realistic mod- eling and a novel learning strategy. IEEE Transactions on Neural Networks and Learning Systems PP(99), 1-14 (2018). DOI 10.1109/TNNLS.2017.2736643</note>
+</biblStruct>
+
+<biblStruct xml:id="b33">
+	<analytic>
+		<title level="a" type="main">Rdf: A density-based outlier detection method using vertical data representation</title>
+		<author>
+			<persName><forename type="first">D</forename><surname>Ren</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><surname>Perrizo</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">ICDM&apos;04. Fourth IEEE International Conference on</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2004">2004. 2004</date>
+			<biblScope unit="page" from="503" to="506" />
+		</imprint>
+	</monogr>
+	<note>Data Mining</note>
+	<note type="raw_reference">Ren, D., Wang, B., Perrizo, W.: Rdf: A density-based outlier detection method using vertical data representa- tion. In: Data Mining, 2004. ICDM&apos;04. Fourth IEEE In- ternational Conference on, pp. 503-506. IEEE (2004)</note>
+</biblStruct>
+
+<biblStruct xml:id="b34">
+	<analytic>
+		<title level="a" type="main">Decision forest: Twenty years of research</title>
+		<author>
+			<persName><forename type="first">L</forename><surname>Rokach</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Information Fusion</title>
+		<imprint>
+			<biblScope unit="volume">27</biblScope>
+			<biblScope unit="page" from="111" to="125" />
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Rokach, L.: Decision forest: Twenty years of research. In- formation Fusion 27, 111-125 (2016)</note>
+</biblStruct>
+
+<biblStruct xml:id="b35">
+	<analytic>
+		<title level="a" type="main">A cost-sensitive decision tree approach for fraud detection</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Sahin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Bulkan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Duman</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Expert Systems with Applications</title>
+		<imprint>
+			<biblScope unit="volume">40</biblScope>
+			<biblScope unit="issue">15</biblScope>
+			<biblScope unit="page" from="5916" to="5923" />
+			<date type="published" when="2013">2013</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Sahin, Y., Bulkan, S., Duman, E.: A cost-sensitive deci- sion tree approach for fraud detection. Expert Systems with Applications 40(15), 5916-5923 (2013)</note>
+</biblStruct>
+
+<biblStruct xml:id="b36">
+	<analytic>
+		<title level="a" type="main">Less is more: Active learning with support vector machines</title>
+		<author>
+			<persName><forename type="first">G</forename><surname>Schohn</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Cohn</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">ICML</title>
+		<imprint>
+			<date type="published" when="2000">2000</date>
+			<biblScope unit="page" from="839" to="846" />
+		</imprint>
+	</monogr>
+	<note>Citeseer</note>
+	<note type="raw_reference">Schohn, G., Cohn, D.: Less is more: Active learning with support vector machines. In: ICML, pp. 839-846. Cite- seer (2000)</note>
+</biblStruct>
+
+<biblStruct xml:id="b37">
+	<analytic>
+		<title level="a" type="main">Support vector method for novelty detection</title>
+		<author>
+			<persName><forename type="first">B</forename><surname>Schölkopf</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">C</forename><surname>Williamson</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">J</forename><surname>Smola</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Shawe-Taylor</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">C</forename><surname>Platt</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in neural information processing systems</title>
+		<imprint>
+			<date type="published" when="2000">2000</date>
+			<biblScope unit="page" from="582" to="588" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Schölkopf, B., Williamson, R.C., Smola, A.J., Shawe- Taylor, J., Platt, J.C.: Support vector method for novelty detection. In: Advances in neural information processing systems, pp. 582-588 (2000)</note>
+</biblStruct>
+
+<biblStruct xml:id="b38">
+	<analytic>
+		<title level="a" type="main">Fraudminer: a novel credit card fraud detection model based on frequent itemset mining</title>
+		<author>
+			<persName><forename type="first">K</forename><surname>Seeja</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Zareapoor</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">The Scientific World Journal</title>
+		<imprint>
+			<biblScope unit="issue">0</biblScope>
+			<biblScope unit="page" from="1" to="10" />
+			<date type="published" when="2014">2014. 2014</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Seeja, K., Zareapoor, M.: Fraudminer: a novel credit card fraud detection model based on frequent itemset mining. The Scientific World Journal 2014(0), 1-10 (2014)</note>
+</biblStruct>
+
+<biblStruct xml:id="b39">
+	<analytic>
+		<title level="a" type="main">A revived survey of various credit card fraud detection techniques</title>
+		<author>
+			<persName><forename type="first">N</forename><surname>Sethi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Gera</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Computer Science and Mobile Computing</title>
+		<imprint>
+			<biblScope unit="volume">3</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="780" to="791" />
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Sethi, N., Gera, A.: A revived survey of various credit card fraud detection techniques. International Journal of Computer Science and Mobile Computing 3(4), 780-791 (2014)</note>
+</biblStruct>
+
+<biblStruct xml:id="b40">
+	<analytic>
+		<title level="a" type="main">Active learning literature survey</title>
+		<author>
+			<persName><forename type="first">B</forename><surname>Settles</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">University of Wisconsin, Madison</title>
+		<imprint>
+			<biblScope unit="volume">52</biblScope>
+			<biblScope unit="issue">55-66</biblScope>
+			<biblScope unit="page">11</biblScope>
+			<date type="published" when="2010">2010</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Settles, B.: Active learning literature survey. University of Wisconsin, Madison 52(55-66), 11 (2010)</note>
+</biblStruct>
+
+<biblStruct xml:id="b41">
+	<analytic>
+		<title level="a" type="main">Multiple-instance active learning</title>
+		<author>
+			<persName><forename type="first">B</forename><surname>Settles</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Craven</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Ray</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in neural information processing systems</title>
+		<imprint>
+			<date type="published" when="2008">2008</date>
+			<biblScope unit="page" from="1289" to="1296" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Settles, B., Craven, M., Ray, S.: Multiple-instance active learning. In: Advances in neural information processing systems, pp. 1289-1296 (2008)</note>
+</biblStruct>
+
+<biblStruct xml:id="b42">
+	<analytic>
+		<title level="a" type="main">Survey on credit card fraud detection techniques</title>
+		<author>
+			<persName><forename type="first">P</forename><forename type="middle">R</forename><surname>Shimpi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">V</forename><surname>Kadroli</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal Of Engineering And Computer Science</title>
+		<imprint>
+			<biblScope unit="volume">4</biblScope>
+			<biblScope unit="issue">11</biblScope>
+			<biblScope unit="page">15</biblScope>
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Shimpi, P.R., Kadroli, V.: Survey on credit card fraud de- tection techniques. International Journal Of Engineering And Computer Science 4(11), 15,010-15,015 (2015)</note>
+</biblStruct>
+
+<biblStruct xml:id="b43">
+	<monogr>
+		<title level="m" type="main">A novel anomaly detection scheme based on principal component classifier</title>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">L</forename><surname>Shyu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">C</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Sarinnapakorn</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Chang</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2003">2003</date>
+			<publisher>MIAMI UNIV CORAL GABLES FL DEPT OF ELECTRICAL AND COM-PUTER ENGINEERING</publisher>
+		</imprint>
+		<respStmt>
+			<orgName>Tech. rep.</orgName>
+		</respStmt>
+	</monogr>
+	<note type="raw_reference">Shyu, M.L., Chen, S.C., Sarinnapakorn, K., Chang, L.: A novel anomaly detection scheme based on principal component classifier. Tech. rep., MIAMI UNIV CORAL GABLES FL DEPT OF ELECTRICAL AND COM- PUTER ENGINEERING (2003)</note>
+</biblStruct>
+
+<biblStruct xml:id="b44">
+	<analytic>
+		<title level="a" type="main">Credit card fraud detection using hidden markov model</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Srivastava</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Kundu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Sural</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Majumdar</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on dependable and secure computing</title>
+		<imprint>
+			<biblScope unit="volume">5</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="37" to="48" />
+			<date type="published" when="2008">2008</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Srivastava, A., Kundu, A., Sural, S., Majumdar, A.: Credit card fraud detection using hidden markov model. IEEE Transactions on dependable and secure computing 5(1), 37-48 (2008)</note>
+</biblStruct>
+
+<biblStruct xml:id="b45">
+	<analytic>
+		<title level="a" type="main">Enhancing effectiveness of outlier detections for low density patterns</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Tang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Fu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Cheung</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Advances in Knowledge Discovery and Data Mining</title>
+		<imprint>
+			<biblScope unit="volume">0</biblScope>
+			<biblScope unit="page" from="535" to="548" />
+			<date type="published" when="2002">2002</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Tang, J., Chen, Z., Fu, A., Cheung, D.: Enhancing ef- fectiveness of outlier detections for low density patterns. Advances in Knowledge Discovery and Data Mining 0, 535-548 (2002)</note>
+</biblStruct>
+
+<biblStruct xml:id="b46">
+	<analytic>
+		<title level="a" type="main">Apate: A novel approach for automated credit card transaction fraud detection using network-based extensions</title>
+		<author>
+			<persName><forename type="first">V</forename><surname>Van Vlasselaer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Bravo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">O</forename><surname>Caelen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Eliassi-Rad</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Akoglu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Snoeck</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Baesens</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Decision Support Systems</title>
+		<imprint>
+			<biblScope unit="volume">75</biblScope>
+			<biblScope unit="page" from="38" to="48" />
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Van Vlasselaer, V., Bravo, C., Caelen, O., Eliassi-Rad, T., Akoglu, L., Snoeck, M., Baesens, B.: Apate: A novel approach for automated credit card transaction fraud de- tection using network-based extensions. Decision Sup- port Systems 75, 38-48 (2015)</note>
+</biblStruct>
+
+<biblStruct xml:id="b47">
+	<analytic>
+		<title level="a" type="main">Afraid: fraud detection via active inference in time-evolving social networks</title>
+		<author>
+			<persName><forename type="first">V</forename><surname>Van Vlasselaer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Eliassi-Rad</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Akoglu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Snoeck</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Baesens</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in Social Networks Analysis and Mining (ASONAM)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2015">2015. 2015</date>
+			<biblScope unit="page" from="659" to="666" />
+		</imprint>
+	</monogr>
+	<note>IEEE/ACM International Conference on</note>
+	<note type="raw_reference">Van Vlasselaer, V., Eliassi-Rad, T., Akoglu, L., Snoeck, M., Baesens, B.: Afraid: fraud detection via active infer- ence in time-evolving social networks. In: Advances in Social Networks Analysis and Mining (ASONAM), 2015 IEEE/ACM International Conference on, pp. 659-666. IEEE (2015)</note>
+</biblStruct>
+
+<biblStruct xml:id="b48">
+	<analytic>
+		<title level="a" type="main">Far-sighted active learning on a budget for image and video recognition</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Vijayanarasimhan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Jain</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Grauman</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Computer Vision and Pattern Recognition (CVPR)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2010">2010. 2010</date>
+			<biblScope unit="page" from="3035" to="3042" />
+		</imprint>
+	</monogr>
+	<note>IEEE Conference on</note>
+	<note type="raw_reference">Vijayanarasimhan, S., Jain, P., Grauman, K.: Far-sighted active learning on a budget for image and video recog- nition. In: Computer Vision and Pattern Recognition (CVPR), 2010 IEEE Conference on, pp. 3035-3042. IEEE (2010)</note>
+</biblStruct>
+
+<biblStruct xml:id="b49">
+	<analytic>
+		<title level="a" type="main">A novel intrusion detection method based on principle component analysis in computer security</title>
+		<author>
+			<persName><forename type="first">W</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Guan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Zhang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in Neural Networks-ISNN 2004</title>
+		<imprint>
+			<date type="published" when="2004">2004</date>
+			<biblScope unit="page" from="88" to="89" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Wang, W., Guan, X., Zhang, X.: A novel intrusion de- tection method based on principle component analysis in computer security. Advances in Neural Networks-ISNN 2004 pp. 88-89 (2004)</note>
+</biblStruct>
+
+<biblStruct xml:id="b50">
+	<analytic>
+		<title level="a" type="main">Effective detection of sophisticated online banking fraud on extremely imbalanced data</title>
+		<author>
+			<persName><forename type="first">W</forename><surname>Wei</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Cao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Ou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Chen</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">World Wide Web</title>
+		<imprint>
+			<biblScope unit="volume">16</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="449" to="475" />
+			<date type="published" when="2013">2013</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Wei, W., Li, J., Cao, L., Ou, Y., Chen, J.: Effective detection of sophisticated online banking fraud on ex- tremely imbalanced data. World Wide Web 16(4), 449- 475 (2013)</note>
+</biblStruct>
+
+<biblStruct xml:id="b51">
+	<analytic>
+		<title level="a" type="main">Stochastic semi-supervised learning on partially labeled imbalanced data</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Xie</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Xiong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Active Learning and Experimental Design workshop In conjunction with AISTATS 2010</title>
+		<imprint>
+			<publisher>AISTATS</publisher>
+			<date type="published" when="2011">2011</date>
+			<biblScope unit="page" from="85" to="98" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Xie, J., Xiong, T.: Stochastic semi-supervised learning on partially labeled imbalanced data. In: Active Learning and Experimental Design workshop In conjunction with AISTATS 2010, pp. 85-98. AISTATS (2011)</note>
+</biblStruct>
+
+<biblStruct xml:id="b52">
+	<analytic>
+		<title level="a" type="main">Application of credit card fraud detection: Based on bagging ensemble classifier</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Zareapoor</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Shamsolmoali</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Procedia Computer Science</title>
+		<imprint>
+			<biblScope unit="volume">48</biblScope>
+			<biblScope unit="page" from="679" to="685" />
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zareapoor, M., Shamsolmoali, P.: Application of credit card fraud detection: Based on bagging ensemble classi- fier. Procedia Computer Science 48, 679-685 (2015)</note>
+</biblStruct>
+
+<biblStruct xml:id="b53">
+	<analytic>
+		<title level="a" type="main">A new local distancebased outlier detection approach for scattered real-world data</title>
+		<author>
+			<persName><forename type="first">K</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Hutter</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Jin</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in knowledge discovery and data mining</title>
+		<imprint>
+			<biblScope unit="page">5476</biblScope>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zhang, K., Hutter, M., Jin, H.: A new local distance- based outlier detection approach for scattered real-world data. Advances in knowledge discovery and data mining 5476</note>
+</biblStruct>
+
+<biblStruct xml:id="b54">
+	<analytic>
+		<title level="a" type="main">Detection of emerging faults on industrial gas turbines using extended gaussian mixture models</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Bingham</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Martínez-García</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Cox</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Rotating Machinery</title>
+		<imprint>
+			<biblScope unit="page" from="1" to="9" />
+			<date type="published" when="2017">2017. 2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zhang, Y., Bingham, C., Martínez-García, M., Cox, D.: Detection of emerging faults on industrial gas turbines using extended gaussian mixture models. International Journal of Rotating Machinery 2017, 1-9 (2017)</note>
+</biblStruct>
+
+<biblStruct xml:id="b55">
+	<analytic>
+		<title level="a" type="main">Active learning for word sense disambiguation with methods for addressing the class imbalance problem</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Zhu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><forename type="middle">H</forename><surname>Hovy</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">EMNLP-CoNLL</title>
+		<imprint>
+			<date type="published" when="2007">2007</date>
+			<biblScope unit="volume">7</biblScope>
+			<biblScope unit="page" from="783" to="790" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zhu, J., Hovy, E.H.: Active learning for word sense dis- ambiguation with methods for addressing the class imbal- ance problem. In: EMNLP-CoNLL, vol. 7, pp. 783-790 (2007)</note>
+</biblStruct>
+
+<biblStruct xml:id="b56">
+	<analytic>
+		<title level="a" type="main">Active learning with evolving streaming data</title>
+		<author>
+			<persName><forename type="first">I</forename><surname>Žliobaite</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Bifet</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Pfahringer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Holmes</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Joint European Conference on Machine Learning and Knowledge Discovery in Databases</title>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2011">2011</date>
+			<biblScope unit="page" from="597" to="612" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Žliobaite, I., Bifet, A., Pfahringer, B., Holmes, G.: Ac- tive learning with evolving streaming data. In: Joint Eu- ropean Conference on Machine Learning and Knowledge Discovery in Databases, pp. 597-612. Springer (2011)</note>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

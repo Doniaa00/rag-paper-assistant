@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">Challenges and Complexities in Machine Learning based Credit Card Fraud Detection</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability  status="unknown">
+					<licence/>
+				</availability>
+				<date type="published" when="2022-08-20">20 Aug 2022</date>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author role="corresp">
+							<persName><forename type="first">Gayan</forename><forename type="middle">K</forename><surname>Kulatilleke</surname></persName>
+							<email>tidalbobo@gmail.com</email>
+							<affiliation key="aff0">
+								<orgName type="institution">University of London</orgName>
+								<address>
+									<postCode>2017.</postCode>
+								</address>
+							</affiliation>
+						</author>
+						<title level="a" type="main">Challenges and Complexities in Machine Learning based Credit Card Fraud Detection</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date type="published" when="2022-08-20">20 Aug 2022</date>
+						</imprint>
+					</monogr>
+					<idno type="MD5">1A6117133F00651E39CD1FDF1F312F01</idno>
+					<idno type="arXiv">arXiv:2208.10943v1[cs.CR]</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.2-SNAPSHOT" ident="GROBID" when="2026-08-31T18:10+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<textClass>
+				<keywords>
+					<term>imbalanced</term>
+					<term>credit card fraud</term>
+					<term>machine learning</term>
+					<term>personal information</term>
+					<term>PCA encoding</term>
+					<term>fraud characteristics</term>
+				</keywords>
+			</textClass>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>Credit cards play an exploding role in modern economies. Its popularity and ubiquity have created a fertile ground for fraud, assisted by the cross boarder reach and instantaneous confirmation. While transactions are growing, the fraud percentages are also on the rise as well as the true cost of a dollar fraud. Volume of transactions, uniqueness of frauds and ingenuity of the fraudster are main challenges in detecting frauds. The advent of machine learning, artificial intelligence and big data has opened up new tools in the fight against frauds. Given past transactions, a machine learning algorithm has the ability to 'learn' infinitely complex characteristics in order to identify frauds in real-time, surpassing the best human investigators. However, the developments in fraud detection algorithms has been challenging and slow due the massively unbalanced nature of fraud data, absence of benchmarks and standard evaluation metrics to identify better performing classifiers, lack of sharing and disclosure of research findings and the difficulties in getting access to confidential transaction data for research. This work investigates the properties of typical massively imbalanced fraud data sets, their availability, suitability for research use while exploring the widely varying nature of fraud distributions. Furthermore, we show how human annotation errors compound with machine classification errors. We also carry out experiments to determine the effect of PCA obfuscation (as a means of disseminating sensitive transaction data for research and machine learning) on algorithmic performance of classifiers and show that while PCA does not significantly degrade performance, care should be taken to use the appropriate principle component size (dimensions) to avoid overfitting.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1">Introduction</head><p>Credit cards play a major role in today's economy <ref type="bibr" target="#b18">[19]</ref>. Card fraud includes any theft or fraud involving a credit or debit payment card. The perpetrator could be the authorized user attempting an illicit activity, or an unauthorized user committing a fraud by means of a stolen card or compromised card credentials.</p><p>Financial Fraud Action UK (FFA UK) reports 19.1 billion transactions during 2016 in UK, a 10% increase from previous year and "fraud losses totalling £618.0 million, a 9% increase from the previous year", its fifth consecutive year of increases. Current prevention rates are only 0.6/£.</p><p>Figure <ref type="figure" target="#fig_0">1</ref> shows that majority of the frauds are remote purchases, carried out online via the Internet, where the card is not present. Losses by type of Fraud, as a % of total loss. Source: www.financialfraudaction.org.uk/fraudfacts17/assets/fraud the facts.pdf Due to chip-based cards, counterfeit card-based fraud (using a duplicated copy of a stolen genuine card details) has declined (Figure <ref type="figure" target="#fig_0">1</ref>). According to FFA, increasingly, credit card fraud appears to occur via online transactions and 2016 figures show a 20% increase from the previous year UK numbers, as summarized in Figure <ref type="figure">2</ref>.</p><p>It is evident, from Figure <ref type="figure">2</ref>, that online card fraud is on the rise and its impact is increasing.</p><p>Credit card frauds result in financial losses to all stakeholders, but ultimately hit the general public, who has to bear the higher bank charges and fees to buffer up the expenses and losses of the merchants and financial institutions. Reputation losses may affect the merchants and banks in the long run with the risk of customer switch over and instability. Mistrust and reluctance to use the payment systems can cause economic inefficiencies in terms of risk provisions, slowdown, and depression. Fraud incurs additional costs of card replacement, merchandise replacement, chargebacks and administration and staff overheads. According to US based LexisNexis Group (Lexisnexis.com,2018) the true loss on a merchant after remedial action was $2.40 for each 1$ fraud, in 2016, an 8% increase over the year.</p><p>To avoid losses and damages from fraud two approaches, prevention and detection, can be used, often in unison. Fraud prevention is a more proactive method aimed at stopping frauds taking place by means of proper procedures, Fig. <ref type="figure">2</ref>. Increase in Remote purchase fraud losses on UK issued cards Source: www.financialfraudaction.org.uk/fraudfacts17/assets/fraud the facts.pdf safe guards and controls. It minimises ability to conduct a fraud. Fraud detection is more reactive and comes in to play at each transaction that takes place in order to detect a fraudster in action.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1.1">Importance of credit card fraud detection</head><p>According to <ref type="bibr" target="#b16">[17]</ref>, fraud detection systems are essential to minimize losses to counter increasing frauds and fraud costs. While incidents of credit card fraud are limited to about 0.2% of all card transactions, it may result in huge financial losses from large transaction values <ref type="bibr" target="#b14">[15]</ref>. Since fraud cannot be prevented, given the human nature, early detection is used to minimize the damage.</p><p>Fraud detection has been defined as the process that, given a set of credit card transactions, identifies if a new authorized transaction belongs to the class of fraud or normal transactions <ref type="bibr" target="#b8">[9]</ref>. While such a process should be economical <ref type="bibr" target="#b10">[11]</ref> and practical in today's institutional context and technology, it has also become mandatory for survival. While many research efforts are ongoing, progress is slow due to some unique challenges and the nature of the problem.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1.2">Challenges of Credit Card Fraud Detection</head><p>Credit card fraud detection is extremely difficult <ref type="bibr" target="#b5">[6]</ref> due to its volume, the adaptive and unique nature of each fraud and the need for real time or near real time assessments (requiring automated identification, classification, and annotation). Many researchers <ref type="bibr" target="#b16">[17,</ref><ref type="bibr" target="#b14">15]</ref> state that constraints such as lack of real data sets due to sensitivity, confidentiality and privacy concerns and the massively imbalanced highly skewed nature of the data makes the problem challenging and difficult, if not impossible.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1.3">Machine learning</head><p>Machine learning is a technique where a software applications learns predict an outcome, without being explicitly programmed. This is accomplished by using historical data as input to predict new output values. Machine learning techniques for fraud detection can be supervised, semi-supervised or unsupervised <ref type="bibr" target="#b2">[3]</ref>. In supervised learning, human annotated (labelled) fraud and normal transactions are used the train a (software) model how to predict frauds. In the case of classification, the model determines if a given transaction is fraudulent; in the case of in case of regression it provide a risk rating. Aim is for investigators can prioritize on a smaller sub set of highly probable frauds. In unsupervised learning, the model attempts to cluster transactions in to fraud and normal groups based on similarities of features without the help of human pre-labelled data <ref type="bibr" target="#b12">[13]</ref>. Finally, in semi-supervised techniques, a partially labelled data set is used <ref type="bibr" target="#b9">[10]</ref>. Generally most many machine learning models can be used in all modes, though with varying degree of accuracy and reliability, though supervised algorithms and models are most common <ref type="bibr" target="#b4">[5]</ref>.</p><p>Some researchers <ref type="bibr" target="#b18">[19]</ref> consider user behaviour a proxy for fraud detection, assuming that a frustrater's use of the card should deviate from normal, thus containing what is known as an anomaly, which stands out. This, also known as a one-class classification <ref type="bibr" target="#b17">[18]</ref> has the benefit of only needing normal data for the learning process, which is more common and consists of nearly 99% of the transactions <ref type="bibr" target="#b5">[6]</ref>. However, while user behaviour analysis is able to detect novel frauds easily <ref type="bibr" target="#b18">[19]</ref>, they have a high rate of false alarms (FP). With current high transaction rates, this makes such models unattractive <ref type="bibr" target="#b18">[19]</ref>. Further, sophisticated fraudsters deliberately emulate normal user patterns <ref type="bibr" target="#b17">[18]</ref>; making void the different behaviour assumption on which these models are based upon.</p><p>Unsupervised models require, while not requiring labelled data, needs excessive training and time to reach acceptable levels of performance <ref type="bibr" target="#b18">[19]</ref>. Also, with large data volumes, such times and computational costs can reach impractical thresholds.</p><p>After the model is developed and trained, its learning can be stored, copied and reused on multiple and different systems <ref type="bibr" target="#b2">[3]</ref> for predictions.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1.4">Context of the research</head><p>Given a sufficiently detailed and large labelled collection of historical transactions, machine learning can be used to "learn" complex characteristics and flag frauds in new transactions, ideally in real-time. It will result in lesser number of frauds as cards could be blocked immediately on the very first instance preventing multiple frauds being carried out. It will also act as a deterrent and a reassurance to users. Card providers utilizing such technology would see return on investment (ROI) from increased customer volumes in the short term, while in the long term such mechanisms would be core competencies for survival.</p><p>Yet, research in this area is slow. In this work, we investigate the characteristics of fraud data and explore the challenges and complexities needed to be overcome for effective application of machine learning researchers to this problem.</p><p>A significant challenge is posed by the sensitive nature of transaction data. It is a typical and accepted practice to only provide researchers access to limited and (mostly) somewhat obfuscated and encoded data. Almost always, some processing is done at least to remove the personal identifiable elements. As such, PCA is a common format for release of such confidential data sets. However, no detailed study has been carried out to explore the effect of PCA obfuscation over a wide range of different machine learning classifiers.</p><p>In this work we:</p><p>-Investigate characteristics of typical fraud detection data sets -Explore the effect of PCA obfuscation on confidential data and its impact on algorithmic performance of classifiers</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2">Characteristics of credit card data sets and challenges</head><p>The process of creating a model for credit card fraud detection using labelled transaction data has several major constraints and challenges associated <ref type="bibr" target="#b5">[6,</ref><ref type="bibr" target="#b18">19]</ref>.</p><p>-Massive imbalance in the data: as frauds are highly outnumbered by normal transactions, typically about 0.2%. Importantly, as observed by <ref type="bibr" target="#b3">[4]</ref>, it is the minority class (frauds) that is of interest and that the scarcity of these important frauds often hampers learning ability of the classifier often resulting in poor models. -Unavailability of data sets: as card companies cannot release these to the public domain or researchers due to confidentiality, privacy, secrecy and legal concerns. Though there is an abundance of machine learning algorithms and a keen interest, any research work in this direction will need real data to progress <ref type="bibr" target="#b3">[4]</ref>. Further, <ref type="bibr" target="#b5">[6]</ref> noted the use of synthetic data as an alternative and the absence or difficulty to access research and findings. -Limited published work: as researchers do not generally disclosed the features of the data or parameters used in classifiers <ref type="bibr" target="#b14">[15]</ref>. This could be due to funding institution restrictions. According to <ref type="bibr" target="#b11">[12]</ref>, the development of new credit card fraud detection methods is severely hampered by the difficulty in exchanging ideas in fraud detection due to security and privacy concerns. -Adaptive and innovative fraudulent behaviour: Profiles of fraud and normal changes too often and keeps on evolving <ref type="bibr" target="#b5">[6]</ref> requiring constant relearning of the new patterns. There is also the possibility of past fraudulent transactions mistaken as valid and the algorithm learning these incorrect facts. New frauds can be crafted to mimic normal transactions and one miss can result in all similar cases being missed. According to <ref type="bibr" target="#b14">[15]</ref>, the problem can be too complex to differentiate even by human experts. -Overlap and limited separability of the classes: is a direct consequence of the above. It has been observed <ref type="bibr" target="#b14">[15]</ref>, using DBSCAN, Gaussian mixed model, Binomial Logistic Regression, and k-means, that fraudulent transactions are not outliers (anomalies) and that they are not isolated or limited to a specific cluster but distributed uniformly. -Lack of suitable evaluation metrics: suited for massively unbalanced data, as traditional accuracy scores cannot be used. Unfortunately, <ref type="bibr" target="#b18">[19]</ref> et al.</p><p>(2016) notes the non-existence of a standard evaluation criterion or metrics for measuring and comparing the performance and quality of fraud detection systems. As consequence, it impossible to benchmark detection models and algorithms. Further, <ref type="bibr" target="#b5">[6]</ref> points out the lack of benchmarking as a key issue.</p><p>Researches are divided as to what constitutes the ideal metric for evaluation and what models yield better performance. -Fraud detection cost: must be economically acceptable and lower than the loss of fraud itself. With the large range of frauds and huge volumes, preventing a fraud of a few dollars does not make much sense ( <ref type="bibr" target="#b18">[19]</ref>, and such financial trade-offs should be included in the model and detection system design.</p><p>An effective and viable machine learning solution needs to address all above factors effectively and efficiently in order to develop a suitable classifier.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3">Choice of evaluation metrics</head><p>In classification, one of the most important measurements is evaluation of the effectiveness and quality of the classifier, or the model's ability to predict the correct classes of new information. Since, in credit card fraud data the frauds consist of a very minute fraction, traditional measures such as Accuracy cannot be relied upon <ref type="bibr" target="#b1">[2]</ref>.</p><p>As a simple illustration, given that there are 2 frauds for every 1000 transactions (the same as in the primary real-world data set), even a faulty model that always predict a transaction as normal would achieve an accuracy of (998 /1000 * 100) 99.8%. While Accuracy score alone would make this an exceptional classifier, in the context of massively imbalanced data this evaluation metrics becomes useless. However, there is no agreed standardized evaluation metrics for typical massively unbalanced data sets.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4">Incorporating human annotation errors with classification errors</head><p>Let X be the feature vector that contains a card transaction details. Further, X-train[x 1 , x 2 , . . . x n ] and X-real[x 1 , x 2 , . . . x n ] are respectively the train and test data sets. We use h to denote human related operations and m for machine </p><p>Also, since the classification model learns from X-train[x 1 , x 2 , . . . x n ] and ŷh :</p><formula xml:id="formula_1">m = f (h, yh )<label>(2)</label></formula><p>Therefore, for an arbitrary evaluation matrix of S:</p><formula xml:id="formula_2">Model error: E m = S(ŷ h , ŷm )</formula><p>Real error: E r = S(y, ŷm )</p><p>The best model can be obtained by minimization of the model error</p><formula xml:id="formula_4">E * m = arg min(E m )<label>(4)</label></formula><p>However, the real-world requirement is minimization of the real error, which includes components of the human error and the model error:</p><formula xml:id="formula_5">E * r = arg min(E r )<label>(5)</label></formula><p>Therefore, it is evident that while model accuracy is important, the human annotation accuracy plays a significant role in the final classifier accuracy which cannot be ignored.</p><p>Given that the human error falls beyond the scope of machine learning, it is still possible to apply some form of anomaly detection or clean up, purely to address the errors caused at the annotation stage and minimize E r with the expectation of making the classifier's learning task easier and error rates low.</p><p>It can also be assumed that an error in the classification of any of the minority classes (false negatives, i.e.: misclassification of fraud as normal) can have a stronger impact on the final plateau of performance that a model is able to reach. It is also safe to assume that the level of imbalance has an effect on error rates as it increases the impact of a single error.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5">Unbalanced classification</head><p>According to <ref type="bibr" target="#b5">[6]</ref> the fraud detection problem is difficult as there are relatively minute examples of fraud and massive imbalance. Further, <ref type="bibr" target="#b3">[4]</ref> states that such minute fraud fractions suffer from concept drift, where transactions might change their statistical properties over time.</p><p>Sampling is used to either lower the majority class (undersampling) or raise the minority (oversampling) to re-balance the data. Researchers <ref type="bibr" target="#b3">[4]</ref> observed that balancing or leaving the training set unbalanced has a direct influence on the resultant model. While oversampling replicates the minority class giving the classifier enough opportunity to learn, it does not add any new information and may lead to overfitting the majority class especially in the case of noisy input <ref type="bibr" target="#b14">[15]</ref>. According to <ref type="bibr" target="#b0">[1]</ref>, oversampling increases training time and by creating copies of the minority (frauds) and is susceptible to overfitting.</p><p>Undersampling limits the majority class. While it leads to a significant loss of data, it creates a model on real observed data. However, undersampling modifies the priors and consequently biases the posterior probabilities of a classifier <ref type="bibr" target="#b3">[4]</ref>.</p><p>While oversampling replicates the minority class giving the classifier enough opportunity to learn, it does not add any new information and may lead to overfitting the majority class especially in the case of noisy input <ref type="bibr" target="#b14">[15]</ref>. It also increases training time <ref type="bibr">[</ref>  <ref type="table" target="#tab_0">1</ref> shows some of the undersampling methods implemented in the imbalanced-learn python library<ref type="foot" target="#foot_0">foot_0</ref> which is used later in this work for experiments and classifier selection. The imbalanced-learn python library also provides oversampling methods, which are given in Table <ref type="table" target="#tab_1">2</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="6">Access to training data sets</head><p>Researchers need to make a trade-off between the real world and practical data, due to constraints such as privacy and confidentiality, especially in domains as credit card transactions. One of the biggest challenges and a major hurdle in research related to credit card fraud detection is the lack of real-world data sets <ref type="bibr" target="#b5">[6]</ref>. Notably, <ref type="bibr" target="#b18">[19]</ref> states that "the lack of publicly available database has been a limiting factor for the publications on financial fraud detection" and notes the unavailability of a universally accepted field structure for credit card transactions. A sample of the observations by <ref type="bibr" target="#b5">[6]</ref>, in Table <ref type="table">3</ref> summarizes the wide spectrum and diversity of the fraud distributions. Note that these are data sets released by respective sources, after undergoing possible vetting. Further, they can be from differing contexts.</p><p>Credit card transaction data sets used by researchers reveals that:</p><p>-Fraud percentage in every data set is different ( and some seem to be artificially adjusted; ex: 80-20 for public release)</p><p>While this can be explained by the different fraud prevention mechanisms and deterrents in place <ref type="bibr" target="#b18">[19]</ref>, or the preference to hide the true fraud rates, it indicates that the credit card fraud characteristics are unique across countries and institutions. The only similarity remains to be the massively unbalanced nature.</p><p>Therefor it seems a model selection strategy based on the data set, rather than a generally effective model, is more suitable.</p><p>-Number of features used is different and it is safe to assume that they would have different assumptions and definitions.</p><p>This implies that a solution for credit card detection should not place too much emphasis on data exploration and engineering. Given that most information is confidential it may not even be possible to know the definitions of certain fields or its content in raw form.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="7">Case study : the Pozzolo data set</head><p>Credit card information and data sets are confidential in nature and while companies are keen to research and break new frontiers in machine learning and fraud detection, they are also reluctant to hand over sensitive customer information to the academia. In addition to the ethical and public relations  <ref type="table">3</ref>. Credit Card fraud Data sets used by previous Researchers, originally from <ref type="bibr" target="#b18">[19]</ref>, modified by author issues the is also legal constraints in most parts of the world. This has created a huge problem in the research efforts. Due to the lack of real-world data, researchers tend to use a few such publicly available data sets, often released with personal information obfuscated and/or de-identified for legal, ethical, and business reasons.</p><p>Principal Component Analysis (PCA) is commonly used to encode and obfuscate content. The principal components of a collection of data points are a sequence of p unit vectors, where the i-th vector is the direction of a line that best fits the data while being orthogonal to the first i -1 vectors. Given the principal components, it is not possible to recover the original data.</p><p>PCA has the following characteristics:</p><p>-Reduces the dimensionality of the data set, lowering the CPU, memory and time -Ensures that personal and confidential information remains safe -Removes the dependants on fields and variables.</p><p>The PCA encoded real-world credit card fraud data set <ref type="bibr" target="#b3">[4]</ref> is such an example, where all features are PCA encoded prior to release and the actual features are unknown.</p><p>The real-world credit card transaction data set, originally published by <ref type="bibr" target="#b3">[4]</ref>, consists of 284,807 PCA encoded labelled transactions of 2 days in September 2013 by European cardholders. Of these, 492 or 0.172% are frauds, indicating massively unbalanced data. It is PCA encoded to ensure confidentiality and consists of 28 principal components. It is released to public domain by the ULB Machine Learning Group (MLG), a research unit of the Computer Science Department of the Faculty of Sciences, Université libre de Bruxelles. It should also be noted that PCA encoding does not necessitate (or allow) any feature engineering.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="8">Algorithmic efficiencies of PCA obfuscation on data</head><p>In this section, to validate that assumption that PCA does not obscure or lose significant information and still allows models to achieve acceptable accuracy, we conduct a set of experiments. We use a secondary PCA un-encoded data set and compare classification accuracy of a wide range of popular machine learning classifiers with it and its PCA-encoded version. By comparison of the classification performance, we determine the effect of the PCA encoding on the algorithmic efficiency of classification in general.</p><p>Specifically, the aim is to determine if the primary data set still yields appropriate results despite the PCA obfuscation and importantly, to determine the effectiveness of PCA as a means of disseminating confidential data sets for machine learning research.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="8.1">The secondary data set</head><p>The secondary data set, summarized in Table <ref type="table" target="#tab_5">5</ref>, originally used by <ref type="bibr" target="#b15">[16]</ref>  The secondary data has a high (22%) fraud percentage and is less imbalanced than the primary Pozzolo data set. Thus, we adjust it to obtain a fraud rate of 2%, by removing surplus frauds. Lowering the fraud rate beyond 2% resulted in too few samples being present for the classifiers to work with which we avoid. The 3D PCA plots for full and reduced data sets are shown in Figure <ref type="figure" target="#fig_2">4</ref>. There does not appear to be any noticeable difference in the 2 plots, other than the lesser number of frauds present in the leftmost 2% model.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="8.2">Methodology</head><p>To assess the effect of PCA encoding on classifier performance, we test the secondary data set with and without PCA encoding on classification. We test both the original 22% and the 2% modified variant, and report them separately, as the real-world data sets are often bellow 1% fraud percentages and also given that there is a wide range of variation in fraud percentages of typical data sets. We crate a 23-principle component PCA encoded version of the secondary data set using the scikit library, specifically full SVD with a standard LAPACK solver.</p><p>A StratifiedShuffleSplit (i.e.: class proportion in the data sets is kept constant for all folds) with a 20:80 test: train split was used to train 15 machine learning classifiers from the scikik-learn library, specifically DummyClassifier, Logisti-cRegression, RandomForestClassifier, GaussianNB, SVC(Linear), MLPClassifier, RidgeClassifier, DecisionTreeClassifier, SGDClassifier, PassiveAggressiveClassifier, Perceptron, KneighborsClassifier and ensembles AdaBoostClassifier (Real), AdaBoostClassifier (Discrete), GradientBoostingClassifier along with Quadrat-icDiscriminantAnalysis. We use F1 score and g-mean as effective performance measures for unbalanced data sets following <ref type="bibr" target="#b3">[4]</ref>.</p><p>Python is used as the main programming language with Scikit-learn and imbalanced-learn libraries. All code and models were run on Google Colaboratory with data stored on Google Drive. The g-mean is also quite similar. In Ridge, SGD and PAClassifier the combined information content in PCA has resulted in a high F1 and a higher g-mean score, indicating a quite good information survival during the PCA process. The cases of RF, Ada and KNN where F1 and g-mean are lower are still within acceptable tolerances. This indicates that for semi balanced data sets with a minority of fraud, PCA seems to generally preserve the informational content across binary classifiers for F1 and g-mean evaluation metrics.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="8.3">Experimental results and analysis</head><p>Figure <ref type="figure">6</ref> shows the adjusted (2%, fraud rate) secondary data set results. With the lower frauds and a smaller data set, some of the models were not able to calculate well defined F1 values and were removed from the graph. The F1 scores are similar for LR, SGD and QuadraticDA. GNB, DT and KNN shows degraded F1 while GBC shows improved scores.</p><p>We observe that PCA does not preclude the learning and information content in massively unbalanced data sets. However, learning is more challenged with increasing imbalance. Also, F1 and g-mean act as independent scores as there is little correlation between these.</p><p>Effect of dimensions on classifier's algorithmic efficiencies Figure <ref type="figure" target="#fig_4">7</ref> shows the change of F1 score based on the dimensionality for the top 3 models. They peek around the first 15 principle components. Thereafter, minor degradation on the F1 score is visible, possibly due to overfitting in the presence of a strong negative class majority.</p><p>Therefore, while PCA does not significantly degrade performance, care should be taken to use the appropriate principle component size (dimensions) to avoid overfitting. In summary, these experiments demonstrate that PCA does not preclude learning in massively unbalanced data sets. PCA obfuscation preserves adequate information content and does not have significant impact on the classifier performance. All classifiers were able to report near-identical scores both at moderate and massive imbalance scenarios. However there is significant reduction in learning with increasing imbalance. Specifically, learning is more challenging mainly due to the unbalanced nature and not PCA obfuscation.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="9">Limitations</head><p>Due to unavailability of a data set, this research was unable to look in to the effect of a less low than 1% imbalance. The secondary date set used was only able to be trimmed to 2%. There is scope for a more in-depth analysis of the effectiveness of PCA and also LDA as an alternative for obfuscation.</p><p>Further evaluation of transaction-based classification cost models (as done by few researchers) along with a larger spread of classifiers. It would necessitate base classifier algorithms to be modified to incorporate custom cost models and would be worthwhile investigating as many researchers have already suggested novel classification cost models including class based, transaction based and even item based (e.g.: the remaining balance value on the credit card).</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="10">Conclusion</head><p>In this work we provide descriptive and experimental insights in to the properties of credit card fraud data, focusing on its nature, challenges and implications of obfuscation as a means to ensure confidentiality). We investigate the algorithmic performance of 15 machine learning classifiers against PCA encoded sensitive transaction data and show that, while PCA does not significantly degrade performance, care should be taken to use the appropriate principle component size (dimensions) to avoid overfitting. Furthermore, we show how human annotation errors compound with machine classification errors.</p><p>In addition to a severe lack of suitable machine learning data sets for fraud detection research, of those available, each credit card data set gives conflicting characteristics (feature definitions, depth and breadth) as well as fraud ratios which could be the cause of the inability to obtain an ideal general classification algorithm. Further, there is no standardized corpus that defines what should be typical credit card data, despite the universal and ubiquitous nature of global card payments. The only similarity remains to be the massively unbalanced nature. Therefore, it may not be possible to find a one-hat solution for credit card fraud detection and a data-driven approach is necessary.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="11">Acknowledgments</head><p>Dedicated to Sugandi.</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head>Fig. 1 .</head><label>1</label><figDesc>Fig. 1. Losses by type of Fraud, as a % of total loss. Source: www.financialfraudaction.org.uk/fraudfacts17/assets/fraud the facts.pdf</figDesc><graphic coords="2,134.77,212.30,345.83,140.48" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head>Fig. 3 .</head><label>3</label><figDesc>Fig. 3. Formalizing the classification problem with real-world data</figDesc><graphic coords="7,134.77,115.84,345.82,117.23" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_2"><head>2Fig. 4 .</head><label>4</label><figDesc>Fig. 4. 3D plot of the PCA encoded secondary data set with frauds</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_3"><head>Fig. 5 .Fig. 6 .</head><label>56</label><figDesc>Fig. 5. Raw vs PCA encoded -secondary data set -22% frauds</figDesc><graphic coords="13,134.77,444.37,345.84,174.46" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_4"><head>Fig. 7 .</head><label>7</label><figDesc>Fig. 7. Effect of Dimensions on Classifier performance</figDesc><graphic coords="15,134.77,115.84,345.83,140.10" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0"><head></head><label></label><figDesc></figDesc><graphic coords="3,134.77,115.83,345.83,232.35" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0"><head></head><label></label><figDesc></figDesc><graphic coords="14,134.77,115.84,345.83,154.25" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_0"><head>Table 1 .</head><label>1</label><figDesc>1]. Notably, using oversampling or undersampling results in the training data set having a different distribution from the real data set. It results in a biased training set which is known in literature as Sample Selection Bias. Undersampling methods in the in the imbalanced-learn python library</figDesc><table><row><cell>Undersampling method</cell><cell>Reference</cell></row><row><cell>Random majority under-sampling with replacement</cell><cell></cell></row><row><cell>Instance Hardness Threshold</cell><cell>Smith et. al. (2014) [14]</cell></row><row><cell>Oversampling method</cell><cell>Reference</cell></row><row><cell>Random minority over-sampling with replacement</cell><cell></cell></row><row><cell>SMOTE -Synthetic Minority Over-sampling Technique</cell><cell>Chawla et. al. (2002) [1]</cell></row><row><cell>ADASYN -Adaptive synthetic sampling approach for imbal-</cell><cell>He et al. (2008) [7]</cell></row><row><cell>anced learning</cell><cell></cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_1"><head>Table 2 .</head><label>2</label><figDesc>Oversampling methods in the in the imbalanced-learn python library</figDesc><table><row><cell>Table</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_3"><head>Table 4</head><label>4</label><figDesc>summarizes its features.</figDesc><table><row><cell>Normal</cell><cell>Frauds</cell><cell>Features</cell><cell>Instances</cell></row><row><cell>284,315</cell><cell>492</cell><cell>30 (28 PCA + 2 Raw)</cell><cell>284, 807</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_4"><head>Table 4 .</head><label>4</label><figDesc>Primary PCA encoded (Pozzolo) Data set</figDesc><table /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_5"><head>Table 5 .</head><label>5</label><figDesc>for binary classifier evaluation, is available from the University of California Irvine (UCI) Machine learning repository 2 , and consists of raw (non PCA encoded) records related to client information, payment history, status and credit limits of credit card customers in Taiwan from April 2005 to September 2005<ref type="bibr" target="#b7">[8]</ref>. Secondary Data set</figDesc><table><row><cell>Normal</cell><cell>Frauds</cell><cell>Features</cell><cell>Instances</cell></row><row><cell>23,364</cell><cell>6634</cell><cell>23 Raw</cell><cell>30,000</cell></row></table></figure>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot" n="1" xml:id="foot_0"><p>Contrib.scikit-learn.org,</p></note>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot" n="2018" xml:id="foot_1"><p></p></note>
+		</body>
+		<back>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<analytic>
+		<title level="a" type="main">Smote: synthetic minority over-sampling technique</title>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of artificial intelligence research</title>
+		<imprint>
+			<biblScope unit="volume">16</biblScope>
+			<biblScope unit="page" from="321" to="357" />
+			<date type="published" when="2002">2002</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Smote: synthetic minority over-sampling technique. Journal of artificial intelligence research 16, 321-357 (2002)</note>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<analytic>
+		<title level="a" type="main">Strategies for learning in class imbalance problems</title>
+		<author>
+			<persName><forename type="first">R</forename><surname>Barandela</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Sanchez</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">V</forename><surname>Garcia</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Rangel</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Pattern Recognition</title>
+		<imprint>
+			<biblScope unit="volume">3</biblScope>
+			<biblScope unit="issue">36</biblScope>
+			<biblScope unit="page" from="849" to="851" />
+			<date type="published" when="2003">2003</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Barandela, R., Sanchez, J., Garcia, V., Rangel, E.: Strategies for learning in class imbalance problems. Pattern Recognition 3(36), 849-851 (2003)</note>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<analytic>
+		<title level="a" type="main">A survey of data mining and machine learning methods for cyber security intrusion detection</title>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">L</forename><surname>Buczak</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Guven</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Communications surveys &amp; tutorials</title>
+		<imprint>
+			<biblScope unit="volume">18</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="1153" to="1176" />
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Buczak, A.L., Guven, E.: A survey of data mining and machine learning methods for cyber security intrusion detection. IEEE Communications surveys &amp; tutorials 18(2), 1153-1176 (2015)</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<analytic>
+		<title level="a" type="main">Calibrating probability with undersampling for unbalanced classification</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Dal Pozzolo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">O</forename><surname>Caelen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">A</forename><surname>Johnson</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Bontempi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE symposium series on computational intelligence</title>
+		<imprint>
+			<biblScope unit="page" from="159" to="166" />
+			<date type="published" when="2015">2015. 2015</date>
+			<publisher>IEEE</publisher>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Dal Pozzolo, A., Caelen, O., Johnson, R.A., Bontempi, G.: Calibrating probability with undersampling for unbalanced classification. In: 2015 IEEE symposium series on computational intelligence. pp. 159-166. IEEE (2015)</note>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<analytic>
+		<title level="a" type="main">A novel and successful credit card fraud detection system implemented in a turkish bank</title>
+		<author>
+			<persName><forename type="first">E</forename><surname>Duman</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Buyukkaya</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">I</forename><surname>Elikucuk</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">IEEE 13th International Conference on Data Mining Workshops</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2013">2013. 2013</date>
+			<biblScope unit="page" from="162" to="171" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Duman, E., Buyukkaya, A., Elikucuk, I.: A novel and successful credit card fraud detection system implemented in a turkish bank. In: 2013 IEEE 13th International Conference on Data Mining Workshops. pp. 162-171. IEEE (2013)</note>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<analytic>
+		<title level="a" type="main">Solving credit card fraud detection problem by the new metaheuristics migrating birds optimization</title>
+		<author>
+			<persName><forename type="first">E</forename><surname>Duman</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">I</forename><surname>Elikucuk</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Work-Conference on Artificial Neural Networks</title>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2013">2013</date>
+			<biblScope unit="page" from="62" to="71" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Duman, E., Elikucuk, I.: Solving credit card fraud detection problem by the new metaheuristics migrating birds optimization. In: International Work-Conference on Artificial Neural Networks. pp. 62-71. Springer (2013)</note>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<analytic>
+		<title level="a" type="main">Adasyn: Adaptive synthetic sampling approach for imbalanced learning</title>
+		<author>
+			<persName><forename type="first">H</forename><surname>He</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Bai</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><forename type="middle">A</forename><surname>Garcia</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Li</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">IEEE international joint conference on neural networks (IEEE world congress on computational intelligence)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2008">2008. 2008</date>
+			<biblScope unit="page" from="1322" to="1328" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">He, H., Bai, Y., Garcia, E.A., Li, S.: Adasyn: Adaptive synthetic sampling approach for imbalanced learning. In: 2008 IEEE international joint conference on neural networks (IEEE world congress on computational intelligence). pp. 1322-1328. IEEE (2008)</note>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<monogr>
+		<author>
+			<persName><forename type="first">M</forename><surname>Lichman</surname></persName>
+		</author>
+		<title level="m">Uci machine learning repository</title>
+		<imprint>
+			<date type="published" when="2013">2013</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Lichman, M., et al.: Uci machine learning repository (2013)</note>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">Credit card fraud detection using bayesian and neural networks</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Maes</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Tuyls</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Vanschoenwinkel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Manderick</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Proceedings of the 1st international naiso congress on neuro fuzzy technologies</title>
+		<imprint>
+			<biblScope unit="volume">261</biblScope>
+			<biblScope unit="page">270</biblScope>
+			<date type="published" when="2002">2002</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Maes, S., Tuyls, K., Vanschoenwinkel, B., Manderick, B.: Credit card fraud detection using bayesian and neural networks. In: Proceedings of the 1st international naiso congress on neuro fuzzy technologies. vol. 261, p. 270 (2002)</note>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<analytic>
+		<title level="a" type="main">A survey of semi-supervised learning methods</title>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">N</forename><surname>Pise</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Kulkarni</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International conference on computational intelligence and security</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2008">2008. 2008</date>
+			<biblScope unit="volume">2</biblScope>
+			<biblScope unit="page" from="30" to="34" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Pise, N.N., Kulkarni, P.: A survey of semi-supervised learning methods. In: 2008 International conference on computational intelligence and security. vol. 2, pp. 30-34. IEEE (2008)</note>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<analytic>
+		<title level="a" type="main">Real-time credit card fraud detection using computational intelligence</title>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">T</forename><surname>Quah</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Sriganesh</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Expert systems with applications</title>
+		<imprint>
+			<biblScope unit="volume">35</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="1721" to="1732" />
+			<date type="published" when="2008">2008</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Quah, J.T., Sriganesh, M.: Real-time credit card fraud detection using computational intelligence. Expert systems with applications 35(4), 1721-1732 (2008)</note>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<analytic>
+		<title level="a" type="main">Detecting credit card fraud by ann and logistic regression</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Sahin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Duman</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">international symposium on innovations in intelligent systems and applications</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2011">2011. 2011</date>
+			<biblScope unit="page" from="315" to="319" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Sahin, Y., Duman, E.: Detecting credit card fraud by ann and logistic regression. In: 2011 international symposium on innovations in intelligent systems and applications. pp. 315-319. IEEE (2011)</note>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<analytic>
+		<title level="a" type="main">Big data analytics techniques for credit card fraud detection: A review</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Sathyapriya</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">V</forename><surname>Thiagarasu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Science and Research</title>
+		<imprint>
+			<biblScope unit="volume">6</biblScope>
+			<biblScope unit="issue">5</biblScope>
+			<biblScope unit="page" from="206" to="211" />
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Sathyapriya, M., Thiagarasu, V.: Big data analytics techniques for credit card fraud detection: A review. International Journal of Science and Research 6(5), 206-211 (2017)</note>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<analytic>
+		<title level="a" type="main">An instance level analysis of data complexity</title>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">R</forename><surname>Smith</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Martinez</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Giraud-Carrier</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Machine learning</title>
+		<imprint>
+			<biblScope unit="volume">95</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="225" to="256" />
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Smith, M.R., Martinez, T., Giraud-Carrier, C.: An instance level analysis of data complexity. Machine learning 95(2), 225-256 (2014)</note>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<analytic>
+		<title level="a" type="main">Ensemble learning for credit card fraud detection</title>
+		<author>
+			<persName><forename type="first">I</forename><surname>Sohony</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Pratap</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">U</forename><surname>Nambiar</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the ACM India Joint International Conference on Data Science and Management of Data</title>
+		<meeting>the ACM India Joint International Conference on Data Science and Management of Data</meeting>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+			<biblScope unit="page" from="289" to="294" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Sohony, I., Pratap, R., Nambiar, U.: Ensemble learning for credit card fraud detection. In: Proceedings of the ACM India Joint International Conference on Data Science and Management of Data. pp. 289-294 (2018)</note>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<analytic>
+		<title level="a" type="main">The comparisons of data mining techniques for the predictive accuracy of probability of default of credit card clients</title>
+		<author>
+			<persName><forename type="first">I</forename><forename type="middle">C</forename><surname>Yeh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">H</forename><surname>Lien</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Expert systems with applications</title>
+		<imprint>
+			<biblScope unit="volume">36</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="2473" to="2480" />
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Yeh, I.C., Lien, C.h.: The comparisons of data mining techniques for the predictive accuracy of probability of default of credit card clients. Expert systems with applications 36(2), 2473-2480 (2009)</note>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<analytic>
+		<title level="a" type="main">Application of credit card fraud detection: Based on bagging ensemble classifier</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Zareapoor</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Shamsolmoali</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Procedia computer science</title>
+		<imprint>
+			<biblScope unit="volume">48</biblScope>
+			<biblScope unit="page" from="679" to="685" />
+			<date type="published" when="2015">2015. 2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zareapoor, M., Shamsolmoali, P., et al.: Application of credit card fraud detection: Based on bagging ensemble classifier. Procedia computer science 48(2015), 679-685 (2015)</note>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<analytic>
+		<title level="a" type="main">One-class adversarial nets for fraud detection</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Zheng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Yuan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Wu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Lu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the AAAI Conference on Artificial Intelligence</title>
+		<meeting>the AAAI Conference on Artificial Intelligence</meeting>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+			<biblScope unit="volume">33</biblScope>
+			<biblScope unit="page" from="1286" to="1293" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zheng, P., Yuan, S., Wu, X., Li, J., Lu, A.: One-class adversarial nets for fraud detection. In: Proceedings of the AAAI Conference on Artificial Intelligence. vol. 33, pp. 1286-1293 (2019)</note>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<monogr>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Zojaji</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">E</forename><surname>Atani</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">H</forename><surname>Monadjemi</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1611.06439</idno>
+		<title level="m">A survey of credit card fraud detection techniques: data and technique oriented perspective</title>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Zojaji, Z., Atani, R.E., Monadjemi, A.H., et al.: A survey of credit card fraud detection techniques: data and technique oriented perspective. arXiv preprint arXiv:1611.06439 (2016)</note>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

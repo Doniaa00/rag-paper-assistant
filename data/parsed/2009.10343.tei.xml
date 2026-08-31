@@ -1,0 +1,890 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">GAMMA DISTRIBUTION-BASED SAMPLING FOR IMBALANCED DATA</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability  status="unknown">
+					<licence/>
+				</availability>
+				<date type="published" when="2020-09-22">22 Sep 2020</date>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><forename type="first">Firuz</forename><surname>Kamalov</surname></persName>
+						</author>
+						<author>
+							<persName><forename type="first">Dmitry</forename><surname>Denisov</surname></persName>
+						</author>
+						<title level="a" type="main">GAMMA DISTRIBUTION-BASED SAMPLING FOR IMBALANCED DATA</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date type="published" when="2020-09-22">22 Sep 2020</date>
+						</imprint>
+					</monogr>
+					<idno type="MD5">F22C2D2C566600274A49C2F41E5747E7</idno>
+					<idno type="arXiv">arXiv:2009.10343v1[cs.LG]</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.2-SNAPSHOT" ident="GROBID" when="2026-08-31T18:10+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>Imbalanced class distribution is a common problem in a number of fields including medical diagnostics, fraud detection, and others. It causes bias in classification algorithms leading to poor performance on the minority class data. In this paper, we propose a novel method for balancing the class distribution in data through intelligent resampling of the minority class instances. The proposed method is based on generating new minority instances in the neighborhood of the existing minority points via a gamma distribution. Our method offers a natural and coherent approach to balancing the data. We conduct a comprehensive numerical analysis of the new sampling technique. The experimental results show that the proposed method outperforms the existing state-of-the-art methods for imbalanced data. Concretely, the new sampling technique produces the best results on 12 out of 24 real life as well as synthetic datasets. For comparison, the SMOTE method achieves the top score on only 1 dataset. We conclude that the new technique offers a simple yet effective sampling approach to balance data.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1.">INTRODUCTION</head><p>Imbalanced class distribution refers to a setting where one class label significantly outnumbers another class label in the dataset. It occurs in a number of applications including medical diagnostics, insurance fraud, spam email, and others that involve rare events <ref type="bibr" target="#b17">[18,</ref><ref type="bibr" target="#b25">26,</ref><ref type="bibr" target="#b29">30]</ref>. Imbalanced class distribution leads to bias in classification algorithms. Since the goal of a classification algorithm is to maximize the overall predictive accuracy it would direct most of its efforts to correctly classifying the majority label data. If the payoff from correctly classifying the minority instances is not significant enough the classifier will likely ignore such points. At the same time, correctly classifying the minority points is often of more importance than the majority points. For instance, identifying a patient with a rare disease is far more crucial than identifying a healthy individual.</p><p>There are a number of approaches to dealing with imbalanced data. The existing approaches can be broadly categorized as cost sensitive classification, one-class classification, resampling, and blended methods. In cost sensitive classification, the minority class instances are assigned a higher weight than the majority class instances forcing the classifier to focus more on the minority data. In one-class classification, the minority points are considered separately from the majority points. In resampling methods, the data is balanced through undersampling the majority class data or oversampling the minority class data. Finally, blended methods combine two or more approaches to address class imbalance. Although the existing solutions perform well in certain cases, they suffer from several drawbacks. Cost sensitive approaches are vulnerable to overfitting as narrow regions in space are endowed with higher weights. One-class methods do not take the full advantage of the available data. Since each target class is considered independently any possible interactions between classes are ignored. Similarly, undersampling methods do not utilize all the available information as only a fraction of the majority class is used in classification. Oversampling techniques seem to avoid the above issues by carefully creating new minority class points to balance the data. However, the assumptions underlying oversampling techniques may not necessarily be valid for a given dataset. There remains a considerable room for improvement in the existing oversampling methods. Blended approaches combine the above methods and therefore inherit their drawbacks.</p><p>In this paper, we propose a new technique to balance skewed class distribution through intelligent oversampling of the minority class points. The proposed method uses the gamma distribution to create new minority class points. Concretely, given an existing minority class point p 0 we generate a new minority point in the neighborhood of p 0 using the gamma distribution. The use of the gamma distribution allows for the new minority points to be generated close to the existing minority points. We believe that such approach is more natural than other similar oversampling techniques that use the uniform distribution. In addition, since the amma distribution is asymmetric, we can target the locations of the new minority points in the most likely directions based on the neighboring minority points.</p><p>We conduct a series of experiments to test the efficacy of the proposed oversampling technique. The performance of the proposed method is benchmarked against a number of popular oversampling techniques such as ROS, SMOTE and ADASYN. First, we use simulated data to illustrate that the proposed method can significantly outperform the existing sampling techniques. Second, we analyze the performance of the new method on a range of real life datasets (Table <ref type="table" target="#tab_1">2</ref>) with different imbalance ratios. The results of the experiments show that the proposed sampling method consistently outperforms the competitor approaches. Given the variety of datasets that were used in our experiments, we conclude that the proposed method would be effective in a range of applications.</p><p>Our paper is structured as follows. In Section 2, we survey the existing approaches to deal with imbalanced data. In Section 3, we describe the details of the proposed method. In Section 4, we present the results of the numerical experiments performed to test the efficacy of the proposed method. We conclude with a brief summary of the paper in Section 5.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.">LITERATURE</head><p>The problem of imbalanced data has been well covered in the literature <ref type="bibr" target="#b28">[29]</ref>. There are exist several approaches to dealing with skewed class distribution including cost sensitive classification <ref type="bibr" target="#b6">[7,</ref><ref type="bibr" target="#b18">19]</ref> , one-class classification <ref type="bibr" target="#b31">[32]</ref>, resampling <ref type="bibr" target="#b9">[10]</ref>, and blended methods <ref type="bibr" target="#b3">[4,</ref><ref type="bibr" target="#b11">12]</ref>. Among the existing variety of approaches to combat class imbalance sampling techniques have gained the biggest acceptance.</p><p>Sampling techniques -and in particular oversampling techniques -have received greater attention in the literature than other methods due to their recent success. One of the most popular oversampling approaches called SMOTE was proposed by Chawla et al. in <ref type="bibr" target="#b4">[5]</ref>. SMOTE operates by linearly interpolating new minority points between existing neighboring minority points. In other words, the new points are randomly interspersed along the lines connecting neighboring minority class points. An extension of SMOTE called ADASYN was proposed by He et al. in <ref type="bibr" target="#b12">[13,</ref><ref type="bibr" target="#b13">14]</ref>. ADASYN generates the new minority points in the same fashion as SMOTE except with a greater emphasis on the border regions between the majority and minority classes. The regions that are close to the border with the majority class data are assigned a greater number of new minority points. A detailed study of SMOTE and its properties can be found in <ref type="bibr" target="#b7">[8]</ref>. Modern oversampling approaches use more sophisticated techniques to generate new points. The authors in <ref type="bibr" target="#b15">[16]</ref> apply kernel density estimation to approximate the distribution of the minority points. The resulting estimator is used to generate new minority points. In <ref type="bibr" target="#b26">[27]</ref>, the authors propose to overcome the linear nature of SMOTE algorithm for nonlinear problems by sampling from the feature space of kernel SVM classifier.</p><p>Undersampling techniques work by sampling a subset of the majority class to balance the class distribution <ref type="bibr" target="#b22">[23,</ref><ref type="bibr" target="#b23">24]</ref>. Undersampling techniques are particularly popular in bagging methods. In bagging, subsets of the majority class are repeatedly sampled and base classifiers are trained on the balanced datasets. Then an ensemble rule is used to determine the output of the combined classifier. Ensemble techniques that use bootstrap undersampling are a popular approach to imbalanced data <ref type="bibr" target="#b10">[11,</ref><ref type="bibr" target="#b30">31]</ref>.</p><p>The gamma distribution is a popular statistical tool used in a number of applications <ref type="bibr" target="#b19">[20]</ref>. In <ref type="bibr" target="#b32">[33]</ref>, the authors use multivariate gamma distribution to investigate the performance of radio frequency and optical wireless communication systems. Gamma distribution and its extensions have also been used to model a variety of data and processes <ref type="bibr" target="#b0">[1,</ref><ref type="bibr" target="#b2">3,</ref><ref type="bibr" target="#b20">21]</ref>. It is also used as a kernel function in nonparametric density estimation. Standard symmetric kernels for density estimation do not perform well with respect to positive or bounded variables. The issue is particularly acute in positive variables with a large probability mass near zero. Gamma kernels can be used effectively to estimate such distributions <ref type="bibr" target="#b5">[6,</ref><ref type="bibr" target="#b24">25]</ref>. In <ref type="bibr" target="#b1">[2]</ref>, authors use the positive asymmetry of the gamma distribution to model highly skewed income distribution. The authors in <ref type="bibr" target="#b14">[15]</ref> apply a gamma kernel to estimate insurance loss distribution.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.">METHODOLOGY</head><p>In this section, we provide the necessary background and describe the algorithm for the proposed method. The proposed sampling technique is based on univariate gamma distribution. The gamma distribution is a twoparameter family of continuous distributions. It is often used in Bayesian statistics as prior conjugate distribution for various types of rate parameters. It arises in processes involving the waiting times between Poisson distributed events. The probability density function for a gamma distribution is given by the equation</p><formula xml:id="formula_0">(1) f (x; α, θ) = x α-1 e -x θ Γ(α)θ α ,</formula><p>where</p><formula xml:id="formula_1">Γ(z) = ∞ 0 x z-1 e -x</formula><p>dx is the gamma function, α is the shape parameter, and θ is the scale parameter. The parameter α controls the shape of the distribution. As shown in Figure <ref type="figure">1</ref>, an increase in the value of α leads to a more symmetrical gamma distribution. The parameter θ controls the scale of the distribution. An increase in the value of θ results in an increase in the scale of the distribution. Note there exists an alternative notation in the literature for the scale parameter θ, whereby it is replaced by the rate parameter λ = 1 θ . The resulting equation is given by f</p><formula xml:id="formula_2">(x; α, λ) = λ α x α-1 e -λx Γ(α)</formula><p>. It is also worth noting that the exponential distribution is a special case of the gamma distribution with α = 1. Similarly, the χ 2 is another special case of the gamma distribution. It is an easy exercise in calculus to show that the maximum value of f (x; α, θ) occurs at <ref type="bibr" target="#b1">(2)</ref> x = θ(α -1).</p><p>For instance, given a gamma distribution with parameters α = 5 and θ = 1 8 the maximum value of the pdf occurs at x = 0.5 (Figure <ref type="figure">1</ref>). In our proposed sampling procedure we are guided by the following two core principals:</p><p>(1) The new minority class points must lie in the close vicinity of the existing minority points. (2) The new minority class points must be positioned in the direction of the neighboring minority points. To achieve the first goal above we place a base gamma distribution to each existing minority point so that the maximum value of the pdf occurs at the given minority point (Figure <ref type="figure" target="#fig_1">2</ref>). Accordingly, the new minority points will be more likely generated close to the chosen minority point.</p><p>To achieve the second goal above we orient the base gamma distribution in the direction of neighboring minority points. The base gamma distribution is also scaled according to the distance to the neighboring point. In Figure <ref type="figure" target="#fig_2">3</ref>, the initial minority point is located at x = 2 and the neighboring minority point is located at x = 5. The new minority points will be generated according to the scaled gamma distribution. As shown in Figure <ref type="figure" target="#fig_2">3</ref>, the new minority points are more likely to be generated near the initial minority point and in the direction of the neighboring minority point.</p><p>In Figure <ref type="figure" target="#fig_4">4</ref>, we illustrate the gamma distribution for points in 2D. Given the initial minority point at (2, 1) and a neighboring point at <ref type="bibr" target="#b4">(5,</ref><ref type="bibr" target="#b3">4)</ref>, we scale and orient the base gamma distribution accordingly. Thus, the new minority points generated by the gamma distribution will be more likely to generated  near the initial point (2, 1) and in the direction of the neighboring point at <ref type="bibr" target="#b4">(5,</ref><ref type="bibr" target="#b3">4)</ref>. In summary, the proposed sampling technique starts by selecting an initial minority point p and a neighboring minority point p . Then, the base gamma distribution is scaled and oriented according to p and p as illustrated in Figure <ref type="figure" target="#fig_4">4</ref>. The new minority points will be generated according to the resulting gamma distribution. The proposed technique ensures that the new minority points a generated near the existing minority points and in the direction where they are most likely to appear based on the neighboring minority points. The details of the proposed algorithm are outlined below.  (1) Choose the parameters α and θ for the base gamma distribution (Equation <ref type="formula">1</ref>). (2) Calculate the coordinates of the maximum value of the distribution using Equation 2. (3) Randomly choose N minority points (with replacement), where N equals the difference between the number of majority and minority points. (4) For each randomly chosen minority point p:</p><p>i. Randomly choose one of the k nearest neighbors p . Define vector v = p -p.</p><p>ii. Generate a value t using the base Gamma distribution.</p><p>iii. Define a new minority point as q = p + (t -m) • v, where t -m represents the scaling factor. (5) Repeat until the number of the minority points equals the number of majority points. The process of generating new points using the the gamma distribution is illustrated in Figure <ref type="figure" target="#fig_5">5</ref>. As shown in the figure, most of the new points are located near the initial minority point. In addition, a portion of the new points lies on the opposite side of the neighboring point. We find it natural to allow some of the points to be generated outside the range between the initial and neighboring points. By adjusting the shape and scale parameters we can control the process of generation of new points. The increase in the shape parameter would result in a more symmetrical distribution of the new points around the initial minority point. The increase in the scale parameter would result in points being more likely generated further from the initial point. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.">NUMERICAL EXPERIMENTS</head><p>In this section, we present the results of the numerical experiments that were carried out to test the performance of the proposed method. We benchmark the performance of the new method against several popular sampling techniques including Random Undersampling (RUS), Random Oversampling (ROS), SMOTE, and ADASYN. The experiments are carried out using both simulated and real life data. The synthetic dataset is created to illustrate a scenario where the proposed sampling method would be advantageous. We also demonstrate the performance of the new method on a wide array of real life datasets. We employ a total of 24 real life datasets whose class ratio ranges from 8.6:1 to 130:1. The results show an improved performance of the new method over other existing sampling techniques.</p><p>We use 5-fold cross validation throughout our experiments. At each iteration, 80% of the original (imbalanced) data is sampled and a classifier is trained on the resulting balanced dataset. Then the trained classifier is tested on the holdout (imbalanced) 20% fold. The reported results represent the mean outcome over the 5 holdout sets. The number of nearest neighbors used in the sampling algorithms is k = 3. The numerical experiments are implemented in Python using the sklearn <ref type="bibr" target="#b27">[28]</ref> and imblearn <ref type="bibr" target="#b21">[22]</ref> machine learning libraries.</p><p>Measuring the performance of a classifier in the case of imbalanced dataset requires a careful consideration. Traditional metrics such as accuracy and error rate do not fully reflect the performance of a classifier on the minority set. To this end, we use the F 1 -score and AUC to measure the performance of sampling techniques. The F 1 -score is the harmonic mean of precision and recall</p><formula xml:id="formula_3">F 1 = 2 • precision • recall precision + recall .</formula><p>The F 1 -score indicates the ability of the classifier to efficiently identify the positive instances in the dataset. AUC is another commonly used metric for imbalanced data. It represents the probability that a classifier will rank a randomly chosen positive instance higher than a randomly chosen negative one.</p><p>4.1. Simulated data. We use simulated data to demonstrate the efficacy of the proposed method. Concretely, we construct a dataset where the majority class points are randomly distributed along a straight line and the minority points are placed on two sides of the majority set. A sample distribution of the data is illustrated in Figure <ref type="figure" target="#fig_6">6</ref>. In our experiment, we employ a synthetic imbalanced dataset consisting of 5,500 points of which 10% belong to the minority class. The goal of the experiment is to analyze the performance of gamma sampling compared to SMOTE sampling method. As a benchmark we also test the original imbalanced dataset. We use Nearest Neighbor (NN), Random Forest (RF), and Support Vector Machines (SVM) classifiers to compare the performance of the sampling methods. Each classifier is trained and tested on imbalanced, SMOTEbalanced, and Gamma-balanced datasets. The main measures of classifier performance are the F 1 -score and AUC. The result of the experiment are presented in Table <ref type="table" target="#tab_0">1</ref>. As can seen from the table the results are overwhelmingly in favor of the Gamma-based sampling. The Gamma-based method outperforms SMOTE and the original imbalanced datasets on every classifier both in terms of F 1 -score and AUC values. Gamma-based sampling in conjunction with the SVM classifier produces the best overall results of F 1 = 0.52 and AUC = 0.33. The results of the experiment on the synthetic dataset illustrate the weakness of SMOTE and other related sampling methods. Concretely, in case where neighboring minority points are separated by a group of majority points the SMOTE algorithm is likely to generate new minority points in the midst of the majority points. Consequently, a classification algorithm would have difficulty distinguishing between the two classes. Our sampling method is designed to address this issue by employing the gamma distribution in place of uniform distribution. In the scenario presented in Figure <ref type="figure" target="#fig_6">6</ref>, using a gamma distribution would generate new minority points that are closer to the original minority points and therefore less likely to mix with the majority points. 4.2. Real life data. We test the performance of the proposed method on a range of real life datasets. The datasets are chosen to represent varying domains and imbalance ratios (Table <ref type="table" target="#tab_1">2</ref>). The class ratios of the datasets used in the experiment range from 8.6:1 to 130:1. The number of samples and features in the datasets range from 336 to 20,000 and from 6 to 294 respectively. Thus, we obtain a comprehensive experimental analysis of the proposed method. We benchmark the performance of the proposed method against a number of other traditional sampling techniques including SMOTE, ADASYN, Random Oversampling (ROS), and Random Undersampling (RUS). After sampling and balancing the datasets the Random Forrest classifier is applied to train and test on the data. We measure the performance of the classifier using the F 1 -score and AUC. The F 1 -score values are reported in Table <ref type="table" target="#tab_2">3</ref>. As shown in the table, the proposed method (Gamma) produces the best result in 12 out of 24 datasets. For comparison, the SMOTE algorithm produces the best result just on 1 dataset. On certain datasets, the margin of performance is substantial -as in the case of the arrhythmia dataset where the F 1 -score of the proposed method is 0.17 higher than the second highest score. The results show that the proposed method can be applied effectively to datasets with different class ratios. In particular, the ecoli dataset has a class ratio of 8.6:1 and abalone 19 has class ratio of 130:1. In addition, the new method produces strong results across different fields of application including medicine, image recognition, crime, and others. Overall, the results in Table <ref type="table" target="#tab_2">3</ref> show that the proposed method is superior to the benchmark sampling techniques. The results of the AUC measurements are presented in Table <ref type="table" target="#tab_3">4</ref>. The AUC represents the likelihood that a randomly chosen positive sample will be As shown in the table, the proposed method often outperforms the benchmark techniques. Concretely, the proposed method produces the top AUC value in 10 out of 24 cases. For comparison the SMOTE algorithm produces the highest AUC value just once. The new sampling technique produces strong results across different class ratios and fields of application. The overall results show that the proposed sampling method outperforms the benchmark mtheods. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.">CONCLUSION</head><p>Imbalanced class distribution is an issue that appears in a number of fields including text classification, medical diagnostics, and fraud detection. Prevalence of one class over another results in classification bias. Although there exists a plethora of approaches to address this issue there remains a lot of room for improvement. In this paper we present a new oversampling technique based on the gamma distribution. The proposed approach has a number of advantages over the existing sampling techniques. First, the gamma distribution naturally leads to the new minority points being generated near the existing minority points. Second, the new points are created both in the same and opposite directions from the neighboring minority points. Finally, the performance of the new sampling method can be further improved by tuning the parameters of the gamma distribution.</p><p>The efficacy of the proposed method was tested on a range of simulated and real life datasets. We constructed a synthetic dataset to illustrate a scenario where the new sampling method produces optimal results. In general, the new method performs well in settings where the regions between neighboring minority points contain majority points. The use of gamma distribution helps to avoid generating the new minority points in mix with the majority points. The experimental results on the synthetic dataset show that the proposed sampling approach performs well regardless of the classification algorithm (Table <ref type="table" target="#tab_0">1</ref>).</p><p>To validate the new sampling approach we carried out extensive tests on a wide array of real life datasets. We employed a total of 24 datasets from various fields of application and a range of class ratios. The proposed sampling technique produced the top F 1 -scores on 12 (half) of the datasets (Table <ref type="table" target="#tab_2">3</ref>). For comparison, the SMOTE algorithm produced the top score only on 1 dataset. Similar results were obtained when employing AUC to measure the classification performance. The results on the real life datasets indicate that the new sampling technique significantly outperforms other benchmark methods.</p><p>In this paper, we introduced a new sampling technique to deal with imbalanced data. The new method is based on the gamma distribution and allows for generation of minority points in the vicinity of existing points. The sampling procedure can be fine tuned by adjusting the distribution parameters. The results of extensive experiments show that the proposed method significantly outperforms other benchmark methods. Therefore, we believe that it could be a valuable tool for researchers working with imbalanced data.</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head>25 FIGURE 1 .</head><label>251</label><figDesc>FIGURE 1. The effects of varying α and θ values on the shape of the distribution.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head>FIGURE 2 .</head><label>2</label><figDesc>FIGURE 2. The base gamma distribution is given by the parameters α = 2, θ = 1 8 . The maximum value of the distribution occurs at x = 0.125 (Equation2).</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_2"><head>FIGURE 3 .</head><label>3</label><figDesc>FIGURE 3. Given a minority point at x = 2 and a neighboring point at x = 5 the base gamma distribution is scaled and oriented accordingly.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_3"><head>Algorithm</head><label></label><figDesc></figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_4"><head>FIGURE 4 .</head><label>4</label><figDesc>FIGURE 4. Given a minority point at (2, 1) and a neighboring point at (5, 4) the base gamma distribution is scaled and oriented accordingly.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_5"><head>FIGURE 5 .</head><label>5</label><figDesc>FIGURE 5. Given a minority point at x = 2 and a neighboring point at x = 5 the base gamma distribution is scaled and oriented accordingly.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_6"><head>FIGURE 6 .</head><label>6</label><figDesc>FIGURE 6. Distribution of synthetically generated data.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_0"><head>TABLE 1 .</head><label>1</label><figDesc>Experiments on synthetic data</figDesc><table><row><cell cols="4">Sampling Classifier F 1 -score precision recall</cell><cell>AUC</cell></row><row><cell>initial</cell><cell>NN</cell><cell>0.0042</cell><cell cols="2">0.2000 0.0021 0.0928</cell></row><row><cell>smote</cell><cell>NN</cell><cell>0.1931</cell><cell cols="2">0.1229 0.7103 0.1069</cell></row><row><cell>gamma</cell><cell>NN</cell><cell>0.3105</cell><cell cols="2">0.5817 0.5514 0.2334</cell></row><row><cell>initial</cell><cell>RF</cell><cell>0.0044</cell><cell cols="2">0.2000 0.0022 0.0929</cell></row><row><cell>smote</cell><cell>RF</cell><cell>0.0440</cell><cell cols="2">0.0307 0.0786 0.0863</cell></row><row><cell>gamma</cell><cell>RF</cell><cell>0.0535</cell><cell cols="2">0.0516 0.0558 0.0888</cell></row><row><cell>initial</cell><cell>SVM</cell><cell>0.0000</cell><cell cols="2">0.0000 0.0000 0.0909</cell></row><row><cell>smote</cell><cell>SVM</cell><cell>0.1861</cell><cell cols="2">0.1609 0.2221 0.1076</cell></row><row><cell>gamma</cell><cell>SVM</cell><cell>0.5195</cell><cell cols="2">0.6071 0.4560 0.3286</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_1"><head>TABLE 2 .</head><label>2</label><figDesc>Details of the Experimental Datasets.</figDesc><table><row><cell>ID</cell><cell>Name Repository &amp; Target</cell><cell>Ratio #S</cell><cell>#F</cell></row><row><cell>0</cell><cell>ecoli UCI, target: imU</cell><cell>8.6:1 336</cell><cell>7</cell></row><row><cell>1</cell><cell>optical digits UCI, target: 8</cell><cell>9.1:1 5620</cell><cell>64</cell></row><row><cell>2</cell><cell>satimage UCI, target: 4</cell><cell>9.3:1 6435</cell><cell>36</cell></row><row><cell>3</cell><cell>pen digits UCI, target: 5</cell><cell cols="2">9.4:1 10992 16</cell></row><row><cell>4</cell><cell>abalone UCI, target: 7</cell><cell>9.7:1 4177</cell><cell>10</cell></row><row><cell>5</cell><cell>sick euthyroid UCI, target: sick euthyroid</cell><cell>9.8:1 3163</cell><cell>42</cell></row><row><cell>6</cell><cell>spectrometer UCI, target: &gt;= 44</cell><cell>11:1 531</cell><cell>93</cell></row><row><cell>7</cell><cell>car eval 34 UCI, target: good, v good</cell><cell>12:1 1728</cell><cell>21</cell></row><row><cell>8</cell><cell>us crime UCI, target: &gt; 0.65</cell><cell cols="2">12:1 1994 100</cell></row><row><cell>9</cell><cell>yeast ml8 LIBSVM, target: 8</cell><cell cols="2">13:1 2417 103</cell></row><row><cell>10</cell><cell cols="3">scene LIBSVM, target: &gt;one label 13:1 2407 294</cell></row><row><cell>11</cell><cell>libras move UCI, target: 1</cell><cell>14:1 360</cell><cell>90</cell></row><row><cell>12</cell><cell>thyroid sick UCI, target: sick</cell><cell>15:1 3772</cell><cell>52</cell></row><row><cell>13</cell><cell cols="2">coil 2000 KDD, CoIL, target: minority 16:1 9822</cell><cell>85</cell></row><row><cell>14</cell><cell>arrhythmia UCI, target: 06</cell><cell>17:1 452</cell><cell>278</cell></row><row><cell cols="2">15 solar flare m0 UCI, target: &gt; 0</cell><cell>19:1 1389</cell><cell>32</cell></row><row><cell>16</cell><cell>oil UCI, target: minority</cell><cell>22:1 937</cell><cell>49</cell></row><row><cell>17</cell><cell>car eval 4 UCI, target: vgood</cell><cell>26:1 1728</cell><cell>21</cell></row><row><cell>18</cell><cell>wine quality UCI, wine, target: &lt;= 4</cell><cell>26:1 4898</cell><cell>11</cell></row><row><cell>19</cell><cell>letter img UCI, target: Z</cell><cell cols="2">26:1 20000 16</cell></row><row><cell>20</cell><cell>yeast me2 UCI, target: ME2</cell><cell>28:1 1484</cell><cell>8</cell></row><row><cell>21</cell><cell>ozone level UCI, ozone, data</cell><cell>34:1 2536</cell><cell>72</cell></row><row><cell cols="2">22 mammography UCI, target: minority</cell><cell>42:1 11183</cell><cell>6</cell></row><row><cell>23</cell><cell>abalone 19 UCI, target: 19</cell><cell>130:1 4177</cell><cell>10</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_2"><head>TABLE 3 .</head><label>3</label><figDesc>Classification performance -as measured by the F 1 -score -using various sampling techniques.</figDesc><table><row><cell>ID Name</cell><cell cols="2">Initial Gamma SMOTE ADASYN</cell><cell>ROS</cell><cell>RUS</cell></row><row><cell>0 ecoli</cell><cell>0.6353 0.6555 0.6278</cell><cell cols="3">0.6101 0.4490 0.5896</cell></row><row><cell>1 optical digits</cell><cell>0.8767 0.9386 0.9227</cell><cell cols="3">0.9121 0.9175 0.8966</cell></row><row><cell>2 satimage</cell><cell>0.6181 0.6537 0.6753</cell><cell cols="3">0.6828 0.6876 0.5653</cell></row><row><cell>3 pen digits</cell><cell>0.9789 0.9863 0.9821</cell><cell cols="3">0.9789 0.9820 0.9780</cell></row><row><cell>4 abalone</cell><cell>0.1290 0.3745 0.3520</cell><cell cols="3">0.3286 0.2297 0.3830</cell></row><row><cell cols="2">5 sick euthyroid 0.8536 0.8337 0.8348</cell><cell cols="3">0.8463 0.8584 0.8070</cell></row><row><cell>6 spectrometer</cell><cell>0.8197 0.8676 0.8236</cell><cell cols="3">0.7643 0.7990 0.7462</cell></row><row><cell>7 car eval 34</cell><cell>0.8902 0.9041 0.9179</cell><cell cols="3">0.9278 0.9313 0.7537</cell></row><row><cell>8 us crime</cell><cell>0.4584 0.5284 0.5037</cell><cell cols="3">0.4853 0.4684 0.4516</cell></row><row><cell>9 yeast ml8</cell><cell>0.0000 0.0284 0.0087</cell><cell cols="3">0.0386 0.0000 0.1606</cell></row><row><cell>10 scene</cell><cell>0.0095 0.1784 0.1490</cell><cell cols="3">0.1418 0.0735 0.2597</cell></row><row><cell>11 libras move</cell><cell>0.6370 0.8407 0.7863</cell><cell cols="3">0.7198 0.7128 0.5357</cell></row><row><cell>12 thyroid sick</cell><cell>0.8462 0.8706 0.8531</cell><cell cols="3">0.8621 0.8706 0.7434</cell></row><row><cell>13 coil 2000</cell><cell>0.0345 0.0775 0.0828</cell><cell cols="3">0.0765 0.1195 0.1913</cell></row><row><cell>14 arrhythmia</cell><cell>0.0000 0.4758 0.3086</cell><cell cols="3">0.2705 0.2381 0.2674</cell></row><row><cell cols="2">15 solar flare m0 0.0542 0.1038 0.0923</cell><cell cols="3">0.1812 0.1309 0.2575</cell></row><row><cell>16 oil</cell><cell>0.3717 0.5867 0.5222</cell><cell cols="3">0.6136 0.4779 0.2640</cell></row><row><cell>17 car eval 4</cell><cell>0.8728 0.9205 0.9492</cell><cell cols="3">0.9455 0.9325 0.6355</cell></row><row><cell>18 wine quality</cell><cell>0.1848 0.3862 0.3101</cell><cell cols="3">0.2905 0.2319 0.2277</cell></row><row><cell>19 letter img</cell><cell>0.9493 0.9571 0.9520</cell><cell cols="3">0.9580 0.9575 0.7339</cell></row><row><cell>20 yeast me2</cell><cell>0.2617 0.3944 0.3579</cell><cell cols="3">0.3697 0.2585 0.2281</cell></row><row><cell>21 ozone level</cell><cell>0.0267 0.3751 0.2806</cell><cell cols="3">0.2823 0.1470 0.1938</cell></row><row><cell cols="2">22 mammography 0.6709 0.6188 0.6541</cell><cell cols="3">0.6140 0.6881 0.3856</cell></row><row><cell>23 abalone 19</cell><cell>0.0000 0.0809 0.0491</cell><cell cols="3">0.0478 0.0000 0.0408</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_3"><head>TABLE 4 .</head><label>4</label><figDesc>Classification performance -as measured by AUC -using various sampling techniques.</figDesc><table><row><cell>ID Name</cell><cell cols="2">Initial Gamma SMOTE ADASYN</cell><cell>ROS</cell><cell>RUS</cell></row><row><cell>0 ecoli</cell><cell>0.4864 0.4770 0.4446</cell><cell cols="3">0.4365 0.2891 0.4174</cell></row><row><cell>1 optical digits</cell><cell>0.8023 0.8929 0.8689</cell><cell cols="3">0.8525 0.8618 0.8121</cell></row><row><cell>2 satimage</cell><cell>0.4570 0.4597 0.4884</cell><cell cols="3">0.4979 0.5152 0.3810</cell></row><row><cell>3 pen digits</cell><cell>0.9625 0.9737 0.9678</cell><cell cols="3">0.9620 0.9677 0.9579</cell></row><row><cell>4 abalone</cell><cell>0.1138 0.2002 0.1835</cell><cell cols="3">0.1705 0.1300 0.2203</cell></row><row><cell cols="2">5 sick euthyroid 0.7487 0.7089 0.7142</cell><cell cols="3">0.7320 0.7529 0.6695</cell></row><row><cell>6 spectrometer</cell><cell>0.7054 0.7731 0.7034</cell><cell cols="3">0.6172 0.6769 0.6001</cell></row><row><cell>7 car eval 34</cell><cell>0.8093 0.8305 0.8524</cell><cell cols="3">0.8684 0.8753 0.6083</cell></row><row><cell>8 us crime</cell><cell>0.3036 0.3190 0.3034</cell><cell cols="3">0.2816 0.2937 0.2785</cell></row><row><cell>9 yeast ml8</cell><cell>0.0736 0.0758 0.0739</cell><cell cols="3">0.0766 0.0736 0.0858</cell></row><row><cell>10 scene</cell><cell>0.0742 0.1194 0.0900</cell><cell cols="3">0.0919 0.0863 0.1351</cell></row><row><cell>11 libras move</cell><cell>0.5399 0.7532 0.7128</cell><cell cols="3">0.6197 0.5839 0.3504</cell></row><row><cell>12 thyroid sick</cell><cell>0.7373 0.7660 0.7457</cell><cell cols="3">0.7559 0.7719 0.5870</cell></row><row><cell>13 coil 2000</cell><cell>0.0685 0.0705 0.0738</cell><cell cols="3">0.0711 0.0757 0.0957</cell></row><row><cell>14 arrhythmia</cell><cell>0.0553 0.3479 0.2776</cell><cell cols="3">0.2299 0.2364 0.1449</cell></row><row><cell cols="2">15 solar flare m0 0.1414 0.1473 0.1458</cell><cell cols="3">0.1741 0.1496 0.1595</cell></row><row><cell>16 oil</cell><cell>0.2446 0.3705 0.3757</cell><cell cols="3">0.4189 0.3559 0.1397</cell></row><row><cell>17 car eval 4</cell><cell>0.7777 0.8546 0.9075</cell><cell cols="3">0.9016 0.8749 0.4693</cell></row><row><cell>18 wine quality</cell><cell>0.1158 0.1791 0.1288</cell><cell cols="3">0.1168 0.1104 0.1108</cell></row><row><cell>19 letter img</cell><cell>0.9063 0.9179 0.9121</cell><cell cols="3">0.9212 0.9205 0.5792</cell></row><row><cell>20 yeast me2</cell><cell>0.1578 0.2022 0.1794</cell><cell cols="3">0.1692 0.1383 0.1201</cell></row><row><cell>21 ozone level</cell><cell>0.0361 0.1771 0.1350</cell><cell cols="3">0.1115 0.0681 0.0981</cell></row><row><cell cols="2">22 mammography 0.4942 0.4138 0.4440</cell><cell cols="3">0.3979 0.4955 0.2209</cell></row><row><cell>23 abalone 19</cell><cell>0.0093 0.0193 0.0125</cell><cell cols="3">0.0136 0.0077 0.0187</cell></row></table></figure>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot" n="1" xml:id="foot_0"><p>CANADIAN UNIVERSITY DUBAI, DUBAI, UAE. E-mail address: firuz@cud.ac.ae</p></note>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot" n="2" xml:id="foot_1"><p>DELOITTE, DUBAI, UAE E-mail address: dmdenisov@deloitte.com</p></note>
+		</body>
+		<back>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<analytic>
+		<title level="a" type="main">The number of key carcinogenic events can be predicted from cancer incidence</title>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">V</forename><surname>Belikov</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Scientific reports</title>
+		<imprint>
+			<biblScope unit="volume">7</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page">12170</biblScope>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Belikov, A. V. (2017). The number of key carcinogenic events can be predicted from cancer incidence. Scientific reports, 7(1), 12170.</note>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<analytic>
+		<title level="a" type="main">Consistency of asymmetric kernel density estimators and smoothed histograms with application to income data</title>
+		<author>
+			<persName><forename type="first">T</forename><surname>Bouezmarni</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">O</forename><surname>Scaillet</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Econometric Theory</title>
+		<imprint>
+			<biblScope unit="volume">21</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="390" to="412" />
+			<date type="published" when="2005">2005</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Bouezmarni, T., &amp; Scaillet, O. (2005). Consistency of asymmetric kernel density estimators and smoothed histograms with application to income data. Econometric Theory, 21(2), 390-412.</note>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<analytic>
+		<title level="a" type="main">A new generalized gamma distribution with applications</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Bourguignon</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">D C S</forename><surname>Lima</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Leo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">D</forename><surname>Nascimento</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><forename type="middle">G B</forename><surname>Pinho</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><forename type="middle">M</forename><surname>Cordeiro</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">American Journal of Mathematical and Management Sciences</title>
+		<imprint>
+			<biblScope unit="volume">34</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="309" to="342" />
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Bourguignon, M., Lima, M. D. C. S., Leo, J., Nascimento, A. D., Pinho, L. G. B., &amp; Cordeiro, G. M. (2015). A new generalized gamma distribution with applications. American Journal of Mathematical and Management Sciences, 34(4), 309-342.</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<analytic>
+		<title level="a" type="main">l2, 1 norm regularized multi-kernel based joint nonlinear feature selection and over-sampling for imbalanced data classification</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Cao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Zhao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Huang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">O</forename><surname>Zaiane</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Neurocomputing</title>
+		<imprint>
+			<biblScope unit="volume">234</biblScope>
+			<biblScope unit="page" from="38" to="57" />
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Cao, P., Liu, X., Zhang, J., Zhao, D., Huang, M., &amp; Zaiane, O. (2017). l2, 1 norm regularized multi-kernel based joint nonlinear feature selection and over-sampling for imbalanced data classification. Neurocomputing, 234, 38-57.</note>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<analytic>
+		<title level="a" type="main">SMOTE: synthetic minority over-sampling technique</title>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">V</forename><surname>Chawla</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">W</forename><surname>Bowyer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><forename type="middle">O</forename><surname>Hall</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><forename type="middle">P</forename><surname>Kegelmeyer</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of artificial intelligence research</title>
+		<imprint>
+			<biblScope unit="volume">16</biblScope>
+			<biblScope unit="page" from="321" to="357" />
+			<date type="published" when="2002">2002</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Chawla, N. V., Bowyer, K. W., Hall, L. O., and Kegelmeyer, W. P. (2002). SMOTE: synthetic minority over-sampling technique. Journal of artificial intelligence research, 16, 321-357.</note>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<analytic>
+		<title level="a" type="main">Probability density function estimation using gamma kernels</title>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">X</forename><surname>Chen</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Annals of the Institute of Statistical Mathematics</title>
+		<imprint>
+			<biblScope unit="volume">52</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="471" to="480" />
+			<date type="published" when="2000">2000</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Chen, S. X. (2000). Probability density function estimation using gamma kernels. Annals of the Institute of Statistical Mathematics, 52(3), 471-480.</note>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<analytic>
+		<title level="a" type="main">Cost-Sensitive Large margin Distribution Machine for classification of imbalanced data</title>
+		<author>
+			<persName><forename type="first">F</forename><surname>Cheng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Wen</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Pattern Recognition Letters</title>
+		<imprint>
+			<biblScope unit="volume">80</biblScope>
+			<biblScope unit="page" from="107" to="112" />
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Cheng, F., Zhang, J., &amp; Wen, C. (2016). Cost-Sensitive Large margin Distribution Machine for classification of imbalanced data. Pattern Recognition Letters, 80, 107- 112.</note>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<analytic>
+		<title level="a" type="main">A Comprehensive Analysis of Synthetic Minority Oversampling TEchnique (SMOTE) for Handling Class Imbalance</title>
+		<author>
+			<persName><forename type="first">D</forename><surname>Elreedy</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">F</forename><surname>Atiya</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Information Sciences</title>
+		<imprint>
+			<biblScope unit="volume">505</biblScope>
+			<biblScope unit="page" from="32" to="64" />
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Elreedy, D., &amp; Atiya, A. F. (2019). A Comprehensive Analysis of Synthetic Minor- ity Oversampling TEchnique (SMOTE) for Handling Class Imbalance. Information Sciences, 505, 32-64.</note>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">An introduction to ROC analysis</title>
+		<author>
+			<persName><forename type="first">T</forename><surname>Fawcett</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Pattern recognition letters</title>
+		<imprint>
+			<biblScope unit="volume">27</biblScope>
+			<biblScope unit="issue">8</biblScope>
+			<biblScope unit="page" from="861" to="874" />
+			<date type="published" when="2006">2006</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Fawcett, T. (2006). An introduction to ROC analysis. Pattern recognition letters, 27(8), 861-874.</note>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<analytic>
+		<title level="a" type="main">Smote for learning from imbalanced data: progress and challenges, marking the 15-year anniversary</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Fernndez</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Garcia</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Herrera</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">V</forename><surname>Chawla</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of artificial intelligence research</title>
+		<imprint>
+			<biblScope unit="volume">61</biblScope>
+			<biblScope unit="page" from="863" to="905" />
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Fernndez, A., Garcia, S., Herrera, F., &amp; Chawla, N. V. (2018). Smote for learning from imbalanced data: progress and challenges, marking the 15-year anniversary. Journal of artificial intelligence research, 61, 863-905.</note>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<analytic>
+		<title level="a" type="main">EUSBoost: Enhancing ensembles for highly imbalanced data-sets by evolutionary undersampling</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Galar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Fernndez</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Barrenechea</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Herrera</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Pattern Recognition</title>
+		<imprint>
+			<biblScope unit="volume">46</biblScope>
+			<biblScope unit="issue">12</biblScope>
+			<biblScope unit="page" from="3460" to="3471" />
+			<date type="published" when="2013">2013</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Galar, M., Fernndez, A., Barrenechea, E., &amp; Herrera, F. (2013). EUSBoost: En- hancing ensembles for highly imbalanced data-sets by evolutionary undersampling. Pattern Recognition, 46(12), 3460-3471.</note>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<analytic>
+		<title level="a" type="main">BPSO-Adaboost-KNN ensemble learning algorithm for multi-class imbalanced data classification</title>
+		<author>
+			<persName><forename type="first">G</forename><surname>Haixiang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Yijing</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Yanan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Xiao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Jinling</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Engineering Applications of Artificial Intelligence</title>
+		<imprint>
+			<biblScope unit="volume">49</biblScope>
+			<biblScope unit="page" from="176" to="193" />
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Haixiang, G., Yijing, L., Yanan, L., Xiao, L., &amp; Jinling, L. (2016). BPSO-Adaboost- KNN ensemble learning algorithm for multi-class imbalanced data classification. En- gineering Applications of Artificial Intelligence, 49, 176-193.</note>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<analytic>
+		<title level="a" type="main">Learning from Imbalanced Data</title>
+		<author>
+			<persName><forename type="first">H</forename><surname>He</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><forename type="middle">A</forename><surname>Garcia</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Knowledge and Data Engineering</title>
+		<imprint>
+			<biblScope unit="volume">21</biblScope>
+			<biblScope unit="issue">9</biblScope>
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">He, H., and Garcia, E. A. (2009). Learning from Imbalanced Data IEEE Transactions on Knowledge and Data Engineering v. 21 n. 9.</note>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<analytic>
+		<title level="a" type="main">ADASYN: Adaptive synthetic sampling approach for imbalanced learning</title>
+		<author>
+			<persName><forename type="first">H</forename><surname>He</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Bai</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><forename type="middle">A</forename><surname>Garcia</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Li</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">IEEE International Joint Conference on Neural Networks (IEEE World Congress on Computational Intelligence)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2008-06">2008, June. 2008</date>
+			<biblScope unit="page" from="1322" to="1328" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">He, H., Bai, Y., Garcia, E. A., &amp; Li, S. (2008, June). ADASYN: Adaptive synthetic sampling approach for imbalanced learning. In 2008 IEEE International Joint Con- ference on Neural Networks (IEEE World Congress on Computational Intelligence) (pp. 1322-1328). IEEE.</note>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<analytic>
+		<title level="a" type="main">A gamma kernel density estimation for insurance loss data</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Jeon</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">H</forename><surname>Kim</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Insurance: Mathematics and Economics</title>
+		<imprint>
+			<biblScope unit="volume">53</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="569" to="579" />
+			<date type="published" when="2013">2013</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Jeon, Y., &amp; Kim, J. H. (2013). A gamma kernel density estimation for insurance loss data. Insurance: Mathematics and Economics, 53(3), 569-579.</note>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<analytic>
+		<title level="a" type="main">Kernel density estimation based sampling for imbalanced class distribution</title>
+		<author>
+			<persName><forename type="first">F</forename><surname>Kamalov</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Information Sciences</title>
+		<imprint>
+			<biblScope unit="volume">512</biblScope>
+			<biblScope unit="page" from="1192" to="1201" />
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Kamalov, F. (2020). Kernel density estimation based sampling for imbalanced class distribution. Information Sciences, 512, 1192-1201.</note>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<analytic>
+		<title level="a" type="main">Outlier detection in high dimensional data</title>
+		<author>
+			<persName><forename type="first">F</forename><surname>Kamalov</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><forename type="middle">H</forename><surname>Leung</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Information &amp; Knowledge Management</title>
+		<imprint>
+			<biblScope unit="page">2040013</biblScope>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Kamalov, F., &amp; Leung, H. H. (2020). Outlier detection in high dimensional data. Journal of Information &amp; Knowledge Management, 2040013.</note>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<analytic>
+		<title level="a" type="main">Learning from imbalanced data: open challenges and future directions</title>
+		<author>
+			<persName><forename type="first">B</forename><surname>Krawczyk</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Progress in Artificial Intelligence</title>
+		<imprint>
+			<biblScope unit="volume">5</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="221" to="232" />
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Krawczyk, B. (2016). Learning from imbalanced data: open challenges and future directions. Progress in Artificial Intelligence, 5(4), 221-232.</note>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<analytic>
+		<title level="a" type="main">Costsensitive learning of deep feature representations from imbalanced data</title>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">H</forename><surname>Khan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Hayat</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Bennamoun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><forename type="middle">A</forename><surname>Sohel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Togneri</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE transactions on neural networks and learning systems</title>
+		<imprint>
+			<biblScope unit="volume">29</biblScope>
+			<biblScope unit="issue">8</biblScope>
+			<biblScope unit="page" from="3573" to="3587" />
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Khan, S. H., Hayat, M., Bennamoun, M., Sohel, F. A., &amp; Togneri, R. (2017). Cost- sensitive learning of deep feature representations from imbalanced data. IEEE trans- actions on neural networks and learning systems, 29(8), 3573-3587.</note>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<monogr>
+		<title level="m" type="main">Handbook of statistical distributions with applications</title>
+		<author>
+			<persName><forename type="first">K</forename><surname>Krishnamoorthy</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+			<publisher>Chapman and Hall/CRC</publisher>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Krishnamoorthy, K. (2016). Handbook of statistical distributions with applications. Chapman and Hall/CRC.</note>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<analytic>
+		<title level="a" type="main">The Weibull-Gamma Distribution: Properties and Applications</title>
+		<author>
+			<persName><forename type="first">H</forename><forename type="middle">S</forename><surname>Klakattawi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Entropy</title>
+		<imprint>
+			<biblScope unit="volume">21</biblScope>
+			<biblScope unit="issue">5</biblScope>
+			<biblScope unit="page">438</biblScope>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Klakattawi, H. S. (2019). The Weibull-Gamma Distribution: Properties and Applica- tions. Entropy, 21(5), 438.</note>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<analytic>
+		<title level="a" type="main">Imbalanced-learn: A python toolbox to tackle the curse of imbalanced datasets in machine learning</title>
+		<author>
+			<persName><forename type="first">G</forename><surname>Lemaitre</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Nogueira</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">K</forename><surname>Aridas</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">The Journal of Machine Learning Research</title>
+		<imprint>
+			<biblScope unit="volume">18</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="559" to="563" />
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Lemaitre, G., Nogueira, F., and Aridas, C. K. (2017). Imbalanced-learn: A python toolbox to tackle the curse of imbalanced datasets in machine learning. The Journal of Machine Learning Research, 18(1), 559-563.</note>
+</biblStruct>
+
+<biblStruct xml:id="b22">
+	<analytic>
+		<title level="a" type="main">Clustering-based undersampling in class-imbalanced data</title>
+		<author>
+			<persName><forename type="first">W</forename><forename type="middle">C</forename><surname>Lin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">F</forename><surname>Tsai</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><forename type="middle">H</forename><surname>Hu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">S</forename><surname>Jhang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Information Sciences</title>
+		<imprint>
+			<biblScope unit="volume">409</biblScope>
+			<biblScope unit="page" from="17" to="26" />
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Lin, W. C., Tsai, C. F., Hu, Y. H., &amp; Jhang, J. S. (2017). Clustering-based undersam- pling in class-imbalanced data. Information Sciences, 409, 17-26.</note>
+</biblStruct>
+
+<biblStruct xml:id="b23">
+	<analytic>
+		<title level="a" type="main">Exploratory undersampling for classimbalance learning</title>
+		<author>
+			<persName><forename type="first">X</forename><forename type="middle">Y</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Wu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><forename type="middle">H</forename><surname>Zhou</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Systems, Man, and Cybernetics, Part B (Cybernetics)</title>
+		<imprint>
+			<biblScope unit="volume">39</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="539" to="550" />
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Liu, X. Y., Wu, J., &amp; Zhou, Z. H. (2009). Exploratory undersampling for class- imbalance learning. IEEE Transactions on Systems, Man, and Cybernetics, Part B (Cybernetics), 39(2), 539-550.</note>
+</biblStruct>
+
+<biblStruct xml:id="b24">
+	<analytic>
+		<title level="a" type="main">Nonparametric kernel density estimation near the boundary</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Malec</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Schienle</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Computational Statistics &amp; Data Analysis</title>
+		<imprint>
+			<biblScope unit="volume">72</biblScope>
+			<biblScope unit="page" from="57" to="76" />
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Malec, P., &amp; Schienle, M. (2014). Nonparametric kernel density estimation near the boundary. Computational Statistics &amp; Data Analysis, 72, 57-76.</note>
+</biblStruct>
+
+<biblStruct xml:id="b25">
+	<analytic>
+		<title level="a" type="main">kNN approach to unbalanced data distributions: a case study involving information extraction</title>
+		<author>
+			<persName><forename type="first">I</forename><surname>Mani</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">I</forename><surname>Zhang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of workshop on learning from imbalanced datasets</title>
+		<meeting>workshop on learning from imbalanced datasets</meeting>
+		<imprint>
+			<date type="published" when="2003-08">2003, August</date>
+			<biblScope unit="volume">126</biblScope>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Mani, I., &amp; Zhang, I. (2003, August). kNN approach to unbalanced data distribu- tions: a case study involving information extraction. In Proceedings of workshop on learning from imbalanced datasets (Vol. 126).</note>
+</biblStruct>
+
+<biblStruct xml:id="b26">
+	<analytic>
+		<title level="a" type="main">Classification of imbalanced data by oversampling in kernel space of support vector machines</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Mathew</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">K</forename><surname>Pang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Luo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><forename type="middle">H</forename><surname>Leong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE transactions on neural networks and learning systems</title>
+		<imprint>
+			<biblScope unit="volume">29</biblScope>
+			<biblScope unit="issue">9</biblScope>
+			<biblScope unit="page" from="4065" to="4076" />
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Mathew, J., Pang, C. K., Luo, M., &amp; Leong, W. H. (2017). Classification of im- balanced data by oversampling in kernel space of support vector machines. IEEE transactions on neural networks and learning systems, 29(9), 4065-4076.</note>
+</biblStruct>
+
+<biblStruct xml:id="b27">
+	<analytic>
+		<title level="a" type="main">Scikit-learn: Machine learning in Python</title>
+		<author>
+			<persName><forename type="first">F</forename><surname>Pedregosa</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Varoquaux</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Gramfort</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">V</forename><surname>Michel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Thirion</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">O</forename><surname>Grisel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">.</forename><forename type="middle">.</forename><surname>Vanderplas</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of machine learning research</title>
+		<imprint>
+			<biblScope unit="volume">12</biblScope>
+			<biblScope unit="page" from="2825" to="2830" />
+			<date type="published" when="2011-10">2011. Oct</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Pedregosa, F., Varoquaux, G., Gramfort, A., Michel, V., Thirion, B., Grisel, O., ... &amp; Vanderplas, J. (2011). Scikit-learn: Machine learning in Python. Journal of machine learning research, 12(Oct), 2825-2830.</note>
+</biblStruct>
+
+<biblStruct xml:id="b28">
+	<analytic>
+		<title level="a" type="main">Data imbalance in classification: Experimental evaluation</title>
+		<author>
+			<persName><forename type="first">F</forename><surname>Thabtah</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Hammoud</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Kamalov</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Gonsalves</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Information Sciences</title>
+		<imprint>
+			<biblScope unit="volume">513</biblScope>
+			<biblScope unit="page" from="429" to="441" />
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Thabtah, F., Hammoud, S., Kamalov, F., &amp; Gonsalves, A. (2020). Data imbalance in classification: Experimental evaluation. Information Sciences, 513, 429-441.</note>
+</biblStruct>
+
+<biblStruct xml:id="b29">
+	<analytic>
+		<title level="a" type="main">ROSEFW-RF: the winner algorithm for the ECBDL14 big data competition: an extremely imbalanced big data bioinformatics problem</title>
+		<author>
+			<persName><forename type="first">I</forename><surname>Triguero</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Del Ro</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">V</forename><surname>Lpez</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Bacardit</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">M</forename><surname>Bentez</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Herrera</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Knowledge-Based Systems</title>
+		<imprint>
+			<biblScope unit="volume">87</biblScope>
+			<biblScope unit="page" from="69" to="79" />
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Triguero, I., del Ro, S., Lpez, V., Bacardit, J., Bentez, J. M., &amp; Herrera, F. (2015). ROSEFW-RF: the winner algorithm for the ECBDL14 big data competition: an ex- tremely imbalanced big data bioinformatics problem. Knowledge-Based Systems, 87, 69-79.</note>
+</biblStruct>
+
+<biblStruct xml:id="b30">
+	<analytic>
+		<title level="a" type="main">Diversity analysis on imbalanced data sets by using ensemble models</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Yao</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">2009 IEEE Symposium on Computational Intelligence and Data Mining</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2009-03">2009, March</date>
+			<biblScope unit="page" from="324" to="331" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Wang, S., &amp; Yao, X. (2009, March). Diversity analysis on imbalanced data sets by using ensemble models. In 2009 IEEE Symposium on Computational Intelligence and Data Mining (pp. 324-331). IEEE.</note>
+</biblStruct>
+
+<biblStruct xml:id="b31">
+	<analytic>
+		<title level="a" type="main">Maximum margin of twin spheres support vector machine for imbalanced data classification</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Xu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE transactions on cybernetics</title>
+		<imprint>
+			<biblScope unit="volume">47</biblScope>
+			<biblScope unit="issue">6</biblScope>
+			<biblScope unit="page" from="1540" to="1550" />
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Xu, Y. (2016). Maximum margin of twin spheres support vector machine for imbal- anced data classification. IEEE transactions on cybernetics, 47(6), 1540-1550.</note>
+</biblStruct>
+
+<biblStruct xml:id="b32">
+	<analytic>
+		<title level="a" type="main">On the multivariate gammagamma distribution with arbitrary correlation and applications in wireless communications</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Matthaiou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><forename type="middle">K</forename><surname>Karagiannidis</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Dai</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Vehicular Technology</title>
+		<imprint>
+			<biblScope unit="volume">65</biblScope>
+			<biblScope unit="issue">5</biblScope>
+			<biblScope unit="page" from="3834" to="3840" />
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zhang, J., Matthaiou, M., Karagiannidis, G. K., &amp; Dai, L. (2015). On the multivari- ate gammagamma distribution with arbitrary correlation and applications in wireless communications. IEEE Transactions on Vehicular Technology, 65(5), 3834-3840.</note>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

@@ -1,0 +1,2701 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">A Survey of Credit Card Fraud Detection Techniques: Data and Technique Oriented Perspective</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability status="unknown"><licence/></availability>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><surname>Samanehsorournejad</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="department">Department of Information Technology</orgName>
+								<orgName type="institution">University of Guilan</orgName>
+								<address>
+									<country key="IR">Iran</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Zahra</forename><surname>Zojaji</surname></persName>
+							<email>z.zojaji@aut.ac.ir</email>
+							<affiliation key="aff1">
+								<orgName type="department">Department of Computer Engineering</orgName>
+								<orgName type="institution">Amirkabir University of Technology</orgName>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Reza</forename><forename type="middle">Ebrahimi</forename><surname>Atani</surname></persName>
+							<affiliation key="aff2">
+								<orgName type="department">Department of Computer Engineering</orgName>
+								<orgName type="institution">University of Guilan</orgName>
+								<address>
+									<settlement>Rasht</settlement>
+									<country key="IR">Iran</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><roleName>Amir</roleName><forename type="first">Hassan</forename><surname>Monadjemi</surname></persName>
+							<email>monadjemi@eng.ui.ac.ir</email>
+							<affiliation key="aff3">
+								<orgName type="department">Department of Computer Engineering</orgName>
+								<orgName type="institution">University of Isfahan</orgName>
+								<address>
+									<settlement>Isfahan</settlement>
+									<country key="IR">Iran</country>
+								</address>
+							</affiliation>
+						</author>
+						<title level="a" type="main">A Survey of Credit Card Fraud Detection Techniques: Data and Technique Oriented Perspective</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date/>
+						</imprint>
+					</monogr>
+					<idno type="MD5">72C112BD6C345B8B1D301FC369AA8444</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.2-SNAPSHOT" ident="GROBID" when="2026-08-31T18:09+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<textClass>
+				<keywords>
+					<term>Credit Card</term>
+					<term>Fraud Classification</term>
+					<term>Fraud Detection Techniques</term>
+				</keywords>
+			</textClass>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>Credit card plays a very important rule in today's economy. It becomes an unavoidable part of household, business and global activities. Although using credit cards provides enormous benefits when used carefully and responsibly,significant credit and financial damagesmay be causedby fraudulent activities. Many techniques have been proposed to confront thegrowthin credit card fraud. However, all of these techniques have the same goal of avoiding the credit card fraud; each one has its own drawbacks, advantages and characteristics. In this paper, after investigating difficultiesof credit card fraud detection, we seek to review the state of the art in credit card fraud detection techniques, datasets and evaluation criteria.The advantages and disadvantages of fraud detection methods are enumerated and compared.Furthermore, a classification of mentioned techniques into two main fraud detection approaches, namely, misuses (supervised) and anomaly detection (unsupervised) is presented. Again, a classification of techniques is proposed based on capability to process the numerical and categorical datasets. Different datasets used in literatureare then described and grouped into real and synthesized data and the effective and common attributesare extracted for further usage.Moreover, evaluation employed criterions in literature are collected and discussed.Consequently, open issues for credit card fraud detection are explained as guidelinesfor new researchers.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1.">Introduction</head><p>At the current state of the world, financial organizations expand the availability of financial facilitiesbyemployingof innovative servicessuch ascredit cards, Automated Teller Machines (ATM), internet and mobile banking services. Besides, along with the rapid advances of e-commerce,the use of credit card has become a convenience and necessary part of financial life. Credit card is a payment cardsupplied to customers as a system of payment. There are lots of advantages in usingcredit cards such as:  Ease of purchase Credit cards can make life easier. They allow customers to purchase on credit in arbitrary time, location and amount, without carrying the cash.Provide a convenient payment method for purchases made on the internet, over the telephone, through ATMs, etc.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head> Keep customer credit history</head><p>Having a good credit history is often important in detecting loyal customers. This history is valuable not only for credit cards, but also for other financial serviceslike loans, rental applications, or even some jobs. Lenders and issuers of creditmortgage companies, credit card companies, retail stores, and utility companies can review customer credit score and history to see how punctualand responsible customers are in paying back their debts.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head> Protection of Purchases</head><p>Credit cards may also offer customers, additional protection if the purchased merchandisebecomes lost, damaged, or stolen. Both the buyer"s credit card statement and company can confirmthat the customer has bought if the original receipt is lost or stolen. In addition, some credit card companies provideinsurance forlarge purchases.</p><p>In spite of all mentioned advantages, the problem of fraud is a serious issue ine-banking services that threaten credit card transactions especially. Fraud is an intentional deceptionwith the purpose of obtaining financial gain or causing loss by implicit or explicit trick.Fraud is a public law violation in which the fraudster gains an unlawful advantage or causes unlawful damage. The estimation ofamount of damage made by fraud activities indicates that fraud costs a very considerable sum of money.Credit card fraud is increasing significantly with the development of modern technology resulting in the loss of billions of dollars worldwide each year.Statistics from the Internet Crime Complaint Center show that there has been a significant rising in reported fraud in last decade. Financial losses caused due to online fraud only in US, was reported $3.4 billion in 2011.</p><p>Fraud detection involves identifying scarce fraud activities among numerous legitimate transactions as quickly as possible. Fraud detection methods are developing rapidlyin order to adapt with new incoming fraudulent strategies across the world. But, development of new fraud detection techniquesbecomes more difficult due to the severe limitation of the ideas exchange in fraud detection. On the other hand, fraud detection is essentially a rare event problem, which has been variously called outlier analysis, anomaly detection, exception mining, mining rare classes, mining imbalanced data etc. The number of fraudulent transactions is usually a very low fraction of the total transactions. Hence the task of detecting fraud transactions in an accurate and efficient manner is fairly difficult and challengeable.Therefore, development of efficient methods which can distinguish rarefraud activities from billions of legitimate transaction seems essential. Although, credit card fraud detection has gained attention and extensive studyespecially in recent years and there are lots of surveys about this kind of fraud such as <ref type="bibr" target="#b29">[1]</ref>, <ref type="bibr" target="#b30">[2]</ref>, <ref type="bibr" target="#b31">[3]</ref>,neither classify all credit card fraud detection techniques with analysis of datasets and attributes. Therefore in this paper, we attempt to collect and integrate a complete set of researches of literature and analyze them from various aspects.</p><p>The main contributions of this work are highlighted as follows:  To the best of our knowledge, the absence of complete and detailed credit card fraud detection survey is an important issue, which is addressed by analyzing the state of the art in credit card fraud detection.</p><p> The state of the art fraud detection techniques are described and classified from different aspects of supervised/unsupervised and numerical/categorical data consistent.</p><p> In credit card fraud research each author has used its own dataset. There isno standard dataset or benchmark to evaluate detection methods. We attemptto gather different datasetsinvestigated by researchers, categorize them into real and synthetized groups and extract the common attributes affects the quality of detection. The rest of the paper is organized as follows: a general description of types of fraud is presented in Section2.Challengesof credit card fraud detection are identified in Section3. Section4describes the credit card fraud detection techniques, their advantages and disadvantages and classification of them. In section 5 the dataset used by researchers and corresponding evaluation criteria are explained; another classification upon data types is also drawn in this section. Finally open issues of credit card fraud detection are presented in Section6.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.">Credit card fraud</head><p>Illegal use of credit card or its information without the knowledge of the owner is referred to as credit card fraud.Different credit card fraud tricks belong mainly to two groups of application and behavioral fraud <ref type="bibr" target="#b31">[3]</ref>. Application fraud takes place when, fraudsters apply new cards from bank or issuing companies using false or other"s information. Multiple applications may be submitted by one user with one set of user details (called duplication fraud) or different user with identical details (called identity fraud). Behavioral fraud, on the other hand,has four principal types: stolen/lost card, mail theft, counterfeit card and "card holder not present" fraud.Stolen/lost card fraud occurs when fraudsters steala credit card or get access to a lost card. Mail theft fraud occurs when the fraudster get a credit card in mail or personal information from bank before reaching to actual cardholder <ref type="bibr" target="#b31">[3]</ref>. In both counterfeit and "card holder not present" frauds, credit card details are obtained without the knowledge of card holders. In the former, remote transactions can be conducted using card details through mail, phone, or the Internet. In the latter, counterfeit cards are made based on card information. Based on statistical data stated in <ref type="bibr" target="#b29">[1]</ref> in 2012, the high risk countries facing credit card fraud threat is illustrated in Fig. <ref type="figure">1</ref>. Ukraine has the most fraud rate with staggering 19%, which is closely followed by Indonesia at 18.3% fraud rate. After these two, Yugoslavia with the rate of17.8% is the most risky country. The next highest fraud rate belongs to Malaysia (5.9%), Turkey (9%) and finally United States. Other countries that are prune to credit card fraud with the rate below than 1% are not demonstrated in figure <ref type="figure">1</ref>.</p><p>Fig1. High risk countries facing credit card fraud threat</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.">Difficulties of Credit Card Fraud Detection</head><p>Fraud detection systems are prune to several difficulties and challenges enumerated bellow. An effective frauddetection technique should have abilities to address these difficulties in order to achievebest performance.</p><p> Imbalanced data:The credit card fraud detection data has imbalanced nature. It means thatvery small percentages of all credit card transactions are fraudulent. This cause the detection of fraud transactions very difficult and imprecise.</p><p> Different misclassification importance: in fraud detection task, different misclassification errors have different importance.Misclassification of a normal transaction asfraud is not as harmful as detecting a fraud transaction as normal. Because in the first case the mistake in classification will be identified in further investigations.</p><p> Overlapping data: many transactions may be considered fraudulent, while actually they are normal (false positive) and reversely, a fraudulent transaction may also seem to be legitimate (false negative). Hence obtaining low rate of false positive and false negative is a key challenge of fraud detection systems <ref type="bibr">[4, 5, and 6]</ref>.</p><p> Lack of adaptability: classification algorithms are usually faced with the problem of detecting new types of normal or fraudulent patterns. The supervised and unsupervised fraud detection systems are inefficient in detecting new patterns of normal and fraud behaviors, respectively.</p><p> Fraud detection cost: The system should take into account both the cost of fraudulent behavior that is detected and the cost of preventing it. For example, no revenue is obtained by stopping a fraudulent transaction of a few dollars <ref type="bibr">[5,</ref><ref type="bibr" target="#b35">7]</ref>.  Lack of standard metrics: there is no standard evaluation criterion for assessing and comparing the results of fraud detection systems.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.">Credit Card Fraud Detection Techniques</head><p>The credit card fraud detection techniques are classified in two general categories: fraud analysis (misuse detection) and userbehavior analysis (anomaly detection).</p><p>The first group of techniques deals with supervised classification task in transaction level. In these methods, transactions are labeled as fraudulent or normal based on previous historical data. This dataset is then used to create classification models which can predict the state (normal or fraud) of new records. There are numerous model creation methods for a typical two class classification tasksuch as rule induction <ref type="bibr" target="#b29">[1]</ref>, decision trees <ref type="bibr" target="#b30">[2]</ref> and neural networks <ref type="bibr" target="#b31">[3]</ref>.This approach is proven to reliably detect most fraud tricks which have been observed before <ref type="bibr" target="#b32">[4]</ref>, it also known as misuse detection.</p><p>The second approach deals with unsupervised methodologies which are based on account behavior. In this method a transaction is detected fraudulent if it is in contrast with user"s normal behavior. This is because we don"t expect fraudsters behave the same as the account owner or be aware of the behavior model of the owner <ref type="bibr">[5]</ref>.To this aim, we need to extract the legitimate user behavioral model (e.. user profile)for each account and then detect fraudulent activities according to it. Comparingnew behaviors with this model, different enough activities are distinguished as frauds. The profiles may contain the activity information of the account; such as merchant types, amount, location and time of transactions, <ref type="bibr" target="#b34">[6]</ref>.This method is also known as anomaly detection.</p><p>It is important to highlight the key differences between user behavior analysis and fraud analysis approaches.Thefraud analysis methodcan detect known fraud tricks, with a low false positiverate.These systems extract the signature and model of fraud tricks presented in oracle dataset and can then easily determine exactly which frauds, the system is currently experiencing. If the test data does not containanyfraud signatures, no alarm is raised. Thus, the false positive rate can be reduced extremely.However,sincelearning of a fraud analysis system (i.e. classifier) is based on limited and specific fraud records,It cannot detect novel frauds. As a result, the false negativesratemay be extremely high depending on how ingenious are the fraudsters.User behavioranalysis, on the other hand, greatly addresses the problem of detecting novel frauds. Thesemethods do not search for specific fraud patterns, but rather compare incoming activitieswiththe constructed model of legitimate user behavior. Any activity that is enough different from the model will be considered as a possible fraud. Though, user behavior analysis approaches are powerful in detectinginnovative frauds, they reallysuffer from high rates of false alarm. Moreover, if a fraud occurs during the training phase, this fraudulent behavior will be entered in baseline mode and is assumed to be normal in further analysis <ref type="bibr" target="#b35">[7]</ref>.In this section we will brieflyintroduce some current fraud detection techniques which are applied to credit card fraud detection tasks, also main advantage and disadvantage of each approachwill be discussed.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.1">Artificial Neural Network</head><p>An artificial neural network (ANN) is a set of interconnected nodes designed to imitate the functioning of the human brain <ref type="bibr" target="#b37">[9]</ref>. Each node has a weighted connection to several other nodes in adjacent layers. Individual nodes take the input received from connected nodes and use the weights together with a simple function to compute output values. Neural networks come in many shapes and architectures.The Neural network architecture, including the number of hidden layers, the number of nodeswithin a specific hidden layer and their connectivity, most be specified by user based on the complexity of the problem. ANNs can be configured by supervised, unsupervised or hybrid learning methods.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.1.1">Supervised techniques</head><p>In supervised learning, samples of both fraudulent and non-fraudulent records, associated with their labels are used to create models. These techniques are often used in fraud analysis approach.One of the most popular supervised neural networks is back propagation network (BPN). It minimizes the objective function using a multi-stage dynamic optimization methodthat is a generalization of the delta rule.The back propagation method is often useful for feed-forward network with no feedback. The BPN algorithm is usually time-consuming and parameters like the number of hidden neurons and learning rate of delta rules require extensive tuning and trainingto achieve the best performance <ref type="bibr" target="#b38">[10]</ref>. In the domain of fraud detection, supervised neural networks like back-propagation are known as efficient tool that have numerous applications [11], <ref type="bibr" target="#b39">[12]</ref>, <ref type="bibr" target="#b40">[13]</ref>.</p><p>RaghavendraPatidar, et al. <ref type="bibr" target="#b41">[14]</ref> used a dataset to train a three layers backpropagation neural network in combination with genetic algorithms (GA) <ref type="bibr" target="#b42">[15]</ref>forcredit card fraud detection. In this work, genetic algorithms was responsible for making decision about the network architecture, dealing with the network topology, number of hidden layers and number of nodes in each layer.</p><p>Also, Aleskerovet al. <ref type="bibr" target="#b43">[16]</ref> developed a neural network based data mining system for credit card fraud detection.The proposed system (CARDWATCH) had three layers autoassociativearchitectures.They used a set of synthetized data for training and testing the system. The reportedresultsshow very successfulfraud detection rates.</p><p>In <ref type="bibr" target="#b44">[17]</ref>, a P-RCE neural network was applied for credit card fraud detection.P-RCE is a type of radial-basis function networks <ref type="bibr" target="#b45">[18,</ref><ref type="bibr" target="#b47">19]</ref>that usually applied for pattern recognition tasks.Krenkeret al. proposed a model for real time fraud detection based on bidirectional neural networks <ref type="bibr" target="#b48">[20]</ref>. They used a large data set of cell phone transactions provided by a credit card company. It was claimed that the system outperforms the rule based algorithms in terms of false positive rate.</p><p>Again in <ref type="bibr" target="#b49">[21]</ref> a parallel granular neural network (GNN) is proposed to speed up data mining and knowledge discoveryprocess for credit card fraud detection.GNNis a kind of fuzzy neural network based on knowledge discovery (FNNKD).The underlying dataset was extracted from SQL server database containing sample Visa Card transactions and then preprocessed for applying in fraud detection. They obtained less average training errors in the presence of larger training dataset.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>4.1.2Unsupervised techniques</head><p>The unsupervised techniques do not need the previous knowledge of fraudulent and normalrecords.These methodsraise alarmfor those transactions that are most dissimilar from the normalones.These techniques are often used in user behavior approach.ANNs can produce acceptable result for enough large transaction dataset. They need a long training dataset. Selforganizing map (SOM) is one of the most popular unsupervised neural networks learning which was introduced by <ref type="bibr" target="#b50">[22]</ref>. SOM provides a clustering method, which is appropriate for constructing and analyzing customer profiles,in credit card fraud detection, as suggested in <ref type="bibr" target="#b51">[23]</ref>. SOM operates in two phase: training and mapping. In the former phase, the map is built and weights of the neurons are updated iteratively, based on input samples <ref type="bibr" target="#b52">[24]</ref>, in latter, test data is classified automatically into normal and fraudulent classes through the procedure of mapping. As stated in <ref type="bibr" target="#b53">[25]</ref>, after training the SOM, new unseen transactions are compared to normal and fraud clusters, if it is similar to all normal records, it is classified as normal. New fraud transactions are also detected similarly.</p><p>One of the advantages of using unsupervised neural networks over similar techniques is that these methods can learn from data stream. The more data passed to a SOM model, the more adaptation and improvement on result is obtained. More specifically, the SOM adapts its model as time passes. Therefore it can be used and updated online in banks or other financial corporations. As a result, the fraudulent use of a card can be detected fast and effectively. However, neural networks has some drawbacks and difficulties which are mainly related to specifying suitable architecture in one hand and excessive training required for reaching to best performance in other hand.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.">1.3 Hybrid supervised and unsupervisedtechniques</head><p>In addition to supervised and unsupervised learning models of neural networks, some researchers have applied hybrid models. John ZhongLeiet.Al. <ref type="bibr">[26]</ref> proposed hybrid supervised (SICLN) and unsupervised (ICLN)learning networkfor credit card fraud detection. They improved the reward only rule of SICLNmodel to ICLN in order to update weights according to both reward and penalty. This improvement appeared in terms of increasing stability and reducing the training time.Moreover, the number of final clusters of the ICLN is independent from the number of initial network neurons. As a result the inoperable neurons can be omitted from the clusters by applying the penalty rule.The results indicated that both the ICLN and the SICLN havehigh performance, but the SICLN outperforms well-known unsupervised clustering algorithms.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.2">Artificial Immune System (AIS)</head><p>The natural immune system is a highly complex system, comprised of an intricate network of specialized tissues, organs, cells and chemical molecules. These elements are interrelated and act in a highly co-ordinate and specific manner when they recognize, remember disease causing foreign cells and eliminate them. Any element that could be recognized by the immune system is named an antigen. The immune system"s detectors are the antibodies that are capable to recognition and destruction harmful and risky antigens <ref type="bibr" target="#b55">[27]</ref>.</p><p>The immune system consists of the two main response of immune and defense: innate immune response and acquired immune response. The body"s first response for defense is made of the outer, unbroken skin and the "mucus membranes" lining internal channels, such as the respiratory and digestive tracts. If the harmful cells could pass through innate immune defense the acquired immunity will defense. In fact, adaptive immune response performs based on antigen-specific recognition of almost unlimited types of infectious substances, even if previously unseen or mutated. It is worth mentioning that the acquired immune response is capable of "remembering" every infection, so that a second exposure to the same pathogen is dealt with more efficiently.</p><p>There are two organs responsible for the generation and development of immune cells: the bone marrow and the thymus. The bone marrow is the site where all blood cells are generated and where some of them are developed. The thymus is the organ to which a class of immune cells named Tcells migrates and maturates <ref type="bibr" target="#b56">[28]</ref>. There exist a great number of different immune cells, but lymphocytes (white blood cells), are the prevailing ones. Their main function is distinguishing selfcells, which are the human body cells, from non-self cells, the dangerous foreign cells (the pathogens). Lymphocytes are classified into two main types: B-cells and T-cells, both originated in the bone marrow. Those lymphocytes that develop within the bone marrow are named B-cells, and those that migrate to and develop within the thymus (the organ which is located behind the breastbone) are named T-cells. Artificial Immune System (AIS) is a recent sub field based on the biological metaphor of the immune system <ref type="bibr" target="#b57">[29]</ref>. The immune system can distinguish between self and non-self-cells, or more specific, between harmful cells (called as pathogens) and other cells. The ability to recognize differences in patterns and being all to detect and eliminate infections precisely has attracted the engineer"s intention in all fields.</p><p>Researchers have used the concepts of immunology in order to develop a set of algorithms, such as negative selection algorithm <ref type="bibr" target="#b58">[30]</ref>, immune networks algorithm <ref type="bibr" target="#b59">[31]</ref>, clonal selection algorithm <ref type="bibr" target="#b60">[32]</ref>, and the dendritic cells algorithm <ref type="bibr" target="#b61">[33]</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.2.1">Negative Selection:</head><p>Negative Selection Algorithm or NSA proposed by <ref type="bibr" target="#b62">[34]</ref> is a change detection algorithm based on the T-Cells generation process of biological immune system. It is one of the earliest AIS algorithms applied in various real-world applications. Since it was first conceived, it has attracted many researchers and practitioners in AIS and has gone through some phenomenal evolution. NSA has two stages: generation and detection. In generation stage, the detectors are generated by some random process and censored by trying to match self samples. Those candidates that match (by affinity of higher than affinity threshold) are eliminated and the rest are kept as detectors. In detection stage, the collection of detectors (or detector set) is used in checking whether an incoming data instance is self or non-self. If it matches (by affinity of higher than affinity threshold) any detector, it is claimed as non-self or anomaly.</p><p>Brabazonet.al <ref type="bibr" target="#b63">[35]</ref> proposed an AIS based model for online credit card fraud detection. Three AIS algorithms were implemented and their performance was standardized against a logistic regression model. Their three chosenalgorithms were the unmodified negative selectionAlgorithm, the modified negative selection algorithm andthe Clonal selection algorithm.They proposed the Distance Value Metric for calculating distance between records. This metric is based on the probability of data occurrence in the training set. Where the detection rate increased, but the number of false alarms and missed frauds remained.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.2.2">Clonal selection:</head><p>Clonal selection theory is used by the immune system to explain the basic features of an immune response to an antigenic stimulus. The selection mechanism guarantees that only those clones (antibodies) with higher affinity for the encountered antigen will survive. On the basis of clonal selection principle, clonal selection algorithm was initially proposed in <ref type="bibr">[36]</ref> and formally explained in <ref type="bibr" target="#b65">[37]</ref>. The general algorithm was called CLONALG. Gadiet.al in <ref type="bibr">[36]</ref> applied the AIRS in fraud detection on credit card transactions. AIRS is a classification algorithm that is based on AIS whichapplies clonal selection to create detectors.AIRS generatesdetectors for all of the classes in the database and in detectionstage uses k Nearest Neighbor algorithm (also called K-NN)in order to classify eachrecord.They compared their method with other methods like the neural networks, Bayesian networks, and decision trees and claimed that, after improving the input parameters for all the methods, AIRS has show the best results of all, partly perhaps since the number of input parameters for AIRS is comparatively high. If we consider a particular training dataset, and set the parameters depending on the same database, the results indicate a tendency to improve. The experiment was carried out on Weka package. Soltaniet.alin <ref type="bibr">[8]</ref> proposed AIRS on credit card fraud detection. Since AIRS has a long training time, authors have implemented the model in Cloud Computing environment to shorten this time. They had used MapReduce API which works based on Hadoop distributed file system, and runs the algorithm in parallel.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.2.3">Immune Network:</head><p>The nature immune system is applied through the interactions between a huge numbers of different types of cells. Instead of using a central coordinator, the nature immune systems sustain the appropriate level of immune responses by maintaining the equilibrium status between antibody suppression and stimulation using idiotypes and paratopes antibodies <ref type="bibr" target="#b66">[38]</ref>, <ref type="bibr" target="#b67">[39]</ref>. The first Artificial Immune Network (AIN) proposed by <ref type="bibr" target="#b68">[40]</ref>. Neal M.et.al <ref type="bibr" target="#b69">[41]</ref> introduced the AISFD, which adopted thetechniques developed by CBR (case based reasoning) communityand applied various methods borrowed from genetic algorithm andother techniques to clone the B cells (network nodes) for mortgage fraud detection.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.2.4">Danger Theory:</head><p>The novel immune theory, named Danger Theory was proposed in 1994 <ref type="bibr" target="#b70">[42]</ref>. It embarked from the concept that defined "self-non-self" in the traditional theories and emphasizes that the immune system does not respond to "non-self" but to danger. According to the theory a useful evolutionarily immune system should focus on those things that are foreign and dangerous, rather than on those that are simply foreign <ref type="bibr" target="#b71">[43]</ref>. Danger is measured by damage inflicted to cells indicated by distress signals emitted when cells go through an unnatural death (necrosis).</p><p>Dendritic cells (DCs), part of the innate immune system, interact with antigens derived from the host tissue; therefore, the algorithm inspired by Danger Theory is named Dendritic cell algorithm. Dendritic cells control the state of adaptive immune system cells by emitting the following signals:</p><p> PAMP (pathogen associated molecular pattern)  Danger  Safe  Inflammation PAMP is released from tissue cells following sudden necrotic cell death; actually, the presence of PAMP usually indicates an anomalous situation The presence of Danger signals may or may not indicate an anomalous situation; however the probability of an anomaly is higher than the same, under normal circumstances Safe signal act as an indicator of healthy tissue Inflammation signal is classed as the molecules of an inflammatory response to tissue injury. In fact, the presence of this signal amplifies the above three signals. DCs exist in a number of different states of maturity, depending on the type of environmental signal present in the surrounding fluid. They can exist in immature, semi-mature or mature forms. Initially, when a DC enters the tissue, it exists in an immature state. DCs which have the ability to present both the antigen and active T-cells are mature. For an immature DC to become mature it should be exposed to PAMP and danger signals predominantly. The immature DCs exposed to safe signals predominantly are termed "semi-mature"; they produce semi-mature DCs output signaling molecule, which has the ability to de-activate the T-cells. Exposure to PAMP, danger and safe signals lead to an increase in co-stimulatory molecules production, which in turn ends up in removal from the tissue and its migration to local lymph nodes.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.2.5">Hybrid AIS or methods</head><p>Some researchers applied different algorithms (i.e. vaccination algorithm, CART and so on) by AIS algorithm which are presented below: Wong <ref type="bibr" target="#b72">[44]</ref> presents the AISCCFD prototype proposed to measure and manage the memory population and mutate detectors in real time. In their work both the two algorithms the vaccination and negative selection were combined. The results were tested for different fraud types. The proposed method demonstrated higher detection rates when vaccination algorithm was applied, but it failed to detect some types of fraud precisely. Huang et.al <ref type="bibr" target="#b73">[45]</ref> presented a novel hybrid Artificial Immune inspired model for fraud detection by combining triplealgorithms: CSPRA, the dendritic cell algorithm (DCA), and CART. Though their proposed method had high detection rate and low false alarm, their approach was focused on logging data and limited to VoD (video on demand) systems and not credit card transactions. Ayaraet.al <ref type="bibr" target="#b74">[46]</ref> applied AIS to predict failures of ATM 1 . Their approach is enriched by adding a generation of new antibodies from the antigens that correspond to the unpredicted failures.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.3">Genetic Algorithm (GA)</head><p>Inspired from natural evolution, Genetic algorithms (GA), were originally introduced by John Holland <ref type="bibr" target="#b42">[15]</ref>. GA searches for optimum solution with a population of candidate solutions that are traditionally represented in the form of binary strings called chromosomes.</p><p>The basic idea is that the stronger members of the population have more chance to survive and reproduce. The strength of a solution is its capability to solve the underlying problem which is indicated by fitness. New generation is selected in proportion to fitness among previous population and newly created offspring. Normally, new offspring will be produced by applying genetic operators such as mutation and crossing over on some fitter members of current generation (parents). As generations progress, the solution are evolved and the average fitness of population increases.This process is repeated until some stopping criteria, (i.e. often passing a pre-specified number of generations) is satisfied.</p><p>Genetic Programming (GP) <ref type="bibr" target="#b75">[47]</ref> is an extension of genetic algorithms that represent each individual by a tree rather than a bit string. Due to hierarchy nature of the tree, GP can produce various types of model such as mathematical functions, logical and arithmetic expressions, computer programs, networks structures, etc. Genetic algorithms have been used in data mining tasks mainly for feature selection. It is also widely used in combination with other algorithms for parameter tuning and optimization. Due to availability of genetic algorithm code in different programming languages, it is a popular and strong algorithm in credit card fraud detection. However, GA is very expensive in consuming time and memory. Genetic programming has also various applications in data mining as classification tool. EkremDuman et al. developed a method for credit card fraud detection <ref type="bibr" target="#b76">[48]</ref>. They defined a costsensitive objective function that assigned different cost to different misclassification errors (e.g. false positive, false negative). In this case, the goal of a classifier will be the minimization of overall cost instead of the number of misclassified transactions. This is due the fact that the correct classification of some transactions was more important than others. The utilized classifier in this work was a novel combination of the genetic algorithms and the scatter search. For evaluating the proposed method, it was applied to real data and showed promising result in comparison to literature. Analyzing the influence of the features in detecting fraud indicated that statistics of the popular and unpopular regions for a credit card holder is the most important feature. Authors excluded some type of features such as the MCC and country statistics from their study that resulted in less generality for typical fraud detection problem. K.RamaKalyaniet al. <ref type="bibr" target="#b77">[49]</ref> presented a model of credit card fraud detection based on the principles of genetic algorithm. The goal of the approach was first developing a synthetizing algorithm for generating test data and then to detect fraudulent transaction with the proposed algorithm.. Bentley et al. <ref type="bibr" target="#b78">[50]</ref>developed a genetic programming based fuzzy system to extract rules for classifying data tested on real home insurance claims and credit card transactions.</p><p>In <ref type="bibr" target="#b79">[51]</ref>, authors applied Genetic Programming to the prediction of the price in the stock market of Japan. The objective of the work was to make decision in stock market about the best stocks as well as the time and amount of stocks to sell or buy. The experimental results showed the superior performance of GP over neural networks.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.4">Hidden Markov Model (HMM)</head><p>A Hidden Markov Model is a double embedded stochastic process which is applied to model much more complicated stochastic processes as compared to a traditional Markov model. The underlying system is assumed to be a Markov process with unobserved states. In simpler Markov models like Markov chains, states are definite transition probabilities are only unknown parameters. In contrast, the states of a HMM are hidden, but state dependent outputs are visible. In credit card fraud detection a HMM is trained for modeling the normal behavior encoded in user profiles <ref type="bibr">[52]</ref>. According to this model, a new incoming transaction will be classified to fraud if it is not accepted by model with sufficiently high probability.Each user profile contains a set of information about last 10 transactions of that user liketime; category and amount of for each transaction <ref type="bibr">[52, 53, and 54]</ref>.HMM produces high false positive rate <ref type="bibr" target="#b83">[55]</ref>.V. Bhusari et al. <ref type="bibr" target="#b84">[56]</ref> utialized HMM for detecting credit card frauds with low false alarm. The proposed system was also scalable for processing huge number of transactions. HMM can also be embedded in online fraud detection systems which receive transaction details and verify whether it is normal or fraudulent.If the system confirms the transaction to be malicious, an alarm is raised and related bank rejects that transaction. The responding cardholder may then be informed about possible card misuse.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.5">Support Vector Machine (SVM)</head><p>Support vector machine (SVM) <ref type="bibr" target="#b85">[57]</ref> is a supervised learning model with associated learning algorithms that can analyze and recognize patterns for classification and regression tasks <ref type="bibr" target="#b76">[48]</ref>. SVM is a binary classifier. The basic idea of SVM was to find an optimal hyper-plane which can separate instances of two given classes, linearly. This hyper-plane was assumed to be located in the gap between some marginal instances called support vectors. Introducing the kernel functions, the idea was extended for linearly inseparable data. A kernel function represents the dot product of projections of two data points in a high dimensional space. It is a transform that disperses data by mapping from the input space to a new space (feature space) in which the instances are more likely to be linearly separable. Kernels, such as radial basis function (RBF), can be used to learn complex input spaces. In classification tasks, given a set of training instances, marked with the label of the associated class, the SVM training algorithm find a hyper-plane that can assign new incoming instances into one of two classes. The class prediction of each new data point is based on which side of the hyper-plane it falls on feature space. SVM has been successfully applied to a broad range of applications such as <ref type="bibr" target="#b86">[58]</ref> [59] <ref type="bibr" target="#b88">[60]</ref>. In credit card fraud detection, Ghosh and Reilly <ref type="bibr" target="#b89">[61]</ref> developed a model using SVMs and admired neural networks. In this research a three layer feed-forward RBF neural network applied for detecting fraudulent credit card transactions through only two passes required to churn out a fraud score in every two hours. Tung-shou Chen et al. <ref type="bibr" target="#b90">[62]</ref> proposed a binary support vector system (BSVS), in which support vectors were selected by means of the genetic algorithms (GA). In proposed model self-organizing map (SOM) was first applied to obtain a high true negative rate and BSVS was then used to better train the data according their distribution. In <ref type="bibr" target="#b91">[63]</ref>, a classification model based on decision trees and support vector machines (SVM) was constructed respectively for detecting credit card fraud. The first comparative study among SVM and decision tree methods in credit card fraud detection with a real data set was performed in this paper. The results revealed that the decision tree classifiers such as CART outperform SVM in solving the problem under investigation. Rongchang Chen et al. <ref type="bibr" target="#b92">[64]</ref> suggested a novel questionnaire-responder transaction (QRT) approach with SVM for credit card fraud detection. The objective of this research was the usage of SVM as well as other approaches such as Over-sampling and majority voting for investigating the prediction accuracy of their method in fraud detection. The experimental results indicated that the QRT approach has high degree of efficiency in terms of prediction accuracy. Qibei Lu et al. <ref type="bibr">[65]</ref> established a credit card fraud detection model based on Class Weighted SVM. Employing Principal Component Analysis (PCA), they initially reduced data dimension to less synthetic composite features due to the high dimensionality of data. Then according to imbalance characteristics of data, an improved Imbalance Class Weighted SVM (ICW-SVM) was proposed.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.6">Bayesian Network</head><p>A Bayesian network is a graphical model that represents conditional dependencies among random variables. The underlying graphical model is in the form of directed acyclic graph. Bayesian networks are usefulfor finding unknown probabilities given known probabilitiesin the presence of uncertainty <ref type="bibr" target="#b94">[66]</ref>. Bayesian networks can play an important and effective role in modeling situations where some basic information is already known but incoming data is uncertain or partially unavailable <ref type="bibr" target="#b95">[67]</ref>, <ref type="bibr" target="#b96">[68]</ref>, <ref type="bibr" target="#b97">[69]</ref>.The goal of using Bayes rules is often the prediction of the class label associated to a given vector of features or attributes <ref type="bibr" target="#b98">[70]</ref>.Bayesian networks have been successfully applied to various fields of interest for instance churn prevention <ref type="bibr" target="#b99">[71]</ref> in business,pattern recognition in vision <ref type="bibr" target="#b100">[72]</ref>, generation of diagnostic in medicine <ref type="bibr" target="#b101">[73]</ref>and fault diagnosis <ref type="bibr" target="#b102">[74]</ref> as well as forecasting <ref type="bibr" target="#b103">[75]</ref> in power systems.Besides, these networks have also been used to detect anomaly and frauds in credit card transactions or telecommunication networks <ref type="bibr">[76, 77, and 5]</ref>. In <ref type="bibr" target="#b98">[70]</ref>, two approaches are suggested for credit card fraud detection using Bayesian network.In the first, the fraudulent user behavior and in the second the legitimate (normal) user behavior are modeled by Bayesian network. The fraudulent behavior net is constructed fromexpert knowledge, while the legitimate net is set up in respect to available data from non fraudulent users. During operation, legitimatenet is adapted to a specific user based on emerging data.Classification of new transactions were simplyconducted by inserting it to both networksand then specify the type of behavior (legitimate/fraud) according to correspondingprobabilities. Applying Bayes rule, gives the probability of fraud for new transactions <ref type="bibr" target="#b106">[78]</ref>. Again, Ezawa and Nortondeveloped a four-stage Bayesian network <ref type="bibr" target="#b107">[79]</ref>. They claimed that lots of popular methods such as regression, K-nearest neighbor and neural networks takes too long time to be applicable in their data.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.7">Fuzzy Logic Based System</head><p>Fuzzy logic based system is the system based on fuzzy rules. Fuzzy logic systems address the uncertainty of the input and output variables by defining fuzzy sets and numbers in order to express values in the form of linguistic variables (e.g. small, medium and large). Two important types of these systems are fuzzy neural network and fuzzy Darwinian system.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>4.7.1Fuzzy Neural Network (FNN)</head><p>The aim of applying Fuzzy Neural Network (FNN) is to learn fromgreatnumber of uncertain and imprecise records of information, which is very common in real world applications <ref type="bibr" target="#b108">[80]</ref>. Fuzzy neural networks proposedin <ref type="bibr" target="#b109">[81]</ref> to accelerate rule induction for fraud detection in customer specific credit cards. In this research authors applied GNN (Granular Neural Network) method which implements fuzzy neural network based on knowledge discovery (FNNKD), for accelerating thetraining network and detecting fraudster in parallel.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>4.7.2Fuzzy Darwinian System</head><p>Fuzzy Darwinian Detection <ref type="bibr" target="#b110">[82]</ref> is a kind of Evolutionary-Fuzzy system that uses genetic programming in order to evolve fuzzy rules. Extracting the rules, the systemcan classify the transactions into fraudulent and normal. This system was composed of genetic programming (GP) unit in combination with fuzzy expert system. Results indicated that the proposed system has very high accuracy and low false positive rate in comparison with other techniques, but it is extremely expensive <ref type="bibr" target="#b111">[83]</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.8">Expert Systems</head><p>Rules can be generated from information which are obtained from a human expert and stored in a rule-based system as IF-THEN rules. Knowledge base system or an expert system is the information which is stored in Knowledge base. The rules in the expert system appliedin order to perform operations on a data to inference to reach appropriate conclusion. Powerful and flexible solutions for many application problemsprovides by expert system. Financial analysis and fraud detection are one of the general areas which it can be apply. By applying expert system suspicious activity or transaction can be detected from deviations from "normal' spending patterns <ref type="bibr" target="#b112">[84]</ref>. In <ref type="bibr" target="#b113">[85]</ref> authors presented a model to detect credit card frauds in various payment channels. In their model fuzzy expert system gives the abnormal degree which determines how the new transaction is fraudulent in comparison with user behavioral. The fraud tendency weight is achieved by user behavioral analysis. So, this system is named FUZZGY. Also, another research <ref type="bibr" target="#b114">[86]</ref> proposed expert system model to detect fraud for alert financial institutions.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.9">Inductive logic programming (ILP)</head><p>ILP by using a set of positive and negative examples uses first order predicate logic to define a concept. This logic program is then used to classify new instances. Complex relationship among components or attributes can be easily expressed,in this approach of classification.The effectiveness of the system improves by domain knowledge which can be easily represented in an ILP system <ref type="bibr" target="#b115">[87]</ref>.Muggleton et al. <ref type="bibr" target="#b116">[88]</ref> proposed the model applying labeled data in fraud detection which using relational learning approaches such as Inductive Logic Programming (ILP) and simple homophilybased classifiers on relational databases. Perlich, et al. <ref type="bibr" target="#b117">[89]</ref> also propose novel target-dependent detection for converting the relational learning problem into a conventional one.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.10">Case-based reasoning (CBR)</head><p>Adapting solutions in order to solve previous problems and use them to solve new problems is the basic idea of CBR. In CBR, cases introduce as descriptions of past experience of human specialists and stored in a database which uses for later retrieval when the user encounters a new case with similar parameters. These cases can apply for classification purposes. A CBR system attempts to find a matching case when face with a new problem. In this method the model defined as the training data, and in test phase when a new case or instance is given to the model it looks in all the data to discover a subset of cases that are most similar to new case and uses them to predict the result. Nearest neighbor matching algorithm usually applied with CBR, although there are several another algorithms which used with this approach such as <ref type="bibr" target="#b118">[90]</ref>. Case-based reasoning is well documented both as the framework for hybrid frauddetection systems and as an inference engine in <ref type="bibr" target="#b119">[91]</ref>. Also, E.b. Reategui applied hybrid approaches of CBR and NN which divides the task of fraud detection into two separate components and found that this multiple approach was more effective than either approach on its own <ref type="bibr" target="#b120">[92]</ref>. In this model, CBR looks for best matches in the case base while an artificial neural net (ANN) learns patterns of use and misuse of credit cards. The case base included information such as transaction amounts, dates, place and type, theft date, and MCC (merchant category code). The hybrid CBR and ANN system reported a classification accuracy of 89% on a case base of 1606 cases.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Table1. Advantages and disadvantages of fraud detection methods</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Techniques</head><p>Advantages Disadvantages</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Artificial Neural Network (ANN)</head><p>Ability to learn from the past/lack of need to be reprogrammed/ Ability to extract rules and predict future activities based on the current situation/ High accuracy/ Portability/ high speed in detection/ the ability to generate code to be used in real-time systems/ the easiness to be built and operated/ Effectiveness in dealing with noisy data, in predicting patterns, in solving complex problems, and in processing new instances/Adaptability /Maintainability /knowledge discovery and data miming Difficulty to confirm the structure/high processing time for large neural networks and excessive training/ poor explanation capability/ difficult to setup and operate/high expense/ non numerical data need to be converted and normalized/Sensitivity to data format.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Artificial Immune System (AIS)</head><p>High capability in pattern recognition/powerful in Learning and memory/Self-organization/ easy in integration with other systems/dynamically changing coverage/ self Identity/ multilayered/ has diversity/ noise tolerance/ fault tolerance/ predator-prey dynamics/ Inexpensive / no need to training phase in DCA.</p><p>Need high training time in NSA/ poor in handle missing data in ClonalG and NSA</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Genetic Algorithm</head><p>Works well with noisy data/easy to integrate with other systems/ usually combined into other techniques to increase the performance of those techniques and optimize their parameters/ easy in build and operate/In expensive/fast in detection/ Adaptability/Maintainability/knowledge discovery and data miming</p><p>Requires extensive tool knowledge to set up and operate and difficult to understand.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Hidden Markov Model (HMM)</head><p>Fast in detection Highly expensive/ low accuracy/not scalable to large size data sets</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Support Vector Machines (SVM)</head><p>SVMs deliver a unique solution, since the optimality problem is convex/by choosing an appropriate generalization grade, SVMs can be robust, even when the training sample has some bias.</p><p>Poor in process largedataset/expensive/has low speed of detection/ medium accuracy/lack of transparency of results</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Bayesian Network</head><p>High processing and detection speed/high accuracy</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Excessive training need/ expensive</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Fuzzy Logic Based System</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Fuzzy Neural Network</head><p>Very fast in detection/good accuracy Expensive</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Fuzzy Darwinian System</head><p>Very high accuracy/ Maintainability Has very low speed in detection/ High expensive</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Expert System</head><p>Easy to modify the KB/ easy to develop and build the system/ easy to manage complexity or missing information/high degree of accuracy/ explanation facilities/good performance/Rules from other techniques such as NN and DT can be extracted, modified, and stored in the KB.</p><p>Poor in handling missing information or unexpected data values/poor in process different data types /knowledge representation languages do not approach human flexibility/ poor in build and operate/ poor in integration</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Inductive logic programming (ILP)</head><p>Powerful in process different data types/ powerful modeling language that can model complex relationships/powerful in handle missing data Has low predictive accuracy/extremely sensitive to noise/ their performance deteriorates rapidly in the presence of spurious data.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Case based reasoning (CBR)</head><p>Useful in domain that has a large number of examples/ has the ability to work with incomplete or noisy data/effective/ flexible/ easy to update and maintain/ can be used in a hybrid approach.</p><p>May suffer from the problem of incomplete or noisy data.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Decision tree (DT)</head><p>High flexibility/good haleness/ explainable/easy to implement/easy to display and to understand Requirements to check each condition one by one. In fraud detection condition is transaction.</p><p>In order to best comprise in fraud detection techniques we have been summarizes the advantages and disadvantages of the mentioned techniques, which demonstrated in Table1. It is important to make a point that primary version of this Table presented in <ref type="bibr" target="#b115">[87]</ref>.Finally,Fig. <ref type="figure">2shows</ref> a complete classification of fraud detection techniques.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>5-Data set and evaluation</head><p>The mentioned methods in any field definitely need a creditable data set to test upon it, and examine efficiency in compare to other"s related work. The lack of publicly available database has been a limiting factor for the publications on financial fraud detection <ref type="bibr">[36]</ref>, particularly credit card transactions. On the other hand, credit card is inherently private so, creating a proper data set for this purpose is very difficult and there are no standard techniques to do this. Also, there is no universal corpus for credit card. Altogether, some works build their own data set for evaluation <ref type="bibr" target="#b76">[48]</ref>, <ref type="bibr">[93]</ref>. However others use data sets which are gains by certain banks or financial institutions in a specific time window <ref type="bibr">[36]</ref>, <ref type="bibr" target="#b60">[32]</ref>, <ref type="bibr" target="#b122">[94]</ref>, <ref type="bibr">[59]</ref>, <ref type="bibr">[95]</ref>, and <ref type="bibr" target="#b124">[96]</ref>.</p><p>Table2 will be present some credit card fraud detection research which had used real or synthetically generated dataset. The volume of fraud in every dataset is different. This might be because of the different security protocols used by different organizations and banks and so on. Whatever the reason is, this fact causes different fraud characteristics on each dataset, which affects the performance of the fraud detection system. Therefore considering the dataset"s characteristics will help the system having more precise results.</p><p>A proper data set is a data set which covers various fraud and several attributes of customer profile or behavior. We believe that the contribution of attributes is a critical factor that should be considered. Also, a proper data set should be able to reflect the real world of credit card. Credit card transaction datasets usually divided in to two types: numerical and categorical attributes.</p><p>In statistics, categorical data is a statistical data type consisting of categorical variables, used for observed data whose value is one of a fixed number of nominal categories, or for data that has been converted into that form, for example as grouped data. However numeric data are numbers like age, cost, etc. In fraud detection applications customer"s gender and name are the typical numerical attribute, and categorical attributes are those like merchant category code, date of transaction, amount of transaction and etc. Some of these categorical variables can, depending on the dataset, have hundreds and thousands of categories. Finally, Fig. <ref type="figure" target="#fig_1">3shows</ref> a complete classification in two groups: numerical and categorical attributes which is suitable for each algorithm.  <ref type="table">4shows</ref> the details of the most common formulas which are used by researchers for evaluation of their proposed methods. As can be seen in this table some researchers had been used multiple formulas in order to evaluated their proposed model. The aim of all algorithms and techniques is to minimize FP and FN rate and maximize TP and TN rate and with a good detection rate at the same time.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="6.">Open issues</head><p>While credit card fraud detection has gained wide-scale attention in the literature, there are yet some issues (a number of significant open issues) that face researchers and have not been addressed beforeadequately. Wehope this overview focuses the direction of future research to provide more efficient and trustable fraud detection systems.These issues are as follow:</p><p> Nonexistence of standard and comprehensive credit card benchmark or dataset Credit card is inherently private property, so creating a proper benchmark for this purpose is very difficult. Incomplete datasets can cause fraud detection system to learn fraud tricks or normal behavior partially. On the other hand, lack of a standard dataset makes comparison of various techniques problematic or impossible. Many researchers used datasets that are only permitted to authors and cannot be published in order to privacy considerations.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head> Nonexistence of standard algorithm</head><p>There is not any powerful algorithm known in credit card fraud literature that outperforms all others.Eachtechnique hasits own advantages and disadvantages as stated in previous sections. Combining these algorithms to support each other"s benefits and cover their weaknesses would be of great interest.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head> Nonexistence of suitable metrics</head><p>The limitation of good metrics in order to evaluate the results of fraud detection system is yet an open issue. Nonexistence of such metrics causes incapability of researchers and practitioners in comparing different approaches and determining priority of most efficient fraud detection systems.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head> Lack of adaptive credit card fraud detection systems</head><p>Although lots of researches have been investigated credit card fraud detection field, there are none or limited adaptive techniques which can learn data stream of transactions as they are conducted. Such a system can update its internal model and mechanisms over a time without need to be relearned offline. Therefore, it can add novel frauds (or normal behaviors) immediately to model of learn fraud tricks and detect them afterward as soon as possible.</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head>1</head><label></label><figDesc>Automatic Teller Machine (ATM)</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head>Fig. 3 A</head><label>3</label><figDesc>Fig. 3 A complete classification of the dataset"s attribute  Evaluation There are a variety of measures for various algorithms and these measures have been developed to evaluate very different things. So it should be criteria for evaluation of various proposedmethod. False Positive (FP), False Negative (FN), True Positive (TP), and True Negative (TN) and the</figDesc><graphic coords="18,72.00,460.42,426.45,173.24" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0"><head></head><label></label><figDesc></figDesc><graphic coords="16,72.00,85.80,432.66,212.65" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_0"><head>Statistical Classification of Credit Card Fraud Occurrence</head><label></label><figDesc></figDesc><table><row><cell></cell><cell>Ukraine 19%</cell><cell>Ukraine</cell></row><row><cell></cell><cell>other counry</cell><cell>Indonesia</cell></row><row><cell></cell><cell>29%</cell><cell>Yugoslavia</cell></row><row><cell></cell><cell></cell><cell>Malaysia</cell></row><row><cell></cell><cell>Indonesia 18%</cell><cell>Turkey</cell></row><row><cell>United States 1%</cell><cell>Turkey 9%</cell><cell>United States other counry</cell></row><row><cell></cell><cell>Yugoslavia</cell><cell></cell></row><row><cell></cell><cell>18%</cell><cell></cell></row><row><cell></cell><cell>Malaysia</cell><cell></cell></row><row><cell></cell><cell>6%</cell><cell></cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_2"><head></head><label></label><figDesc>NicholasWong et al. (2012)  [97],<ref type="bibr" target="#b24">Manoel Fernando, et al. (2008)</ref>[36], soltani et al.[8],A. Brabazon et al. (2011) [35], Siddhartha et al. (2008) [59], P. Ravisankar et al. (2011) [99], AbhinavSrivastava et al. (2008) [52], John Zhong et al. (2012) [26], Qibei Lu et al. (2011) [65], AmlanKundu (2006) [98] Manoel Fernando, et al. (2008)[36], Siddhartha et al. (2008) [50], John Zhong et al. (2012) [26], Qibei Lu et al. (2011)[65], AmlanKundu (2006)[98]    </figDesc><table><row><cell></cell><cell cols="3">Table4.Evaluation criteria for credit card fraud detection</cell></row><row><cell>Measure</cell><cell>Formula</cell><cell>Description</cell><cell>Used in</cell></row><row><cell></cell><cell></cell><cell>Accuracy is the percentage of</cell><cell></cell></row><row><cell>Accuracy</cell><cell></cell><cell>correctly classified instances.</cell><cell></cell></row><row><cell>(ACC)/Detection rate</cell><cell>TN + TP/TP + FP + FN + TN</cell><cell>It is one the most widely used</cell><cell></cell></row><row><cell></cell><cell></cell><cell>classification performance</cell><cell></cell></row><row><cell></cell><cell></cell><cell>metrics</cell><cell></cell></row><row><cell></cell><cell></cell><cell>Precision is the number of</cell><cell></cell></row><row><cell>Precision/Hit rate</cell><cell>TP/TP + FP</cell><cell>classified positive or fraudulent instances that actually are</cell><cell></cell></row><row><cell></cell><cell></cell><cell>positive instances.</cell><cell></cell></row><row><cell></cell><cell></cell><cell>TP (true positive) is the number</cell><cell></cell></row><row><cell></cell><cell></cell><cell>of correctly classified positive</cell><cell></cell></row><row><cell></cell><cell></cell><cell>or abnormal instances. TP rate</cell><cell>Maes S. et al. (2002) [5], Siddhartha et al.</cell></row><row><cell></cell><cell></cell><cell>measures how well a classifier</cell><cell>(2008) [59], Tao guo et al. (2008) [93], P.</cell></row><row><cell>True positive</cell><cell>TP/TP + FN</cell><cell>can recognize abnormal</cell><cell>Ravisankar et al. (2011) [99],</cell></row><row><cell>rate/Sensitivity</cell><cell></cell><cell>records. It is also called</cell><cell>AbhinavSrivastava et al. (2008) [52], John</cell></row><row><cell></cell><cell></cell><cell>sensitivity measure. In the case</cell><cell>Zhong et al. (2012) [26], Qibei Lu et al.</cell></row><row><cell></cell><cell></cell><cell>of credit card fraud detection,</cell><cell>(2011) [65], AmlanKundu (2006) [98]</cell></row><row><cell></cell><cell></cell><cell>abnormal instances are</cell><cell></cell></row><row><cell></cell><cell></cell><cell>fraudulent transactions.</cell><cell></cell></row><row><cell></cell><cell></cell><cell>TN (true negative) is the</cell><cell></cell></row><row><cell></cell><cell></cell><cell>number of correctly classified</cell><cell></cell></row><row><cell>True negative rate /Specificity</cell><cell>TN/TN + FP</cell><cell>negative or normal instances. TN rate measures how well a classifier can recognize normal</cell><cell></cell></row><row><cell></cell><cell></cell><cell>records. It is also called</cell><cell></cell></row><row><cell></cell><cell></cell><cell>specificity measure.</cell><cell></cell></row></table></figure>
+		</body>
+		<back>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Siddhartha</forename></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2008">2008</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Siddhartha et al. (2008)</note>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Philip</forename><forename type="middle">K</forename><surname>Chan</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="1999">1999</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Philip K. Chan (1999)</note>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Tao Guo</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2008">2008</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Tao guo et al. (2008)</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">P</forename><surname>Ravisankar</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">P. Ravisankar et al. (2011)</note>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">John</forename><surname>Zhong</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2012">2012</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">John Zhong et al. (2012)</note>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">S</forename><surname>Maes</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2002">2002</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Maes S. et al. (2002)</note>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Qibei</forename><surname>Lu</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Qibei Lu et al. (2011)</note>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Amlankundu</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2006">2006</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">AmlanKundu (2006)</note>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<monogr>
+		<title level="m">False positive rate (FPR) FP/FP+TN Ratio of credit card fraud detected incorrectly</title>
+		<imprint/>
+	</monogr>
+	<note type="raw_reference">False positive rate (FPR) FP/FP+TN Ratio of credit card fraud detected incorrectly</note>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Nicholas</forename><surname>Wong</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2012">2012</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Nicholas Wong et al. (2012)</note>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Soltani</surname></persName>
+		</author>
+		<imprint/>
+	</monogr>
+	<note type="raw_reference">soltani et al.</note>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">S</forename><surname>Maes</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2002">2002</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Maes S. et al. (2002)</note>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Philip</forename><forename type="middle">K</forename><surname>Chan</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="1999">1999</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Philip K. Chan (1999)</note>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Abhinavsrivastava</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2008">2008</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">AbhinavSrivastava et al. (2008)</note>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">John</forename><surname>Zhong</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2012">2012</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">John Zhong et al. (2012)</note>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Qibei</forename><surname>Lu</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Qibei Lu et al. (2011)</note>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Amlankundu</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2006">2006</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">AmlanKundu (2006)</note>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<monogr>
+		<title level="m" type="main">ROC True positive rate plotted against false positive rate Relative Operating Characteristic curve, a comparison of TPR and FPR as the criterion changes</title>
+		<editor>Manoel Fernando, et al.</editor>
+		<imprint>
+			<date type="published" when="2008">2008</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">ROC True positive rate plotted against false positive rate Relative Operating Characteristic curve, a comparison of TPR and FPR as the criterion changes Manoel Fernando, et al. (2008)</note>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">S</forename><surname>Maes</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2002">2002</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Maes S. et al. (2002)</note>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Tao Guo</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2008">2008</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Tao guo et al. (2008)</note>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">John</forename><surname>Zhong</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2012">2012</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">John Zhong et al. (2012)</note>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Qibei</forename><surname>Lu</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Qibei Lu et al. (2011)</note>
+</biblStruct>
+
+<biblStruct xml:id="b22">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Amlankundu</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2006">2006</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">AmlanKundu (2006)</note>
+</biblStruct>
+
+<biblStruct xml:id="b23">
+	<monogr>
+		<title level="m">Cost Cost = 100 * FN + 10</title>
+		<imprint/>
+	</monogr>
+	<note type="raw_reference">Cost Cost = 100 * FN + 10</note>
+</biblStruct>
+
+<biblStruct xml:id="b24">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Manoel</forename><surname>Fernando</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2008">2008</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Manoel Fernando, et al. ,(2008)</note>
+</biblStruct>
+
+<biblStruct xml:id="b25">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Soltani</surname></persName>
+		</author>
+		<imprint/>
+	</monogr>
+	<note type="raw_reference">soltani et al.</note>
+</biblStruct>
+
+<biblStruct xml:id="b26">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Philip</forename><forename type="middle">K</forename><surname>Chan</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="1999">1999</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Philip K. Chan (1999)</note>
+</biblStruct>
+
+<biblStruct xml:id="b27">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Qibei</forename><surname>Lu</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Qibei Lu et al. (2011) [</note>
+</biblStruct>
+
+<biblStruct xml:id="b28">
+	<monogr>
+		<title level="m" type="main">F1-measure 2 × (Precision ×Recall)/(Precision +Recall) Weighted average of the precision and recall Siddhartha et al</title>
+		<imprint>
+			<date type="published" when="2008">2008</date>
+			<biblScope unit="page">59</biblScope>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">F1-measure 2 × (Precision ×Recall)/(Precision +Recall) Weighted average of the precision and recall Siddhartha et al. (2008) [59</note>
+</biblStruct>
+
+<biblStruct xml:id="b29">
+	<analytic>
+		<title level="a" type="main">A review of Fraud Detection Techniques: Credit Card</title>
+		<author>
+			<persName><forename type="first">Jyotiyadav</forename><surname>Khyatichaudhary</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Bhawnamallick</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Computer Applications</title>
+		<imprint>
+			<biblScope unit="volume">45</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<date type="published" when="2012">2012</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">KhyatiChaudhary, JyotiYadav, BhawnaMallick, &quot; A review of Fraud Detection Techniques: Credit Card&quot;, International Journal of Computer Applications Volume 45-No.1 2012.</note>
+</biblStruct>
+
+<biblStruct xml:id="b30">
+	<analytic>
+		<title level="a" type="main">A survey of signature based methods for financial fraud detection</title>
+		<author>
+			<persName><forename type="first">Michael</forename><surname>Edward Edge</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Pedro</forename><forename type="middle">R</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Falcone</forename><surname>Sampaio</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">journal of computers and security</title>
+		<imprint>
+			<biblScope unit="volume">28</biblScope>
+			<biblScope unit="page" from="3" to="8" />
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Michael Edward Edge, Pedro R, Falcone Sampaio, &quot;A survey of signature based methods for financial fraud detection&quot;, journal of computers and security, Vol. 28, pp 3 8 1 -3 9 4, 2009.</note>
+</biblStruct>
+
+<biblStruct xml:id="b31">
+	<analytic>
+		<title level="a" type="main">Credit card fraud and detection techniques: a review</title>
+		<author>
+			<persName><forename type="first">Linda</forename><surname>Delamaire</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Hussein</forename><surname>Abdou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">John</forename><surname>Pointon</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Banks and Bank Systems</title>
+		<imprint>
+			<biblScope unit="volume">4</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Linda Delamaire, Hussein Abdou, John Pointon, &quot;Credit card fraud and detection techniques: a review&quot;, Banks and Bank Systems, Volume 4, Issue 2, 2009.</note>
+</biblStruct>
+
+<biblStruct xml:id="b32">
+	<monogr>
+		<title level="m" type="main">Credit Card Fraud Detection Using Meta-Learning: Issues and Initial Results</title>
+		<author>
+			<persName><forename type="first">Salvatore</forename><forename type="middle">J</forename><surname>Stolfo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">David</forename><forename type="middle">W</forename><surname>Fan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Wenke</forename><surname>Lee</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Andreas</forename><forename type="middle">L</forename><surname>Prodromidis</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="1997">1997</date>
+		</imprint>
+		<respStmt>
+			<orgName>Department of Computer Science-Columbia University</orgName>
+		</respStmt>
+	</monogr>
+	<note type="raw_reference">Salvatore J. Stolfo, David W. Fan, Wenke Lee and Andreas L. Prodromidis; &quot;Credit Card Fraud Detection Using Meta-Learning: Issues and Initial Results&quot;; Department of Computer Science- Columbia University; 1997.</note>
+</biblStruct>
+
+<biblStruct xml:id="b33">
+	<monogr>
+		<title level="m" type="main">Credit Card Fraud Detection Using Bayesian and Neural Networks</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Maes</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Tuyls</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Vanschoenwinkel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Manderick</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2002">2002</date>
+		</imprint>
+		<respStmt>
+			<orgName>Vrije University Brussel -Belgium</orgName>
+		</respStmt>
+	</monogr>
+	<note type="raw_reference">Maes S. Tuyls K. Vanschoenwinkel B. and Manderick B.; &quot;Credit Card Fraud Detection Using Bayesian and Neural Networks&quot;; Vrije University Brussel -Belgium; 2002.</note>
+</biblStruct>
+
+<biblStruct xml:id="b34">
+	<monogr>
+		<title level="m" type="main">Agent-Based Distributed Learning Applied to Fraud Detection</title>
+		<author>
+			<persName><forename type="first">Andreas</forename><forename type="middle">L</forename><surname>Prodromidis</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Salvatore</forename><forename type="middle">J</forename><surname>Stolfo</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2000">2000</date>
+		</imprint>
+		<respStmt>
+			<orgName>Department of Computer Science-Columbia University</orgName>
+		</respStmt>
+	</monogr>
+	<note type="raw_reference">Andreas L. Prodromidis and Salvatore J. Stolfo; &quot;Agent-Based Distributed Learning Applied to Fraud Detection&quot;; Department of Computer Science-Columbia University; 2000.</note>
+</biblStruct>
+
+<biblStruct xml:id="b35">
+	<analytic>
+		<title level="a" type="main">Cost-based Modeling for Fraud and Intrusion Detection: Results from the JAM Project</title>
+		<author>
+			<persName><forename type="first">Salvatore</forename><forename type="middle">J</forename><surname>Stolfo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Wenke</forename><surname>Wei Fan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Andreas</forename><forename type="middle">L</forename><surname>Lee</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Prodromidis</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE</title>
+		<imprint>
+			<biblScope unit="volume">0</biblScope>
+			<biblScope unit="page" from="7695" to="0490" />
+			<date type="published" when="1999">1999</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Salvatore J. Stolfo, Wei Fan, Wenke Lee and Andreas L. Prodromidis; &quot;Cost-based Modeling for Fraud and Intrusion Detection: Results from the JAM Project&quot;; 0-7695-0490-6/99, 1999 IEEE.</note>
+</biblStruct>
+
+<biblStruct xml:id="b36">
+	<analytic>
+		<title level="a" type="main">A new user-based model for credit card fraud detection based on artificial immune system</title>
+		<author>
+			<persName><forename type="first">N</forename><surname>Soltani</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">K</forename><surname>Akbari</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Sargolzaeijavan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Artificial Intelligence and Signal Processing (AISP)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2012">2012. 2012</date>
+			<biblScope unit="page" from="29" to="033" />
+		</imprint>
+	</monogr>
+	<note>16th CSI International Symposium on</note>
+	<note type="raw_reference">Soltani, N., Akbari, M.K., SargolzaeiJavan, M., &quot;A new user-based model for credit card fraud detection based on artificial immune system,&quot; Artificial Intelligence and Signal Processing (AISP), 2012 16th CSI International Symposium on., IEEE, pp. 029-033, 2012.</note>
+</biblStruct>
+
+<biblStruct xml:id="b37">
+	<analytic>
+		<title level="a" type="main">Credit card fraud detection with a neural-network</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Ghosh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">L</forename><surname>Reilly</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 27 th Annual Conference on System Science</title>
+		<meeting>the 27 th Annual Conference on System Science</meeting>
+		<imprint>
+			<publisher>IEEE Computer Society Press</publisher>
+			<date type="published" when="1994">1994</date>
+			<biblScope unit="volume">3</biblScope>
+			<biblScope unit="page" from="621" to="630" />
+		</imprint>
+	</monogr>
+	<note>Information Systems: DSS/ Knowledge-Based Systems</note>
+	<note type="raw_reference">S. Ghosh and D. L. Reilly, &quot;Credit card fraud detection with a neural-network&quot;, Proceedings of the 27 th Annual Conference on System Science, Volume 3: Information Systems: DSS/ Knowledge- Based Systems, pages 621-630, 1994. IEEE Computer Society Press.</note>
+</biblStruct>
+
+<biblStruct xml:id="b38">
+	<analytic>
+		<title level="a" type="main">Analysis of Credit Card Fraud Detection Techniques: based on Certain Design Criteria</title>
+		<author>
+			<persName><forename type="first">Seeja</forename><forename type="middle">K R</forename><surname>Masoumehzareapoor</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Afshar</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Alam</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Computer Applications</title>
+		<imprint>
+			<biblScope unit="volume">52</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<date type="published" when="2012">0975 -8887. 2012</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">MasoumehZareapoor, Seeja.K.R, M.Afshar.Alam, &quot;Analysis of Credit Card Fraud Detection Techniques: based on Certain Design Criteria&quot;, International Journal of Computer Applications (0975 -8887) Volume 52-No.3, 2012.</note>
+</biblStruct>
+
+<biblStruct xml:id="b39">
+	<monogr>
+		<ptr target="http://www.fairisaac.com" />
+		<title level="m">All points protection: One sure strategy to control fraud, Fair Isaac</title>
+		<imprint>
+			<date type="published" when="2007">2007</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">All points protection: One sure strategy to control fraud, Fair Isaac, http://www.fairisaac.com, 2007.</note>
+</biblStruct>
+
+<biblStruct xml:id="b40">
+	<monogr>
+		<title level="m" type="main">Clear Commerce fraud prevention guide</title>
+		<ptr target="http://www.clearcommerce.com" />
+		<imprint>
+			<date type="published" when="2002">2002</date>
+			<publisher>Clear Commerce Corporation</publisher>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Clear Commerce fraud prevention guide, Clear Commerce Corporation, 2002, http://www.clearcommerce.com.</note>
+</biblStruct>
+
+<biblStruct xml:id="b41">
+	<analytic>
+		<title level="a" type="main">Credit Card Fraud Detection Using Neural Network</title>
+		<author>
+			<persName><forename type="first">Lokesh</forename><surname>Raghavendrapatidar</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Sharma</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Soft Computing and Engineering (IJSCE</title>
+		<idno type="ISSN">2231-2307</idno>
+		<imprint>
+			<biblScope unit="volume">1</biblScope>
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">RaghavendraPatidar, Lokesh Sharma, &quot;Credit Card Fraud Detection Using Neural Network&quot;, International Journal of Soft Computing and Engineering (IJSCE) ISSN: 2231-2307, Volume-1, 2011.</note>
+</biblStruct>
+
+<biblStruct xml:id="b42">
+	<monogr>
+		<title level="m" type="main">Adaptation in natural and artificial systems</title>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">H</forename><surname>Holland</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="1975">1975</date>
+			<publisher>The University of Michigan Press</publisher>
+			<pubPlace>Ann Arbor</pubPlace>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Holland, J. H. &quot;Adaptation in natural and artificial systems.&quot; Ann Arbor: The University of Michigan Press. (1975).</note>
+</biblStruct>
+
+<biblStruct xml:id="b43">
+	<analytic>
+		<title level="a" type="main">CARDWATCH: A Neural Network-Based Database Mining System for Credit Card Fraud Detection</title>
+		<author>
+			<persName><forename type="first">E</forename><surname>Aleskerov</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Freisleben</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Rao</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">the International Conference on Computational Intelligence for Financial Engineering</title>
+		<imprint>
+			<date type="published" when="1997">1997</date>
+			<biblScope unit="page" from="220" to="226" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">E. Aleskerov, B. Freisleben, B. Rao, &quot;CARDWATCH: A Neural Network-Based Database Mining System for Credit Card Fraud Detection&quot;, the International Conference on Computational Intelligence for Financial Engineering, pp. 220-226, 1997.</note>
+</biblStruct>
+
+<biblStruct xml:id="b44">
+	<analytic>
+		<title level="a" type="main">Credit Card Fraud Detection with a Neural-Network</title>
+		<author>
+			<persName><forename type="first">Douglas</forename><forename type="middle">L</forename><surname>Sushmitoghosh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Nestor</forename><surname>Reilly</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of 27 th Annual Hawaii International Conference on System Sciences</title>
+		<meeting>27 th Annual Hawaii International Conference on System Sciences</meeting>
+		<imprint>
+			<date type="published" when="1994">1994</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">SushmitoGhosh, Douglas L. Reilly, Nestor, &quot;Credit Card Fraud Detection with a Neural- Network&quot;, Proceedings of 27 th Annual Hawaii International Conference on System Sciences, 1994.</note>
+</biblStruct>
+
+<biblStruct xml:id="b45">
+	<analytic>
+		<title level="a" type="main">Learning with localized receptive fields</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Moody</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Darken</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proc. of the 1988</title>
+		<meeting>of the 1988</meeting>
+		<imprint/>
+	</monogr>
+	<note type="raw_reference">Moody and C. Darken, &quot;Learning with localized receptive fields.&quot; in Proc. of the 1988</note>
+</biblStruct>
+
+<biblStruct xml:id="b46">
+	<monogr>
+		<title level="m">Connectionist Models Summer School</title>
+		<editor>
+			<persName><forename type="first">D</forename><forename type="middle">S</forename><surname>Touretzky</surname></persName>
+		</editor>
+		<editor>
+			<persName><forename type="first">G</forename><forename type="middle">E</forename><surname>Hinton</surname></persName>
+		</editor>
+		<editor>
+			<persName><forename type="first">T</forename><forename type="middle">J</forename><surname>Sejnowski</surname></persName>
+		</editor>
+		<meeting><address><addrLine>San Mateo, CA</addrLine></address></meeting>
+		<imprint>
+			<publisher>Morgan Kaufmann Publishers</publisher>
+			<date type="published" when="1989">1989</date>
+			<biblScope unit="page" from="133" to="143" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Connectionist Models Summer School, D.S. Touretzky, G.E. Hinton and T.J. Sejnowski, eds., Morgan Kaufmann Publishers, San Mateo, CA, 1989, pp. 133-143.</note>
+</biblStruct>
+
+<biblStruct xml:id="b47">
+	<monogr>
+		<title level="m" type="main">Max likelihood competition in RBP networks</title>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">J</forename><surname>Nowlan</surname></persName>
+		</author>
+		<idno>CRG-TR-90-2</idno>
+		<imprint>
+			<date type="published" when="1990">1990</date>
+			<pubPlace>Canada</pubPlace>
+		</imprint>
+		<respStmt>
+			<orgName>Dept. of Computer Science, University of Toronto</orgName>
+		</respStmt>
+	</monogr>
+	<note type="report_type">Technical Report</note>
+	<note type="raw_reference">S.J. Nowlan, &quot;Max likelihood competition in RBP networks,&quot; Technical Report CRG-TR-90-2, Dept. of Computer Science, University of Toronto, Canada, 1990.</note>
+</biblStruct>
+
+<biblStruct xml:id="b48">
+	<analytic>
+		<title level="a" type="main">Bidirectional Artificial Neural Networks for Mobile-Phone Fraud Detection</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Krenker</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Volk</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">U</forename><surname>Sedlar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Bester</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Kosh</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Artificial Neural Networks</title>
+		<imprint>
+			<biblScope unit="volume">31</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="92" to="98" />
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">A. Krenker, M. Volk, U. Sedlar, J. Bester, A. Kosh, &quot;Bidirectional Artificial Neural Networks for Mobile-Phone Fraud Detection,&quot; Journal of Artificial Neural Networks, Vol. 31, No. 1, pp. 92-98, 2009.</note>
+</biblStruct>
+
+<biblStruct xml:id="b49">
+	<monogr>
+		<title level="m" type="main">Parallel granular neural networks for fast credit card fraud detection</title>
+		<author>
+			<persName><forename type="first">Yan-Qing</forename><surname>Mubeenasyeda</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yi</forename><surname>Zbang</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Pan</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2002">2002</date>
+		</imprint>
+	</monogr>
+	<note>international conference on e-commerce application</note>
+	<note type="raw_reference">MubeenaSyeda, Yan-Qing Zbang and Yi Pan,&quot; Parallel granular neural networks for fast credit card fraud detection&quot;, international conference on e-commerce application, 2002.</note>
+</biblStruct>
+
+<biblStruct xml:id="b50">
+	<analytic>
+		<title level="a" type="main">The self-organizing maps</title>
+		<author>
+			<persName><forename type="first">T</forename><surname>Kohonen</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the IEEE</title>
+		<meeting>the IEEE</meeting>
+		<imprint>
+			<date type="published" when="1990">1990</date>
+			<biblScope unit="volume">78</biblScope>
+			<biblScope unit="page" from="1464" to="1480" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Kohonen, T. &quot;The self-organizing maps&quot;. In Proceedings of the IEEE (1990) 78 (9), pp 1464- 1480.</note>
+</biblStruct>
+
+<biblStruct xml:id="b51">
+	<analytic>
+		<title level="a" type="main">Credit card fraud detection using self organizing maps</title>
+		<author>
+			<persName><forename type="first">Vladimir</forename><surname>Zaslavsky</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Anna</forename><surname>Strizhak</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Information &amp; Security. An International Journal</title>
+		<imprint>
+			<biblScope unit="volume">18</biblScope>
+			<biblScope unit="page" from="48" to="63" />
+			<date type="published" when="2006">2006</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Vladimir Zaslavsky and Anna Strizhak &quot;Credit card fraud detection using self organizing maps&quot;. Information &amp; Security. An International Journal, (2006). Vol.18; (48-63).</note>
+</biblStruct>
+
+<biblStruct xml:id="b52">
+	<analytic>
+		<title level="a" type="main">Clustering of the self-organizing map</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Vesanto</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>&amp;alhoniemi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Neural Networks</title>
+		<imprint>
+			<biblScope unit="volume">11</biblScope>
+			<biblScope unit="page" from="586" to="600" />
+			<date type="published" when="2000">2000. 2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Vesanto, J., &amp;Alhoniemi, E. (2000). &quot;Clustering of the self-organizing map&quot;.IEEE Transactions on Neural Networks, (2009). 11; (586-600).</note>
+</biblStruct>
+
+<biblStruct xml:id="b53">
+	<analytic>
+		<title level="a" type="main">Self-organizing neural networks for financial diagnosis</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Serrano-Cinca</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Decision Support Systems</title>
+		<imprint>
+			<biblScope unit="volume">17</biblScope>
+			<biblScope unit="page" from="227" to="238" />
+			<date type="published" when="1996">1996</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Serrano-Cinca, C &quot;Self-organizing neural networks for financial diagnosis&quot;. Decision Support Systems, (1996). 17; (227-238).</note>
+</biblStruct>
+
+<biblStruct xml:id="b54">
+	<analytic>
+		<title level="a" type="main">Improved competitive learning neural networks for network intrusion and fraud detection</title>
+		<author>
+			<persName><forename type="first">John</forename><surname>Zhong Lei</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Alia</forename><surname>Ghorbani</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Neuro computing</title>
+		<imprint>
+			<biblScope unit="volume">75</biblScope>
+			<biblScope unit="page" from="135" to="145" />
+			<date type="published" when="2012">2012</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">John Zhong Lei, AliA.Ghorbani, &quot;Improved competitive learning neural networks for network intrusion and fraud detection &quot;,Neuro computing 75(2012)135-145.</note>
+</biblStruct>
+
+<biblStruct xml:id="b55">
+	<analytic>
+		<title level="a" type="main">Learning to Detect Objects by Artificial Immune Approaches</title>
+		<author>
+			<persName><forename type="first">H</forename><surname>Zheng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Zhang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Future Generation Computer Systems</title>
+		<imprint>
+			<biblScope unit="volume">20</biblScope>
+			<biblScope unit="page" from="1197" to="1208" />
+			<date type="published" when="2004">2004</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">H. Zheng, J. Zhang, &quot;Learning to Detect Objects by Artificial Immune Approaches&quot;, Journal of Future Generation Computer Systems, Vol. 20, pp. 1197-1208, 2004.</note>
+</biblStruct>
+
+<biblStruct xml:id="b56">
+	<analytic>
+		<title level="a" type="main">Artificial immune systems as a novel soft computing paradigm</title>
+		<author>
+			<persName><forename type="first">L</forename><forename type="middle">N</forename><surname>De Castro</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">I</forename><surname>Timmis</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Soft Computing</title>
+		<imprint>
+			<biblScope unit="volume">7</biblScope>
+			<biblScope unit="page" from="526" to="544" />
+			<date type="published" when="2003">2003</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">L. N. de Castro, J. I. Timmis, &quot;Artificial immune systems as a novel soft computing paradigm&quot;, Journal of Soft Computing, Vol. 7, pp 526-544, 2003.</note>
+</biblStruct>
+
+<biblStruct xml:id="b57">
+	<analytic>
+		<title level="a" type="main">Artificial immune systems as a novel soft computing paradigm</title>
+		<author>
+			<persName><forename type="first">L</forename><forename type="middle">N</forename><surname>De Castro</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Timmis</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Soft Computing</title>
+		<imprint>
+			<biblScope unit="page" from="526" to="544" />
+			<date type="published" when="2003">2003</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">L. N. de Castro, J. Timmis,&quot; Artificial immune systems as a novel soft computing paradigm&quot;, Journal of Soft Computing, PP 526-544, 2003.</note>
+</biblStruct>
+
+<biblStruct xml:id="b58">
+	<monogr>
+		<title level="m" type="main">Negative Selection Algorithms: From the Thymus to V-Detector</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Zhou</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2006">2006</date>
+		</imprint>
+		<respStmt>
+			<orgName>School of Computer Science, University of Memphis</orgName>
+		</respStmt>
+	</monogr>
+	<note type="report_type">PhD Thesis</note>
+	<note type="raw_reference">J. Zhou, &quot;Negative Selection Algorithms: From the Thymus to V-Detector&quot;, PhD Thesis, School of Computer Science, University of Memphis, 2006.</note>
+</biblStruct>
+
+<biblStruct xml:id="b59">
+	<monogr>
+		<title level="m" type="main">Artificial Immune Systems: A Novel Data Analysis Technique Inspired by the Immune Network Theory</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Timmis</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2000">2000</date>
+		</imprint>
+		<respStmt>
+			<orgName>School of Computer Science, University of Wales</orgName>
+		</respStmt>
+	</monogr>
+	<note type="report_type">PhD. Thesis</note>
+	<note type="raw_reference">J. Timmis, &quot;Artificial Immune Systems: A Novel Data Analysis Technique Inspired by the Immune Network Theory&quot;, PhD. Thesis, School of Computer Science, University of Wales, 2000.</note>
+</biblStruct>
+
+<biblStruct xml:id="b60">
+	<analytic>
+		<title level="a" type="main">Clonal Selection Algorithms: A Comparative Case Study Using Effective Mutation Potentials</title>
+		<author>
+			<persName><forename type="first">V</forename><surname>Cutello</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Narzisi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Nicosia</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Pavone</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">proceeding of International Conference on Artificial Immune Systems (ICARIS)</title>
+		<meeting>eeding of International Conference on Artificial Immune Systems (ICARIS)</meeting>
+		<imprint>
+			<date type="published" when="2005">2005</date>
+			<biblScope unit="page" from="13" to="28" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">V. Cutello, G. Narzisi, G. Nicosia, M. Pavone, &quot;Clonal Selection Algorithms: A Comparative Case Study Using Effective Mutation Potentials&quot;, proceeding of International Conference on Artificial Immune Systems (ICARIS), pp. 13-28, 2005.</note>
+</biblStruct>
+
+<biblStruct xml:id="b61">
+	<monogr>
+		<title level="m" type="main">The Dendritic Cells Algorithm</title>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">Green</forename><surname>Smith</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2007">2007</date>
+		</imprint>
+		<respStmt>
+			<orgName>School of Computer Science, University of Nottingham</orgName>
+		</respStmt>
+	</monogr>
+	<note type="report_type">PhD thesis</note>
+	<note type="raw_reference">J. Green smith, &quot;The Dendritic Cells Algorithm&quot;, PhD thesis, School of Computer Science, University of Nottingham, 2007.</note>
+</biblStruct>
+
+<biblStruct xml:id="b62">
+	<monogr>
+		<title level="m" type="main">An immunological model of distributed detection and its application to computer security</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Hofmeyr</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="1999">1999</date>
+		</imprint>
+		<respStmt>
+			<orgName>University Of New Mexico</orgName>
+		</respStmt>
+	</monogr>
+	<note type="report_type">PhD thesis</note>
+	<note type="raw_reference">S. Hofmeyr. An immunological model of distributed detection and its application to computer security. PhD thesis, University Of New Mexico, 1999.</note>
+</biblStruct>
+
+<biblStruct xml:id="b63">
+	<analytic>
+		<title level="a" type="main">Identifying Online Credit Card Fraud using Artificial Immune Systems</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Brabazon</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">IEEE Congress on Evolutionary Computation (CEC)</title>
+		<meeting><address><addrLine>Spain</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">A. Brabazon, et.al. &quot;Identifying Online Credit Card Fraud using Artificial Immune Systems&quot;, IEEE Congress on Evolutionary Computation (CEC), Spain, 2011</note>
+</biblStruct>
+
+<biblStruct xml:id="b64">
+	<monogr>
+		<title level="m" type="main">Credit Card Fraud Detection with Artificial Immune System</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Gadi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Lago</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2008">2008</date>
+			<publisher>Springer</publisher>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">M. Gadi, X. Wang, A. Lago, &quot;Credit Card Fraud Detection with Artificial Immune System&quot;, Springer, 2008.</note>
+</biblStruct>
+
+<biblStruct xml:id="b65">
+	<analytic>
+		<title level="a" type="main">Artificial Immune System for Fraud Detection</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Tuo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Red</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><surname>Lid</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><forename type="middle">B</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Lei</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">3th International Conference on Systems, Man and Cybernetics</title>
+		<imprint>
+			<date type="published" when="2004">2004</date>
+			<biblScope unit="page" from="101" to="107" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. Tuo, S. Red, W. Lid, X. Li. B. Li, L. Lei, &quot;Artificial Immune System for Fraud Detection&quot;, 3th International Conference on Systems, Man and Cybernetics, pp 101-107, 2004.</note>
+</biblStruct>
+
+<biblStruct xml:id="b66">
+	<analytic>
+		<title level="a" type="main">Multiple algorithms for fraud detection</title>
+		<author>
+			<persName><forename type="first">R</forename><surname>Wheeler</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Aitken</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Knowledge-Based Systems</title>
+		<imprint>
+			<biblScope unit="volume">13</biblScope>
+			<biblScope unit="page" from="93" to="99" />
+			<date type="published" when="2000">2000</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">R. Wheeler, S. Aitken,&quot; Multiple algorithms for fraud detection&quot;, Journal of Knowledge-Based Systems, Vol. 13,pp. 93-99, 2000.</note>
+</biblStruct>
+
+<biblStruct xml:id="b67">
+	<analytic>
+		<title level="a" type="main">A comparison of state-of-the-art classification techniques for expert automobile insurance claim fraud detection</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Viaene</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">A</forename><surname>Derrig</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Baesens</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Dedene</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Risk and Insurance</title>
+		<imprint>
+			<biblScope unit="volume">69</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="373" to="421" />
+			<date type="published" when="2002">2002</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S. Viaene, R.A. Derrig, B. Baesens, G. Dedene, &quot;A comparison of state-of-the-art classification techniques for expert automobile insurance claim fraud detection&quot;, Journal of Risk and Insurance, Vol. 69, No.3, pp. 373-421, 2002.</note>
+</biblStruct>
+
+<biblStruct xml:id="b68">
+	<analytic>
+		<title level="a" type="main">Towards a network theory of the immune system</title>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">K</forename><surname>Jerne</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Annals of Immunology</title>
+		<imprint>
+			<biblScope unit="volume">125</biblScope>
+			<biblScope unit="page" from="373" to="389" />
+			<date type="published" when="1974">1974</date>
+			<pubPlace>Paris</pubPlace>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">N.K. Jerne, Towards a network theory of the immune system, Annals of Immunology (Paris) 125C (1974) 373-389.</note>
+</biblStruct>
+
+<biblStruct xml:id="b69">
+	<analytic>
+		<title level="a" type="main">Artificial immune system for fraud detection</title>
+		<author>
+			<persName><forename type="first">Jianyong</forename><surname>Tuo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Shouju</forename><surname>Ren</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Wenhuang</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Xiu</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Bing</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Lei</forename><surname>Lin</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE International Conference on Systems, Man, and Cybernetics -SMC</title>
+		<imprint>
+			<biblScope unit="volume">2</biblScope>
+			<biblScope unit="page" from="1407" to="1411" />
+			<date type="published" when="2004">2004</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Jianyong Tuo, Shouju Ren, Wenhuang Liu, Xiu Li, Bing Li, Lei Lin,&quot; Artificial immune system for fraud detection &quot;, IEEE International Conference on Systems, Man, and Cybernetics -SMC , vol. 2, pp. 1407-1411, 2004.</note>
+</biblStruct>
+
+<biblStruct xml:id="b70">
+	<analytic>
+		<title level="a" type="main">Tolerance, Danger and the Extended Family</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Matzinger</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Annual Reviews in Immunology</title>
+		<imprint>
+			<biblScope unit="volume">12</biblScope>
+			<biblScope unit="page" from="991" to="1045" />
+			<date type="published" when="1994">1994</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">P. Matzinger, &quot;Tolerance, Danger and the Extended Family&quot;, Annual Reviews in Immunology, 12, pp.991-1045, 1994.</note>
+</biblStruct>
+
+<biblStruct xml:id="b71">
+	<analytic>
+		<title level="a" type="main">The Danger Model in Its Historical Context</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Matzinger</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Immunology</title>
+		<imprint>
+			<biblScope unit="volume">54</biblScope>
+			<biblScope unit="page" from="4" to="19" />
+			<date type="published" when="2001">2001</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">P. Matzinger &quot;The Danger Model in Its Historical Context&quot; Journal of Immunology Vol. 54, pp. 4-19, 2001.</note>
+</biblStruct>
+
+<biblStruct xml:id="b72">
+	<analytic>
+		<title level="a" type="main">Artificial Immune Systems for Detection of Credit Card Fraud: an Architecture, Prototype and Preliminary Results</title>
+		<author>
+			<persName><forename type="first">N</forename><surname>Wong</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Ray</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Stephens</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Lewis</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Information Systems</title>
+		<imprint>
+			<biblScope unit="volume">22</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="53" to="76" />
+			<date type="published" when="2012">2012</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">N. Wong, P. Ray, G. Stephens, L. Lewis, &quot;Artificial Immune Systems for Detection of Credit Card Fraud: an Architecture, Prototype and Preliminary Results,&quot; Journal of Information Systems, Vol. 22, No. 1, pp. 53-76, 2012.</note>
+</biblStruct>
+
+<biblStruct xml:id="b73">
+	<analytic>
+		<title level="a" type="main">A Novel Hybrid Artificial Immune Inspired Approach for Online Break-in Fraud Detection</title>
+		<author>
+			<persName><forename type="first">R</forename><surname>Huang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Tawfik</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Nagar</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Computational Science</title>
+		<imprint>
+			<date type="published" when="2010">2010</date>
+			<biblScope unit="page" from="2727" to="2736" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">R. Huang, H. Tawfik, A. Nagar, &quot;A Novel Hybrid Artificial Immune Inspired Approach for Online Break-in Fraud Detection,&quot; International Conference on Computational Science, pp. 2727- 2736, 2010.</note>
+</biblStruct>
+
+<biblStruct xml:id="b74">
+	<analytic>
+		<title level="a" type="main">Immunising Automated Teller Machines</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Ayara</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Timmis</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Forrest</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">InProceedings of the 4th International Conference onArtificial Immune Systems</title>
+		<imprint>
+			<date type="published" when="2005">2005</date>
+			<biblScope unit="page" from="404" to="417" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">M. Ayara, J. Timmis, R. deLemos, And S. Forrest, &quot;Immunising Automated Teller Machines&quot;. InProceedings of the 4th International Conference onArtificial Immune Systems, pp. 404-417, 2005.</note>
+</biblStruct>
+
+<biblStruct xml:id="b75">
+	<analytic>
+		<title level="a" type="main">Genetic programming for prevention of cyber terrorism through dynamic and evolving intrusion detection</title>
+		<author>
+			<persName><forename type="first">James</forename><forename type="middle">V</forename><surname>Hansena</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Paul</forename><surname>Benjamin Lowrya</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Rayman</forename><forename type="middle">D</forename><surname>Meservya</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Daniel</forename><forename type="middle">M</forename><surname>Donald</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal Decision Support Systems</title>
+		<imprint>
+			<biblScope unit="volume">43</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="1362" to="1374" />
+			<date type="published" when="2007-08">August 2007</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">James V. Hansena, , Paul Benjamin Lowrya, Rayman D. Meservya, , Daniel M. c Donald ,&quot; Genetic programming for prevention of cyber terrorism through dynamic and evolving intrusion detection &quot;Journal Decision Support Systems, Volume 43, Issue 4, August 2007, Pages 1362-1374.</note>
+</biblStruct>
+
+<biblStruct xml:id="b76">
+	<analytic>
+		<title level="a" type="main">Detecting credit card fraud by genetic algorithm and scatter search</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Ekremduman</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Hamdiozcelik</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Expert Systems with Applications</title>
+		<imprint>
+			<biblScope unit="volume">38</biblScope>
+			<biblScope unit="page" from="13057" to="13063" />
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">EkremDuman, M. HamdiOzcelik,&quot; Detecting credit card fraud by genetic algorithm and scatter search&quot;, Expert Systems with Applications 38 (2011) 13057-13063.</note>
+</biblStruct>
+
+<biblStruct xml:id="b77">
+	<analytic>
+		<title level="a" type="main">Fraud Detection of Credit Card Payment System by Genetic Algorithm</title>
+		<author>
+			<persName><forename type="first">K</forename><surname>Ramakalyani</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Umadevi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Scientific &amp; Engineering Research</title>
+		<imprint>
+			<biblScope unit="volume">3</biblScope>
+			<biblScope unit="issue">7</biblScope>
+			<date type="published" when="2012">2012</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">K.RamaKalyani, D.UmaDevi,&quot; Fraud Detection of Credit Card Payment System by Genetic Algorithm&quot;, International Journal of Scientific &amp; Engineering Research Volume 3, Issue 7, -2012.</note>
+</biblStruct>
+
+<biblStruct xml:id="b78">
+	<analytic>
+		<title level="a" type="main">Fuzzy Darwinian Detection of Credit Card Fraud</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Bentley</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Kim</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Jung</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Choi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proc. of 14 th Annual Fall Symposium of the Korean Information Processing Society</title>
+		<meeting>of 14 th Annual Fall Symposium of the Korean Information essing Society</meeting>
+		<imprint>
+			<date type="published" when="2000">2000</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Bentley, P., Kim, J., Jung., G. &amp; Choi, J. Fuzzy Darwinian Detection of Credit Card Fraud. Proc. of 14 th Annual Fall Symposium of the Korean Information Processing Society. 2000.</note>
+</biblStruct>
+
+<biblStruct xml:id="b79">
+	<monogr>
+		<title level="m" type="main">Using Genetic Programming to Predict Financial Data</title>
+		<author>
+			<persName><forename type="first">Hitoshi</forename><surname>Iba</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Takashi</forename><surname>Sasaki</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="1999">1999</date>
+			<publisher>IEE</publisher>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Hitoshi Iba, Takashi Sasaki, &quot;Using Genetic Programming to Predict Financial Data&quot;, IEE, 1999.</note>
+</biblStruct>
+
+<biblStruct xml:id="b80">
+	<analytic>
+		<title level="a" type="main">Credit Card Fraud Detection using Hidden Markov Model</title>
+		<author>
+			<persName><forename type="first">Amlankundu</forename><surname>Abhinavsrivastava</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Arun</forename><forename type="middle">K</forename><surname>Shamiksural</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Majumdar</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on dependable and secure computing</title>
+		<imprint>
+			<biblScope unit="volume">5</biblScope>
+			<biblScope unit="page" from="37" to="48" />
+			<date type="published" when="2008">2008</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">AbhinavSrivastava, AmlanKundu, ShamikSural, Arun K. Majumdar. &quot;Credit Card Fraud Detection using Hidden Markov Model&quot;, IEEE Transactions on dependable and secure computing, Volume 5; (2008) (37-48).</note>
+</biblStruct>
+
+<biblStruct xml:id="b81">
+	<analytic>
+		<title level="a" type="main">A Survey on Hidden Markov Model for Credit Card Fraud Detection</title>
+		<author>
+			<persName><forename type="first">Anshul</forename><surname>Singh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Devesh</forename><surname>Narayan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Engineering and Advanced Technology (IJEAT)</title>
+		<imprint>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="49" to="52" />
+			<date type="published" when="2012">2012</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Anshul Singh, Devesh Narayan &quot;A Survey on Hidden Markov Model for Credit Card Fraud Detection&quot;, International Journal of Engineering and Advanced Technology (IJEAT), (2012). Volume-1, Issue-3; (49-52).</note>
+</biblStruct>
+
+<biblStruct xml:id="b82">
+	<analytic>
+		<title level="a" type="main">Markova Scheme for Credit Card Fraud Detection</title>
+		<author>
+			<persName><forename type="first">B</forename><surname>Sanjayagandhi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Lalunaik</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Gopi Krishna</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Lakshminadh</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Advanced Computing, Communication and Networks</title>
+		<imprint>
+			<date type="published" when="2011">2011</date>
+			<biblScope unit="page" from="144" to="147" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">B.SanjayaGandhi ,R.LaluNaik, S.Gopi Krishna, K.lakshminadh &quot;Markova Scheme for Credit Card Fraud Detection&quot;. International Conference on Advanced Computing, Communication and Networks; (2011). (144-147).</note>
+</biblStruct>
+
+<biblStruct xml:id="b83">
+	<analytic>
+		<title level="a" type="main">Analysis on Credit Card Fraud Detection Methods</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Benson Edwin Raj</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">Annie</forename><surname>Portia</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">IEEE-International Conference on Computer</title>
+		<imprint>
+			<publisher>Communication and Electrical Technology</publisher>
+			<date type="published" when="2011">2011</date>
+			<biblScope unit="page" from="152" to="156" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S. Benson Edwin Raj, A. Annie Portia &quot;Analysis on Credit Card Fraud Detection Methods&quot;. IEEE-International Conference on Computer, Communication and Electrical Technology; (2011). (152-156).</note>
+</biblStruct>
+
+<biblStruct xml:id="b84">
+	<analytic>
+		<title level="a" type="main">Application of Hidden Markov Model in Credit Card Fraud Detection</title>
+		<author>
+			<persName><forename type="first">V</forename><surname>Bhusari</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Patil</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Distributed and Parallel Systems (IJDPS)</title>
+		<imprint>
+			<biblScope unit="volume">2</biblScope>
+			<biblScope unit="issue">6</biblScope>
+			<date type="published" when="2011-11">November 2011</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">V. Bhusari, S. Patil, &quot;Application of Hidden Markov Model in Credit Card Fraud Detection&quot;, International Journal of Distributed and Parallel Systems (IJDPS) Vol.2, No.6, November 2011.</note>
+</biblStruct>
+
+<biblStruct xml:id="b85">
+	<monogr>
+		<title level="m" type="main">Support vector networks, Machine Learning</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Cortes</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Vapnik</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="1995">1995</date>
+			<biblScope unit="volume">20</biblScope>
+			<biblScope unit="page" from="273" to="297" />
+		</imprint>
+	</monogr>
+	<note>V</note>
+	<note type="raw_reference">Cortes, C. &amp; Vapnik, V &quot;Support vector networks, Machine Learning&quot;, (1995). Vol. 20; (273-297).</note>
+</biblStruct>
+
+<biblStruct xml:id="b86">
+	<monogr>
+		<title level="m" type="main">An Introduction to Support Vector Machines and Other Kernelbased Learning Methods</title>
+		<author>
+			<persName><forename type="first">N</forename><surname>Cristianini</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Shawe-Taylor</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2000">2000</date>
+			<publisher>Cambridge University Press</publisher>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">N. Cristianini, J. Shawe-Taylor &quot;An Introduction to Support Vector Machines and Other Kernel- based Learning Methods&quot;. Cambridge University Press (2000).</note>
+</biblStruct>
+
+<biblStruct xml:id="b87">
+	<analytic>
+		<title level="a" type="main">Data mining for credit card fraud: A comparative study</title>
+		<author>
+			<persName><forename type="first">Siddhartha</forename><surname>Bhattacharyya</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Sanjeevjha</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">Christopher</forename><surname>Kuriantharakunnel</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Westland</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Decision Support Systems</title>
+		<imprint>
+			<biblScope unit="volume">50</biblScope>
+			<biblScope unit="page" from="602" to="613" />
+			<date type="published" when="2011">2011</date>
+			<publisher>Elsevier</publisher>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Siddhartha Bhattacharyya, SanjeevJha, KurianTharakunnel, J. Christopher Westland &quot;Data mining for credit card fraud: A comparative study&quot;. Elsevier, Decision Support Systems (2011), 50; (602-613).</note>
+</biblStruct>
+
+<biblStruct xml:id="b88">
+	<analytic>
+		<title level="a" type="main">Outlier Detection Methods for Industrial Applications</title>
+		<author>
+			<persName><forename type="first">Silvia</forename><surname>Cateni</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Marco</forename><surname>Valentinacolla</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Vannucci</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Advances in Robotics, Automation and Control</title>
+		<imprint>
+			<biblScope unit="page" from="265" to="282" />
+			<date type="published" when="2008">2008</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Silvia Cateni, ValentinaColla, Marco Vannucci &quot;Outlier Detection Methods for Industrial Applications&quot;, Advances in Robotics, Automation and Control; (2008). (265-282).</note>
+</biblStruct>
+
+<biblStruct xml:id="b89">
+	<analytic>
+		<title level="a" type="main">Credit Card Fraud Detection with a Neural Network</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Ghosh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Reilly</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proc. of 27 th Hawaii International Conference on Systems Science</title>
+		<meeting>of 27 th Hawaii International Conference on Systems Science</meeting>
+		<imprint>
+			<date type="published" when="2004">2004</date>
+			<biblScope unit="volume">3</biblScope>
+			<biblScope unit="page" from="621" to="630" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ghosh, S. &amp; Reilly, D. Credit Card Fraud Detection with a Neural Network. Proc. of 27 th Hawaii International Conference on Systems Science 3: 621-630. 2004.</note>
+</biblStruct>
+
+<biblStruct xml:id="b90">
+	<analytic>
+		<title level="a" type="main">A new binary support vector system for increasing detection rate of credit card fraud</title>
+		<author>
+			<persName><forename type="first">Tung-Shou</forename><surname>Chen</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Pattern Recognition and Artificial Intelligence</title>
+		<imprint>
+			<biblScope unit="volume">20</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="227" to="239" />
+			<date type="published" when="2006">2006</date>
+		</imprint>
+	</monogr>
+	<note>chih-chianglin</note>
+	<note type="raw_reference">Tung-shou Chen, chih-chianglin, &quot;A new binary support vector system for increasing detection rate of credit card fraud&quot;, International Journal of Pattern Recognition and Artificial Intelligence Vol. 20, No. 2 (2006) 227-239.</note>
+</biblStruct>
+
+<biblStruct xml:id="b91">
+	<analytic>
+		<title level="a" type="main">Detecting Credit Card Fraud by Decision Trees and Support Vector Machines</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Sahin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Duman</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="s">-conference of engineering and computer statistics</title>
+		<imprint>
+			<biblScope unit="volume">1</biblScope>
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+	<note>proceeding of international multi</note>
+	<note type="raw_reference">Y. Sahin and E. Duman,&quot; Detecting Credit Card Fraud by Decision Trees and Support Vector Machines&quot;, proceeding of international multi-conference of engineering and computer statistics Vol. 1, 2011.</note>
+</biblStruct>
+
+<biblStruct xml:id="b92">
+	<analytic>
+		<title level="a" type="main">Novel Questionnaire-Responded Transaction Approach with SVM for Credit Card Fraud Detection</title>
+		<author>
+			<persName><forename type="first">Rongchang</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Tungshou</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yuerchien</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yuru</forename><surname>Yang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">LNCS</title>
+		<imprint>
+			<biblScope unit="volume">3497</biblScope>
+			<biblScope unit="page" from="916" to="921" />
+			<date type="published" when="2005">2005</date>
+			<publisher>Springer-Verlag</publisher>
+			<pubPlace>Berlin Heidelberg</pubPlace>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Rongchang Chen, Tungshou Chen, YuerChien, and Yuru Yang, &quot;Novel Questionnaire- Responded Transaction Approach with SVM for Credit Card Fraud Detection&quot;, Springer-Verlag Berlin Heidelberg, LNCS 3497, pp. 916-921, 2005.</note>
+</biblStruct>
+
+<biblStruct xml:id="b93">
+	<analytic>
+		<title level="a" type="main">Research on Credit Card Fraud Detection Model Based on Class Weighted Support Vector Machine</title>
+		<author>
+			<persName><forename type="first">Qibei</forename><surname>Lu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Chunhuaju</forename></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Convergence Information Technology</title>
+		<imprint>
+			<biblScope unit="volume">6</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Qibei Lu, ChunhuaJu, &quot;Research on Credit Card Fraud Detection Model Based on Class Weighted Support Vector Machine&quot;, Journal of Convergence Information Technology, Vol. 6, Number 1, 2011.</note>
+</biblStruct>
+
+<biblStruct xml:id="b94">
+	<analytic>
+		<title level="a" type="main">Detection of frauds and other non-technical losses in a power utility using Pearson coefficient, Bayesian networks and decision trees</title>
+		<author>
+			<persName><forename type="first">Inigo</forename><surname>Monedero</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Felix</forename><surname>Biscarri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Carlos</forename><surname>Leon</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Juan</forename><forename type="middle">I</forename><surname>Guerrero</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jesus</forename><surname>Biscarri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Rociomillan</forename></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">journal of Electrical Power and Energy Systems</title>
+		<imprint>
+			<biblScope unit="volume">34</biblScope>
+			<biblScope unit="page" from="90" to="98" />
+			<date type="published" when="2012">2012</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Inigo Monedero, Felix Biscarri, Carlos Leon, Juan I. Guerrero, Jesus Biscarri, RocioMillan, &quot;Detection of frauds and other non-technical losses in a power utility using Pearson coefficient, Bayesian networks and decision trees&quot;, journal of Electrical Power and Energy Systems 34 (2012) pp 90-98.</note>
+</biblStruct>
+
+<biblStruct xml:id="b95">
+	<analytic>
+		<title level="a" type="main">A comparative assessment of supervised data mining techniques for fraud prevention</title>
+		<author>
+			<persName><forename type="first">Sherly</forename><forename type="middle">K K</forename></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">TIST.Int.J.Sci.Tech.Res</title>
+		<imprint>
+			<biblScope unit="volume">1</biblScope>
+			<biblScope unit="issue">1-6</biblScope>
+			<date type="published" when="2012">2012</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Sherly K.K (2012) &quot;A comparative assessment of supervised data mining techniques for fraud prevention&quot;. TIST.Int.J.Sci.Tech.Res,Vol.1; (1-6).</note>
+</biblStruct>
+
+<biblStruct xml:id="b96">
+	<analytic>
+		<title level="a" type="main">Credit card fraud detection: A fusion approach using Dempster-Shafer theory and Bayesian learning</title>
+		<author>
+			<persName><forename type="first">Amlankundu</forename><surname>Suvasinipanigrahi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">K</forename><surname>Shamiksural</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Majumdar</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Elsevier, Information Fusion</title>
+		<imprint>
+			<biblScope unit="volume">10</biblScope>
+			<biblScope unit="page" from="354" to="363" />
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">SuvasiniPanigrahi, AmlanKundu, ShamikSural, A.K. Majumdar &quot;Credit card fraud detection: A fusion approach using Dempster-Shafer theory and Bayesian learning&quot;. Elsevier, Information Fusion 10; (2009). (354-363).</note>
+</biblStruct>
+
+<biblStruct xml:id="b97">
+	<analytic>
+		<title level="a" type="main">Bayesians networks without tears</title>
+		<author>
+			<persName><forename type="first">Eugene</forename><surname>Charniak</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">AI Magazine</title>
+		<imprint>
+			<date type="published" when="1991">1991</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Eugene Charniak &quot;Bayesians networks without tears&quot;. AI Magazine. (1991).</note>
+</biblStruct>
+
+<biblStruct xml:id="b98">
+	<monogr>
+		<title level="m" type="main">Improving Credit Card Fraud Detection using a Meta-Learning Strategy</title>
+		<author>
+			<persName><forename type="first">Joseph</forename><surname>King-Fung Pun</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2011">2011</date>
+		</imprint>
+		<respStmt>
+			<orgName>Graduate Department of Chemical Engineering and Applied Chemistry University of Toronto</orgName>
+		</respStmt>
+	</monogr>
+	<note>A thesis submitted in conformity with the requirements for the degree of Master of Applied Science</note>
+	<note type="raw_reference">Joseph King-Fung Pun &quot;Improving Credit Card Fraud Detection using a Meta-Learning Strategy&quot;. A thesis submitted in conformity with the requirements for the degree of Master of Applied Science Graduate Department of Chemical Engineering and Applied Chemistry University of Toronto. (2011).</note>
+</biblStruct>
+
+<biblStruct xml:id="b99">
+	<analytic>
+		<title level="a" type="main">Bayesian network approach to predict mobile churn motivations: emphasis on general Bayesian network, Markov blanket, and what-if simulation</title>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">C</forename><surname>Lee</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">Y</forename><surname>Jo</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">LNCS</title>
+		<imprint>
+			<biblScope unit="volume">6284</biblScope>
+			<biblScope unit="page" from="304" to="313" />
+			<date type="published" when="2010">2010</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Lee KC, Jo NY. Bayesian network approach to predict mobile churn motivations: emphasis on general Bayesian network, Markov blanket, and what-if simulation, LNCS, 6284; 2010, pp 304-13.</note>
+</biblStruct>
+
+<biblStruct xml:id="b100">
+	<analytic>
+		<title level="a" type="main">Robust character recognition using a hierarchical Bayesian network</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Thornton</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Gustafsson</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Blumenstein</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Hine</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">LNCS</title>
+		<imprint>
+			<biblScope unit="volume">4304</biblScope>
+			<biblScope unit="page" from="1259" to="1266" />
+			<date type="published" when="2006">2006</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Thornton J, Gustafsson T, Blumenstein M, Hine T. Robust character recognition using a hierarchical Bayesian network, LNCS, 4304; 2006. p. 1259-66.</note>
+</biblStruct>
+
+<biblStruct xml:id="b101">
+	<analytic>
+		<title level="a" type="main">Evaluation of Bayesian networks used for diagnostics</title>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">W</forename><surname>Przytul</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Dash</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Thompson</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proc IEEE Aerospace Conf</title>
+		<meeting>IEEE Aerospace Conf</meeting>
+		<imprint>
+			<date type="published" when="2003">2003</date>
+			<biblScope unit="volume">60</biblScope>
+			<biblScope unit="page" from="1" to="12" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Przytul KW, Dash D, Thompson D. Evaluation of Bayesian networks used for diagnostics. In: Proc IEEE Aerospace Conf, vol. 60, 2003. pp 1-12.</note>
+</biblStruct>
+
+<biblStruct xml:id="b102">
+	<analytic>
+		<title level="a" type="main">A Bayesian network fault diagnosis system for proton membrane exchange fuel cells</title>
+		<author>
+			<persName><forename type="first">Lam</forename><surname>Riascos</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">G</forename><surname>Simoes</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><forename type="middle">E</forename><surname>Miyagi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">J. Power Sources</title>
+		<imprint>
+			<biblScope unit="volume">165</biblScope>
+			<biblScope unit="page" from="267" to="278" />
+			<date type="published" when="2007">2007</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Riascos LAM, Simoes MG, Miyagi PE. A Bayesian network fault diagnosis system for proton membrane exchange fuel cells. J. Power Sources 2007; 165:267-78.</note>
+</biblStruct>
+
+<biblStruct xml:id="b103">
+	<analytic>
+		<title level="a" type="main">Electricity price forecasting in deregulated markets: a review and evaluation</title>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">K</forename><surname>Aggarwal</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><forename type="middle">M</forename><surname>Saini</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Kumar</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Int J Electr Power Energy Syst</title>
+		<imprint>
+			<biblScope unit="volume">31</biblScope>
+			<biblScope unit="page" from="13" to="22" />
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Aggarwal SK, Saini LM, Kumar A. Electricity price forecasting in deregulated markets: a review and evaluation. Int J Electr Power Energy Syst 2009; 31:13-22.</note>
+</biblStruct>
+
+<biblStruct xml:id="b104">
+	<analytic>
+		<title level="a" type="main">Survey of fraud detection techniques</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Kou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C-T</forename><surname>Lu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Sinvongwattana</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y-P</forename><surname>Huang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE international conf on network sensor and control</title>
+		<imprint>
+			<biblScope unit="page" from="89" to="95" />
+			<date type="published" when="2004">2004</date>
+			<pubPlace>Taiwan</pubPlace>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Kou Y, Lu C-T, Sinvongwattana S, Huang Y-P. Survey of fraud detection techniques. In: IEEE international conf on network sensor and control. Taiwan; 2004. p. 89-95.</note>
+</biblStruct>
+
+<biblStruct xml:id="b105">
+	<analytic>
+		<title level="a" type="main">How to increase security in mobile networks by anomaly detection</title>
+		<author>
+			<persName><forename type="first">R</forename><surname>Buschkes</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Kesdogan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Reichl</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proc 14th computer security application conf (ACSAC &quot;98)</title>
+		<meeting>14th computer security application conf (ACSAC &quot;98)</meeting>
+		<imprint>
+			<date type="published" when="1998">1998</date>
+			<biblScope unit="page">8</biblScope>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Buschkes R, Kesdogan D, Reichl P. How to increase security in mobile networks by anomaly detection. In: Proc 14th computer security application conf (ACSAC &quot;98); 1998.pp 8.</note>
+</biblStruct>
+
+<biblStruct xml:id="b106">
+	<analytic>
+		<title level="a" type="main">Analysis of Credit Card Fraud Detection Methods</title>
+		<author>
+			<persName><forename type="first">V</forename><surname>Dheepa</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Dr</forename><forename type="middle">R</forename></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Recent Trends in Engineering</title>
+		<imprint>
+			<biblScope unit="volume">2</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="126" to="128" />
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">V.Dheepa, Dr. R.Dhanapal &quot;Analysis of Credit Card Fraud Detection Methods&quot;. International Journal of Recent Trends in Engineering, (2009).Vol 2, No. 3; (126-128).</note>
+</biblStruct>
+
+<biblStruct xml:id="b107">
+	<analytic>
+		<title level="a" type="main">Constructing Bayesian networks to predict uncollectible telecommunications accounts</title>
+		<author>
+			<persName><forename type="first">K</forename><surname>Ezawa</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Norton</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Expert</title>
+		<imprint>
+			<biblScope unit="volume">11</biblScope>
+			<biblScope unit="issue">5</biblScope>
+			<biblScope unit="page" from="45" to="51" />
+			<date type="published" when="1996">1996</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">K. Ezawa, S. Norton, Constructing Bayesian networks to predict uncollectible telecommunications accounts, IEEE Expert 11 (5) (1996) 45-51.</note>
+</biblStruct>
+
+<biblStruct xml:id="b108">
+	<analytic>
+		<title level="a" type="main">Analysis of Credit Card Fraud Detection Techniques: based on Certain Design Criteria</title>
+		<author>
+			<persName><forename type="first">Seeja</forename><forename type="middle">K</forename><surname>Masoumehzareapoor</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Afshar</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Alam</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Computer Applications</title>
+		<imprint>
+			<biblScope unit="volume">52</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<date type="published" when="2012-08">0975 -8887. August 2012</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">MasoumehZareapoor, Seeja.K.R, and M.Afshar.Alam, &quot;Analysis of Credit Card Fraud Detection Techniques: based on Certain Design Criteria&quot;, International Journal of Computer Applications (0975 -8887) Volume 52-No.3, August 2012</note>
+</biblStruct>
+
+<biblStruct xml:id="b109">
+	<analytic>
+		<title level="a" type="main">Parallel Granular Neural Networks for Fast Credit Card Fraud Detection</title>
+		<author>
+			<persName><forename type="first">Yan-Qing</forename><surname>Mubeenasyeda</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yi</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Pan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the IEEE international conference</title>
+		<meeting>the IEEE international conference</meeting>
+		<imprint>
+			<date type="published" when="2002">2002</date>
+			<biblScope unit="volume">1</biblScope>
+			<biblScope unit="page" from="572" to="577" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">MubeenaSyeda, Yan-Qing Zhang and Yi Pan &quot;Parallel Granular Neural Networks for Fast Credit Card Fraud Detection&quot;. In: Proceedings of the IEEE international conference, Vol. 1; pp572- 577, 2002.</note>
+</biblStruct>
+
+<biblStruct xml:id="b110">
+	<analytic>
+		<title level="a" type="main">Fuzzy Darwinian Detection of Credit Card Fraud</title>
+		<author>
+			<persName><forename type="first">Peter</forename><forename type="middle">J</forename><surname>Bentley</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jungwon</forename><surname>Kim</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Gil-Ho</forename><surname>Jung</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jong-Uk</forename><surname>Choi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">the 14th Annual Fall Symposium of the Korean Information Processing Society</title>
+		<imprint>
+			<date type="published" when="2000">14 th 2000</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Peter J. Bentley, Jungwon Kim, Gil-Ho Jung and Jong-Uk Choi, &quot;Fuzzy Darwinian Detection of Credit Card Fraud,&quot; In the 14th Annual Fall Symposium of the Korean Information Processing Society, 14 th 2000.</note>
+</biblStruct>
+
+<biblStruct xml:id="b111">
+	<analytic>
+		<title level="a" type="main">Subscription fraud prevention in telecommunications using fuzzy rules and neural networks</title>
+		<author>
+			<persName><forename type="first">P</forename><forename type="middle">A</forename><surname>Estevez</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">M</forename><surname>Held</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">A</forename><surname>Perez</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Expert Systems with Applications</title>
+		<imprint>
+			<biblScope unit="volume">31</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="337" to="344" />
+			<date type="published" when="2006">2006</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">PA.Estevez, CM. Held and CA. Perez, &quot;Subscription fraud prevention in telecommunications using fuzzy rules and neural networks&quot;, Expert Systems with Applications, Vol. 31 (2), 2006, pp. 337-344.</note>
+</biblStruct>
+
+<biblStruct xml:id="b112">
+	<analytic>
+		<title level="a" type="main">The development of a rule based expert system model for fraud alert consumer credit</title>
+		<author>
+			<persName><forename type="first">Kevin</forename><forename type="middle">J</forename><surname>Leonard</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">European journal of operational research</title>
+		<imprint>
+			<biblScope unit="volume">80</biblScope>
+			<biblScope unit="page" from="350" to="356" />
+			<date type="published" when="1995">1995</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Kevin J. Leonard; &quot;The development of a rule based expert system model for fraud alert consumer credit&quot;; European journal of operational research, vol. 80, p.p. 350-356; 1995.</note>
+</biblStruct>
+
+<biblStruct xml:id="b113">
+	<analytic>
+		<title level="a" type="main">FUZZGY: A hybrid model for credit card fraud detection</title>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">R</forename><surname>Harati Nik</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Sixth International Symposium on Telecommunications (IST)</title>
+		<imprint>
+			<date type="published" when="2012">2012</date>
+			<biblScope unit="page" from="1088" to="1093" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">M.R. Harati Nik, &quot;FUZZGY: A hybrid model for credit card fraud detection&quot;, Sixth International Symposium on Telecommunications (IST),PP. 1088 -1093, 2012.</note>
+</biblStruct>
+
+<biblStruct xml:id="b114">
+	<analytic>
+		<title level="a" type="main">Detecting credit card fraud using expert systems</title>
+		<author>
+			<persName><forename type="first">Kevin</forename><forename type="middle">J</forename><surname>Leonard</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">journal Computers &amp; Industrial Engineering</title>
+		<imprint>
+			<biblScope unit="volume">25</biblScope>
+			<biblScope unit="issue">1-4</biblScope>
+			<biblScope unit="page" from="103" to="106" />
+			<date type="published" when="1993-09">September 1993</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Kevin J. Leonard, &quot;Detecting credit card fraud using expert systems&quot;, journal Computers &amp; Industrial Engineering Volume 25, Issues 1-4, September 1993, Pages 103-106.</note>
+</biblStruct>
+
+<biblStruct xml:id="b115">
+	<analytic>
+		<title level="a" type="main">Electronic Payment Fraud Detection Techniques</title>
+		<author>
+			<persName><forename type="first">Adnan</forename><forename type="middle">M</forename><surname>Al-Khatib</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">World of Computer Science and Information Technology Journal (WCSIT</title>
+		<idno type="ISSN">2221-0741</idno>
+		<imprint>
+			<biblScope unit="volume">2</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="137" to="141" />
+			<date type="published" when="2012">2012</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Adnan M. Al-Khatib, &quot;Electronic Payment Fraud Detection Techniques&quot;, World of Computer Science and Information Technology Journal (WCSIT) ISSN: 2221-0741 Vol. 2, No. 4, 137-141, 2012.</note>
+</biblStruct>
+
+<biblStruct xml:id="b116">
+	<analytic>
+		<title level="a" type="main">Inductive Logic Programming: Theory and Methods</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Muggleton</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Deraedt</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Logic Programming</title>
+		<imprint>
+			<biblScope unit="volume">19</biblScope>
+			<biblScope unit="issue">20</biblScope>
+			<biblScope unit="page" from="629" to="680" />
+			<date type="published" when="1994">1994</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Muggleton, S. &amp; DeRaedt L. (1994). Inductive Logic Programming: Theory and Methods. Journal of Logic Programming 19/20: pp 629-680.</note>
+</biblStruct>
+
+<biblStruct xml:id="b117">
+	<analytic>
+		<title level="a" type="main">Aggregation-based Feature Invention and Relational Concept Classes</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Perlich</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Provost</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proc. of SIGKDD</title>
+		<meeting>of SIGKDD</meeting>
+		<imprint>
+			<date type="published" when="2003">2003</date>
+			<biblScope unit="volume">03</biblScope>
+			<biblScope unit="page" from="167" to="176" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Perlich, C. &amp; Provost F. (2003). Aggregation-based Feature Invention and Relational Concept Classes. Proc. of SIGKDD03, pp 167-176.</note>
+</biblStruct>
+
+<biblStruct xml:id="b118">
+	<analytic>
+		<title level="a" type="main">Multiple algorithms for fraud detection</title>
+		<author>
+			<persName><forename type="first">R</forename><surname>Wheeler</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Aitken</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Knowledge-Based Systems</title>
+		<imprint>
+			<biblScope unit="volume">13</biblScope>
+			<biblScope unit="page" from="93" to="99" />
+			<date type="published" when="2000">2000</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">R. Wheeler, S. Aitken; &quot;Multiple algorithms for fraud detection&quot;; Knowledge-Based Systems 13; 2000; pp. 93-99.</note>
+</biblStruct>
+
+<biblStruct xml:id="b119">
+	<analytic>
+		<title level="a" type="main">Multiple algorithms for fraud detection</title>
+		<author>
+			<persName><forename type="first">R</forename><surname>Wheeler</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Aitken</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/S0950-7051(00)00050-2</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Knowl Base Syst</title>
+		<imprint>
+			<biblScope unit="volume">13</biblScope>
+			<biblScope unit="page" from="93" to="99" />
+			<date type="published" when="2000">2000</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Wheeler R, Aitken S (2000) Multiple algorithms for fraud detection. Knowl Base Syst 13:93- 99. Doi: 10.1016/S0950-7051(00)00050-2</note>
+</biblStruct>
+
+<biblStruct xml:id="b120">
+	<analytic>
+		<title level="a" type="main">A Classification System For Credit Card Transactions, Advances in Case-Based Reasoning</title>
+		<author>
+			<persName><forename type="first">E</forename><forename type="middle">B</forename><surname>Reategui</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Campbell</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the Second EuropeanWorkshop EWCBR-94</title>
+		<meeting>the Second EuropeanWorkshop EWCBR-94</meeting>
+		<imprint>
+			<biblScope unit="volume">984</biblScope>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Reategui, E.B. and Campbell, J. A Classification System For Credit Card Transactions, Advances in Case-Based Reasoning, Proceedings of the Second EuropeanWorkshop EWCBR-94 (LNCS 984)</note>
+</biblStruct>
+
+<biblStruct xml:id="b121">
+	<analytic>
+		<title level="a" type="main">neural data mining for credit card fraud detection</title>
+		<author>
+			<persName><forename type="first">T</forename><surname>Guo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Li</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the Seventh International Conference on Machine Learning and Cybernetics</title>
+		<meeting>the Seventh International Conference on Machine Learning and Cybernetics</meeting>
+		<imprint>
+			<date type="published" when="2008">2008</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">T. Guo, G.yang LI, &quot;neural data mining for credit card fraud detection&quot;, Proceedings of the Seventh International Conference on Machine Learning and Cybernetics, 2008.</note>
+</biblStruct>
+
+<biblStruct xml:id="b122">
+	<monogr>
+		<title level="m" type="main">Credit Card Fraud Detection Using Artificial Neural Networks Tuned by Genetic Algorithms</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Paasch</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2007">2007</date>
+			<pubPlace>Hong Kong</pubPlace>
+		</imprint>
+		<respStmt>
+			<orgName>Hong Kong University of Science and Technology (HKUST)</orgName>
+		</respStmt>
+	</monogr>
+	<note type="report_type">Doctoral Dissertation</note>
+	<note type="raw_reference">C. Paasch, Credit Card Fraud Detection Using Artificial Neural Networks Tuned by Genetic Algorithms, Hong Kong University of Science and Technology (HKUST), Hong Kong, Doctoral Dissertation, 2007.</note>
+</biblStruct>
+
+<biblStruct xml:id="b123">
+	<analytic>
+		<title level="a" type="main">Distributed Data Mining in Credit Card Fraud Detection</title>
+		<author>
+			<persName><forename type="first">Philip</forename><forename type="middle">K</forename><surname>Chan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Wei</forename><surname>Fan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Andreas</forename><forename type="middle">L</forename><surname>Prodromidis</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Salvatore</forename><forename type="middle">J</forename><surname>Stolfo</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">international conference on intelligent systems</title>
+		<imprint>
+			<date type="published" when="1999">1999</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Philip K. Chan, Wei Fan, Andreas L. Prodromidis, and Salvatore J. Stolfo,&quot; Distributed Data Mining in Credit Card Fraud Detection&quot;, international conference on intelligent systems&quot;,1999.</note>
+</biblStruct>
+
+<biblStruct xml:id="b124">
+	<analytic>
+		<title level="a" type="main">Discovering credit cardholders&quot; behavior by multiple criteria linear programming</title>
+		<author>
+			<persName><forename type="first">G</forename><surname>Kou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Peng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Shi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Wise</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><surname>Xu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Annals of Operations Research</title>
+		<imprint>
+			<biblScope unit="volume">135</biblScope>
+			<biblScope unit="page" from="261" to="274" />
+			<date type="published" when="2005">2005</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">G. Kou, Y. Peng, Y. Shi, M. Wise, W. Xu, Discovering credit cardholders&quot; behavior by multiple criteria linear programming, Annals of Operations Research 135, (2005) 261-274.</note>
+</biblStruct>
+
+<biblStruct xml:id="b125">
+	<analytic>
+		<title level="a" type="main">Artificial immune systems for the detection of credit card fraud: an architecture, prototype and preliminary results</title>
+		<author>
+			<persName><forename type="first">Nicholas</forename><surname>Wong</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Pradeep</forename><surname>Ray</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Greg</forename><surname>Stephens</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Lundy</forename><surname>Lewis</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International journal of information systems</title>
+		<imprint>
+			<biblScope unit="volume">22</biblScope>
+			<biblScope unit="page" from="53" to="76" />
+			<date type="published" when="2012">2012</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Nicholas Wong, Pradeep Ray, Greg Stephens &amp; Lundy Lewis (2012). &quot;Artificial immune systems for the detection of credit card fraud: an architecture, prototype and preliminary results&quot;, International journal of information systems, Volume 22, pp 53-76.</note>
+</biblStruct>
+
+<biblStruct xml:id="b126">
+	<analytic>
+		<title level="a" type="main">Two-Stage Credit Card Fraud Detection Using Sequence Alignment</title>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">K</forename><surname>Amlankundu</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Majumdar</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">ICISS 2006</title>
+		<imprint>
+			<date type="published" when="2006">2006</date>
+			<biblScope unit="volume">4332</biblScope>
+			<biblScope unit="page" from="260" to="275" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">AmlanKundu, ShamikSural, and A.K. Majumdar, &quot;Two-Stage Credit Card Fraud Detection Using Sequence Alignment&quot;, ICISS 2006, LNCS 4332, pp. 260-275, 2006.</note>
+</biblStruct>
+
+<biblStruct xml:id="b127">
+	<analytic>
+		<title level="a" type="main">Detection of financial statement fraud and feature selection using data mining techniques</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Ravisankar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">V</forename><surname>Ravi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Raghavarao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">I</forename><surname>Bose</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Decision Support Systems</title>
+		<imprint>
+			<biblScope unit="volume">50</biblScope>
+			<biblScope unit="page" from="491" to="500" />
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">P. Ravisankar, V. Ravi, G. RaghavaRao, I. Bose, &quot;Detection of financial statement fraud and feature selection using data mining techniques&quot; , Decision Support Systems 50 (2011) 491-500.</note>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

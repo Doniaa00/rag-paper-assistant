@@ -1,0 +1,773 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">A Semi-supervised Graph Attentive Network for Financial Fraud Detection</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability  status="unknown">
+					<licence/>
+				</availability>
+				<date type="published" when="2020-02-28">28 Feb 2020</date>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><forename type="first">Daixin</forename><surname>Wang</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="institution">Ant Financial Services Group</orgName>
+								<address>
+									<country key="CN">China</country>
+								</address>
+							</affiliation>
+							<affiliation key="aff1">
+								<orgName type="department">Department of Computer Science and Technology</orgName>
+								<orgName type="institution">Tsinghua University</orgName>
+								<address>
+									<country key="CN">China</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Jianbin</forename><surname>Lin</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="institution">Ant Financial Services Group</orgName>
+								<address>
+									<country key="CN">China</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Peng</forename><surname>Cui</surname></persName>
+							<affiliation key="aff1">
+								<orgName type="department">Department of Computer Science and Technology</orgName>
+								<orgName type="institution">Tsinghua University</orgName>
+								<address>
+									<country key="CN">China</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Quanhui</forename><surname>Jia</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="institution">Ant Financial Services Group</orgName>
+								<address>
+									<country key="CN">China</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Zhen</forename><surname>Wang</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="institution">Ant Financial Services Group</orgName>
+								<address>
+									<country key="CN">China</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Yanming</forename><surname>Fang</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="institution">Ant Financial Services Group</orgName>
+								<address>
+									<country key="CN">China</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Quan</forename><surname>Yu</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="institution">Ant Financial Services Group</orgName>
+								<address>
+									<country key="CN">China</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Jun</forename><surname>Zhou</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="institution">Ant Financial Services Group</orgName>
+								<address>
+									<country key="CN">China</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Shuang</forename><surname>Yang</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="institution">Ant Financial Services Group</orgName>
+								<address>
+									<country key="CN">China</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Yuan</forename><surname>Qi</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="institution">Ant Financial Services Group</orgName>
+								<address>
+									<country key="CN">China</country>
+								</address>
+							</affiliation>
+						</author>
+						<title level="a" type="main">A Semi-supervised Graph Attentive Network for Financial Fraud Detection</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date type="published" when="2020-02-28">28 Feb 2020</date>
+						</imprint>
+					</monogr>
+					<idno type="MD5">20A2B5ADBDB93FFAEEACFFC5CEF0D696</idno>
+					<idno type="arXiv">arXiv:2003.01171v1[cs.SI]</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.2-SNAPSHOT" ident="GROBID" when="2026-08-31T18:09+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<textClass>
+				<keywords>
+					<term>Graph Embedding</term>
+					<term>Fraud Prediction</term>
+					<term>Graph Neural Network</term>
+				</keywords>
+			</textClass>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>With the rapid growth of financial services, fraud detection has been a very important problem to guarantee a healthy environment for both users and providers. Conventional solutions for fraud detection mainly use some rule-based methods or distract some features manually to perform prediction. However, in financial services, users have rich interactions and they themselves always show multifaceted information. These data form a large multiview network, which is not fully exploited by conventional methods. Additionally, among the network, only very few of the users are labelled, which also poses a great challenge for only utilizing labeled data to achieve a satisfied performance on fraud detection.</p><p>To address the problem, we expand the labeled data through their social relations to get the unlabeled data and propose a semisupervised attentive graph neural network, named SemiGNN to utilize the multi-view labeled and unlabeled data for fraud detection. Moreover, we propose a hierarchical attention mechanism to better correlate different neighbors and different views. Simultaneously, the attention mechanism can make the model interpretable and tell what are the important factors for the fraud and why the users are predicted as fraud. Experimentally, we conduct the prediction task on the users of Alipay, one of the largest third-party online and offline cashless payment platform serving more than 4 hundreds of million users in China. By utilizing the social relations and the user attributes, our method can achieve a better accuracy compared with the state-of-the-art methods on two tasks. Moreover, the interpretable results also give interesting intuitions regarding the tasks.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>I. INTRODUCTION</head><p>Nowadays financial services especially online financial services provide much convenience to a lot of people and meanwhile create a huge economic benefit to the society. However, we are also witnessing more and more financial frauds. For example, in the US alone, the number of customers who experienced fraud hit a record 15.4 million people, which is 16 percent higher than 2015. Fraudsters stole about 6 billion from banks last year <ref type="foot" target="#foot_0">1</ref> . There are many kinds of fraud, like case-out fraud in credit-card services, insurance fraud, default and so on. These frauds all will seriously damage the security to both the users and the service providers. Therefore, how to do fraud detection is an important problem to be investigated.</p><p>The goal of fraud detection is to predict whether an entity, which can be a user or a device or more, will be involved in a fraud or not in the future. Generally, the problem can be formulated as a classification problem. Conventional methods for fraud detection can be classified into two categories. The first kind is the rule-based methods. Their assumption is that financial fraudulent activities can be detected by looking at on-surface and evident signals. These signals can help design some rules to do fraud prediction. Although rule-based methods have served the industry for a long time, they have their own disadvantages. Rule designs are heavily relied on the human prior knowledge. Therefore, these methods are difficult to handle the changing and complex patterns. Furthermore, rule-based methods are easy to be attacked <ref type="bibr" target="#b0">[1]</ref>. To address their limitations, machine learning methods are proposed to automatically mine the fraud patterns from data. Most of the machine learning methods extract user's statistical features from different aspects, such as user profile, user behaviors and transaction summarizing. These methods make prediction mainly based on the statistical features of a certain user and use classical classifiers like logistic regression, neural networks to do classification <ref type="bibr" target="#b1">[2]</ref>- <ref type="bibr" target="#b3">[4]</ref>. However, these methods seldom consider the interactions between users. Actually, there are rich interactions in the financial scenarios. For example, users have social relationships like friends, classmates and relatvies between each other. Users may have transactions with merchants or other users. Users have to login in some apps to achieve the financial transactions. All of these relationships may be beneficial to the fraud detection problem. Then some following methods start to use graph embedding to incorporate the user interactions <ref type="bibr" target="#b4">[5]</ref>, <ref type="bibr" target="#b5">[6]</ref>. However, for the fraud detection, very few of the data are labeled and we usually have a large number of unlabeled data, which have not been fully exploited in existing graph-based methods. Furthermore, interpretable models and results are often preferred in financial scenarios but existing graph embedding methods are often black-box models.</p><p>Considering the limitations of existing methods, we aim to propose a method which can utilize both labelled and unlabelled multiview data to do fraud detection. However, it faces the following challenges: <ref type="bibr" target="#b0">(1)</ref> How to bridge the labeled data with the unlabeled data?: Very few of the users are labeled as fraud or not. Therefore, only modelling the labeled data is difficult to obtain a satisfied performance. To incorporate the unlabeled data, how to bridge the relationships between the unsupervised information and the supervised information is the first challenge. (2) How to model the data heterogeneity?: Utilizing multiview data can provide a more comprehensive information regarding the task. Nevertheless, multiview data like social relations and user attributes have different statistical properites. Such a heterogeneity poses a great challenge to integrate multiview data. (3) How to learn an interpretable model? The results of fraud detection are often served for the financial risk control. No matter for the financial service providers, or for the supervisors, they all require interpretable models to have a better knowledge of the predicted results. Therefore, how to design an interpretable model for fraud detection is also challenging.</p><p>To address above three challenges, we propose a semisupervised graph attentive neural model for multiview data, named SemiGNN. The basic idea of SemiGNN is to enhance the representations of users by fully exploiting the relational data and attribute data of both labeled and unlabled data. In detail, we bridge the labeled and unlabeled users via their social relations. And for each user, we also use his attributes to build the attribute network. The social relations and the attributes together form a large multiview network. Then we propose a semi-supervised graph neural network to simultaneously model the multiview information within network to do fraud detection. The model has several advantages: (1) It can fully exploit the supervised information and unsupervised structural information for fraud detection. (2) Our model can integrate multiview data to get a comprehensive result for fraud detection. (3) Building the attribute network instead of using attributes as the dense features can enhance the representation ability of the attribute information. Furthermore, we design a hierarchical attention mechanism into SemiGNN. The firstlayer node-level attention is designed to effectively correlate different neighbors or different attributes of users. The secondlayer view-level attention is able to correlate different views of data. Moreover, the attention-based model can also provide interpretable results to give more insights regarding the task.</p><p>In summary, the contributions of the paper are summarized as follows: </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>II. RELATED WORK</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. Financial Fraud Detection</head><p>Empirically, our work is related to the problem of fraud detection. Financial fraud is an issue which has serious reaching consequences in both the finance industry and daily life. Therefore, a great number of literatures have been studied on different types of the fraud, like financial statement fraud <ref type="bibr" target="#b6">[7]</ref>- <ref type="bibr" target="#b8">[9]</ref>, credit card fraud <ref type="bibr" target="#b9">[10]</ref>, <ref type="bibr" target="#b10">[11]</ref>, insurance fraud <ref type="bibr" target="#b11">[12]</ref>, <ref type="bibr" target="#b12">[13]</ref> and so on. Earilier works mainly use the rule-based methods for fraud detection. They assume that the fraud activities have some obvious patterns. Accordingly, these works define some combinatorial rules to detect these fraud activities. Due to the simplicity and interpretability of rule-based methods, they are popular for fraud detection. However, rule-based methods are highly dependent on the human expert knowledge. They are difficult to find complex and changing patterns. And they are also easier to be attacked once the rules are awared by attackers.</p><p>Considering the limitations of the rule-based methods, recent methods start to use the machine learning models to automatically find the intrinsic fraud patterns from data. Commonly, these methods first extract statistical features from different aspects like user's profiles and historical behaviours and then use some classical classifiers like SVM <ref type="bibr" target="#b8">[9]</ref>, treebased methods <ref type="bibr" target="#b9">[10]</ref> or neural networks <ref type="bibr" target="#b6">[7]</ref>, <ref type="bibr" target="#b7">[8]</ref> to decide fraud or not. For example, Ravisankar et al. <ref type="bibr" target="#b8">[9]</ref> extracts some statistic features about assets, liabilities, incomes, debt and sales and uses a multi-layer feedforward network to do financial statement fraud detection. Kirkos et al. <ref type="bibr" target="#b7">[8]</ref> selects some personal variables regarding the financial distress, debt structure, need for continuing growth, accounts receivable and totally uses a 27-dimensional vector as the input to the decision tree, neural network and bayesian belief network. They find that the bayesian belief networks outperforms the rest of the two methods.</p><p>Aforementioned methods regard each entity as an individual and thus only consider personal attributes. However, in financial scenarios, entities have many interactions with each other, which will form a graph. Then a few of recent works start to utilize the graph for fraud detection. For example, Liu et al. <ref type="bibr" target="#b4">[5]</ref> proposes a graph neural network for malicious account detection. Hu et al. <ref type="bibr" target="#b5">[6]</ref> proposes a meta-path based graph embedding method for user cash-out prediction. They all demonstrate that the graph structure benefits the task of fraud detection a lot. However, as we stated before, their methods do not exploit the unlabeled data and are not interpretable.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Learning over graphs</head><p>Technically, our work is related to the graph-based methods. Network embedding is an effective method to model the structure of a graph. It aims to learn a low-dimensional vectorrepresentation for each node. Early works mainly focus on the pure network without node attributes. DeepWalk <ref type="bibr" target="#b15">[16]</ref> and Node2vec <ref type="bibr" target="#b16">[17]</ref> propose to use the random walk and skip-gram to learn the node representations. LINE <ref type="bibr" target="#b17">[18]</ref> and SDNE <ref type="bibr" target="#b18">[19]</ref> propose explicit objective functions for preserving first-and second-order proximity. Some further works <ref type="bibr" target="#b19">[20]</ref>, <ref type="bibr" target="#b20">[21]</ref> use the matrix factorization to factorize high-order relation matrix. However, network data often come with the node and edge attributes. Then some further works like Metapath2vec <ref type="bibr" target="#b21">[22]</ref> , HNE <ref type="bibr" target="#b22">[23]</ref> are proposed to consider both the network topology and node features. Recently, graph convolution network based methods are very popular <ref type="bibr" target="#b23">[24]</ref>, <ref type="bibr" target="#b24">[25]</ref>. They are inductive methods which can simulataneously learn with the network topology and node attributes. Unfortunately, these methods are usually designed for common tasks like link prediction and only exploit partial information in networks. Therefore they are suboptimal in terms of classificatiom performance and cannot provide interpretable results in the fraud detection problem.</p><p>Our work is also related to the graph-based semi-supervised learning (GSSL) method <ref type="bibr" target="#b25">[26]</ref>. They treat labeled and unlabeled data as a vertex and learn a classifier which is consistent with the labels while making sure that the prediction results for similar vertex are also similar. Different GSSL algorithms apply different functions for graph regularization. However, these methods seldom consider the vertex's features and very few of these methods are applied to the multi-view and interpretable scenario. We first give a general description of our problem, as illustrated in Figure <ref type="figure" target="#fig_0">1</ref>. In our problem, we collect multiple views of data, which denotes different facets of user information. Some views naturally form the graph, like social relations and transaction relations. But for some user attributes, we also formulate them as an attribute graph instead of dense features. We find that in this way our graph model can better find the correlations between the attributes. Note that here we propose a general model. But for different scenarios, we have different number of views and each view represents different information. We will specify the details of the dataset in the experiment. With the multiview network, our target is to train a classifier for user fraud classification.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>III. THE MODEL</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. Problem Definition and Notations</head><p>We summarize the notations of this paper in Table <ref type="table" target="#tab_1">I</ref>. We have n L labeled users denoted as U L , each of which is labeled as fraud or not. From these users, we go through the social relations of the labeled users and thus get n uL unlabeled users, denoted as U uL . We have n uL n L . For each user, we have m views of data. In each view, we have a view-specific graph denoted as</p><formula xml:id="formula_0">G v = {U ∪ S v , E v }, v ∈ {1, ..., m}.</formula><p>Here S v denotes some view-specific nodes. For example, if we use the user-app graph, S v should be the app set. If we use the relation graph, S v may be empty. And if we use the attribute graph, S v may be the attribute sets.  We design a hierarchical attention structure in graph neural network: from node-level attention to view-level attention to integrate multiple neighborhoods and different views. The framework of the whole model can be shown in Figure <ref type="figure" target="#fig_2">2</ref>. Firstly, we propose a node-level attention to learn the weight of neighbors for users in each view and accordingly aggregate the neighbors to obtain the low-level view-specific user embeding. Secondly, multiview data characterizes different facets of user information and thus it is essential to integrate multiview data. However, multiview raw data usually have different statistical properites <ref type="bibr" target="#b26">[27]</ref>, which makes it difficult to assmeble multiview data in the low-level space. Since multiview data describe the same thing, they should show large semantic similarity. Meanwhile, the representations in the high-level space are more close to the semantic. Considering this, we use seperate models to project low-level view-specific user embedding into the high-level space and then integrate view-specific embedding to obtain the joint embedding. Specifically, we propose the view-level attention here to tell the difference of different views and get the optimal combination of view-specific user embedding for the task. Finally, with the combined embedding, we design the supervised classification loss and unsupervised graph-based loss to fully utilize the labeled and unlabeled data. 2) Node-level Attention: As explained before, we first model each view of graph separately. To model the graph structure, we obtain the user's embedding by ensembling his neighbors' embedding. But we notice that in each view, the neighbors of each user play different roles and show different importance for the specific task. Therefore, we introduce nodelevel attention here, which can learn the importance of each node to the final task and find a optimal way to aggragate the representations of the neighbors to form the view-specific user embedding.</p><p>Suppose that the node pair (u, i) is connected by an edge with weight of w v ui in the v-th graph, where u represents a user and i represents the user's neighbor. Let M v ∈ R |nv|•d denote the node embedding matrix of the v-th view, where d denotes the dimension of the node embedding. We use M v i. to denote the embedding look-up operation for the node i. Then the weighted embedding of node i can be calculated as w ui • M v i. , which we simply denote as e v ui . With e v ui between each node pair, we hope to inject the structural information into the model and aggregate the neighbors' embedding to obtain the user's embedding. However, different nodes contribute unequally for user's embedding and the final task. Therefore, to learn the importance automatically, we propose a node-level attention mechanism. In detail, let H v be a learnable attention matrix parameter. Then the importance α v ui of view-specific node pair (u, i) can be defined as follows:</p><formula xml:id="formula_1">α v ui = exp(e v ui • H v ui ) k∈N v u exp(e v uk • H v uk )</formula><p>.</p><p>Once obtained α v ui , the normalized importance is used to compute a linear combination of the neighbors' embedding to obtain the low-level view-specific user embedding:</p><formula xml:id="formula_2">h v u = k∈N (A) u α uk e uk ,<label>(1)</label></formula><p>Similarily, we can obtain the user embedding of other views in the similar way.</p><p>3) View-level Attention: From Eq. 1, we can obtain the view-specific low-level embedding for each user. To learn more comprehensive user embedding, we should fuse multiple views of information. As we state before, low-level representations of multiview data lie in heterogeneous domains, which makes it difficult to capture the multiview correlations in low-level space. To address the problem, we use separate multi-layer perceptrons (MLP) to project low-level viewspecific user embedding into the high-level space first and then integrate multiview data. In detail, the representations of the l-layer are defined as:</p><formula xml:id="formula_3">h v(l) u = Relu(h v(l-1) u W v l + b v l ), v ∈ {2, ..., m},<label>(2)</label></formula><p>where</p><formula xml:id="formula_4">h v(1) u = h v u .</formula><p>Through several layers of non-linear functions to map the raw data into the high-level semantic space, it is easier to correlate multiview data <ref type="bibr" target="#b26">[27]</ref>. Now, different views contain different aspect of semantic and each view-specific user embedding only reflect one aspect of information. Meanwhile, considering different aspects contribute differently to the final tasks, we propose a view-level attention mechnism to automatically learn the importance of different views and accordingly integrate multiview data.</p><p>We first introduce a view preference vector φ v u for each user to guide the view-level attention mechanism. The vector is randomly initialized and is learnt during the training process.</p><p>With the view preference vector φ v u , the importance of each view can be calculated as:</p><formula xml:id="formula_5">α v u = exp(h v(L) u • φ v u ) k∈{1,...,m} exp(h k(L) u • φ k u ) , v ∈ {1, ..., m},<label>(3)</label></formula><p>Here we observe that if the view-specific vector is similar to the preference vector, it will be assigned with larger importance and this view will contribute more to the joint user embedding.</p><p>With the learned view-attention importance, the joint embedding of user u can be obtained by weighted combining view-specific embedding {h</p><formula xml:id="formula_6">1(L) u , ..., h m(L) u }: h u = || m i=1 (α v u • h v(L) u ),<label>(4)</label></formula><p>where || denotes the concatenation operation.</p><p>To summarize, the view-level attention mechanism models personalized preference on different views by introducing preference vector for each user and each view. In this way, the joint embedding can naturally distinguish view-specific user embedding and fuse them.</p><p>Finally, we use a one-layer perceptron, which uses the joint user embedding h u as the input to refine the representations. After that, we can obtain the final high-level embedding for the user u, which we denote as a u . With a u for each user, we can define the task-specific loss function, which we leave in the next section.</p><p>4) Loss function and Optimization: For the labeled users, we use softmax on the representations of the embedding layer to get the classification result. Thus we can define the classification loss:</p><formula xml:id="formula_7">L sup = - 1 |U L | u∈U l k i=1 I(y u = i) log exp(a u • θ i ) k j=1 exp(a u • θ j ) ,<label>(5)</label></formula><p>where I(•) is the indicator function, k is the number of occupations to be predicted and θ is the parameter of the softmax. However, since fraud labeling is resource-consuming, only a small portion of the users are labeled, which makes the model difficult to learn a good classifier with such limited labeled data. Although a large number of users are not labeled, we have these users' multiview information. Therefore, we consider utilize unlabeled data to help the model training. But how to select the unlabeled data from the huge pool. Previous works have demonstrated that the fraud always happens within a local graph <ref type="bibr" target="#b4">[5]</ref>, <ref type="bibr" target="#b5">[6]</ref>. Inspired by this, we use the labeled data as the seeds and then obtain the unlabeled data by extending the one-hop social relations like friends, classmates and workmates from the seed users. In this way, we can utilize such social relations to bridge the labeled and unlabeled data and thus learn the model with the unlabeled data.</p><p>To achieve this, inspired by Deepwalk <ref type="bibr" target="#b15">[16]</ref>, we propose an unsupervised graph-based loss function to refine the whole model. Supposing the relation graph is G (U ) , we perform random walk to define the neighbors of each vertex. The loss function encourages nearby nodes having similar representaions while makes the representations of disparate nodes distinct:</p><formula xml:id="formula_8">L graph = u∈U v∈Nu∪N egu -log(σ(a T u a v )) -Q • E q∼Pneg(u) log(σ(a T u a q )),<label>(6)</label></formula><p>where N u is the neighbors of the user u and N eg u is the negative neighbors of the user u, v is a node that co-occurs in the u's random walk path, σ is the sigmoid function, P neg (u) ∝ d 0.75 u is the negative sampling distribution and Q is the number of negative samples set to 3 in our paper.</p><p>In summary, by incorporating the unlabeled data, it can help the model better define the fradulous local structure and the healthy local structure. More importantly, the representations a u of the unlabeled data we feed into the loss function is generated from the user's multiview information, rather than directly performing embedding look-up. In this way, we not only utilize the social relations of the unlabeled data, but also integrate their content information, which further improves the model's performance.</p><p>Then we combine the supervised classification loss (Eqn. 5) and unsupervised graph loss (Eqn. 6) to form the final objective function:</p><formula xml:id="formula_9">L SemiGN N = α • L sup + (1 -α) • L graph + λL reg , (<label>7</label></formula><formula xml:id="formula_10">)</formula><p>where α is the balancing term between the supervised loss and unsupervised loss and L reg denotes the L2 regularization of the model parameters.</p><p>We optimize the model using Stochastic Gradient Descent (SGD). The pseudo code to train SemiGNN is listed in Alg. 1.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>5) Analysis of the Proposed Model:</head><p>Here we give some analysis of the proposed model SemiGNN: for all k ∈ {1, ..., m} do</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>5:</head><p>Obtain low-level view-specific user embedding h k u and h k v by Eq. 1.</p><p>6:</p><p>Obtain high-level view-specific user embedding h k L u and h k L v by Eq. 2</p><p>7:</p><p>Obtain view preference vector a k u and a k v by Eq. 3 8:</p><p>end for 9:</p><p>Obtain a u and a v by Eq. 4.</p><p>10:</p><p>Get L SemiGN N by Eqn. 7.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>11:</head><p>Do backpropagation and update model parameters:</p><formula xml:id="formula_11">Θ (new) = Θ (old) -λ • ∂L SemiGN N ∂Θ (old)</formula><p>12: end for 13: return Θ feed the user into the model to decide whether it is fraud or not. And commonly we have the multiview information for almost all the users. In this way, once the model is trained, it can be used to classify all the users on our platform. • The proposed SemiGNN is efficient and can be parallelized easily. In the training procedure, we need to go over several iterations. In each iteration, we need to go over the whole edge. For the node-level attention, we will look at the node's neighbors and for the view-level attention, we need to go over the whole views. Therefore, the training complexity of the model is</p><formula xml:id="formula_12">O(I • |E| • d • m),</formula><p>where I is the number of iterations, d is the average degree of a node and |E| is the edge size of the relation graph. Therefore, the complexity of the model is linear to the number of edges. Furthermore, the model can be easily parallelized because the optimization for each edge is independent. Therefore, we can deploy the model into several machines to do optimization.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>IV. EXPERIMENT</head><p>In this experiment, we conduct experiments on a real-world dataset to answer the following questions:</p><p>• Can SemiGNN learn better embeddings for fraud detection compared with existing methods? • Whether the proposed hierarchical attention mechanim can help improve the model's performance and give interpretable results? • Whether the performance of our model can benefit from the unlabeled data?</p><p>• Is SemiGNN sensitive to the parameters and how the performance will be affected?</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. Dataset</head><p>We use the dataset from ALIPAY<ref type="foot" target="#foot_1">foot_1</ref> , the biggest third-party online payment platform in China, and through it users are able to do both online and offline payment. ALIPAY provides a credit service name Huabei to the users. Huabei is like a credit card. The users who subscribe the service will be provided some credits to do online and offline shopping. Then users need to do repayment of Huabei some days later. Based on such a service, we conduct the experiment on two tasks: user default prediction and user attributes prediction. User default prediction helps to predict whether someone has enough ability to do repayment. In this way the service provider can do some things to prevent the default. And user attribute prediction helps to decide how many credits should be provided for the user.</p><p>We use the following data sources to form the multiview graph. Firstly, we use the user-relation graph. Here, in our problem if two users are labeled as friends, classmates or workmates, there will be an undirected edge with weight 1 for simplicity between the two users. Secondly, we use the user-app graph. When a user logins an app, there will be an edge connecting with them and the weight denotes the frequency. Thirdly, we use the user-nick graph. The nicks of a user are marked online by other users. The assumption of using nicks is that how people describes other person may help define the user. We use word-cut algorithm to seperate each nick into several words and if a user is marked by a nick, we will connect the user with all the words of the nicks by edges and the edge weight denotes the word frequency. In this way, we can build user-nick bipartite graph. Finally, users usually upload their frequently-used addresses for online merchant. One address is usually a sentence containing the country, province (state), city, street and door information of the user. For most of the users, they have at least one address. Similarily, we split each address into several words. If the user's address contains a word, we set an edge between the user and the word and the edge's weight is corresponding to the word frequency. In this way, each user will link to several words, which forms another bipartite graph.</p><p>We collect about 4 million users with the known labels. To obtain the unlabeled data, we collect the users which are onehop friends, classmates and workmates of the labeled users. Then, the total number of users are over 1 hundred millions. Specifically, we withdraw the addresses which have not been used over the past half of the years. Then about 90 percent of the users have at least one app, over 95 percent of the users have the nicks and 80 percent of the users have at least one address. We use the word-cut package to split each address and the nicks into several words and we withdraw the words whose frequency is below the bottom 10%. Totally, the vocabulary size for addresses are 300 thousand, for nicks are 500 thousand and for apps are 20 thousand.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Baseline Methods</head><p>The state-of-the-art methods are introduced here:</p><p>• Xgboost <ref type="bibr" target="#b27">[28]</ref>: It is a tree-based model, which is very popular and perform well in industry. For each view, we use the dense features as the input to the model. • LINE <ref type="bibr" target="#b17">[18]</ref>: We first use LINE on the multiview graph to learn the user representations and then use softmax to do classification. Note that DeepWalk, LINE and node2vec are similar in terms of the problem to be solved and the performance. LINE is more scalable and thus we only report the performance of LINE here.</p><p>• GCN <ref type="bibr" target="#b23">[24]</ref>: It is a deep graph neural network and each node's embedding is ensembled by its own embedding and the neighbors embedding. Each labeled user is defined as a sample. The node attributes are defined as the average of the pretrained address, nick and app embedding. The graph is defined as the relational graph between the labeled data. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>C. Implementation Details</head><p>In our model SemiGNN, we randomly initialize parameters and optimize the model with Adam <ref type="bibr" target="#b13">[14]</ref>. The learning rate is set as 0.002 and learning rate decay is set as 0.95. The batch size is set as 128. We learn the model for 3 epochs and repeat the experiments for 3 times and report the averaged results. For the random walk part, each node is sampled 5 times with the walk length of 10. The window size is set to 3. For the deep models, the initial node embedding is set to 128. After that, a two-layer perceptron with 64-32 units is set to learn the view-specific embeddings for the users. Then another one-layer perceptron with 32 units is set to learn the view-integrated embeddings. For Xgboost, we use 500 trees. For GAT, we use three layers with 128-64-32 units. For LINE, we use LINE 1st+2nd with the default parameter settings.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>D. Quantitative Results</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>1) User Default Prediction:</head><p>In this task, we split the labeled data into three parts: 50% for training, 30% for test and 20% for validation. Among our dataset, 5% of the labeled data are labeled as default and the rest are labeled as non-default. Our model aims to predict the default labels directly. Commonly, we use AUC as the evaluation metric. Specifically, financial scenario also concerns about the KS <ref type="bibr" target="#b14">[15]</ref>, which is a metric to measure the risk differentiation of the model. The result is shown in Table <ref type="table" target="#tab_5">II</ref>.</p><p>From Table <ref type="table" target="#tab_5">II</ref>, we have the following observations and analysis:</p><p>• We find that our method SemiGNN and its variants perform better than other methods. It demonstrates the superiority of the proposed model. 2) User Attribute Prediction: User attributes are often very important for fraud detection because the attributes help to define a person. Specifically, the user's occupation is a very critical attribute to reflect a person's economic and education condition. Therefore, the occupation prediction can help the downstream fraud detection. Here, we conduct the experiment to predict the user's occupation. We first report the results on the common classification metrics F1-score, precision and recall in Figure <ref type="figure">3</ref>. Since the occupation prediction of our dataset is mainly used for financial risk control, we also focus on the prediction precision of the top-ranked results, which is shown in Table <ref type="table" target="#tab_5">III</ref>.</p><p>From Table <ref type="table" target="#tab_5">III</ref> and Figure <ref type="figure">3</ref>, we find that our method SemiGNN and its variants still perform better than other methods on the three attributes. It demonstrates the superiority of the proposed model. Other observations are similar with those of the previous section, which we will not repeat any more.</p><p>3) The effect of different views: In this section, we aim to test the effect of different views on two tasks. We use SemiGNN x to denote the proposed method which only uses the features of x as the input graph. The result is shown in Table <ref type="table" target="#tab_7">IV</ref>.   From Table <ref type="table" target="#tab_7">IV</ref>, we have the following observations:</p><p>• In both tasks, the performance will drop a lot if we only utilize one view of graph compared with the performance of SemiGNN. It demonstrates that it is very essential to integrate multiple views to get a more comprehensive result. • In both tasks, we find that social relations are effective. It demonstrates that similar people will gather together and it is essential to utilize the graph model to model such a structure. • In the task of default prediction, we find that app and address are important. The reason of app achieving good performance is that default people will usually use some apps to borrow the money and spend the money, which greatly increases the loan of the people and as a result they cannot repay the credits in time. The reason that addresses can achieve a good performance is that users often set the frequent delivery address as the home address or work address. These two addresses can indirectly reflect the people's financial condition. • In the task of occupation attribute prediction, we find that address is the most important features compared with other features. The reason is that in most cases people will use their work address as the delivery address. And the work address can always show the occupation of the users. We find that the app features perform worse in this task. We think the reason is that the apps are nosiy for occupation prediction. Very few apps are specifically designed for specific occupations.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>E. Interpretable Results</head><p>We report the interpretable results in this section. In our model, for each user, since we use the node-level attention mechanism to aggregate neighbors' representations, the value of the attention term can been seen as the importance of the neighbor to the final task. Therefore, we aggregate the importance of each node to obtain the node's global importance to the final task. Due to the space limit, we give the top 15 important apps for default prediction. We also give top 15 addresses and nicks for attribute prediction on doctor. The reason why we report different features for different tasks is that these features are more useful for a specific task, as shown in the previous section. The result is shown in Table <ref type="table">V</ref>.</p><p>From Table <ref type="table">V</ref>, we find that almost all the features are highly related to the corresponding tasks. Specifically, we also get the following interesting findings:</p><p>• We observe that most of the important apps for default prediction are financial apps, especially the p2p apps. It is reasonable because if people frequently use the p2p apps, their loan will be larger which may lead to the default finally. We also find that the game apps and shopping</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head>Fig. 1 .</head><label>1</label><figDesc>Fig.1. The problem illustrations. Some users are labeled and most of the users are unlabeled. We collect different views of data. We aim to utilize the multiview data to do user fraud classification.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head></head><label></label><figDesc>Notation Explanation U = U L ∪ U ul User Set m Number of views nv Number of nodes in the v-th view-specific graph yu the label of the user u N v u the neighbors of user u in the v-th view-specific graph L the number of layers for the view-specific MLP B. SemiGNN 1) Overall Architecture: We introduce how the proposed model SemiGNN utilizes multiview data for fraud detection here. The model has three key questions to be answered: (1) In each view-specific graph, how to assemble the user's neighbors? (2) How to assemble multiview data to obtain user embedding? (3) How to model the labeled and unlabled user simultaneously?</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_2"><head>Fig. 2 .</head><label>2</label><figDesc>Fig. 2. The framework of the proposed model SemiGNN.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_1"><head>TABLE I NOTATIONS</head><label>I</label><figDesc>AND EXPLANATIONS.</figDesc><table /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_2"><head>•</head><label></label><figDesc>We propose a general multiview graph model here and the model can deal with various types of nodes and various views of the graphs. Our model can fuse the rich semantics in each view and learn a comprehensive user embedding for user fraud detection. Furthermore, since we model the multiview data in a unified framework and optimize them together, different views can enhance the mutual promotion and mutual upgrade.• The proposed model potentially has good interpretability for the given task. The node-level attention and the viewlevel attention are optimized with the classification error and in the end the model will pay more attetion to some meaningful nodes and meaningfull views. In this way, by using the attention term, we can observe which nodes are important for the given task and for a given user, what factors are most influential for the user to be classified as fraud or not. Such results are benefitial to analyze and explain the results and help understand the models. Training Algorithm for SemiGNN Input: The multiview graph:G v = {U ∪ S v , E v }, v ∈ {1, ...,m}. The balancing weight α. The regularizer weight λ. Output: The model parameters Θ 1: Randomly initialize the model parameters Θ and the attention parameter H v and φ v . 2: Generating random walk paths according to relation graph G (U ) and construct the user paired set S. 3: for all (u, v) ∈ S do</figDesc><table><row><cell>4:</cell></row></table><note><p>• The proposed model is an inductive method: Given a new user, if we have its multivew information, we can directly Algorithm 1</p></note></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_3"><head></head><label></label><figDesc>• GAT<ref type="bibr" target="#b28">[29]</ref>: It is an improved version of GCN method, which uses the attention mechanism to aggregate the neighborhoods.• SemiGNN sup : It is a reduced version of our proposed method SemiGNN, which only utilizes the labeled data. • SemiGNN nd : It is a reduced version of SemiGNN which removes node-level attention. • SemiGNN vw : It is a reduced version of SemiGNN which removes view-level attention.</figDesc><table /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_4"><head>•</head><label></label><figDesc>The result that SemiGNN outperforms SemiGNN nd and SemiGNN vw demonstrate that the proposed node-level and view-level attention are both essential and help improve the model's performance.• The result that SemiGNN sup outperforms GAT and GCN demonstrates our assumption that different neighbors and diffrent views contribute differently to the target task. Thus, the attention mechanism can better capture their correlations. Meanwhile, by incorporating the attention mechanism, the model can also provide interpretable results, which we will describe in detail in the next section.• We find that there is a relatively great increase from SemiGNN sup to SemiGNN. It demonstrates that although unlabeled data do not have labels, their social relations with labeled data and their multiview contents can still provide very valuable information. • The performance of LINE is much worse than other graph-based methods. It demonstrates the importance of collecting information from connected nodes. • The performance of Xgboost is poor. It demonstrates that the dense features cannot encode enough information. By formulate the problem as a multiview graph and encode each attribute into a vectorized embedding can preserve much more information into the representations, which fasciliates the model learning.</figDesc><table /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_5"><head>TABLE II USER</head><label>II</label><figDesc>DEFAULT PREDICTION ON AUC AND KS ON ALIPAY.</figDesc><table><row><cell cols="6">Evaluation Metric Xgboost LINE GCN</cell><cell cols="7">GAT SemiGNNsup SemiGNN nd SemiGNNvw SemiGNN</cell></row><row><cell></cell><cell>AUC</cell><cell></cell><cell></cell><cell>0.753</cell><cell cols="2">0.771 0.780 0.784</cell><cell>0.786</cell><cell>0.798</cell><cell></cell><cell>0.801</cell><cell></cell><cell>0.807</cell></row><row><cell></cell><cell>KS</cell><cell></cell><cell></cell><cell>0.370</cell><cell cols="2">0.397 0.415 0.424</cell><cell>0.427</cell><cell>0.442</cell><cell></cell><cell>0.448</cell><cell></cell><cell>0.464</cell></row><row><cell>Xgboost</cell><cell>LINE</cell><cell></cell><cell>GCN</cell><cell>GAT</cell><cell>Xgboost</cell><cell>LINE</cell><cell>GCN</cell><cell>GAT</cell><cell>Xgboost</cell><cell>LINE</cell><cell></cell><cell>GCN</cell><cell>GAT</cell></row><row><cell cols="3">SemiGNNsup SemiGNNnd</cell><cell cols="2">SemiGNNvw SemiGNN</cell><cell>SemiGNNsup</cell><cell>SemiGNNnd</cell><cell>SemiGNNvw</cell><cell>SemiGNN</cell><cell cols="3">SemiGNNsup SemiGNNnd</cell><cell>SemiGNNvw SemiGNN</cell></row><row><cell>0.54</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>0.51</cell><cell></cell><cell></cell><cell>0.65</cell><cell></cell><cell></cell><cell></cell></row><row><cell>0.52</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>0.49</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>0.5</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>0.47</cell><cell></cell><cell></cell><cell>0.6</cell><cell></cell><cell></cell><cell></cell></row><row><cell>0.48</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>0.45</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>0.46</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>0.43</cell><cell></cell><cell></cell><cell>0.55</cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>0.41</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>0.44</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>0.39</cell><cell></cell><cell></cell><cell>0.5</cell><cell></cell><cell></cell><cell></cell></row><row><cell>0.42</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>0.37</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>0.4</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>0.35</cell><cell></cell><cell></cell><cell>0.45</cell><cell></cell><cell></cell><cell></cell></row><row><cell cols="2">Government Officer</cell><cell cols="2">Doctor</cell><cell>Teacher</cell><cell cols="2">Government Officer</cell><cell>Doctor</cell><cell>Teacher</cell><cell cols="2">Government Officer</cell><cell cols="2">Doctor</cell><cell>Teacher</cell></row><row><cell></cell><cell cols="3">(a) F1-score</cell><cell></cell><cell></cell><cell cols="2">(b) Precision</cell><cell></cell><cell></cell><cell cols="3">(c) Recall</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell cols="6">Fig. 3. Attribute classification results in terms of F1-score, precision and recall.</cell><cell></cell><cell></cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_7"><head>TABLE IV KS</head><label>IV</label><figDesc>OF THE METHODS WHEN USING DIFFERENT VIEWS OF DATA.</figDesc><table><row><cell>Method</cell><cell cols="2">Default Prediction Attribute Prediction (Doctor)</cell></row><row><cell>SemiGNNapp</cell><cell>0.357</cell><cell>0.554</cell></row><row><cell>SemiGNN addr</cell><cell>0.303</cell><cell>0.638</cell></row><row><cell>SemiGNN nick</cell><cell>0.22</cell><cell>0.615</cell></row><row><cell>SemiGNN social</cell><cell>0.285</cell><cell>0.604</cell></row><row><cell>SemiGNN</cell><cell>0.464</cell><cell>0.729</cell></row></table></figure>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot" n="1" xml:id="foot_0"><p>https://www.altexsoft.com/whitepapers/fraud-detection-how-machinelearning-systems-help-reveal-scams-in-fintech-healthcare-and-ecommerce/</p></note>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot" n="2" xml:id="foot_1"><p>https://www.alipay.com</p></note>
+		</body>
+		<back>
+			<div type="annex">
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>AUC Dimension of Embedding</head><p>apps are also important. The reason is that users may spend a lot of money on these apps. In this way, they may not have enough money to repay the credit, which leads to the default. • We observe that in user attribute prediction, most of the important nicks are titles related to the doctor. Such a result is very reasonable in China because people often mark other peopole's name with their occupations, like Doctor Wang and Nurse Peter. Therefore, we can find useful information in the nicks. When we look at the important addresses for doctor, we find that our method is able to find many departments of the hospital. They are very typical features for doctors, which also demonstrates a great interpretability of our method.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>F. Parameter Sensitivity</head><p>In this section, we investigate the parameter sensitivity. We change the value of one parameter and fix the values of other parameters. Then we report the results of AUC on ALIPAY dataset with various parameter settings in Figure <ref type="figure">4</ref>. Due to the space of limit, we only report the results on the task of default prediction.</p><p>• Dimension of the final embedding: We first test the effect of the dimension of the final embedding on the classification performance. The result is shown in Figure <ref type="figure">4</ref>(a). We can see that with the growth of the embedding dimension, the AUC raises and then drops. The reason is that a suitable dimension is needed to encode enough information but a larger dimension will lead to overfitting and redundancy. • Dimension of the initial node embedding: Then we report the effect of the dimension of the initial node embedding in Figure <ref type="figure">4(b)</ref>. We can see that generally there is little change in terms of AUC when we change the node embedding dimension. The reason is that these dimensions are enough to encode useful information. • The value of α: We change the value of α and report the corresponding performance in Figure <ref type="figure">4</ref>(c). We find that a better performance will achieve when we pay more attention to the labeled data because labeled data can provide discriminatve information. But we also observe that ignoring the unsupervised information also makes the performance worse. The reason is that the unsupervised information can provide structural information, which also benefits the model learning.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>V. CONCLUSION</head><p>In this paper, we propose a semi-supvervised graph attentive network model for fraud detection. Our model links the labeled and unlabeled data via their social relations. And we learn a classifier which on the one hand is consistant with the labels of the labeled data by proposing the classification loss, and on the other hand makes the classification results for similar vertexes similar by proposing the graph-based loss. Specifically, we propose a hierarchical attention mechanism to better mine the multiview graph. The node-level attention is able to better correlate neighbors and the view-level attention can better integrate different views. Experimentally, our method achieves better results compared with baseline methods. And our method can tell important factors for a specific task.</p><p>The future work may focus on differentiating different social relations to further improve the model. And we can extend the model to more fraud detection applications.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>VI. ACKNOWLEDGEMENT</head><p>We would like to thank the support of many colleagues from AI lab and the Financial Risk Management in Ant Financial Services Group. Thanks for the support of the China Postdoctoral Science Foundation.</p></div>			</div>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<analytic>
+		<title level="a" type="main">Intelligent financial fraud detection practices: an investigation</title>
+		<author>
+			<persName><forename type="first">Jarrod</forename><surname>West</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Maumita</forename><surname>Bhattacharya</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Rafiqul</forename><surname>Islam</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Security and Privacy in Communication Networks</title>
+		<meeting><address><addrLine>Cham</addrLine></address></meeting>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">West, Jarrod, Maumita Bhattacharya, and Rafiqul Islam. &quot;Intelli- gent financial fraud detection practices: an investigation.&quot; Inter- national Conference on Security and Privacy in Communication Networks. Springer, Cham, 2014.</note>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<analytic>
+		<title level="a" type="main">A genetic algorithm approach to detecting temporal patterns indicative of financial statement fraud</title>
+		<author>
+			<persName><forename type="first">Bethany</forename><surname>Hoogs</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Intelligent Systems in Accounting, Finance and Management: International Journal</title>
+		<imprint>
+			<biblScope unit="volume">15</biblScope>
+			<biblScope unit="issue">12</biblScope>
+			<biblScope unit="page" from="41" to="56" />
+			<date type="published" when="2007">2007</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Hoogs, Bethany, et al. &quot;A genetic algorithm approach to detect- ing temporal patterns indicative of financial statement fraud.&quot; Intelligent Systems in Accounting, Finance and Management: International Journal 15.12 (2007): 41-56.</note>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<analytic>
+		<title/>
+		<author>
+			<persName><forename type="first">Jon</forename><surname>Quah</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Ts</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Sriganesh</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">l</title>
+		<imprint>
+			<biblScope unit="volume">35</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="1721" to="1732" />
+			<date type="published" when="2008">2008</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Quah, Jon TS, and M. Sriganesh. &quot;l 35.4 (2008): 1721-1732.</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<analytic>
+		<title level="a" type="main">A review of data mining-based financial fraud detection research</title>
+		<author>
+			<persName><forename type="first">Dianmin</forename><surname>Yue</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Wireless Communications, Networking and Mobile Computing</title>
+		<imprint>
+			<publisher>Ieee</publisher>
+			<date type="published" when="2007">2007. 2007</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Yue, Dianmin, et al. &quot;A review of data mining-based financial fraud detection research.&quot; 2007 International Conference on Wireless Communications, Networking and Mobile Computing. Ieee, 2007.</note>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<analytic>
+		<title level="a" type="main">Heterogeneous Graph Neural Networks for Malicious Account Detection</title>
+		<author>
+			<persName><forename type="first">Ziqi</forename><surname>Liu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 27th ACM International Conference on Information and Knowledge Management</title>
+		<meeting>the 27th ACM International Conference on Information and Knowledge Management</meeting>
+		<imprint>
+			<publisher>ACM</publisher>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Liu, Ziqi, et al. &quot;Heterogeneous Graph Neural Networks for Malicious Account Detection.&quot; Proceedings of the 27th ACM International Conference on Information and Knowledge Man- agement. ACM, 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<monogr>
+		<title level="m" type="main">Cash-out User Detection based on Attributed Heterogeneous Information Network with a Hierarchical Attention Mechanism</title>
+		<author>
+			<persName><forename type="first">Binbin</forename><surname>Hu</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Hu, Binbin, et al. &quot;Cash-out User Detection based on Attributed Heterogeneous Information Network with a Hierarchical Atten- tion Mechanism.&quot; (2019).</note>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<analytic>
+		<title level="a" type="main">Data mining for detection of financial statement fraud in Chinese Companies</title>
+		<author>
+			<persName><forename type="first">I</forename><surname>Bose</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Wang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International joint Conference on e-Commerce, e-Administration, e-Society, and e-Education</title>
+		<imprint>
+			<publisher>IBAC) and Knowledge Association of Taiwan (KAT</publisher>
+			<date type="published" when="2007">2007</date>
+		</imprint>
+		<respStmt>
+			<orgName>International Business Academics Consortium</orgName>
+		</respStmt>
+	</monogr>
+	<note type="raw_reference">Bose, I., and J. Wang. &quot;Data mining for detection of fi- nancial statement fraud in Chinese Companies.&quot; International joint Conference on e-Commerce, e-Administration, e-Society, and e-Education. International Business Academics Consortium (IBAC) and Knowledge Association of Taiwan (KAT), 2007.</note>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<analytic>
+		<title level="a" type="main">Data mining techniques for the detection of fraudulent financial statements</title>
+		<author>
+			<persName><forename type="first">Efstathios</forename><surname>Kirkos</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Charalambos</forename><surname>Spathis</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yannis</forename><surname>Manolopoulos</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Expert systems with applications</title>
+		<imprint>
+			<biblScope unit="volume">32</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="995" to="1003" />
+			<date type="published" when="2007">2007</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Kirkos, Efstathios, Charalambos Spathis, and Yannis Manolopoulos. &quot;Data mining techniques for the detection of fraudulent financial statements.&quot; Expert systems with applications 32.4 (2007): 995-1003.</note>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">Detection of financial statement fraud and feature selection using data mining techniques</title>
+		<author>
+			<persName><forename type="first">Pediredla</forename><surname>Ravisankar</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Decision Support Systems</title>
+		<imprint>
+			<biblScope unit="volume">50</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="491" to="500" />
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ravisankar, Pediredla, et al. &quot;Detection of financial statement fraud and feature selection using data mining techniques.&quot; De- cision Support Systems 50.2 (2011): 491-500.</note>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<analytic>
+		<title level="a" type="main">Data mining for credit card fraud: A comparative study</title>
+		<author>
+			<persName><forename type="first">Siddhartha</forename><surname>Bhattacharyya</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Decision Support Systems</title>
+		<imprint>
+			<biblScope unit="volume">50</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="602" to="613" />
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Bhattacharyya, Siddhartha, et al. &quot;Data mining for credit card fraud: A comparative study.&quot; Decision Support Systems 50.3 (2011): 602-613.</note>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<analytic>
+		<title level="a" type="main">Transaction aggregation as a strategy for credit card fraud detection</title>
+		<author>
+			<persName><forename type="first">Christopher</forename><surname>Whitrow</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Data mining and knowledge discovery</title>
+		<imprint>
+			<biblScope unit="volume">18</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="30" to="55" />
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Whitrow, Christopher, et al. &quot;Transaction aggregation as a strat- egy for credit card fraud detection.&quot; Data mining and knowledge discovery 18.1 (2009): 30-55.</note>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<analytic>
+		<title level="a" type="main">A Bayesian dichotomous model with asymmetric link for fraud in insurance</title>
+		<author>
+			<persName><forename type="first">Ll</forename><surname>Bermúdez</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Insurance: Mathematics and Economics</title>
+		<imprint>
+			<biblScope unit="volume">42</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="779" to="786" />
+			<date type="published" when="2008">2008</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Bermúdez, Ll, et al. &quot;A Bayesian dichotomous model with asymmetric link for fraud in insurance.&quot; Insurance: Mathematics and Economics 42.2 (2008): 779-786.</note>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<analytic>
+		<title level="a" type="main">Strategies for detecting fraudulent claims in the automobile insurance industry</title>
+		<author>
+			<persName><forename type="first">Stijn</forename><surname>Viaene</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">European Journal of Operational Research</title>
+		<imprint>
+			<biblScope unit="volume">176</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="565" to="583" />
+			<date type="published" when="2007">2007</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Viaene, Stijn, et al. &quot;Strategies for detecting fraudulent claims in the automobile insurance industry.&quot; European Journal of Operational Research 176.1 (2007): 565-583.</note>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<monogr>
+		<title level="m" type="main">Adam: A method for stochastic optimization</title>
+		<author>
+			<persName><forename type="first">Diederik</forename><forename type="middle">P</forename><surname>Kingma</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jimmy</forename><surname>Ba</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1412.6980</idno>
+		<imprint>
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Kingma, Diederik P., and Jimmy Ba. &quot;Adam: A method for stochastic optimization.&quot; arXiv preprint arXiv:1412.6980 (2014).</note>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<analytic>
+		<title level="a" type="main">A recursive partitioning decision rule for nonparametric classification</title>
+		<author>
+			<persName><forename type="first">Jerome</forename><forename type="middle">H</forename><surname>Friedman</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Computers</title>
+		<imprint>
+			<biblScope unit="volume">4</biblScope>
+			<biblScope unit="page" from="404" to="408" />
+			<date type="published" when="1977">1977</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Friedman, Jerome H. &quot;A recursive partitioning decision rule for nonparametric classification.&quot; IEEE Transactions on Computers 4 (1977): 404-408.</note>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<monogr>
+		<title level="m" type="main">DeepWalk: Online Learning of Social Representations</title>
+		<author>
+			<persName><forename type="first">Sig-Kdd</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">C M</forename></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">SIG-KDD, A. C. M. &quot;DeepWalk: Online Learning of Social Representations.&quot; (2014).</note>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<analytic>
+		<title level="a" type="main">node2vec: Scalable feature learning for networks</title>
+		<author>
+			<persName><forename type="first">Aditya</forename><surname>Grover</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jure</forename><surname>Leskovec</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 22nd ACM SIGKDD international conference on Knowledge discovery and data mining</title>
+		<meeting>the 22nd ACM SIGKDD international conference on Knowledge discovery and data mining</meeting>
+		<imprint>
+			<publisher>ACM</publisher>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Grover, Aditya, and Jure Leskovec. &quot;node2vec: Scalable feature learning for networks.&quot; Proceedings of the 22nd ACM SIGKDD international conference on Knowledge discovery and data min- ing. ACM, 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<analytic>
+		<title level="a" type="main">Line: Large-scale information network embedding</title>
+		<author>
+			<persName><forename type="first">Jian</forename><surname>Tang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 24th international conference on world wide web. International World Wide Web Conferences Steering Committee</title>
+		<meeting>the 24th international conference on world wide web. International World Wide Web Conferences Steering Committee</meeting>
+		<imprint>
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Tang, Jian, et al. &quot;Line: Large-scale information network em- bedding.&quot; Proceedings of the 24th international conference on world wide web. International World Wide Web Conferences Steering Committee, 2015.</note>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<analytic>
+		<title level="a" type="main">Structural deep network embedding</title>
+		<author>
+			<persName><forename type="first">Daixin</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Peng</forename><surname>Cui</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Wenwu</forename><surname>Zhu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 22nd ACM SIGKDD international conference on Knowledge discovery and data mining</title>
+		<meeting>the 22nd ACM SIGKDD international conference on Knowledge discovery and data mining</meeting>
+		<imprint>
+			<publisher>ACM</publisher>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Wang, Daixin, Peng Cui, and Wenwu Zhu. &quot;Structural deep network embedding.&quot; Proceedings of the 22nd ACM SIGKDD international conference on Knowledge discovery and data min- ing. ACM, 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<analytic>
+		<title level="a" type="main">Asymmetric transitivity preserving graph embedding</title>
+		<author>
+			<persName><forename type="first">Mingdong</forename><surname>Ou</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 22nd ACM SIGKDD international conference on Knowledge discovery and data mining</title>
+		<meeting>the 22nd ACM SIGKDD international conference on Knowledge discovery and data mining</meeting>
+		<imprint>
+			<publisher>ACM</publisher>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ou, Mingdong, et al. &quot;Asymmetric transitivity preserving graph embedding.&quot; Proceedings of the 22nd ACM SIGKDD interna- tional conference on Knowledge discovery and data mining. ACM, 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<analytic>
+		<title level="a" type="main">Grarep: Learning graph representations with global structural information</title>
+		<author>
+			<persName><forename type="first">Shaosheng</forename><surname>Cao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Wei</forename><surname>Lu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Qiongkai</forename><surname>Xu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 24th ACM international on conference on information and knowledge management</title>
+		<meeting>the 24th ACM international on conference on information and knowledge management</meeting>
+		<imprint>
+			<publisher>ACM</publisher>
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Cao, Shaosheng, Wei Lu, and Qiongkai Xu. &quot;Grarep: Learn- ing graph representations with global structural information.&quot; Proceedings of the 24th ACM international on conference on information and knowledge management. ACM, 2015.</note>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<analytic>
+		<title level="a" type="main">metapath2vec: Scalable representation learning for heterogeneous networks</title>
+		<author>
+			<persName><surname>Dong</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Nitesh</forename><forename type="middle">V</forename><surname>Yuxiao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ananthram</forename><surname>Chawla</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Swami</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 23rd ACM SIGKDD international conference on knowledge discovery and data mining</title>
+		<meeting>the 23rd ACM SIGKDD international conference on knowledge discovery and data mining</meeting>
+		<imprint>
+			<publisher>ACM</publisher>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Dong, Yuxiao, Nitesh V. Chawla, and Ananthram Swami. &quot;metapath2vec: Scalable representation learning for heteroge- neous networks.&quot; Proceedings of the 23rd ACM SIGKDD inter- national conference on knowledge discovery and data mining. ACM, 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b22">
+	<analytic>
+		<title level="a" type="main">Heterogeneous network embedding via deep architectures</title>
+		<author>
+			<persName><forename type="first">Shiyu</forename><surname>Chang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 21th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</title>
+		<meeting>the 21th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</meeting>
+		<imprint>
+			<publisher>ACM</publisher>
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Chang, Shiyu, et al. &quot;Heterogeneous network embedding via deep architectures.&quot; Proceedings of the 21th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining. ACM, 2015.</note>
+</biblStruct>
+
+<biblStruct xml:id="b23">
+	<monogr>
+		<title level="m" type="main">Semi-supervised classification with graph convolutional networks</title>
+		<author>
+			<persName><forename type="first">Thomas</forename><forename type="middle">N</forename><surname>Kipf</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Max</forename><surname>Welling</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1609.02907</idno>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Kipf, Thomas N., and Max Welling. &quot;Semi-supervised clas- sification with graph convolutional networks.&quot; arXiv preprint arXiv:1609.02907 (2016).</note>
+</biblStruct>
+
+<biblStruct xml:id="b24">
+	<analytic>
+		<title level="a" type="main">Learning convolutional neural networks for graphs</title>
+		<author>
+			<persName><forename type="first">Mathias</forename><surname>Niepert</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mohamed</forename><surname>Ahmed</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Konstantin</forename><surname>Kutzkov</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International conference on machine learning</title>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Niepert, Mathias, Mohamed Ahmed, and Konstantin Kutzkov. &quot;Learning convolutional neural networks for graphs.&quot; Interna- tional conference on machine learning. 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b25">
+	<analytic>
+		<title level="a" type="main">Robust and scalable graph-based semisupervised learning</title>
+		<author>
+			<persName><forename type="first">Wei</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jun</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Shih-Fu</forename><surname>Chang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the IEEE</title>
+		<meeting>the IEEE</meeting>
+		<imprint>
+			<date type="published" when="2012">2012</date>
+			<biblScope unit="volume">100</biblScope>
+			<biblScope unit="page" from="2624" to="2638" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Liu, Wei, Jun Wang, and Shih-Fu Chang. &quot;Robust and scalable graph-based semisupervised learning.&quot; Proceedings of the IEEE 100.9 (2012): 2624-2638.</note>
+</biblStruct>
+
+<biblStruct xml:id="b26">
+	<analytic>
+		<title level="a" type="main">Multimodal deep learning</title>
+		<author>
+			<persName><forename type="first">Jiquan</forename><surname>Ngiam</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 28th international conference on machine learning (ICML-11)</title>
+		<meeting>the 28th international conference on machine learning (ICML-11)</meeting>
+		<imprint>
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ngiam, Jiquan, et al. &quot;Multimodal deep learning.&quot; Proceedings of the 28th international conference on machine learning (ICML- 11). 2011.</note>
+</biblStruct>
+
+<biblStruct xml:id="b27">
+	<analytic>
+		<title level="a" type="main">Xgboost: A scalable tree boosting system</title>
+		<author>
+			<persName><forename type="first">Tianqi</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Carlos</forename><surname>Guestrin</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 22nd acm sigkdd international conference on knowledge discovery and data mining</title>
+		<meeting>the 22nd acm sigkdd international conference on knowledge discovery and data mining</meeting>
+		<imprint>
+			<publisher>ACM</publisher>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Chen, Tianqi, and Carlos Guestrin. &quot;Xgboost: A scalable tree boosting system.&quot; Proceedings of the 22nd acm sigkdd inter- national conference on knowledge discovery and data mining. ACM, 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b28">
+	<monogr>
+		<title level="m" type="main">Graph attention networks</title>
+		<author>
+			<persName><forename type="first">Petar</forename><surname>Velikovi</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1710.10903</idno>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Velikovi, Petar, et al. &quot;Graph attention networks.&quot; arXiv preprint arXiv:1710.10903 (2017).</note>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

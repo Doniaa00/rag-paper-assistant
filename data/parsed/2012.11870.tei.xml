@@ -1,0 +1,880 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">A Survey of Methods for Managing the Classification and Solution of Data Imbalance Problem</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher>Science Publications</publisher>
+				<availability  status="unknown">
+					<licence/>
+				</availability>
+				<date type="published" when="2020-11-01">2020-11-01</date>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><roleName>Md. Sadiq Iqbal</roleName><forename type="first">Khan</forename><forename type="middle">Md. </forename><surname>Hasib</surname></persName>
+							<affiliation key="aff1">
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Md.</forename><forename type="middle">Sadiq</forename><surname>Iqbal</surname></persName>
+						</author>
+						<author>
+							<persName><forename type="first">Faisal</forename><forename type="middle">Muhammad</forename><surname>Shah</surname></persName>
+							<affiliation key="aff4">
+								<orgName type="department">Department of Computer Science and Engineering</orgName>
+								<orgName type="institution">University of Dhaka</orgName>
+								<address>
+									<country key="BD">Bangladesh</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><roleName>Mahmudul</roleName><forename type="first">Jubayer</forename><surname>Al Mahmud</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="department">Department of Computer Science and Engineering</orgName>
+								<orgName type="institution">Ahsanullah University of Science and Technology</orgName>
+								<address>
+									<country key="BD">Bangladesh</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Mahmudul</forename><forename type="middle">Hasan</forename><surname>Popel</surname></persName>
+							<affiliation key="aff5">
+								<orgName type="department">Institute of Computer Science</orgName>
+								<orgName type="institution">Bangladesh Atomic Energy Commission</orgName>
+								<address>
+									<country key="BD">Bangladesh</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Md.</forename><forename type="middle">Imran Hossain</forename><surname>Showrov</surname></persName>
+						</author>
+						<author>
+							<persName><forename type="first">Shakil</forename><surname>Ahmed</surname></persName>
+							<affiliation key="aff3">
+								<orgName type="department">Department of Computer Science and Engineering</orgName>
+								<orgName type="institution">Bangladesh University</orgName>
+								<address>
+									<country key="BD">Bangladesh</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Obaidur</forename><surname>Rahman</surname></persName>
+						</author>
+						<author>
+							<affiliation key="aff6">
+								<orgName type="department">Institute of Computer Science</orgName>
+								<orgName type="institution">Atomic Energy Commission</orgName>
+								<address>
+									<country key="BD">Bangladesh</country>
+								</address>
+							</affiliation>
+						</author>
+						<title level="a" type="main">A Survey of Methods for Managing the Classification and Solution of Data Imbalance Problem</title>
+					</analytic>
+					<monogr>
+						<title level="j" type="main">Journal of Computer Science</title>
+						<title level="j" type="abbrev">Journal of Computer Science</title>
+						<idno type="ISSN">1549-3636</idno>
+						<imprint>
+							<publisher>Science Publications</publisher>
+							<biblScope unit="volume">16</biblScope>
+							<biblScope unit="issue">11</biblScope>
+							<biblScope unit="page" from="1546" to="1557"/>
+							<date type="published" when="2020-11-01" />
+						</imprint>
+					</monogr>
+					<idno type="MD5">A6138DF1C8D72F3FE11FA5A80F4AA97A</idno>
+					<idno type="DOI">10.3844/jcssp.2020.1546.1557</idno>
+					<note type="submission">Received: 24-07-2020 Revised: 15-09-2020 Accepted: 13-11-2020</note>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.2-SNAPSHOT" ident="GROBID" when="2026-08-31T18:10+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<textClass>
+				<keywords>
+					<term>Class Imbalance</term>
+					<term>Ensemble</term>
+					<term>Survey Methods</term>
+					<term>Hybrid</term>
+				</keywords>
+			</textClass>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>The problem of class imbalance is extensive for focusing on numerous applications in the real world. In such a situation, nearly all of the examples are labeled as one class called majority class, while far fewer examples are labeled as the other class usually, the more important class is called minority. Over the last few years, several types of research have been carried out on the issue of class imbalance, including data sampling, costsensitive analysis, Genetic Programming based models, bagging, boosting, etc. Nevertheless, in this survey paper, we enlisted the 24 related studies in the years 2003, 2008, 2010, 2012 and 2014  to 2019, focusing on the architecture of single, hybrid and ensemble method design to understand the current status of improving classification output in machine learning techniques to fix problems with class imbalances. This survey paper also includes a statistical analysis of the classification algorithms under various methods and several other experimental conditions, as well as datasets used in different research papers.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Introduction</head><p>The data is the most valuable asset and one of the best possible sources for any research and development. Data can be viewed as one of the significant components of educational and business strategy decisions. Therefore, the data for research and development for any major decision should be balanced and accurate. Balanced data is one of the major concerns nowadays. Data Imbalance problems impede the performance of the classification algorithm <ref type="bibr" target="#b21">(Singh and Purohit, 2015)</ref>. However, the efficiency of predictive models is significantly impacted when the data set in the real world is highly imbalanced <ref type="bibr">(Amin et al., 2016)</ref>. So, the data are used for strategic decisions and research should be balanced. When class distribution in the dataset is not uniform, the data are called imbalance <ref type="bibr">(Haykin, 1999)</ref>. In such cases, there are only a limited number of instances represented in the least one known as minority class and the remainder of the dataset consisting of other classes is known as majority class. Recent work has shown that output an unequal distribution of class examples in the learning process can skew efficiency. This means the class provides minimal specificity on the minority class while it offers great accuracy in the majority class. Class disparity in the datasets can drastically skew the performance of classifiers in a majority-minority classification problem, introducing a prediction bias for the majority class <ref type="bibr" target="#b8">(Leevy et al., 2018)</ref>. Though high imbalance affects the output significantly, some of the small imbalances metrics were beneficial <ref type="bibr" target="#b6">(Koziarski et al., 2018)</ref>.</p><p>Researchers divided the data imbalance problem into two major categories: Multiclass data imbalance <ref type="bibr">(Bhowan et al., 2011)</ref>. In a multiclass dataset, there are more than two classes and just two classes in a binary dataset. There are plenty of attempts to fix the issue of binary class imbalance, but the different types of problems relevant to the problem of multiclass imbalance are not yet solved <ref type="bibr" target="#b14">(Rout et al., 2018)</ref>. Learning from imbalanced data is studied extensively in standard classification and also in multilevel classification in recent times <ref type="bibr">(Charte et al., 2019)</ref>. There are two major approaches (external and internal) used to build methods to solve the problem of data imbalances <ref type="bibr">(Eggermont et al., 2004)</ref>. Bagging and boosting 1547 are the most common external approaches for handling the data imbalance problem sampling. Researchers have proposed only a few approaches within their internal approach. Among them, Genetic Programming (GP) <ref type="bibr">(Haykin, 1999)</ref> and the Extreme Learning Machine (ELM) <ref type="bibr" target="#b28">(Yu et al., 2016)</ref> approaches are the most popular techniques to solve the data imbalance problem.</p><p>Over the years, many scholars and researchers have done some successful work on the improvement of the imbalance dataset. This study analyzed all of the relevant research in the data collection of imbalances over the last separate ten years. In total 24 articles are enlisted in this survey paper from <ref type="bibr">2003, 2008, 2010, 2012 and 2014 to 2019.</ref> This study contained the proposed method of classification techniques with learning algorithms. Statistical comparison was provided for viewing class if the technique and the algorithm chosen were used along with the selection steps of the function. The paper is set out as follows: An overview of the research subject is given in section 2, which describes a variety of imbalanced dataset techniques. Section 3 offers a statistical analysis of the papers where various year-wise approaches are discussed. Section 4 includes discussion and conclusion alongside indicating some issues for future imbalance dataset research using approaches to machine learning.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Research Paper Overview</head><p>A number of researches are going on in the field of data mining and machine learning such as keyword extraction <ref type="bibr" target="#b18">(Showrov and Sobhan, 2019)</ref>, summarization <ref type="bibr" target="#b0">(Abulaish et al., 2018;</ref><ref type="bibr" target="#b19">Showrov et al., 2019a)</ref>, breast cancer detection <ref type="bibr" target="#b20">(Showrov et al., 2019b</ref>) and so on. The most challenging problem nowadays in this field is a class imbalance. Several scholars have suggested various types of approaches for dealing with problems with class imbalances. Methods of data level, methods of leveling algorithms and methods of the ensemble are categorized methods. Hybrid methods are another group type for dealing with the problem of class imbalances.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Data Level Methods</head><p>This approach is geared towards matching the class distributions. The class distribution are being balanced using the sampling methods by resizing the training datasets. The sampling methods can be categorized into techniques for under-sampling and over-sampling.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Over-Sampling Technique</head><p>Oversampling is the method of either randomly increasing the number of instances in the minority class to increase the disparity ratio such that the corresponding classification algorithms can be employed for the classification of the data. The benefit of this technique is that any necessary information is not missed from the dataset and the primary dataset can be preserved even though new data is appended to it for balancing the data <ref type="bibr" target="#b3">(Kaur and Gosain, 2018)</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>SMOTE</head><p>Synthetic Minority Over-sampling Technique (SMOTE) is a process to increase the data into the minority class by generating new synthetic data using the existing data <ref type="bibr" target="#b2">(Junsomboon and Phienthrakul, 2017)</ref>. It is capable of producing patterns that follow a distribution similar to the true on (Elreedy and Atiya, 2019). However, other methods, such as fuzzy or locally linear embedding <ref type="bibr" target="#b23">(Verbiest et al., 2012)</ref>, continue to improve SMOTE.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Cluster-Based Over-Sampling (CBO)</head><p>This approach contains clustering the training data of each class separately that is achieved using the k-means method. Thereafter, random over-sampling is carried out on all clusters <ref type="bibr" target="#b12">(Popel et al., 2018)</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>ADASYN</head><p>Adaptive synthetic sampling method improves learning on the distributions of data in two ways: (1) Reduction the biasness which is introduced by the class imbalance and (2) adaptively is shifting the boundary of classification decisions towards the difficult examples <ref type="bibr">(He et al., 2008)</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Under-Sampling Technique</head><p>In the under-sampling method, the working area in the dataset is a majority class where either randomly or by using some technique to balance the classes are extracted from the majority class. The under-sampling method is used to boost the imbalance ratio on unbalanced data and classes are then classified using conventional classification algorithms <ref type="bibr" target="#b3">(Kaur and Gosain, 2018)</ref>. However, it does have the benefit of reducing the time required to train the models because the size of the training data set is reduced <ref type="bibr" target="#b17">(Seiffert et al., 2009)</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Random Under-Sampling (RUS)</head><p>Random Under-Sampling (RUS) is an under-sampling method that excludes the majority-class instances randomly to balance the class distribution <ref type="bibr" target="#b12">(Popel et al., 2018)</ref>. It is a technique that removes examples randomly from the class of majority. Given its simplicity, RUS was shown to perform very well. Simplicity, speed and efficiency are the reasons for the introduction of RUS into the boosting process <ref type="bibr" target="#b17">(Seiffert et al., 2009)</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Tomek Link (T-Link)</head><p>T-Link is a technique of under-sampling stated by Tomek. This is seen as improving the Nearest-Neighbor 1548 Regulation (NNR). The T-Link technique can be used as a directed under-sampling method where the majorityclass observations are deleted <ref type="bibr" target="#b13">(Rahman et al., 2011)</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Algorithm Level Methods</head><p>Algorithm level approaches concentrate on improving the ability of current classifier algorithms for learning from minority classes, which are often called internal approaches. For example, adjustment of the estimation of probability or modification of cost per class may be favorable to the minority class.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Support Vector Machine (SVM)</head><p>Support Vector Machine was introduced in the mid-1990s <ref type="bibr" target="#b13">(Rahman et al., 2011)</ref>. This technique discriminates over input spaces in a finite area. It is necessary for classifications to be obtained by learning from the training sample (Durgesh and Lekha, 2010). Traditional SVM classification methods use as input training data consisting of a mix of data classified by two groups <ref type="bibr">(Catania et al., 2012)</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>K-Nearest Neighbor (KNN)</head><p>A number of distance measuring methods are being adopted in K-nearest neighbors. In the training results, KNN finds k number of nearest samples and then allows the class label used frequently within the estimated training samples based on the test sample. The K-nearest neighbor is known for being the simplest and most nonparametric sample classification <ref type="bibr">(Friedl and Brodley, 1997)</ref>. KNN can be mentioned as a learner based on the instance <ref type="bibr">(Bishop, 1995)</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Naïve Bayes</head><p>To simplify the relationship, Naïve Bayes often produces strong classification outcomes. Although a lot of classification missions, only one scan of the training data is required <ref type="bibr" target="#b11">(Mitchell, 1997)</ref>. Based on the given class label, Naïve Bayes estimates that. The attributes are independent of conditions and therefore investigate to determine the class conditional probability <ref type="bibr" target="#b4">(Kotu and Deshpande, 2018)</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Decision Tree</head><p>A Decision tree classifies an unknown test instance by way of a series of decisions. Decision tree classifiers are widely used in many different ways, in particular for their high adaptability to complex classification problems <ref type="bibr">(Friedl and Brodley, 1997)</ref>. The decision tree is simpler and easier to enforce, so as a single classifier it is renowned <ref type="bibr">(Farid et al., 2013)</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Ensemble Methods</head><p>Ensemble approaches involve the synthesis of various methods. Ensembles based on bagging and boosting are commonly used and are efficient solutions for the class issue with imbalances. <ref type="bibr">Breiman (1996)</ref> presented the idea of aggregating bootstraps to create ensembles.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Bagging</head><p>Bagging (Bootstrapped Aggregating) is a way to boost the classification algorithms results <ref type="bibr" target="#b9">(Machová et al., 2006)</ref>. Bagging utilizes and integrates multiple selfemployed learners using an averaging technique. Reducing variation and bias <ref type="bibr" target="#b15">(Sanabila and Jatmiko, 2018)</ref> works fine.</p><p>Boosting <ref type="bibr" target="#b16">Schapire (1990)</ref> launched Boosting. Schapire has shown that a low learner (slightly better than guessing randomly) can transform into a powerful learner. AdaBoost is the family's most influential algorithm. Boosting needs bootstrapping too. There is yet some other difference here, though. Unlike bagging, each sample of data boosts weights. It means that some samples will be run more frequently than others <ref type="bibr">(Breiman, 1996)</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Hybrid Methods</head><p>The hybrid approaches include both data sampling and algorithm boosting. While many data sampling techniques are specifically designed to address the problem of class imbalances, hybrid methods can improve the performance of any weak classifier (regardless of whether the data is unbalanced) <ref type="bibr" target="#b17">(Seiffert et al., 2009)</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>SMOTEBoost</head><p>SMOTEBoost produces synthetic examples of the rare or minority class, thereby implicitly adjusting the weights of updates and compensating for distorted distributions. This construct focuses on the sampled minority class examples for each boosting iteration and creates new examples <ref type="bibr">(Chawla et al., 2003)</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>RUSBoost</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Random</head><p>Under-Sampling Based Boosting (RUSBoost) Method presents a simple, quicker and less complex method for learning from imbalanced data. It proposed a detailed empirical study comparing the performance of several strategies for improving the efficiency of classification when data is imbalanced <ref type="bibr" target="#b17">(Seiffert et al., 2009)</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>LIUBoost</head><p>Locality Informed Underboosting (LIUBoost) approach combines sampling technique with cost-sensitive learning. Under-sampling, it uses data sets in every boosting iteration such as RUSBoost, while incorporating a cost term for each instance based on their hardness into the weight update formula minimizing the information loss introduced by under-sampling <ref type="bibr">(Ahmed et al., 2019)</ref>. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>HUSBoost</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Hybrid</head><p>Under-Sampling Based Boosting (HUSBoost) approach proposes managing imbalanced data that requires three basic steps-data cleaning, data balance and classification. The goal of these methods is to optimize the overall accuracy while these algorithms neglect the minority class most of the time <ref type="bibr" target="#b12">(Popel et al., 2018)</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Statistical Comparison of Related Work</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Distribution of Papers by Year of Publications</head><p>This survey contains 24 research articles within the period from <ref type="bibr">2003, 2008, 2010, 2012 and 2014</ref> to 2019. It addressed 3 papers for 2014 and 2019, each year. From the year 2017, researchers studied the largest number of papers. For that year, the number of papers is 6. Figure <ref type="figure" target="#fig_1">1</ref> shows the ratio of paper distribution by the released year.  </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Method Design</head><p>The unbalanced set of data can be categorized into various categories, namely single, ensemble and hybrid. Type of single-level design includes 10 papers, the type of ensemble design covers 7 papers and finally, the type of hybrid design contains 7 papers. The enlisted 24 papers are given at a glance in the following Table <ref type="table" target="#tab_0">1</ref>. Figure <ref type="figure">2</ref> represents the number of research papers based on single, ensemble and hybrid methods used in each particular year.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Single Level Method</head><p>The number of research papers utilizing different types of sampling classifiers and traditional machine learning algorithms in the single-level method. Mostly, the single level process survey uses Synthetic Minority Oversampling Technique (SMOTE), Decision Tree (DT), Support Vector Machine (SVM), K-Nearest Neighbor (KNN), Edited Nearest Neighbor (ENN) and Naïve Bayes.</p><p>Table <ref type="table" target="#tab_2">2</ref> depicts the year-wise distribution of the Single level method regarding advantage or limitation and citation.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Ensemble Method</head><p>Multiple algorithms are combined in this method. Table <ref type="table" target="#tab_3">3</ref> reflects the year-wise distribution of the ensemble method concerning the benefit or disadvantage that we are analyzing here. Adaboost, ROS, RUS, etc. are different types of algorithms used in ensemble methods. Table <ref type="table" target="#tab_3">3</ref> also lists the method proposed for each paper and the citation of each article.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Hybrid Method</head><p>Table <ref type="table" target="#tab_4">4</ref> shows the year-wise distribution of the hybrid method concerning the results and citations of each paper, the hybrid method is used to solve the imbalanced data set in the mainstream study due to the recent output accuracy. Statistics show the largest number of publications on the hybrid approach in 2017. The table also displays in each article the algorithm used and their success in solving the problem of an imbalanced dataset.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Used Dataset in Researches</head><p>Datasets are assigned for default tasks such as classification, clustering, prediction results, etc. This survey paper analyses Dataset is for classification purposes. Table <ref type="table" target="#tab_5">5</ref>   <ref type="bibr" target="#b23">(Verbiest et al., 2012;</ref><ref type="bibr">Ahmed et al., 2019;</ref><ref type="bibr">Gong and Kim, 2017;</ref><ref type="bibr" target="#b1">Jedrzejowicz et al., 2018;</ref><ref type="bibr">Fernández et al., 2017;</ref><ref type="bibr" target="#b24">Wang, 2019)</ref> are mostly used in handling imbalanced datasets. Liver-Disorders-Bupa (Ebenuwa et al., 2019) contains 345 instances with 7 attributes where attribute types are Categorical, integer and real.</p><p>The study also shows that few private or non-public datasets are used over the time frame. Although the study briefly highlights the UCI machine learning repository datasets being considered as standard datasets for handling and solving imbalanced data. Some medical datasets such as Ovarian I and Ovarian II <ref type="bibr" target="#b27">(Yu and Ni, 2014)</ref> datasets are used as well as Breast Cancer, ILPD, Pima Indians, Fertility, Haberman form medical dataset <ref type="bibr" target="#b2">(Junsomboon and Phienthrakul, 2017)</ref> are also used. On the other hand, customer behavior of banking transaction Data <ref type="bibr" target="#b15">(Sanabila and Jatmiko, 2018)</ref> is used to get the accuracy.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Discussion of Surveyed Works</head><p>The surveyed works and their specific data sets were summarized in Table <ref type="table" target="#tab_2">2</ref> to 5 to provide a highlevel overview and better compare the existing approach for various learning models in class imbalance. Table <ref type="table" target="#tab_2">2</ref> points out on single-level methods which involve both data level and algorithm level approaches where different kinds of the method are used to balance the imbalanced datasets.   <ref type="bibr">ADASYN (He et al., 2008)</ref> and FRIPS <ref type="bibr" target="#b23">(Verbiest et al., 2012)</ref> methods are used to handle multiple class imbalance learning and to control noise to classify imbalanced data using the like of traditional algorithm DT and KNN. Single-level approaches have been investigated in 10 studies and can be further divided into new loss functions, cost-sensitive approaches, performance thresholds. Ensemble methods involve 7 studies that are depicted in Table <ref type="table" target="#tab_3">3</ref>. Resampling method <ref type="bibr" target="#b15">(Sanabila and Jatmiko, 2018)</ref> were combined SMOTE and ENN to minimize the bias of majority class and less misclassification in the way of classifying and also AMCS <ref type="bibr" target="#b26">(Yijing et al., 2016)</ref> method used Naïve Bayes, DT and KNN to choose the best route for different types of data for classifying multiclass imbalanced data. Multiple authors <ref type="bibr" target="#b12">(Popel et al., 2018;</ref><ref type="bibr">Ahmed et al., 2019)</ref> suggested that the use of a machine learning model with DT to address the class imbalance in the field of hybrid methods which denotes in Table <ref type="table" target="#tab_4">4</ref>. A combination of sampling, cost-sensitive method makes the hybrid method better sometimes to give better accuracy than the others in case of balancing data.  1554 About half of the researchers used just various imbalance to test their machine learning approaches to resolve the class disparity. The writers are not at fault for this, as most of them have been concentrating on addressing a particular problem or a benchmark assignment. However, more rigorous experiments testing these approaches across a broader variety of data sets, with differing degrees of class inequality and difficulty, would help explain their strengths and limitations. Also, only one-third of the experiments show the number of rounds or repetitions done on each trial. In other words, the rest of it the groups either did not conduct several runs or neglected to provide the specifics and reported the most desirable findings. For their safety, training a machine learning model on a broad data set will take days or even weeks, making it difficult to perform many rounds of experiments. This opens a range of opportunities for future study, as applying different machine learning approaches to several data sets with replication can improve confidence in outcomes and help direct future practitioners in model selection.</p><p>The methods that have been discussed explicitly cannot currently be comparable, since they are tested in separate data sets with differing class imbalances and results with contradictory performance assessments are published. Besides, some studies report inconsistent findings, further indicating that performance is highly dependent on problem complexity, class representation and recorded performance metrics. Overall, there is a lack of evidence that distinguishes any hybrid, ensemble machine learning method as superior for learning from class imbalanced results and additional experiments are needed before such conclusions can be drawn. Class imbalance is not limited to low or high imbalance data and further analysis needs to be performed to test the application of these machine learning class imbalance approaches in other domains.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Conclusion and Future Works</head><p>Data imbalances are a common concern. It has been a long time since the attention of the researchers. Uses of various imbalance dataset classifier techniques are an emerging data science study. Existing classifier performance on an imbalanced dataset is not expected without a balancing dataset. So, we have to reprocess the data to make a better accuracy of results. In this survey, the application of using different classifiers has been established for the classification of imbalances in results. This survey paper has provided a clear comparison of these papers and a fair viewpoint in this area, but this study cannot say an in-depth analysis of those papers. The following points may be useful in future research:</p><p> System performance is a key factor. In the training phase, the removal of redundant and irrelevant features increases system performance  In the classification techniques, the consideration feature selection step will play a vital role in the future  For performance measurement, uses of hybrid or ensemble classifiers are more feasible instead of a single classifier</p><p>There are some areas for future work that are evident. Applying the newly developed methods to a wider range of data sets and class imbalance levels, comparing outcomes with several complementary performance indicators and reporting statistical evidence can help to define the optimal deep learning approaches as well as traditional machine learning methods for future class imbalance applications. Experimenting with new hybrid and cluster-based machine learning approaches along with deep learning approaches to fix class imbalances in the sense of big data and class rareness may prove useful for the future of big data analytics.</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head></head><label></label><figDesc>1549RHSBoostFor further enhancement of classification accuracy, Random Hybrid Sampling Boosting (RHSBoost) uses both under-sampling and ROSE sampling in the boosting algorithm. Under a boosting scheme (Gong and Kim, 2017), the classification rule uses random undersampling and ROSE sampling.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head>Fig. 1 :</head><label>1</label><figDesc>Fig. 1: Distribution of papers based on years</figDesc><graphic coords="4,106.80,528.95,380.90,169.20" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_0"><head>Table 1 :</head><label>1</label><figDesc>Total number of research papers for the standards of method design<ref type="bibr" target="#b1">Jedrzejowicz et al., 2018;</ref><ref type="bibr" target="#b10">Maldonado et al., 2014;</ref> Fernández et al.,  level algorithm level)  2017; Ebenuwa et al., 2019; Charte et al., 2019;<ref type="bibr" target="#b6">Koziarski et al., 2018;</ref>  Barua et al., 2012;<ref type="bibr" target="#b23">Verbiest et al., 2012;</ref> He et al., 2008) Ensemble 7<ref type="bibr" target="#b22">Sun et al. (2015;</ref><ref type="bibr" target="#b26">Yijing et al., 2016;</ref><ref type="bibr" target="#b25">Wei et al., 2017;</ref><ref type="bibr" target="#b27">Yu and Ni, 2014;</ref>  Lango and Stefanowski, 2017;<ref type="bibr" target="#b24">Wang, 2019;</ref><ref type="bibr" target="#b15">Sanabila and Jatmiko, 2018</ref>) Hybrid 7Ahmed et al. (2019;<ref type="bibr" target="#b2">Junsomboon and Phienthrakul, 2017;</ref> Elhassan and Aljurf, 2016;  Gong and Kim, 2017;<ref type="bibr" target="#b12">Popel et al., 2018;</ref><ref type="bibr" target="#b17">Seiffert et al., 2009;</ref> Chawla et al., 2003)    </figDesc><table><row><cell>Method</cell><cell>No. of</cell><cell></cell></row><row><cell>design type</cell><cell>research paper</cell><cell>References</cell></row><row><cell>Single level (both data</cell><cell>10</cell><cell>Hu et al. (2015;</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_1"><head></head><label></label><figDesc>Ebenuwa et al., 2019)  has multivariate data types, all 10 instances are integer types and it has 699 instances. Yeast dataset (Hu et al., 2015) have 8 real attributes with 1,484 instances. Various kinds of datasets from the Keel dataset repository</figDesc><table><row><cell>displays the distribution of randomly</cell></row><row><cell>used datasets year by year.</cell></row><row><cell>KDD cup 1999 dataset (Chawla et al., 2003) has</cell></row><row><cell>multivariate data types and contains 4,000,000 instances</cell></row><row><cell>and 42 attributes. Abalone dataset (He et al., 2008)</cell></row><row><cell>contains 4,177 instances with 8 attributes, attributes</cell></row><row><cell>types are categorical. Glass dataset (Hu et al., 2015)</cell></row><row><cell>with multivariate data types and 214 instances. E coli 2</cell></row><row><cell>dataset (Elhassan and Aljurf, 2016) carries 363</cell></row><row><cell>instances and 7 attributes. Ionosphere dataset (He et al.,</cell></row><row><cell>2008) contains 351 instances with 34 attributes,</cell></row><row><cell>attributes types are integer and real. Wisconsin breast</cell></row><row><cell>cancer dataset (</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_2"><head>Table 2 :</head><label>2</label><figDesc>Year-wise distribution of single level method regarding advantage/limitation and citation</figDesc><table><row><cell></cell><cell>Research</cell><cell></cell><cell>Algorithm</cell><cell>Proposed</cell><cell></cell><cell></cell></row><row><cell>Year</cell><cell>paper title</cell><cell>Reference</cell><cell>used</cell><cell>method</cell><cell>Advantage/limitation</cell><cell>Citation</cell></row><row><cell cols="2">2008 ADASYN: Adaptive</cell><cell>He et al.</cell><cell> DT</cell><cell>ADASYN</cell><cell>Advantage:</cell><cell></cell></row><row><cell></cell><cell>synthetic sampling</cell><cell>(2008)</cell><cell></cell><cell></cell><cell> Can be used to multiple-class</cell><cell>843</cell></row><row><cell></cell><cell>approach for</cell><cell></cell><cell></cell><cell></cell><cell>imbalanced learning</cell><cell></cell></row><row><cell></cell><cell>imbalanced learning</cell><cell></cell><cell></cell><cell></cell><cell> Can be modified</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>Limitation:</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell> Ensemble learning is more</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>effective then single learning</cell><cell></cell></row><row><cell cols="2">2012 Improving SMOTE</cell><cell>Verbiest et al.</cell><cell> KNN</cell><cell>FRIPS</cell><cell>Advantage:</cell><cell>12</cell></row><row><cell></cell><cell>with fuzzy rough</cell><cell>(2012)</cell><cell></cell><cell></cell><cell> FRIPS can handle noise</cell><cell></cell></row><row><cell></cell><cell>prototype selection to</cell><cell></cell><cell></cell><cell></cell><cell> FRIPS improves SMOTE</cell><cell></cell></row><row><cell></cell><cell>detect noise in imbalanced</cell><cell></cell><cell></cell><cell></cell><cell>Limitation:</cell><cell></cell></row><row><cell></cell><cell>classification data</cell><cell></cell><cell></cell><cell></cell><cell> Not better than SMOTE-TL</cell><cell></cell></row><row><cell cols="2">2014 Feature selection for</cell><cell cols="2">Maldonado et al.  SVM</cell><cell>BFE-SVM,</cell><cell>Advantage:</cell><cell>107</cell></row><row><cell></cell><cell>high-dimensional</cell><cell>(2014)</cell><cell></cell><cell>HO-BFE</cell><cell> Good results on highly imbalanced data sets</cell><cell></cell></row><row><cell></cell><cell>class-imbalanced data</cell><cell></cell><cell></cell><cell></cell><cell> Minimize the number of errors in the</cell><cell></cell></row><row><cell></cell><cell>sets using Support</cell><cell></cell><cell></cell><cell></cell><cell>minority class</cell><cell></cell></row><row><cell></cell><cell>vector machines</cell><cell></cell><cell></cell><cell></cell><cell>Limitation:</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell> Kernel-based methods expose</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>very unstable performance</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell> HO-BFE version running</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>time is about five times higher</cell><cell></cell></row><row><cell cols="2">2012 MWMOTE-Majority</cell><cell>Barua et al.</cell><cell> NN</cell><cell>MWMOTE</cell><cell>Advantage:</cell><cell>261</cell></row><row><cell></cell><cell>Weighted minority</cell><cell>(2012)</cell><cell> DT</cell><cell></cell><cell> Boosting improves the recall performance</cell><cell></cell></row><row><cell></cell><cell>oversampling technique</cell><cell></cell><cell> ENN</cell><cell></cell><cell> Selects the hard-to learn minority class</cell><cell></cell></row><row><cell></cell><cell>for imbalanced data</cell><cell></cell><cell> KNN</cell><cell></cell><cell>Limitations:</cell><cell></cell></row><row><cell></cell><cell>set learning</cell><cell></cell><cell></cell><cell></cell><cell> Use data sets with continuous features only</cell><cell></cell></row><row><cell cols="2">2015 An improved algorithm</cell><cell>Hu et al.</cell><cell> KNN</cell><cell>WRO</cell><cell>Advantage:</cell><cell>9</cell></row><row><cell></cell><cell>for Imbalanced data</cell><cell>(2015)</cell><cell> SVM</cell><cell></cell><cell> Can enlarge the decision regions</cell><cell></cell></row><row><cell></cell><cell>and small sample size</cell><cell></cell><cell></cell><cell></cell><cell> Improve the prediction of the minority class</cell><cell></cell></row><row><cell></cell><cell>classification</cell><cell></cell><cell></cell><cell></cell><cell>Limitations:</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell> Too many parameters</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell> No guidelines for deciding relative ratios</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>of cost factors</cell><cell></cell></row><row><cell cols="2">2017 An insight into</cell><cell>Fernández et al.</cell><cell> KNN</cell><cell>MapReduce</cell><cell>Advantage:</cell><cell>71</cell></row><row><cell></cell><cell>imbalanced big data</cell><cell>(2017)</cell><cell> DT</cell><cell></cell><cell> Handle multi-class imbalance</cell><cell></cell></row><row><cell></cell><cell>classification: Outcomes</cell><cell></cell><cell></cell><cell></cell><cell>Limitations:</cell><cell></cell></row><row><cell></cell><cell>and challenges</cell><cell></cell><cell></cell><cell></cell><cell> Computationally expensive</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell> Lack of sufficient data in the training</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>partitions</cell><cell></cell></row><row><cell cols="2">2018 Imbalanced data</cell><cell cols="3">Jedrzejowicz et al.  Naive Bayes MapReduce</cell><cell>Advantage:</cell><cell>91</cell></row><row><cell></cell><cell>classification using</cell><cell>(2018)</cell><cell> LR</cell><cell>Relief</cell><cell> Binary classification</cell><cell></cell></row><row><cell></cell><cell>MapReduce and relief</cell><cell></cell><cell> DT</cell><cell></cell><cell> Does not change the quality of classification</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>Limitations:</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell> Longer processing time</cell><cell></cell></row><row><cell cols="2">2018 Network-Based</cell><cell>Koziarski et al.</cell><cell> SMOTE</cell><cell>CNN</cell><cell>Advantage:</cell><cell>6</cell></row><row><cell></cell><cell>classification of</cell><cell>(2018)</cell><cell></cell><cell></cell><cell> Suitable for low data imbalance level</cell><cell></cell></row><row><cell></cell><cell>histopathological</cell><cell></cell><cell></cell><cell></cell><cell>Limitations:</cell><cell></cell></row><row><cell></cell><cell>images affected by</cell><cell></cell><cell></cell><cell></cell><cell> Significantly underperformed</cell><cell></cell></row><row><cell></cell><cell>data Imbalance</cell><cell></cell><cell></cell><cell></cell><cell> Not suitable for medium and high data</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>imbalance level</cell><cell></cell></row><row><cell cols="2">2019 Variance ranking</cell><cell>Ebenuwa et al.</cell><cell> LR</cell><cell>ROS</cell><cell>Advantage:</cell><cell>12</cell></row><row><cell></cell><cell>attributes selection</cell><cell>(2019)</cell><cell> SVM</cell><cell></cell><cell> Higher accuracy</cell><cell></cell></row><row><cell></cell><cell>techniques for binary</cell><cell></cell><cell> DT</cell><cell></cell><cell> Achieving predictions with fewer attributes</cell><cell></cell></row><row><cell></cell><cell>classification problem</cell><cell></cell><cell></cell><cell></cell><cell>Limitations:</cell><cell></cell></row><row><cell></cell><cell>in imbalance data</cell><cell></cell><cell></cell><cell></cell><cell> Variable must be numeric</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell> Variable must not be categorical</cell><cell></cell></row><row><cell cols="2">2019 Tackling multilabel</cell><cell>Charte et al.</cell><cell> BR</cell><cell cols="2">REMEDIAL Advantage:</cell><cell></cell></row><row><cell></cell><cell>imbalance through</cell><cell>(2019)</cell><cell> LP</cell><cell></cell><cell> Improves the efficiency of oversampling</cell><cell></cell></row><row><cell></cell><cell>label decoupling</cell><cell></cell><cell> KNN</cell><cell></cell><cell> Improve the training: BR and LP</cell><cell>8</cell></row><row><cell></cell><cell>and data resampling</cell><cell></cell><cell></cell><cell></cell><cell>Limitations:</cell><cell></cell></row><row><cell></cell><cell>hybridization</cell><cell></cell><cell></cell><cell></cell><cell> Not able to balance a high</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>imbalanced labels distribution</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell> Produce new instances in the</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>minority labels only</cell><cell></cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_3"><head>Table 3 :</head><label>3</label><figDesc>Year-wise distribution of ensemble method regrading advantages/limitations and citation</figDesc><table><row><cell>Research</cell><cell></cell><cell>Algorithm</cell><cell>Proposed</cell><cell></cell><cell></cell></row><row><cell>Year paper title</cell><cell>Reference</cell><cell>used</cell><cell>method</cell><cell>Advantage/limitation</cell><cell>Citation</cell></row><row><cell>An improved ensemble</cell><cell>Yu and Ni</cell><cell> SVM</cell><cell>asBagging</cell><cell>Advantage:</cell><cell>20</cell></row><row><cell>learning method for</cell><cell>(2014)</cell><cell></cell><cell>FSS</cell><cell> Greatly enhance the diversity</cell><cell></cell></row><row><cell>classifying high-</cell><cell></cell><cell></cell><cell></cell><cell> Improve the balance level</cell><cell></cell></row><row><cell>dimensional and imbalanced</cell><cell></cell><cell></cell><cell></cell><cell>Limitation:</cell><cell></cell></row><row><cell>biomedicine data</cell><cell></cell><cell></cell><cell></cell><cell> Not suitable for low-</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell>dimensional data</cell><cell></cell></row><row><cell>2015 A novel ensemble method</cell><cell>Sun et al.</cell><cell> Naive Bayes</cell><cell>ClusterBal</cell><cell>Advantage:</cell><cell>137</cell></row><row><cell>for classifying</cell><cell>(2015)</cell><cell> DT</cell><cell>SplitBal</cell><cell> Significantly better than Orig method</cell><cell></cell></row><row><cell>imbalanced data</cell><cell></cell><cell> KNN</cell><cell></cell><cell> Able to handle the binary-class</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell>Limitations:</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell> G-Means and F-Measure</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell>performance were not selected</cell><cell></cell></row><row><cell>2016 Adapted ensemble</cell><cell>Yijing et al.</cell><cell> SVM</cell><cell>AMCS</cell><cell>Advantage:</cell><cell>53</cell></row><row><cell>classification algorithm</cell><cell>(2016)</cell><cell> DT</cell><cell></cell><cell> Choose best route for different</cell><cell></cell></row><row><cell>based on multiple classifier</cell><cell></cell><cell> ANN</cell><cell></cell><cell>types of data</cell><cell></cell></row><row><cell>system and feature selection</cell><cell></cell><cell></cell><cell></cell><cell>Limitations:</cell><cell></cell></row><row><cell>for classifying multi-class</cell><cell></cell><cell></cell><cell></cell><cell> Did not employ cost</cell><cell></cell></row><row><cell>imbalanced data</cell><cell></cell><cell></cell><cell></cell><cell>sensitive learning</cell><cell></cell></row><row><cell>2017 An ensemble model for</cell><cell>Wei et al.</cell><cell> LR</cell><cell>xEnsemble</cell><cell>Advantage:</cell><cell>14</cell></row><row><cell>diabetes diagnosis in</cell><cell>(2017)</cell><cell> CART</cell><cell></cell><cell> Reduce the variance by</cell><cell></cell></row><row><cell>large-scale and imbalanced</cell><cell></cell><cell> LSVC</cell><cell></cell><cell>under-sampling</cell><cell></cell></row><row><cell>datasets</cell><cell></cell><cell> Adaboost</cell><cell></cell><cell> Excellent performance than</cell><cell></cell></row><row><cell></cell><cell></cell><cell> RF</cell><cell></cell><cell>Easy Ensemble</cell><cell></cell></row><row><cell></cell><cell></cell><cell> XGB</cell><cell></cell><cell>Limitations:</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell> Discard much potentially useful data</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell> Weak classifier and running serially</cell><cell></cell></row><row><cell>2017 Multi-class and feature</cell><cell>Lango and</cell><cell> Naive Bayes</cell><cell>RBBag+</cell><cell>Advantage:</cell><cell>23</cell></row><row><cell>selection extensions of</cell><cell>Stefanowski</cell><cell> SVM</cell><cell>RSM</cell><cell> Better on selected attributed</cell><cell></cell></row><row><cell>Roughly balanced</cell><cell>(2017)</cell><cell> LR</cell><cell></cell><cell> Does not influence the final</cell><cell></cell></row><row><cell>bagging for imbalanced</cell><cell></cell><cell> DT</cell><cell></cell><cell>performance</cell><cell></cell></row><row><cell>data</cell><cell></cell><cell></cell><cell></cell><cell>Limitations:</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell> Component classifiers characterized</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell>by quite low diversity</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell> Semi-supervised learning</cell><cell></cell></row><row><cell>Ensemble learning on</cell><cell>Sanabila and</cell><cell> SMOTE</cell><cell></cell><cell>Advantage:</cell><cell>4</cell></row><row><cell>2018 large scale financial</cell><cell>Jatmiko</cell><cell> ENN</cell><cell>Resampling</cell><cell> Help to minimize the bias to</cell><cell></cell></row><row><cell>imbalanced data</cell><cell>(2018)</cell><cell></cell><cell></cell><cell>the majority class</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell> Robust result and less</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell>misclassification</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell>Limitations:</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell> Resampling hinders the performance</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell>of other learning methods</cell><cell></cell></row><row><cell>2019 An ensemble learning</cell><cell>Wang</cell><cell> SMOTE</cell><cell>GABagging</cell><cell>Advantage:</cell><cell>11</cell></row><row><cell>imbalanced data</cell><cell>(2019)</cell><cell> LR</cell><cell></cell><cell> Remove overlapping regions of</cell><cell></cell></row><row><cell>classification method</cell><cell></cell><cell> ROS</cell><cell></cell><cell>different categories</cell><cell></cell></row><row><cell>based on sample</cell><cell></cell><cell> RUS</cell><cell></cell><cell> Good prediction effect</cell><cell></cell></row><row><cell>combination optimization</cell><cell></cell><cell></cell><cell></cell><cell>Limitations:</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell> Higher time complexity</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell> Easy loss</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell> Increasing samples</cell><cell></cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_4"><head>Table 4 :</head><label>4</label><figDesc>Year-wise distribution of hybrid method regarding advantage/limitation and citation</figDesc><table><row><cell></cell><cell>Research</cell><cell></cell><cell>Algorithm</cell><cell>Proposed</cell><cell></cell><cell></cell></row><row><cell>Year</cell><cell>paper title</cell><cell>Reference</cell><cell>used</cell><cell>method</cell><cell>Advantage/Limitation</cell><cell>Citation</cell></row><row><cell>2003</cell><cell>SMOTEBoost: Improving</cell><cell>Chawla et al.</cell><cell> RIPPER</cell><cell>SMOTEBoost</cell><cell>Advantage:</cell><cell>828</cell></row><row><cell></cell><cell>prediction of the</cell><cell>(2003)</cell><cell></cell><cell></cell><cell> Minimal accuracy degradation</cell><cell></cell></row><row><cell></cell><cell>minority class in boosting.</cell><cell></cell><cell></cell><cell></cell><cell> Create new synthetic examples</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>from the minority class</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>Limitation:</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell> Not effective for skewed class</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell> Chose the smallest class as the</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>minority class and collapsed the</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>remaining classes into one class</cell><cell></cell></row><row><cell>2009</cell><cell>RUSBoost: A Hybrid</cell><cell>Seiffert et al.</cell><cell> C4.5</cell><cell>RUSBoost</cell><cell>Advantage:</cell><cell>669</cell></row><row><cell></cell><cell>approach to alleviating</cell><cell>(2009)</cell><cell> DT</cell><cell></cell><cell> Can learning from skewed</cell><cell></cell></row><row><cell></cell><cell>class Imbalance</cell><cell></cell><cell> Naive</cell><cell></cell><cell>training data</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell>Bayes</cell><cell></cell><cell> Better classification</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>performance than AdaBoost</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>Limitations:</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell> Increased model training time</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>on larger training data sets</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell> Loss of information</cell><cell></cell></row><row><cell>2016</cell><cell cols="2">Classification of Imbalance Elhassan and</cell><cell> LR</cell><cell>T-Link</cell><cell>Advantage:</cell><cell>13</cell></row><row><cell></cell><cell>data using Tomek Link</cell><cell>Aljurf</cell><cell> SVM</cell><cell></cell><cell> Methods of data reduction</cell><cell></cell></row><row><cell></cell><cell>(T-Link) combined with</cell><cell>(2016)</cell><cell> ANN</cell><cell></cell><cell> Superior performance</cell><cell></cell></row><row><cell></cell><cell>Random Under-Sampling</cell><cell></cell><cell> RF</cell><cell></cell><cell>Limitations:</cell><cell></cell></row><row><cell></cell><cell>(RUS) as a Data</cell><cell></cell><cell></cell><cell></cell><cell> Majority class removed</cell><cell></cell></row><row><cell></cell><cell>Reduction Method</cell><cell></cell><cell></cell><cell></cell><cell> Information loss</cell><cell></cell></row><row><cell>2019</cell><cell>LIUBoost: Locality</cell><cell>Ahmed et al.</cell><cell> KNN</cell><cell>LIUBoost</cell><cell>Advantage:</cell><cell>4</cell></row><row><cell></cell><cell>Informed Under-Boosting</cell><cell>(2019)</cell><cell> DT</cell><cell></cell><cell> Cost-efficient</cell><cell></cell></row><row><cell></cell><cell>for imbalanced data</cell><cell></cell><cell></cell><cell></cell><cell> Minimize combined error</cell><cell></cell></row><row><cell></cell><cell>classification</cell><cell></cell><cell></cell><cell></cell><cell> Minimizing information loss</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>Limitations:</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell> Alpha term needs to be update</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell> Suffers overfitting</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell> Increased runtime</cell><cell></cell></row><row><cell>2017</cell><cell>Combining over-</cell><cell>Junsomboon and</cell><cell> KNN</cell><cell>NCL+</cell><cell>Advantage:</cell><cell>12</cell></row><row><cell></cell><cell>sampling and</cell><cell>Phienthrakul</cell><cell> Naive</cell><cell>SMOTE</cell><cell> Help to increase correct to classify</cell><cell></cell></row><row><cell></cell><cell>under-sampling</cell><cell>(2017)</cell><cell>Bayes</cell><cell></cell><cell> Good prediction in minority class</cell><cell></cell></row><row><cell></cell><cell>techniques for</cell><cell></cell><cell></cell><cell></cell><cell> Better performance on large dataset</cell><cell></cell></row><row><cell></cell><cell>imbalance dataset</cell><cell></cell><cell></cell><cell></cell><cell>Limitations:</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell> Few numbers of sample data</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell> Possible to ignore serious data</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell> Information loss</cell><cell></cell></row><row><cell>2017</cell><cell>RHSBoost: Improving</cell><cell>Gong and</cell><cell> NN</cell><cell>RHSBoost</cell><cell>Advantage:</cell><cell>36</cell></row><row><cell></cell><cell>classification</cell><cell>Kim</cell><cell></cell><cell></cell><cell> Improve classification accuracy</cell><cell></cell></row><row><cell></cell><cell>performance</cell><cell>(2017)</cell><cell></cell><cell></cell><cell> Relatively high performance</cell><cell></cell></row><row><cell></cell><cell>in imbalance data</cell><cell></cell><cell></cell><cell></cell><cell> Less vulnerable</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>Limitations:</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell> Slightly weaker for large iterations</cell><cell></cell></row><row><cell>2018</cell><cell cols="2">A Hybrid Under-Sampling Popel et al.</cell><cell> RF</cell><cell>HUSBoost</cell><cell>Advantage:</cell><cell>2</cell></row><row><cell></cell><cell>Method (HUSBoost)</cell><cell>(2018)</cell><cell> SVM</cell><cell></cell><cell> Clean noisy and overlapping data</cell><cell></cell></row><row><cell></cell><cell>to classify imbalanced</cell><cell></cell><cell> DT</cell><cell></cell><cell> Consider several balanced subset</cell><cell></cell></row><row><cell></cell><cell>data</cell><cell></cell><cell></cell><cell></cell><cell>Limitations</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell> Arithmetic mean taken</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell> Higher running time</cell><cell></cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_5"><head>Table 5 :</head><label>5</label><figDesc>Year wise distribution of randomly used dataset</figDesc><table><row><cell>Dataset</cell><cell>2003</cell><cell>2008</cell><cell>2015</cell><cell>2016</cell><cell>2018</cell><cell>2019</cell><cell>Total</cell></row><row><cell>KDD cup 1999</cell><cell>1</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>1</cell></row><row><cell>Glass</cell><cell></cell><cell></cell><cell>1</cell><cell></cell><cell></cell><cell></cell><cell>1</cell></row><row><cell>Ecoli2</cell><cell></cell><cell></cell><cell></cell><cell>1</cell><cell></cell><cell></cell><cell>1</cell></row><row><cell>Abalone</cell><cell></cell><cell>1</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>1</cell></row><row><cell>Wisconsin breast cancer</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>1</cell><cell></cell><cell>1</cell></row><row><cell>Yeast</cell><cell></cell><cell></cell><cell>1</cell><cell></cell><cell></cell><cell></cell><cell>1</cell></row><row><cell>Ionosphere</cell><cell></cell><cell>1</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>1</cell></row><row><cell>Liver-disorder-bupa</cell><cell></cell><cell></cell><cell>1</cell><cell></cell><cell></cell><cell></cell><cell>1</cell></row></table></figure>
+		</body>
+		<back>
+
+			<div type="acknowledgement">
+<div><head>Acknowledgment</head><p>We would like to thank <rs type="institution">Google and UCI Machine</rs> for providing the dataset and necessary information for this this research.</p></div>
+			</div>			<div type="annex">
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Author's Contributions</head><p>Khan Md. Hasib: He contributed to all the sections of the paper. He worked on the design and implementation. He participated in correcting the paper and responding to all reviewers' comments.</p><p>Md. Sadiq Iqbal: He was involved in data gathering, experimentation and organization of the paper.</p><p>Faisal Muhammad Shah: He contributed to all the sections of the paper. He coordinated the data gathering, design and execution of all experiments. He also participated in correcting the paper and responding to all reviewers' comments.</p><p>Jubayer Al Mahmud: He contributed to all the sections of the paper. He coordinated the data gathering, design and execution of all experiments. He also participated in correcting the paper and responding to all reviewers' comments.</p><p>Mahmudul Hasan Popel: He contributed to all the sections of the paper. He coordinated the data gathering, design and execution of all experiments. He also participated in correcting the paper and responding to all reviewers' comments.</p><p>Md. Imran Hossain Showrov: He contributed to all the sections of the paper. He conceived the idea and worked on the implementation. He was involved in data gathering, experimentation and organization of the paper. He participated in correcting the paper and responding to all reviewers' comments.</p><p>Shakil Ahmed: He contributed to all the sections of the paper. He coordinated the data gathering,</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Ethics</head><p>This article is original and contains unpublished material. The corresponding author confirms that all of the other authors have read and approved the manuscript and no ethical issues involved.  <ref type="bibr">He, H., Bai, Y., Garcia, E. A., &amp; Li, S. A. (2008)</ref>.</p><p>Adaptive synthetic sampling approach for imbalanced learning. IEEE International Joint Conference on Neural <ref type="bibr">Networks. 2008</ref><ref type="bibr">. Hu, Y., Guo, D., Fan, Z., Dong, C., Huang, Q., Xie, S., ... &amp; Xie, Q. (2015)</ref>. An improved algorithm for imbalanced data and small sample size classification. Journal of Data Analysis and Information Processing, 3(03), 27.</p></div>			</div>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<analytic>
+		<title level="a" type="main">A layered approach for summarization and context learning from microblogging data</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Abulaish</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">I H</forename><surname>Showrov</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Fazil</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 20th International Conference on</title>
+		<meeting>the 20th International Conference on</meeting>
+		<imprint>
+			<date type="published" when="2018-11">2018, November</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Abulaish, M., Showrov, M. I. H., &amp; Fazil, M. (2018, November). A layered approach for summarization and context learning from microblogging data. In Proceedings of the 20th International Conference on</note>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<analytic>
+		<title level="a" type="main">Imbalanced data classification using MapReduce and relief</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Jedrzejowicz</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Kostrzewski</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Neumann</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Zakrzewska</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Information and Telecommunication</title>
+		<imprint>
+			<biblScope unit="volume">2</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="217" to="230" />
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Jedrzejowicz, J., Kostrzewski, R., Neumann, J., &amp; Zakrzewska, M. (2018). Imbalanced data classification using MapReduce and relief. Journal of Information and Telecommunication, 2(2), 217-230.</note>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<analytic>
+		<title level="a" type="main">Combining over-sampling and under-sampling techniques for imbalance dataset</title>
+		<author>
+			<persName><forename type="first">N</forename><surname>Junsomboon</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Phienthrakul</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 9th International Conference on Machine Learning and Computing</title>
+		<meeting>the 9th International Conference on Machine Learning and Computing</meeting>
+		<imprint>
+			<date type="published" when="2017-02">2017, February</date>
+			<biblScope unit="page" from="243" to="247" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Junsomboon, N., &amp; Phienthrakul, T. (2017, February). Combining over-sampling and under-sampling techniques for imbalance dataset. In Proceedings of the 9th International Conference on Machine Learning and Computing (pp. 243-247).</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<analytic>
+		<title level="a" type="main">Comparing the behavior of oversampling and undersampling approach of class imbalance learning by combining class imbalance problem with noise</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Kaur</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Gosain</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">ICT Based Innovations</title>
+		<meeting><address><addrLine>Singapore</addrLine></address></meeting>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2018">2018</date>
+			<biblScope unit="page" from="23" to="30" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Kaur, P., &amp; Gosain, A. (2018). Comparing the behavior of oversampling and undersampling approach of class imbalance learning by combining class imbalance problem with noise. In ICT Based Innovations (pp. 23-30). Springer, Singapore.</note>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<monogr>
+		<title level="m" type="main">Data science: concepts and practice</title>
+		<author>
+			<persName><forename type="first">V</forename><surname>Kotu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Deshpande</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Kotu, V., &amp; Deshpande, B. (2018). Data science: concepts and practice.</note>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Morgan</forename><surname>Kaufmann</surname></persName>
+		</author>
+		<imprint/>
+	</monogr>
+	<note type="raw_reference">Morgan Kaufmann.</note>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<analytic>
+		<title level="a" type="main">Convolutional neural network-based classification of histopathological images affected by data imbalance</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Koziarski</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Kwolek</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Cyganek</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Video Analytics. Face and Facial Expression Recognition</title>
+		<meeting><address><addrLine>Cham</addrLine></address></meeting>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2018">2018</date>
+			<biblScope unit="page" from="1" to="11" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Koziarski, M., Kwolek, B., &amp; Cyganek, B. (2018). Convolutional neural network-based classification of histopathological images affected by data imbalance. In Video Analytics. Face and Facial Expression Recognition (pp. 1-11). Springer, Cham.</note>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<analytic>
+		<title level="a" type="main">Multi-class and feature selection extensions of roughly balanced bagging for imbalanced data</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Lango</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Stefanowski</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Intelligent Information Systems</title>
+		<imprint>
+			<biblScope unit="volume">50</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="97" to="127" />
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Lango, M., &amp; Stefanowski, J. (2018). Multi-class and feature selection extensions of roughly balanced bagging for imbalanced data. Journal of Intelligent Information Systems, 50(1), 97-127.</note>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">A survey on addressing high-class imbalance in big data</title>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">L</forename><surname>Leevy</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><forename type="middle">M</forename><surname>Khoshgoftaar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">A</forename><surname>Bauder</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><surname>Seliya</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Big Data</title>
+		<imprint>
+			<biblScope unit="volume">5</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page">42</biblScope>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Leevy, J. L., Khoshgoftaar, T. M., Bauder, R. A., &amp; Seliya, N. (2018). A survey on addressing high-class imbalance in big data. Journal of Big Data, 5(1), 42.</note>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<analytic>
+		<title level="a" type="main">A comparison of the bagging and the boosting methods using the decision trees classifiers</title>
+		<author>
+			<persName><forename type="first">K</forename><surname>Machová</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Puszta</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Barčák</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Bednár</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Computer Science and Information Systems</title>
+		<imprint>
+			<biblScope unit="volume">3</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="57" to="72" />
+			<date type="published" when="2006">2006</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Machová, K., Puszta, M., Barčák, F., &amp; Bednár, P. (2006). A comparison of the bagging and the boosting methods using the decision trees classifiers. Computer Science and Information Systems, 3(2), 57-72.</note>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<analytic>
+		<title level="a" type="main">Feature selection for high-dimensional class-imbalanced data sets using Support Vector Machines</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Maldonado</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Weber</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Famili</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Information sciences</title>
+		<imprint>
+			<biblScope unit="volume">286</biblScope>
+			<biblScope unit="page" from="228" to="246" />
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Maldonado, S., Weber, R., &amp; Famili, F. (2014). Feature selection for high-dimensional class-imbalanced data sets using Support Vector Machines. Information sciences, 286, 228-246.</note>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<monogr>
+		<title level="m" type="main">Machine Learning</title>
+		<author>
+			<persName><forename type="first">T</forename><forename type="middle">M</forename><surname>Mitchell</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="1997">1997</date>
+			<publisher>McGraw-Hill Higher Education</publisher>
+			<pubPlace>New York</pubPlace>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Mitchell, T. M. (1997). Machine Learning, McGraw-Hill Higher Education. New York.</note>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<analytic>
+		<title level="a" type="main">A Hybrid Under-Sampling Method (HUSBoost) to Classify Imbalanced Data</title>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">H</forename><surname>Popel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">M</forename><surname>Hasib</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">A</forename><surname>Habib</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><forename type="middle">M</forename><surname>Shah</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">2018 21st International Conference of Computer and Information Technology (ICCIT)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2018-12">2018, December</date>
+			<biblScope unit="page" from="1" to="7" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Popel, M. H., Hasib, K. M., Habib, S. A., &amp; Shah, F. M. (2018, December). A Hybrid Under-Sampling Method (HUSBoost) to Classify Imbalanced Data. In 2018 21st International Conference of Computer and Information Technology (ICCIT) (pp. 1-7). IEEE.</note>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<monogr>
+		<title level="m" type="main">Adaptive intrusion detection based on boosting and naive bayesian classifier</title>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">M</forename><surname>Rahman</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">M</forename><surname>Farid</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">Z</forename><surname>Rahman</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Rahman, C. M., Farid, D. M., &amp; Rahman, M. Z. (2011). Adaptive intrusion detection based on boosting and naive bayesian classifier.</note>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<analytic>
+		<title level="a" type="main">Handling imbalanced data: A survey</title>
+		<author>
+			<persName><forename type="first">N</forename><surname>Rout</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Mishra</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">K</forename><surname>Mallick</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Proceedings on Advances in Soft Computing, Intelligent Systems and Applications</title>
+		<meeting><address><addrLine>Singapore</addrLine></address></meeting>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2018">2018</date>
+			<biblScope unit="page" from="431" to="443" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Rout, N., Mishra, D., &amp; Mallick, M. K. (2018). Handling imbalanced data: A survey. In International Proceedings on Advances in Soft Computing, Intelligent Systems and Applications (pp. 431-443). Springer, Singapore.</note>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<analytic>
+		<title level="a" type="main">Ensemble learning on large scale financial imbalanced data</title>
+		<author>
+			<persName><forename type="first">H</forename><forename type="middle">R</forename><surname>Sanabila</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><surname>Jatmiko</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">2018 International Workshop on Big Data and Information Security (IWBIS)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2018-05">2018, May</date>
+			<biblScope unit="page" from="93" to="98" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Sanabila, H. R., &amp; Jatmiko, W. (2018, May). Ensemble learning on large scale financial imbalanced data. In 2018 International Workshop on Big Data and Information Security (IWBIS) (pp. 93-98). IEEE.</note>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<analytic>
+		<title level="a" type="main">The strength of weak learnability</title>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">E</forename><surname>Schapire</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Machine learning</title>
+		<imprint>
+			<biblScope unit="volume">5</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="197" to="227" />
+			<date type="published" when="1990">1990</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Schapire, R. E. (1990). The strength of weak learnability. Machine learning, 5(2), 197-227.</note>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<analytic>
+		<title level="a" type="main">RUSBoost: A hybrid approach to alleviating class imbalance</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Seiffert</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><forename type="middle">M</forename><surname>Khoshgoftaar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Van Hulse</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Napolitano</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Systems, Man and Cybernetics-Part A: Systems and Humans</title>
+		<imprint>
+			<biblScope unit="volume">40</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="185" to="197" />
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Seiffert, C., Khoshgoftaar, T. M., Van Hulse, J., &amp; Napolitano, A. (2009). RUSBoost: A hybrid approach to alleviating class imbalance. IEEE Transactions on Systems, Man and Cybernetics-Part A: Systems and Humans, 40(1), 185-197.</note>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<analytic>
+		<title level="a" type="main">Keyword Extraction from Bengali News</title>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">I H</forename><surname>Showrov</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Sobhan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">2019 5th International Conference on Advances in Electrical Engineering (ICAEE)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2019-09">2019, September</date>
+			<biblScope unit="page" from="658" to="662" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Showrov, M. I. H., &amp; Sobhan, M. (2019, September). Keyword Extraction from Bengali News. In 2019 5th International Conference on Advances in Electrical Engineering (ICAEE) (pp. 658-662). IEEE.</note>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<analytic>
+		<title level="a" type="main">Identification of Users Feature Based on Facebook Snippets</title>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">I H</forename><surname>Showrov</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">A</forename><surname>Al Awal</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Sazzad</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">2019 International Conference on Advances in Computing and Communication Engineering (ICACCE)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2019-04">2019a, April</date>
+			<biblScope unit="page" from="1" to="5" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Showrov, M. I. H., Al Awal, M. A., &amp; Sazzad, S. (2019a, April). Identification of Users Feature Based on Facebook Snippets. In 2019 International Conference on Advances in Computing and Communication Engineering (ICACCE) (pp. 1-5). IEEE.</note>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<analytic>
+		<title level="a" type="main">Performance Comparison of Three Classifiers for the Classification of Breast Cancer Dataset</title>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">I H</forename><surname>Showrov</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">T</forename><surname>Islam</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">D</forename><surname>Hossain</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">S</forename><surname>Ahmed</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">2019 4th International Conference on Electrical Information and Communication Technology (EICT)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2019-12">2019b, December</date>
+			<biblScope unit="page" from="1" to="5" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Showrov, M. I. H., Islam, M. T., Hossain, M. D., &amp; Ahmed, M. S. (2019b, December). Performance Comparison of Three Classifiers for the Classification of Breast Cancer Dataset. In 2019 4th International Conference on Electrical Information and Communication Technology (EICT) (pp. 1-5). IEEE.</note>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<analytic>
+		<title level="a" type="main">A survey on methods for solving data imbalance problem for classification</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Singh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Purohit</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Computer Applications</title>
+		<imprint>
+			<biblScope unit="volume">127</biblScope>
+			<biblScope unit="issue">15</biblScope>
+			<biblScope unit="page" from="37" to="41" />
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Singh, A., &amp; Purohit, A. (2015). A survey on methods for solving data imbalance problem for classification. International Journal of Computer Applications, 127(15), 37-41.</note>
+</biblStruct>
+
+<biblStruct xml:id="b22">
+	<analytic>
+		<title level="a" type="main">A novel ensemble method for classifying imbalanced data</title>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Sun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Q</forename><surname>Song</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Zhu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Sun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Xu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhou</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Pattern Recognition</title>
+		<imprint>
+			<biblScope unit="volume">48</biblScope>
+			<biblScope unit="issue">5</biblScope>
+			<biblScope unit="page" from="1623" to="1637" />
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Sun, Z., Song, Q., Zhu, X., Sun, H., Xu, B., &amp; Zhou, Y. (2015). A novel ensemble method for classifying imbalanced data. Pattern Recognition, 48(5), 1623-1637.</note>
+</biblStruct>
+
+<biblStruct xml:id="b23">
+	<analytic>
+		<title level="a" type="main">Improving SMOTE with fuzzy rough prototype selection to detect noise in imbalanced classification data</title>
+		<author>
+			<persName><forename type="first">N</forename><surname>Verbiest</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Ramentol</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Cornelis</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Herrera</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Ibero-American Conference on Artificial Intelligence</title>
+		<meeting><address><addrLine>Berlin, Heidelberg</addrLine></address></meeting>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2012-11">2012, November</date>
+			<biblScope unit="page" from="169" to="178" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Verbiest, N., Ramentol, E., Cornelis, C., &amp; Herrera, F. (2012, November). Improving SMOTE with fuzzy rough prototype selection to detect noise in imbalanced classification data. In Ibero-American Conference on Artificial Intelligence (pp. 169-178). Springer, Berlin, Heidelberg.</note>
+</biblStruct>
+
+<biblStruct xml:id="b24">
+	<analytic>
+		<title level="a" type="main">An Ensemble Learning Imbalanced Data Classification Method Based on Sample Combination Optimization</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Wang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Physics: Conference Series</title>
+		<imprint>
+			<biblScope unit="volume">1284</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page">12035</biblScope>
+			<date type="published" when="2019-08">2019, August</date>
+			<publisher>IOP Publishing</publisher>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Wang, Y. (2019, August). An Ensemble Learning Imbalanced Data Classification Method Based on Sample Combination Optimization. In Journal of Physics: Conference Series (Vol. 1284, No. 1, p. 012035). IOP Publishing.</note>
+</biblStruct>
+
+<biblStruct xml:id="b25">
+	<analytic>
+		<title level="a" type="main">An ensemble model for diabetes diagnosis in large-scale and imbalanced dataset</title>
+		<author>
+			<persName><forename type="first">X</forename><surname>Wei</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Jiang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Wei</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><surname>Liao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Cheng</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the computing frontiers conference</title>
+		<meeting>the computing frontiers conference</meeting>
+		<imprint>
+			<date type="published" when="2017-05">2017, May</date>
+			<biblScope unit="page" from="71" to="78" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Wei, X., Jiang, F., Wei, F., Zhang, J., Liao, W., &amp; Cheng, S. (2017, May). An ensemble model for diabetes diagnosis in large-scale and imbalanced dataset. In Proceedings of the computing frontiers conference (pp. 71-78).</note>
+</biblStruct>
+
+<biblStruct xml:id="b26">
+	<analytic>
+		<title level="a" type="main">Adapted ensemble classification algorithm based on multiple classifier system and feature selection for classifying multi-class imbalanced data</title>
+		<author>
+			<persName><forename type="first">L</forename><surname>Yijing</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Haixiang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Xiao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Yanan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Jinling</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Knowledge-Based Systems</title>
+		<imprint>
+			<biblScope unit="volume">94</biblScope>
+			<biblScope unit="page" from="88" to="104" />
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Yijing, L., Haixiang, G., Xiao, L., Yanan, L., &amp; Jinling, L. (2016). Adapted ensemble classification algorithm based on multiple classifier system and feature selection for classifying multi-class imbalanced data. Knowledge-Based Systems, 94, 88-104.</note>
+</biblStruct>
+
+<biblStruct xml:id="b27">
+	<analytic>
+		<title level="a" type="main">An improved ensemble learning method for classifying high-dimensional and imbalanced biomedicine data</title>
+		<author>
+			<persName><forename type="first">H</forename><surname>Yu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Ni</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE/ACM transactions on computational biology and bioinformatics</title>
+		<imprint>
+			<biblScope unit="volume">11</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="657" to="666" />
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Yu, H., &amp; Ni, J. (2014). An improved ensemble learning method for classifying high-dimensional and imbalanced biomedicine data. IEEE/ACM transactions on computational biology and bioinformatics, 11(4), 657-666.</note>
+</biblStruct>
+
+<biblStruct xml:id="b28">
+	<analytic>
+		<title level="a" type="main">ODOC-ELM: Optimal decision outputs compensation-based extreme learning machine for classifying imbalanced data</title>
+		<author>
+			<persName><forename type="first">H</forename><surname>Yu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Sun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Yang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><surname>Yang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Shen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Qi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Knowledge-Based Systems</title>
+		<imprint>
+			<biblScope unit="volume">92</biblScope>
+			<biblScope unit="page" from="55" to="70" />
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Yu, H., Sun, C., Yang, X., Yang, W., Shen, J., &amp; Qi, Y. (2016). ODOC-ELM: Optimal decision outputs compensation-based extreme learning machine for classifying imbalanced data. Knowledge-Based Systems, 92, 55-70.</note>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

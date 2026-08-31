@@ -1,0 +1,1332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">A Comparison Study of Credit Card Fraud Detection: Supervised versus Unsupervised</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability  status="unknown">
+					<licence/>
+				</availability>
+				<date type="published" when="2019-04-24">24 Apr 2019</date>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><forename type="first">Xuetong</forename><surname>Niu</surname></persName>
+						</author>
+						<author>
+							<persName><forename type="first">Li</forename><surname>Wang</surname></persName>
+						</author>
+						<author>
+							<persName><forename type="first">Xulei</forename><surname>Yang</surname></persName>
+						</author>
+						<title level="a" type="main">A Comparison Study of Credit Card Fraud Detection: Supervised versus Unsupervised</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date type="published" when="2019-04-24">24 Apr 2019</date>
+						</imprint>
+					</monogr>
+					<idno type="MD5">6974CEA2A1BA424FD48C2AEB97014A6C</idno>
+					<idno type="arXiv">arXiv:1904.10604v1[cs.LG]</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.2-SNAPSHOT" ident="GROBID" when="2026-08-31T18:09+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>Credit card has become popular mode of payment for both online and offline purchase, which leads to increasing daily fraud transactions. An Efficient fraud detection methodology is therefore essential to maintain the reliability of the payment system. In this study, we perform a comparison study of credit card fraud detection by using various supervised and unsupervised approaches. Specifically, 6 supervised classification models, i.e., Logistic Regression (LR), K-Nearest Neighbors (KNN), Support Vector Machines (SVM), Decision Tree (DT), Random Forest (RF), Extreme Gradient Boosting (XGB), as well as 4 unsupervised anomaly detection models, i.e., One-Class SVM (OCSVM), Auto-Encoder (AE), Restricted Boltzmann Machine (RBM), and Generative Adversarial Networks (GAN), are explored in this study. We train all these models on a public credit card transaction dataset from Kaggle website, which contains 492 frauds out of 284,807 transactions. The labels of the transactions are used for supervised learning models only. The performance of each model is evaluated through 5-fold cross validation in terms of Area Under the Receiver Operating Curves (AU-ROC). Within supervised approaches, XGB and RF obtain the best performance with AUROC = 0.989 and AUROC = 0.988, respectively. While for unsupervised approaches, RBM achieves the best performance with AUROC = 0.961, followed by GAN with AUROC = 0.954. The experimental results show that supervised models perform slightly better than unsupervised models in this study. Anyway, unsupervised approaches are still promising for credit card fraud transaction detection due to the insufficient annotation and the data imbalance issue in real-world applications.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Introduction</head><p>Credit card fraud detection has recently become an active research topic with the exploting growth of big data and AI techniques. Also, it plays an important role in banks as it would help to reduce loss caused by fraudulent transactions. Although many proposed methods <ref type="bibr" target="#b56">(Zareapoor and Shamsolmoali 2015;</ref><ref type="bibr" target="#b38">Randhawa et al. 2018</ref>) have achieved promising results, it is still very challenging to accurately and promptly detect credit card fraudulent transactions due to dramatic data imbalance and large variations of fraud transactions.</p><p>Both supervised and unsupervised learning have been investigated in credit card fraud detection. For example, a combination of multiple learned fraud detectors <ref type="bibr" target="#b8">(Chan et al. 1999</ref>) is proposed under a so-called "cost model" to solve the problem of skewed distribution for training data. In contrast, an unsupervised method <ref type="bibr" target="#b4">(Bolton, Hand, and others 2001)</ref> is proposed to detect changes in behavior of usual credit card transactions rather than relying on labels of fraudulent historical transaction data. Also, some surveys have comprehensively studied machine learning techniques applied to credit card fraud detection. For example, the survey <ref type="bibr" target="#b62">(Zojaji et al. 2016</ref>) reviews the techniques, datasets and evaluation criteria in credit card fraud detection. However, no one has evaluated machine learning models and compared credit card fraud detection performance in a supervised vs unsupervised manner.</p><p>In this paper, we evaluate 5 supervised learning models and 4 unsupervised learning models on a Kaggle credit card transaction dataset. The supervised learning models include Support Vector Machines (SVM) <ref type="bibr" target="#b13">(Cortes and Vapnik 1995)</ref>, K-Nearest Neighbors (KNN) <ref type="bibr">(Altman 1992</ref>), Extreme Gradient Boosting (XGB) <ref type="bibr" target="#b11">(Chen et al. 2015)</ref>, Logistic Regression (LR) <ref type="bibr" target="#b32">(Neter et al. 1996)</ref>, Decision Tree (DT) <ref type="bibr">(Quinlan 1986</ref>) and Random Forest (RF) <ref type="bibr">(Breiman 2001)</ref>, while the unsupervised learning methods contain One-Class SVM (OCSVM) <ref type="bibr" target="#b46">(Schölkopf et al. 2000)</ref>, Auto-Encoder (AE) <ref type="bibr" target="#b17">(Deng et al. 2010)</ref>, Restricted Boltzmann Machine (RBM) <ref type="bibr" target="#b49">(Sutskever, Hinton, and Taylor 2009)</ref>, and Generative Adversarial Networks (GAN) <ref type="bibr" target="#b23">(Goodfellow et al. 2014)</ref>. The supervised learning models leverage transaction labels to train classifiers that are able to distinguish between normal and abnormal transactions. In contrast, the unsupervised learning models use unlabeled data for training to capture normal data distribution and then determine whether an unknown test sample is normal or abnormal. As labeling data is time-consuming and labor intensive, labeled data is very expensive, especially when abnormal samples are much smaller than normal one. In this case, the unsupervised learning models would be more useful than the supervised one.</p><p>The main contribution of this paper is that we comprehensively studied both supervised and unsupervised learning models for credit card fraud detection and evaluate these machine learning algorithms on a Kaggle credit card trans-action dataset in a supervised vs unsupervised way. According to our best knowledge, we are the first to conduct this sort of comparison study between supervised and unsupervised learning on credit card fraud detection.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Related Works Traditional Machine Learning Methods</head><p>It is very time-consuming for people to check credit card transactions one-by-one as transaction amount is tremendously large. Hence, an automated method is desired for credit card fraud detection. In decades, many machine learning methods have been used to solve this problem. Next, we will review some of them to have a big picture of this research area. The traditional neural networks (compared to the current deep neural networks) have already been used for credit card fraud detection in <ref type="bibr" target="#b19">(Dorronsoro et al. 1997)</ref>. Hidden Markov Model (HMM) <ref type="bibr" target="#b48">(Srivastava et al. 2008</ref>) is utilized to model the sequence of operations in credit card transaction processing and detect frauds. In <ref type="bibr" target="#b3">(Bhattacharyya et al. 2011)</ref>, Support Vector Machine (SVM) and Random Forest (RF) are investigated together with Logistic Regression (LR) based on real-life data from international credit card transactions. Also, a cost-sensitive decision tree based method <ref type="bibr">(Sahin, Bulkan, and Duman 2013)</ref> is proposed for credit card fraud detection and evaluated on a real world dataset. In another work <ref type="bibr" target="#b30">(Mahmoudi and Duman 2015)</ref>, a modified Fisher discriminant function is proposed for credit card fraud detection to be more sensitive to important instances. Besides using machine learning methods, a framework for transaction aggregation <ref type="bibr" target="#b54">(Whitrow et al. 2009</ref>) is proposed to solve the problem of preprocessing credit card transaction data for supervised fraud classification. Also, a novel learning strategy <ref type="bibr">(Dal Pozzolo et al. 2018</ref>) is proposed to solve three issues of class imbalance, concept drift and verification latency in credit card fraud detection.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Advanced Deep Learning Methods</head><p>Recently, deep learning algorithms have achieved promising results in many areas such as image processing <ref type="bibr" target="#b52">(Wang et al. 2015)</ref>. Therefore, we will review several deep learning based works for credit card fraud detection as follows. Long Short-Term Memory (LSTM) is utilized in <ref type="bibr" target="#b25">(Jurgovsky et al. 2018)</ref> to formulate the credit card fraud detection as a sequence classification problem belonging to supervised learning. Also, an unsupervised model <ref type="bibr" target="#b34">(Pumsirirat and Yan 2018)</ref> of deep Auto-Encoder (AE) and Restricted Boltzmann Machine (RBM) is proposed to reconstruct credit card normal transactions and detect anomalies. Specifically, a framework tuning parameters of deep learning topologies is proposed for credit card fraud detection in <ref type="bibr" target="#b40">(Roy et al. 2018)</ref>. It is necessary to mention that Generative Adversarial Network (GAN) is a remarkable model in unsupervised and semisupervised learning. Not only it is employed to detect activity fraud and malicious users in online social networks <ref type="bibr" target="#b60">(Zheng et al. 2018</ref>), but also it has been used in credit card fraud detection <ref type="bibr" target="#b21">(Fiore et al. 2017)</ref> to augment minority class examples for the classification between fraudulent and nonfraudulent samples. In this paper, the GAN model will also be studied and evaluated as one of unsupervised learning methods.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Supervised Learning Methods</head><p>Some machine learning methods treat fraud transaction as a supervised classification problem. In this way, we can train a classifier based on training data together with annotations, then classify test transaction data into normal and abnormal categories. In this Section, we briefly discuss 6 widelyused supervised machine learning approaches for credit card fraud detection.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Logistic Regression</head><p>Logistic regression was developed by statistician David Cox in 1958 and is a regression model where the response variable Y is categorical. Logistic regression allows us to estimate the probability of a categorical response based on one or more predictor variables x. It allows one to say that the presence of a predictor increases (or decreases) the probability of a given outcome by a specific percentage. Mathematically, logistic regression estimates a multiple linear regression function defined as:</p><formula xml:id="formula_0">Y i = β 0 + β 1 x i,1 + β 2 x i,2 + ... + β p x i,p<label>(1)</label></formula><p>where x i,j refers to the j th predictor variable for the i th observation, Y i is the output of i th observation.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>K-Nearest Neighbors</head><p>In the classification setting, the KNN algorithm essentially boils down to forming a majority vote between the K most similar instances to a given unseen observation. Similarity is defined according to a distance metric between two data points x and x . A popular choice is the Euclidean distance given by</p><formula xml:id="formula_1">d(x, x ) = (x 1 -x 1 ) 2 + (x 2 -x 2 ) 2 + ... + (x n -x n ) 2 (2)</formula><p>But other measures can be more suitable for a given setting and include the Manhattan, Chebyshev and Hamming distance. More formally, given a positive integer K, an unseen observation x and a similarity metric d, KNN classifier performs the following two steps: It runs through the whole dataset computing d between x and each training observation. Suppose the K points in the training data that are closest to x are denoted as set A. It then estimates the conditional probability for each class, that is, the fraction of points in A with that given class label.</p><formula xml:id="formula_2">P (y = j|X = x) = 1 K i∈A I(y i = j)<label>(3)</label></formula><p>where I(x) is the indicator function which evaluates to 1 when the argument x is true and 0 otherwise Finally, the input x is assigned to the class with the largest probability.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Support Vector Machine</head><p>SVM was first introduced by Vapnik in 1995 to solve the classification and regression problems. The basic idea of SVM is to derive an optimal hyperplane that maximizes the margin between two classes. A nice property of SVMs is that it can find a non-linear decision boundary by projecting the data through a nonlinear function φ to a space with a higher dimension. This means that data points which cannot be separated by a straight line in their original input space are lifted to a feature space F where there can be a linear hyperplane separating the data points of one class from an other. When that hyperplane would be projected back to the input space I, it would have the form of a non-linear curve.</p><p>Mathematically, given n training data samples</p><formula xml:id="formula_3">{(x i , y i )} n i=1 , x i ∈ R N , y i ∈ {-1, 1}</formula><p>SVM is formulated by the following optimization problem:</p><formula xml:id="formula_4">M inimize Φ(w) = 1 2 w T w + C n i=1 ξ i (4) subject to y i ( w, φ(x i ) + b) ≥ 1 -ξ i , i = 1, . . . , n ξ i ≥ 0, i = 1, . . . , n<label>(5)</label></formula><p>where the kernel function φ maps training points x i from input space into a higher dimensional feature space. The regularization parameter C controls the trade-off between achieving a low error on the training data and minimising the norm of the weights. .</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Decision Tree</head><p>Decision trees are simple but intuitive models that utilize a top-down approach in which the root node creates binary splits until a certain criteria is met. This binary splitting of nodes provides a predicted value based on the interior nodes leading to the terminal (final) nodes. In a classification context, a decision tree will output a predicted target class for each terminal node produced.</p><p>Decision trees tend to have high variance when they utilize different training and test sets of the same data, since they tend to overfit on training data. This leads to poor performance on unseen data. Unfortunately, this limits the usage of decision trees in predictive modeling. However, using ensemble methods, we can create models that utilize underlying decision trees as a foundation for producing powerful results.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Random Forest</head><p>The random forest algorithm, proposed by L. Breiman in 2001, has been successful as a general-purpose classification and regression method. The approach, which combines several randomized decision trees and aggregates their predictions by averaging, has shown excellent performance in the setting where the number of variables is much larger than the number of observations. Moreover, it is versatile enough to be applied to large-scale problems, is easily adapted to various ad-hoc learning tasks, and returns measures of variable importance.</p><p>In the classification context, the random forest classifier m is obtained via a majority vote among K classification trees with input x, that is,</p><formula xml:id="formula_5">m(x : Θ 1 , ..., Θ K ) = { 1 if 1 K K j=1 m(x; Θ j ) &gt; 1 2 0 otherwise (<label>6</label></formula><formula xml:id="formula_6">)</formula><p>where Θ is the parameter set.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Extreme Gradient Boosting</head><p>Gradient boosting is a powerful machine learning technique for regression, classification and ranking problems, which produces a prediction model in the form of an ensemble of weak prediction models like decision trees. The model is built in a stage-wise manner. In each stage, it introduces a new weak learner to compensate the shortcomings of the existing weak learners. XGB stands for eXtreme Gradient Boosting, one of the implementations of gradient boosting concept. The unique of XGB is that it uses a more regularized model formalization to control over-fitting and achieves better performance.</p><p>Gradient boosting relies on regression trees, where the optimization step works to reduce mean square error, and for binary classification the standard log loss is used. For a multi-class classification problem, the objective function is to optimize the cross entropy loss. Combining the loss function with a regularization term arrives at the objective function. The regularization term controls the complexity and reduces the risk of over-fitting. XGB uses gradient descent for optimization to improve the predictive accuracy at each optimization step by following the negative of the gradient as we are trying to find the sink in a n-dimensional plane.</p><p>To learn the set of functions used in the model, XGB minimizes the following regularized objective</p><formula xml:id="formula_7">L(Θ) = i l(y i , ŷi ) + Ω(Θ)<label>(7)</label></formula><p>where Θ is the learned parameter set, l is a differentiable convex loss function that measures the difference between the predictions ŷi and the target y i , and Ω is the regularization term.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Unsupervised Learning Methods</head><p>There is a recent surge of interest in developing unsupervised generative models for anomaly detection. Generative models are trained to model the distribution of the normal transaction data (without annotations) distribution. Any transaction that does not follow the distribution is considered to be anomalous. In such a way, the fraud transaction can be detected in an unsupervised manner. In this Section, we briefly discuss 4 unsupervised machine learning approaches for credit card fraud detection.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>One-Class Support Vector Machine</head><p>One-Class SVM (OCSVM) was proposed by scholkopf to identify novelty / anomaly in an unsupervised manner without labeled training data. The algorithm learns a soft boundary in order to embrace the normal data instances using the training set, and then, using the testing instance, it tunes itself to identify the abnormalities that fall outside the learned region.</p><p>Mathematically, OCSVM is formulated by the following optimization problem :</p><formula xml:id="formula_8">M inimize Φ(w) = 1 2 w T w + 1 υn n i=1 ξ i -ρ<label>(8)</label></formula><p>subject to</p><formula xml:id="formula_9">y i ( w, φ(x i ) + b) ≥ ρ -ξ i , i = 1, . . . , n ξ i ≥ 0, i = 1, . . . , n<label>(9)</label></formula><p>The parameter υ sets an upper bound on the fraction of outliers and a lower bound on the number of training examples used as support vectors.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Restricted Boltzmann Machine</head><p>A RBM model consists of visible and hidden layers, which are connected through symmetric weights. The inputs x correspond to the neurons in the visible layer. The response of the neurons h in the hidden layer model the probability distribution of the inputs. The probability distribution is derived by learning the symmetrical connecting weights between the visible and the hidden layers. The neurons in the same layer are not connected. The conditional probability of a configuration of the hidden neurons (h), given a configuration of the visible neurons associated with inputs (x), is:</p><formula xml:id="formula_10">p(h|x) = i p(h i |x)<label>(10)</label></formula><p>The objective of the generative training in RBM is to learn the unknown (h) iteratively using the input (x).</p><p>The generative training phase iterates until the reconstructed samples most closely approximates x. It is performed using the maximum likelihood criterion, and implemented by minimizing the negative log probability of the training data:</p><formula xml:id="formula_11">L gen = - logP (x|(w ij , b i , c j ))<label>(11)</label></formula><p>where b i and c j are the bias in the input and hidden layers, respectively. w ij denotes the weights between the inputs and hidden layers.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Auto-Encoder</head><p>An auto-encoder (AE) learns to map from input to output through a pair of encoding and decoding phases. The encoder maps from the input to hidden layer, the decoder maps from the hidden layers to the output layer to reconstruct the inputs. The hidden layers of the auto-encoder are lowdimensional and nonlinear representation of the input data.</p><p>The AE is formulated as follows,</p><formula xml:id="formula_12">X = D(E(X)) (<label>12</label></formula><formula xml:id="formula_13">)</formula><p>where X is the input data, E is an encoding map, D is a decoding map, and X is the reconstructed input data. The objective of the auto-encoder is to approximate the distribution of X as accurately as possible. In particular, an autoencoder can be viewed as a solution to the following optimization problems:</p><formula xml:id="formula_14">min D,E X -D(E(X)) (<label>13</label></formula><formula xml:id="formula_15">)</formula><p>where • is usually 2-norm. Complex distributions of X can be modelled using a deep auto-encoder with multiple layers, which refers to multiple pairs of encoders and decoders.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Generative Adversarial Networks</head><p>GAN is a generative model designed by Goodfellow in 2014. In a GAN setup, two differentiable functions (generator G and discriminator D), represented by neural networks, are competing and trained simultaneously, which eventually drive the generated samples to be indistinguishable from real data.</p><p>The GAN model in this study is based on AnoGAN <ref type="bibr" target="#b44">(Schlegl et al. 2017)</ref> recently developed for anomaly detection by T. Schlegl etc. We modified the original AnoGAN by simultaneously learn an encoder E that maps input samples x to a latent representation z, along with a generator G and discriminator D during training. This enables us to avoid the computationally expensive SGD step for recovering a latent representation at test time.</p><p>After we train the model on the normal data to yield G, D and E for inference, we also define a score function A(x) that measures how anomalous an example x is, based on a convex combination of a reconstruction loss L G and a discriminator-based loss L D :</p><formula xml:id="formula_16">A(x) = α * L G (x) + (1 -α) * L D (x)<label>(14)</label></formula><p>where</p><formula xml:id="formula_17">L G (x) = ||x -G(E(x))|| 1 and L D (x) = σ(D(x, E(x)), 1)</formula><p>where α is a weighting parameter ranged in (0, 1), σ is the cross-entropy loss from the discriminator of x being a real example (class 1). The definition of L G (x) indicates how well the trained encoder and generator can reconstruct an input example x. The definition of L D (x) captures the discriminator confidence that a sample is derived from the real data distribution.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Experimental Results</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Data Set and Preprocessing</head><p>This public dataset contains credit card transactions made in September 2013 by European cardholders. The transactions occurred in two days include 492 fraud records out of 284,807 transactions. It is obvious that the dataset is highly unbalanced (Fig. <ref type="figure" target="#fig_0">1</ref>). The fraudulent class only accounts for 0.172% of all transactions. The dataset contains numerical input variables which are from a PCA transformation due to confidentiality issue. For the non-numerical features of "Time" and "Amount", we normalize them by using RobustScaler which scales the data according to the quantile range. Specifically for the supervised learning models, to tackle the heavily unbalanced problem, random downsampling is used to avoid the bias results toward the non-fraudulent class. Through random downsampling, non-fraud transactions (Class = 0) are randomly reduced to the same amount as fraud transactions (Class = 1), which is equivalent to 492 cases of frauds and 492 cases of non-fraud transactions. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Evaluation Metrics</head><p>As mentioned above, the studied data set is highly imbalanced with 492 fraud records out of 284,807 transactions. Even all the samples are classified into non-fraud category, the classification accuracy is still extremely high, that means traditional evaluation metrics like accuracy is not suitable for this study. Instead, we report the Area Under the Receiver Operating Curves (AUROC) () in our experimental study. AUROC combines the false positive rate (FPR) and the true positive rate (TPR) into one single metric. With the assumption that fraud class is "positive" and non-fraud class is "negative, the definition of FPR and TPR are as follows:</p><p>T P R = T P/P and F P R = F P/N where P and N are the number of samples from positive and negative classes, respectively. TP (True Positive) represents the number of samples predicted to be positive while they are actually positive, and FP (False Positive) the number of samples predicted to be positive while they are actually negative.</p><p>To avoid overfitting issues, in this study, k-fold crossvalidation technique is used to estimate fraud detection performance. In one round of k-fold cross-validation, the data set is first randomly divided into k subsets (or folds), which are of approximately equal size and are mutually exclusive. A machine learning model is then trained and tested k times, where in each time, one of the subsets is set aside as the testing data and the remaining k1 subsets are used as training data. The final testing results are predicted from k trained sub-models. In our experimental studies, 5 cross validations (i.e., k = 5) are used as the validation method.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Parameter Settings</head><p>The key parameters of most studied models are determined by grid-search through cross validation, which are listed below:</p><p>• LR: 'C': 0.1, 'penalty': 'l1' • KNN: 'algorithm': 'auto', 'n neighbors': 4</p><p>• SVM: 'C': 0.5, 'kernel': 'linear' </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Results</head><p>The AUROC values of the 6 supervised models on the studied credit card transaction dataset are shown in Fig. <ref type="figure" target="#fig_1">2</ref>. It can be seen that all the models perform well on this data set, with XGB achieves the best performance with AUROC=0.99, while DT obtains the lowest AUROC value of 0.95. It is expected that the ensemble methods like XGB and RF perform better than the basic methods like DT. Fig. <ref type="figure">3</ref> shows the AUROC values obtained by unsupervised models, with the RBM, GAN and AE obtain AUROC values above 0.95, while the OC-SVM performs not very well with AUROC = 0.90. Overall, it can be observed that supervised models perform slightly better than unsupervised models, at the expense of additional preprocessing procedures like outliers remove.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Discussions</head><p>In credit card fraud detection, supervised learning aims to train a binary classification model to distinguish between fraudulent and non-fraudulent instances by feeding labeled data, while unsupervised learning is intended to model data distribution of one class and determine whether a test sample belongs to this class or not. In this section, we will discuss the pros and cons of both supervised and unsupervised learning.</p><p>Assuming there are sufficient labeled data, supervised learning models, especially for deep neural networks, are able to achieve very promising classification performance. For example, AlexNet <ref type="bibr" target="#b28">(Krizhevsky, Sutskever, and Hinton 2012</ref>) significantly reduce error rates for image classification on a large-scale image dataset with more than 1 million labeled images. However, in credit card fraud detection, the training data in two classes are dramatically imbalanced. The fraudulent transactions are much less than the non-fraudulent ones. As a result, the trained classifier will be biased by the majority class whereas it should pay more attention to the minority one. Another issue for supervised learning is that transaction data could only be labeled after several days even a month. This kind of verification latency <ref type="bibr">(Krivko 2010)</ref> would yield the delay for updating the supervised model. To summarize, the advantage of supervised learning is being capable to achieve very promising results given sufficient training data, while the disadvantage is being dramatically affected by the data imbalance issue and the data labeling processing.</p><p>Although unsupervised learning is not so attractive as the supervised one, it is suitable for credit card fraud detection as it does not require balanced label data. For example, the AnoGAN model <ref type="bibr" target="#b44">(Schlegl et al. 2017</ref>) is able to learn the normal data distribution and indicate whether an unknown test data is normal or abnormal by using their proposed anomaly scoring scheme. This sort of unsupervised learning model would be more prominent if label data is insufficient and data imbalance is severe. Another advantage for unsupervised learning is that a fraudulent credit card use could be detected promptly because the unsupervised model can be updated in low latency by using online unlabeled data in banks and financial institutes. For example, one of unsupervised learning models, Self-Organizing Map (SOM) <ref type="bibr" target="#b58">(Zaslavsky and Strizhak 2006)</ref>, is used to build a framework for unsupervised credit card fraud detection. The proposed automated system is able to continuously modify the model by using new added transactions because the SOM model does not require priori information, e.g., whether a transaction is done by the cardholder or not. In sum, the advantage of unsupervised learning methods are quite obvious for credit card fraud detection, while the disadvantage may be the difficulty of making some unsupervised model (e.g., GAN) converge.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Conclusions</head><p>In this paper, we conduct a comparison study for credit card fraud detection in a supervised vs unsupervised manner by evaluating 10 machine learning models on a Kaggle dataset with credit card transactions data. The label availability and the data imbalance restrict the supervised learning performance dramatically, while the unsupervised one does not have these bottlenecks. Moreover, some unsupervised learning methods, e.g., GAN, have recently received more attentions from the community and also achieved very promising results. In futures, we will focus on using GAN models to improve the performance of credit card fraud detection.</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head>Figure 1 :</head><label>1</label><figDesc>Figure 1: Number of Different Classes</figDesc><graphic coords="5,59.86,54.00,226.77,150.50" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head>Figure 2 :</head><label>2</label><figDesc>Figure 2: Plot of AUROC by supervised approaches</figDesc><graphic coords="6,79.20,77.81,453.60,249.31" type="bitmap" /></figure>
+		</body>
+		<back>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Altman</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="1992">1992</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Altman 1992</note>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<analytic>
+		<title level="a" type="main">An introduction to kernel and nearest-neighbor nonparametric regression</title>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">S</forename><surname>Altman</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">The American Statistician</title>
+		<imprint>
+			<biblScope unit="volume">46</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="175" to="185" />
+			<date type="published" when="1992">1992</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Altman, N. S. 1992. An introduction to kernel and nearest-neighbor nonparametric regression. The American Statistician 46(3):175-185.</note>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Bhattacharyya</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Bhattacharyya et al. 2011]</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<analytic>
+		<title level="a" type="main">Data mining for credit card fraud: A comparative study</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Bhattacharyya</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Jha</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Tharakunnel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">C</forename><surname>Westland</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Decision Support Systems</title>
+		<imprint>
+			<biblScope unit="volume">50</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="602" to="613" />
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Bhattacharyya, S.; Jha, S.; Tharakunnel, K.; and Westland, J. C. 2011. Data mining for credit card fraud: A comparative study. Decision Support Systems 50(3):602-613.</note>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Hand</forename><surname>Bolton</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Others</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2001">2001</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Bolton, Hand, and others 2001]</note>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<analytic>
+		<title level="a" type="main">Unsupervised profiling methods for fraud detection</title>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">J</forename><surname>Bolton</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">J</forename><surname>Hand</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Credit Scoring and Credit Control</title>
+		<imprint>
+			<biblScope unit="volume">VII</biblScope>
+			<biblScope unit="page" from="235" to="255" />
+			<date type="published" when="2001">2001</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Bolton, R. J.; Hand, D. J.; et al. 2001. Unsupervised profiling methods for fraud detec- tion. Credit Scoring and Credit Control VII 235-255.</note>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Breiman</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2001">2001</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Breiman 2001]</note>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<analytic>
+		<title level="a" type="main">Random forests</title>
+		<author>
+			<persName><forename type="first">L</forename><surname>Breiman</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Machine learning</title>
+		<imprint>
+			<biblScope unit="volume">45</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="5" to="32" />
+			<date type="published" when="2001">2001</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Breiman, L. 2001. Random forests. Ma- chine learning 45(1):5-32.</note>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Chan</forename></persName>
+		</author>
+		<imprint>
+			<date type="published" when="1999">1999</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Chan et al. 1999]</note>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<analytic>
+		<title level="a" type="main">Distributed data mining in credit card fraud detection</title>
+		<author>
+			<persName><forename type="first">P</forename><forename type="middle">K</forename><surname>Chan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><surname>Fan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">L</forename><surname>Prodromidis</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">J</forename><surname>Stolfo</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Intelligent Systems and Their Applications</title>
+		<imprint>
+			<biblScope unit="volume">14</biblScope>
+			<biblScope unit="issue">6</biblScope>
+			<biblScope unit="page" from="67" to="74" />
+			<date type="published" when="1999">1999</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Chan, P. K.; Fan, W.; Prodromidis, A. L.; and Stolfo, S. J. 1999. Distributed data mining in credit card fraud detection. IEEE Intelligent Systems and Their Applications 14(6):67-74.</note>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Chen</forename></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Chen et al. 2015]</note>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<analytic>
+		<title level="a" type="main">Xgboost: extreme gradient boosting</title>
+		<author>
+			<persName><forename type="first">T</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>He</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Benesty</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">R package version</title>
+		<imprint>
+			<biblScope unit="volume">0</biblScope>
+			<biblScope unit="page" from="4" to="6" />
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Chen, T.; He, T.; Benesty, M.; et al. 2015. Xgboost: extreme gradient boosting. R package version 0.4- 2 1-4.</note>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Vapnik</forename><surname>Cortes</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="1995">1995</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Cortes and Vapnik 1995]</note>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<analytic>
+		<title level="a" type="main">Support-vector networks</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Cortes</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">V</forename><surname>Vapnik</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Machine learning</title>
+		<imprint>
+			<biblScope unit="volume">20</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="273" to="297" />
+			<date type="published" when="1995">1995</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Cortes, C., and Vapnik, V. 1995. Support-vector networks. Machine learning 20(3):273-297.</note>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Dal</forename><surname>Pozzolo</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Dal Pozzolo et al. 2018]</note>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<analytic>
+		<title level="a" type="main">Credit card fraud detection: a realistic modeling and a novel learning strategy</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Dal Pozzolo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Boracchi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">O</forename><surname>Caelen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Alippi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Bontempi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE transactions on neural networks and learning systems</title>
+		<imprint>
+			<biblScope unit="volume">29</biblScope>
+			<biblScope unit="issue">8</biblScope>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Dal Pozzolo, A.; Boracchi, G.; Caelen, O.; Alippi, C.; and Bontempi, G. 2018. Credit card fraud detection: a realistic modeling and a novel learning strategy. IEEE transactions on neural networks and learn- ing systems 29(8).</note>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Deng</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2010">2010</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Deng et al. 2010]</note>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<analytic>
+		<title level="a" type="main">Binary coding of speech spectrograms using a deep auto-encoder</title>
+		<author>
+			<persName><forename type="first">L</forename><surname>Deng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">L</forename><surname>Seltzer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Yu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Acero</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A.-R</forename><surname>Mohamed</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Hinton</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Eleventh Annual Conference of the International Speech Communication Association</title>
+		<imprint>
+			<date type="published" when="2010">2010</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Deng, L.; Seltzer, M. L.; Yu, D.; Acero, A.; Mohamed, A.-r.; and Hinton, G. 2010. Binary coding of speech spectrograms using a deep auto-encoder. In Eleventh Annual Conference of the International Speech Communi- cation Association.</note>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Dorronsoro</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="1997">1997</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Dorronsoro et al. 1997]</note>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<analytic>
+		<title level="a" type="main">Neural fraud detection in credit card operations</title>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">R</forename><surname>Dorronsoro</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Ginel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">R</forename><surname>Sánchez</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Santa</forename><surname>Cruz</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE transactions on neural networks</title>
+		<imprint>
+			<date type="published" when="1997">1997</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Dorronsoro, J. R.; Ginel, F.; Sánchez, C. R.; and Santa Cruz, C. 1997. Neural fraud detection in credit card operations. IEEE transactions on neural networks.</note>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Fiore</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Fiore et al. 2017]</note>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<analytic>
+		<title level="a" type="main">Using generative adversarial networks for improving classification effectiveness in credit card fraud detection</title>
+		<author>
+			<persName><forename type="first">U</forename><surname>Fiore</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>De Santis</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Perla</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Zanetti</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Palmieri</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Information Sciences</title>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Fiore, U.; De Santis, A.; Perla, F.; Zanetti, P.; and Palmieri, F. 2017. Using generative adversarial networks for improving classification effectiveness in credit card fraud detection. Information Sciences.</note>
+</biblStruct>
+
+<biblStruct xml:id="b22">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Goodfellow</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Goodfellow et al. 2014]</note>
+</biblStruct>
+
+<biblStruct xml:id="b23">
+	<analytic>
+		<title level="a" type="main">Generative adversarial nets</title>
+		<author>
+			<persName><forename type="first">I</forename><surname>Goodfellow</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Pouget-Abadie</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Mirza</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Xu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Warde-Farley</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Ozair</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Courville</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Bengio</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in neural information processing systems</title>
+		<imprint>
+			<date type="published" when="2014">2014</date>
+			<biblScope unit="page" from="2672" to="2680" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Goodfellow, I.; Pouget-Abadie, J.; Mirza, M.; Xu, B.; Warde-Farley, D.; Ozair, S.; Courville, A.; and Bengio, Y. 2014. Generative adversarial nets. In Advances in neural information processing systems, 2672- 2680.</note>
+</biblStruct>
+
+<biblStruct xml:id="b24">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Jurgovsky</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Jurgovsky et al. 2018]</note>
+</biblStruct>
+
+<biblStruct xml:id="b25">
+	<analytic>
+		<title level="a" type="main">Sequence classification for credit-card fraud detection</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Jurgovsky</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Granitzer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Ziegler</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Calabretto</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Portier</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>He-Guelton</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">O</forename><surname>Caelen</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Expert Syst. Appl</title>
+		<imprint>
+			<biblScope unit="volume">100</biblScope>
+			<biblScope unit="page" from="234" to="245" />
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Jurgovsky, J.; Granitzer, M.; Ziegler, K.; Calabretto, S.; Portier, P.; He-Guelton, L.; and Caelen, O. 2018. Sequence classification for credit-card fraud de- tection. Expert Syst. Appl. 100:234-245.</note>
+</biblStruct>
+
+<biblStruct xml:id="b26">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Krivko</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2010">2010</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Krivko 2010</note>
+</biblStruct>
+
+<biblStruct xml:id="b27">
+	<analytic>
+		<title level="a" type="main">A hybrid model for plastic card fraud detection systems</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Krivko</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Expert Systems with Applications</title>
+		<imprint>
+			<biblScope unit="volume">37</biblScope>
+			<biblScope unit="issue">8</biblScope>
+			<biblScope unit="page" from="6070" to="6076" />
+			<date type="published" when="2010">2010</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Krivko, M. 2010. A hybrid model for plastic card fraud detection systems. Expert Systems with Applica- tions 37(8):6070-6076.</note>
+</biblStruct>
+
+<biblStruct xml:id="b28">
+	<analytic>
+		<title level="a" type="main">Imagenet classification with deep convolutional neural networks</title>
+		<author>
+			<persName><forename type="first">Sutskever</forename><surname>Krizhevsky</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Hinton ; Krizhevsky</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">I</forename><surname>Sutskever</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><forename type="middle">E</forename><surname>Hinton</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in neural information processing systems</title>
+		<imprint>
+			<date type="published" when="2012">2012. 2012</date>
+			<biblScope unit="page" from="1097" to="1105" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Krizhevsky, Sutskever, and Hinton 2012] Krizhevsky, A.; Sutskever, I.; and Hinton, G. E. 2012. Imagenet classifica- tion with deep convolutional neural networks. In Advances in neural information processing systems, 1097-1105.</note>
+</biblStruct>
+
+<biblStruct xml:id="b29">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Duman</forename><surname>Mahmoudi</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Mahmoudi and Duman 2015]</note>
+</biblStruct>
+
+<biblStruct xml:id="b30">
+	<analytic>
+		<title level="a" type="main">Detecting credit card fraud by modified fisher discriminant analysis</title>
+		<author>
+			<persName><forename type="first">N</forename><surname>Mahmoudi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Duman</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Expert Systems with Applications</title>
+		<imprint>
+			<biblScope unit="volume">42</biblScope>
+			<biblScope unit="issue">5</biblScope>
+			<biblScope unit="page" from="2510" to="2516" />
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Mahmoudi, N., and Duman, E. 2015. Detecting credit card fraud by modified fisher discriminant analysis. Expert Systems with Applications 42(5):2510-2516.</note>
+</biblStruct>
+
+<biblStruct xml:id="b31">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Neter</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="1996">1996</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Neter et al. 1996]</note>
+</biblStruct>
+
+<biblStruct xml:id="b32">
+	<monogr>
+		<author>
+			<persName><forename type="first">J</forename><surname>Neter</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">H</forename><surname>Kutner</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">J</forename><surname>Nachtsheim</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><surname>Wasserman</surname></persName>
+		</author>
+		<title level="m">Applied linear statistical models</title>
+		<imprint>
+			<publisher>Irwin Chicago</publisher>
+			<date type="published" when="1996">1996</date>
+			<biblScope unit="volume">4</biblScope>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Neter, J.; Kutner, M. H.; Nachtsheim, C. J.; and Wasserman, W. 1996. Applied linear statistical models, volume 4. Irwin Chicago.</note>
+</biblStruct>
+
+<biblStruct xml:id="b33">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Yan</forename><surname>Pumsirirat</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Pumsirirat and Yan 2018]</note>
+</biblStruct>
+
+<biblStruct xml:id="b34">
+	<analytic>
+		<title level="a" type="main">Credit card fraud detection using deep learning based on auto-encoder and restricted boltzmann machine</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Pumsirirat</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Yan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Advanced Computer Science and Applications</title>
+		<imprint>
+			<biblScope unit="volume">9</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Pumsirirat, A., and Yan, L. 2018. Credit card fraud detection using deep learning based on auto-encoder and restricted boltzmann machine. Interna- tional Journal of Advanced Computer Science and Applica- tions 9(1).</note>
+</biblStruct>
+
+<biblStruct xml:id="b35">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Quinlan</forename></persName>
+		</author>
+		<imprint>
+			<date type="published" when="1986">1986</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Quinlan 1986</note>
+</biblStruct>
+
+<biblStruct xml:id="b36">
+	<analytic>
+		<title level="a" type="main">Induction of decision trees</title>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">R</forename><surname>Quinlan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Machine learning</title>
+		<imprint>
+			<biblScope unit="volume">1</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="81" to="106" />
+			<date type="published" when="1986">1986</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Quinlan, J. R. 1986. Induction of decision trees. Machine learning 1(1):81-106.</note>
+</biblStruct>
+
+<biblStruct xml:id="b37">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Randhawa</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Randhawa et al. 2018]</note>
+</biblStruct>
+
+<biblStruct xml:id="b38">
+	<analytic>
+		<title level="a" type="main">Credit card fraud detection using adaboost and majority voting</title>
+		<author>
+			<persName><forename type="first">K</forename><surname>Randhawa</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">K</forename><surname>Loo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Seera</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">P</forename><surname>Lim</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">K</forename><surname>Nandi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE ACCESS</title>
+		<imprint>
+			<biblScope unit="volume">6</biblScope>
+			<biblScope unit="page" from="14277" to="14284" />
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Randhawa, K.; Loo, C. K.; Seera, M.; Lim, C. P.; and Nandi, A. K. 2018. Credit card fraud de- tection using adaboost and majority voting. IEEE ACCESS 6:14277-14284.</note>
+</biblStruct>
+
+<biblStruct xml:id="b39">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Roy</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Roy et al. 2018]</note>
+</biblStruct>
+
+<biblStruct xml:id="b40">
+	<analytic>
+		<title level="a" type="main">Deep learning detecting fraud in credit card transactions</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Roy</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Sun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Mahoney</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Alonzi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Adams</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Beling</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Systems and Information Engineering Design Symposium (SIEDS)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2018">2018. 2018</date>
+			<biblScope unit="page" from="129" to="134" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Roy, A.; Sun, J.; Mahoney, R.; Alonzi, L.; Adams, S.; and Beling, P. 2018. Deep learning detecting fraud in credit card transactions. In Systems and Informa- tion Engineering Design Symposium (SIEDS), 2018, 129- 134. IEEE.</note>
+</biblStruct>
+
+<biblStruct xml:id="b41">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Bulkan</forename><surname>Sahin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Duman</forename></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2013">2013</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Sahin, Bulkan, and Duman 2013]</note>
+</biblStruct>
+
+<biblStruct xml:id="b42">
+	<analytic>
+		<title level="a" type="main">A cost-sensitive decision tree approach for fraud detection</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Sahin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Bulkan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Duman</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Expert Systems with Applications</title>
+		<imprint>
+			<biblScope unit="volume">40</biblScope>
+			<biblScope unit="issue">15</biblScope>
+			<biblScope unit="page" from="5916" to="5923" />
+			<date type="published" when="2013">2013</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Sahin, Y.; Bulkan, S.; and Duman, E. 2013. A cost-sensitive decision tree ap- proach for fraud detection. Expert Systems with Applications 40(15):5916-5923.</note>
+</biblStruct>
+
+<biblStruct xml:id="b43">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Schlegl</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Schlegl et al. 2017]</note>
+</biblStruct>
+
+<biblStruct xml:id="b44">
+	<analytic>
+		<title level="a" type="main">Unsupervised anomaly detection with generative adversarial networks to guide marker discovery</title>
+		<author>
+			<persName><forename type="first">T</forename><surname>Schlegl</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Seeböck</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">M</forename><surname>Waldstein</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">U</forename><surname>Schmidt-Erfurth</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Langs</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Information Processing in Medical Imaging</title>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2017">2017</date>
+			<biblScope unit="page" from="146" to="157" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Schlegl, T.; Seeböck, P.; Waldstein, S. M.; Schmidt-Erfurth, U.; and Langs, G. 2017. Unsu- pervised anomaly detection with generative adversarial net- works to guide marker discovery. In International Confer- ence on Information Processing in Medical Imaging, 146- 157. Springer.</note>
+</biblStruct>
+
+<biblStruct xml:id="b45">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Schölkopf</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2000">2000</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Schölkopf et al. 2000]</note>
+</biblStruct>
+
+<biblStruct xml:id="b46">
+	<analytic>
+		<title level="a" type="main">Support vector method for novelty detection</title>
+		<author>
+			<persName><forename type="first">B</forename><surname>Schölkopf</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">C</forename><surname>Williamson</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">J</forename><surname>Smola</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Shawe-Taylor</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">C</forename><surname>Platt</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in neural information processing systems</title>
+		<imprint>
+			<date type="published" when="2000">2000</date>
+			<biblScope unit="page" from="582" to="588" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Schölkopf, B.; Williamson, R. C.; Smola, A. J.; Shawe-Taylor, J.; and Platt, J. C. 2000. Sup- port vector method for novelty detection. In Advances in neural information processing systems, 582-588.</note>
+</biblStruct>
+
+<biblStruct xml:id="b47">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Srivastava</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2008">2008</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Srivastava et al. 2008]</note>
+</biblStruct>
+
+<biblStruct xml:id="b48">
+	<analytic>
+		<title level="a" type="main">Credit card fraud detection using hidden markov model</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Srivastava</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Kundu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Sural</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Majumdar</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on dependable and secure computing</title>
+		<imprint>
+			<biblScope unit="volume">5</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="37" to="48" />
+			<date type="published" when="2008">2008</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Srivastava, A.; Kundu, A.; Sural, S.; and Majumdar, A. 2008. Credit card fraud detection using hidden markov model. IEEE Transactions on dependable and secure computing 5(1):37-48.</note>
+</biblStruct>
+
+<biblStruct xml:id="b49">
+	<monogr>
+		<title level="m" type="main">Sutskever, I</title>
+		<author>
+			<persName><forename type="first">Hinton</forename><surname>Sutskever</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Taylor</forename></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Sutskever, Hinton, and Taylor 2009] Sutskever, I.;</note>
+</biblStruct>
+
+<biblStruct xml:id="b50">
+	<analytic>
+		<title level="a" type="main">The recurrent temporal restricted boltzmann machine</title>
+		<author>
+			<persName><forename type="first">G</forename><forename type="middle">E</forename><surname>Hinton</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><forename type="middle">W</forename><surname>Taylor</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in neural information processing systems</title>
+		<imprint>
+			<date type="published" when="2009">2009</date>
+			<biblScope unit="page" from="1601" to="1608" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Hinton, G. E.; and Taylor, G. W. 2009. The recurrent temporal re- stricted boltzmann machine. In Advances in neural informa- tion processing systems, 1601-1608.</note>
+</biblStruct>
+
+<biblStruct xml:id="b51">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Wang</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Wang et al. 2015]</note>
+</biblStruct>
+
+<biblStruct xml:id="b52">
+	<analytic>
+		<title level="a" type="main">Video tracking using learned hierarchical features</title>
+		<author>
+			<persName><forename type="first">L</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">L</forename><surname>Chan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Q</forename><surname>Yang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Image Processing</title>
+		<imprint>
+			<biblScope unit="volume">24</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="1424" to="1435" />
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Wang, L.; Liu, T.; Wang, G.; Chan, K. L.; and Yang, Q. 2015. Video tracking using learned hierar- chical features. IEEE Transactions on Image Processing 24(4):1424-1435.</note>
+</biblStruct>
+
+<biblStruct xml:id="b53">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Whitrow</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Whitrow et al. 2009]</note>
+</biblStruct>
+
+<biblStruct xml:id="b54">
+	<analytic>
+		<title level="a" type="main">Transaction aggregation as a strategy for credit card fraud detection</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Whitrow</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">J</forename><surname>Hand</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Juszczak</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Weston</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">M</forename><surname>Adams</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Data Mining and Knowledge Discovery</title>
+		<imprint>
+			<biblScope unit="volume">18</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="30" to="55" />
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Whitrow, C.; Hand, D. J.; Juszczak, P.; Weston, D.; and Adams, N. M. 2009. Transaction aggre- gation as a strategy for credit card fraud detection. Data Mining and Knowledge Discovery 18(1):30-55.</note>
+</biblStruct>
+
+<biblStruct xml:id="b55">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Shamsolmoali</forename><surname>Zareapoor</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zareapoor and Shamsolmoali 2015]</note>
+</biblStruct>
+
+<biblStruct xml:id="b56">
+	<analytic>
+		<title level="a" type="main">Application of credit card fraud detection: Based on bagging ensemble classifier</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Zareapoor</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Shamsolmoali</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Procedia Computer Science</title>
+		<imprint>
+			<biblScope unit="volume">48</biblScope>
+			<biblScope unit="page" from="679" to="685" />
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zareapoor, M., and Shamsolmoali, P. 2015. Application of credit card fraud detection: Based on bagging ensemble classifier. Procedia Computer Science 48:679-685.</note>
+</biblStruct>
+
+<biblStruct xml:id="b57">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Strizhak</forename><surname>Zaslavsky</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2006">2006</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zaslavsky and Strizhak 2006]</note>
+</biblStruct>
+
+<biblStruct xml:id="b58">
+	<analytic>
+		<title level="a" type="main">Credit card fraud detection using self-organizing maps</title>
+		<author>
+			<persName><forename type="first">V</forename><surname>Zaslavsky</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Strizhak</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Information and Security</title>
+		<imprint>
+			<biblScope unit="volume">18</biblScope>
+			<biblScope unit="page">48</biblScope>
+			<date type="published" when="2006">2006</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zaslavsky, V., and Strizhak, A. 2006. Credit card fraud detection using self-organizing maps. Information and Security 18:48.</note>
+</biblStruct>
+
+<biblStruct xml:id="b59">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Zheng</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zheng et al. 2018]</note>
+</biblStruct>
+
+<biblStruct xml:id="b60">
+	<monogr>
+		<title level="m" type="main">One-class adversarial nets for fraud detection</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Zheng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Yuan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Wu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Lu</surname></persName>
+		</author>
+		<idno>CoRR abs/1803.01798</idno>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zheng, P.; Yuan, S.; Wu, X.; Li, J.; and Lu, A. 2018. One-class adversarial nets for fraud detection. CoRR abs/1803.01798.</note>
+</biblStruct>
+
+<biblStruct xml:id="b61">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Zojaji</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zojaji et al. 2016]</note>
+</biblStruct>
+
+<biblStruct xml:id="b62">
+	<monogr>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Zojaji</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">E</forename><surname>Atani</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">H</forename><surname>Monadjemi</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1611.06439</idno>
+		<title level="m">A survey of credit card fraud detection techniques: data and technique oriented perspective</title>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Zojaji, Z.; Atani, R. E.; Monadjemi, A. H.; et al. 2016. A survey of credit card fraud detection techniques: data and technique oriented perspective. arXiv preprint arXiv:1611.06439.</note>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

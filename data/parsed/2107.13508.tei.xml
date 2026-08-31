@@ -1,0 +1,1436 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">Uncertainty-Aware Credit Card Fraud Detection Using Deep Learning</title>
+				<funder ref="#_Shqtdm6">
+					<orgName type="full">Australian Research Council</orgName>
+				</funder>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability  status="unknown">
+					<licence/>
+				</availability>
+				<date type="published" when="2021-07-28">28 Jul 2021</date>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><forename type="first">Maryam</forename><surname>Habibpour</surname></persName>
+							<email>e.maryamhabibpour@gmail.com</email>
+						</author>
+						<author>
+							<persName><forename type="first">Hassan</forename><surname>Gharoun</surname></persName>
+							<email>h.gharoun@alumni.ut.ac.ir</email>
+						</author>
+						<author>
+							<persName><forename type="first">Mohammadreza</forename><surname>Mehdipour</surname></persName>
+						</author>
+						<author>
+							<persName><forename type="first">Amirreza</forename><surname>Tajally</surname></persName>
+							<email>amirreza73tajally@gmail.com</email>
+						</author>
+						<author>
+							<persName><forename type="first">Hamzeh</forename><surname>Asgharnezhad</surname></persName>
+							<email>hamzeh.asgharnezhad@gmail.com</email>
+						</author>
+						<author>
+							<persName><forename type="first">Afshar</forename><surname>Shamsi</surname></persName>
+							<email>afshar.shamsi.j@gmail.com</email>
+						</author>
+						<author>
+							<persName><roleName>Senior Member, IEEE, Miadreza</roleName><forename type="first">Abbas</forename><surname>Khosravi</surname></persName>
+							<email>abbas.khosravi@deakin.edu.au</email>
+						</author>
+						<author>
+							<persName><roleName>Fellow, IEEE</roleName><forename type="first">Saeid</forename><surname>Nahavandi</surname></persName>
+							<email>saeid.nahavandig@deakin.edu.au</email>
+						</author>
+						<author>
+							<persName><roleName>Senior Member, IEEE</roleName><forename type="first">João</forename><forename type="middle">P S</forename><surname>Catalão</surname></persName>
+						</author>
+						<author>
+							<persName><forename type="first">M</forename><surname>Shafie-Khah</surname></persName>
+						</author>
+						<author>
+							<affiliation key="aff0">
+								<orgName type="department" key="dep1">School of Industrial Engineering</orgName>
+								<orgName type="department" key="dep2">College of Engineering</orgName>
+								<orgName type="institution">University of Tehran</orgName>
+								<address>
+									<settlement>Tehran</settlement>
+									<country key="IR">Iran</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<affiliation key="aff1">
+								<orgName type="department">Department of Industrial Engineering</orgName>
+								<orgName type="institution">university of Tehran</orgName>
+								<address>
+									<settlement>Tehran</settlement>
+									<country key="IR">Iran</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<affiliation key="aff2">
+								<orgName type="department">Institute for Intelligent Systems Research and Innovation (IISRI)</orgName>
+								<orgName type="institution">Shamsi are indi- vidual researchers</orgName>
+								<address>
+									<settlement>Tehran</settlement>
+									<country key="IR">Iran</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<affiliation key="aff3">
+								<orgName type="department">School of Technology and Innovations</orgName>
+								<orgName type="institution">Deakin University</orgName>
+								<address>
+									<country key="AU">Australia</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<affiliation key="aff4">
+								<orgName type="department">Faculty of Engineering</orgName>
+								<orgName type="institution">Univer- sity of Vaasa</orgName>
+								<address>
+									<postCode>65200</postCode>
+									<settlement>Vaasa</settlement>
+									<country key="FI">Finland</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<affiliation key="aff5">
+								<orgName type="institution" key="instit1">University of Porto</orgName>
+								<orgName type="institution" key="instit2">INESC TEC</orgName>
+								<address>
+									<settlement>Porto</settlement>
+									<country key="PT">Portugal</country>
+								</address>
+							</affiliation>
+						</author>
+						<title level="a" type="main">Uncertainty-Aware Credit Card Fraud Detection Using Deep Learning</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date type="published" when="2021-07-28">28 Jul 2021</date>
+						</imprint>
+					</monogr>
+					<idno type="MD5">5FAABCB7BAFA458C7D5BEEA856C2BABE</idno>
+					<idno type="arXiv">arXiv:2107.13508v1[cs.LG]</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.2-SNAPSHOT" ident="GROBID" when="2026-08-31T18:10+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>Countless research works of deep neural networks (DNNs) in the task of credit card fraud detection have focused on improving the accuracy of point predictions and mitigating unwanted biases by building different network architectures or learning models. Quantifying uncertainty accompanied by point estimation is essential because it mitigates model unfairness and permits practitioners to develop trustworthy systems which abstain from suboptimal decisions due to low confidence. Explicitly, assessing uncertainties associated with DNNs predictions is critical in real-world card fraud detection settings for characteristic reasons, including (a) fraudsters constantly change their strategies, and accordingly, DNNs encounter observations that are not generated by the same process as the training distribution, (b) owing to the time-consuming process, very few transactions are timely checked by professional experts to update DNNs. Therefore, this study proposes three uncertainty quantification (UQ) techniques named Monte Carlo dropout, ensemble, and ensemble Monte Carlo dropout for card fraud detection applied on transaction data. Moreover, to evaluate the predictive uncertainty estimates, UQ confusion matrix and several performance metrics are utilized. Through experimental results, we show that the ensemble is more effective in capturing uncertainty corresponding to generated predictions. Additionally, we demonstrate that the proposed UQ methods provide extra insight to the point predictions, leading to elevate the fraud prevention process.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>I. INTRODUCTION</head><p>One of the main pitfalls related to modern e-commerce is the increase in card fraud. There is public concern about card-present (CP) and card-not-present (CNP) transactions. Although banks have developed chip smart cards leading to a significant drop in CP fraud, the main issue is online payments (CNP). Modern encryptions and state-of-the-art multi-factor authentication (MFA) techniques such as biometric technology have been developed to disrupt fraudulent activities, preserve the reputation of card issuers and merchants, and therefore diminish monetary losses for customers <ref type="bibr" target="#b0">[1]</ref>. Nevertheless, perpetrators of fraud always find a blind spot to exploit.</p><p>In recent circumstances, the emergence of the coronavirus (COVID-19) pandemic has accelerated the shift towards a more digital world and likewise expanded the e-commerce market. This widespread disease has exacerbated the circumstances and has led fraudsters to target individuals' financial assets to a considerable extent. According to the statistics released by the federal trade commission (FTC), over $3.3 billion fraud losses were reported in the 2020 epidemic, as compared with $1.8 billion in 2019; almost $1.2 billion of losses were attributed to imposter scams, while about $246 million of losses were the consequences of online shopping <ref type="bibr" target="#b1">[2]</ref>.</p><p>Due to the expansion of artificial intelligence (AI) technologies in various dimensions of human life, we have witnessed massive investments into AI implementation by digital security companies to identify illegitimate transactions and make barriers to stop them. Owing to the promising human-level performance, it initially appears desirable to implement deep neural networks (DNNs) to detect card fraud. However, these efficiencies are often accompanied by increased complexity, and thus, raising concerns about the reliability of modern networks. Excessive use of these black-box predictors for critical topics such as medical diagnosis <ref type="bibr" target="#b2">[3]</ref>, <ref type="bibr" target="#b3">[4]</ref>, and particularly this case (fraud detection) <ref type="bibr" target="#b4">[5]</ref>, <ref type="bibr" target="#b5">[6]</ref>, <ref type="bibr" target="#b6">[7]</ref>, has made it extremely necessary to draw a line between well-grounded predictions and those with challenging inference. The lack of interpretability of the mentioned complex models is by no means the only issue. The argument that is often stated is the lack of explicit information about the internal processing <ref type="bibr" target="#b7">[8]</ref>. These autonomous models require massive amounts of training samples to reach the optimal decision. The limited number of samples also raises questions about epistemic uncertainty <ref type="bibr" target="#b8">[9]</ref>. Notably, the most persuasive argument is that these models with arbitrary depth tend to have high confidence in their predictions <ref type="bibr" target="#b9">[10]</ref>. That is to say, in dynamic and constantly evolving environments, where customers' shopping patterns alter periodically or seasonally, nimble fraudsters employ new attacks in response to these changes. Upon such occurrences, the transformation of statistical properties occurs, and discriminative neural networks encounter observations that are not generated by the same process as the training distribution (out of distribution) <ref type="bibr" target="#b10">[11]</ref>. Regrettably, under this circumstance, DNNs have little or no performance guarantees to generate predictions with a low confidence level. Explicitly, overconfident erroneous predictions can be detrimental <ref type="bibr" target="#b11">[12]</ref>.</p><p>Besides the drawbacks of non-linear neural networks, another paramount concern appears with the existence of verification latency <ref type="bibr" target="#b12">[13]</ref>, in which the process of determining the status of new transactions that update the classifier is delayed. Generally, besides the terminal, which performs the primary and basic security checks on all payments in the shortest possible time <ref type="bibr" target="#b13">[14]</ref>, each transaction is scanned through two automated tools to authorize <ref type="bibr" target="#b14">[15]</ref>. First, rule-based systems are employed to alert against fraudulent transactions; second, classifiers such as neural networks are exploited on a labeled data to inspect the nature of transactions <ref type="bibr" target="#b14">[15]</ref>. Transactions flagged by automated tools are inspected by professional experts and the resulting feedback will feed and update the classifiers. This process is time-consuming, and only a limited number of alarms are monitored daily <ref type="bibr" target="#b15">[16]</ref>. Although there is a considerable lag between the suspicious transaction verification process and the classifiers update, the updated classifiers (here DNNs) are not yet guaranteed to generate accurate alerts, and due to the opaque nature, investigators cannot comprehend where the problem is. Thus, the alerts may be ignored or examined reluctantly. Overall, we have enough evidence to conclude that fraudulent transactions are considered genuine if they are neither inspected by investigators nor announced by customers.</p><p>Motivated by these shortcomings, and irrespective of the fact that both broad and in-depth studies have been conducted to illuminate how the machine learning (ML) models work <ref type="bibr" target="#b16">[17]</ref>, it is imperative to implement uncertainty quantification (UQ) techniques for studying DNN models behavior <ref type="bibr" target="#b17">[18]</ref>. The fact remains that transparency as an integral attribute of interpretable, comprehensible, and explainable AI, has become a high priority and an area of focus by several large technology corporations <ref type="bibr" target="#b16">[17]</ref>. UQ techniques are a form of transparency that can effectively manage this mission. In fact, by assessing the uncertainty corresponding to generated predictions, this type of methodology computes meaningful confidence values to specify model reliability and to support interpretability.</p><p>The transaction prediction model needs to accommodate all the components so that the predicted feature vectors cross a threshold before the decision is made. Indeed, the uncertainty results from a lack of training data in certain areas of the input domain. When the model encounters a novel observation, it attempts to communicate with its knowledge to know it, leading to an uncertainty report appearing. The reportage of uncertainty of the model associated with the incorrect prediction could be a step for a requisite investigation and an obstacle to potential losses. Hence, investigators should consider the uncertainty prediction, not necessarily the prediction itself.</p><p>In addition to measuring the uncertainty of the generated predictions (either genuine or fraudulent), UQ techniques have recognized the fact that occasionally the inefficiency of the model is quite probable, which could be specified and minimized through some attempts (e.g., the transaction dataset is a highly skewed dataset since the genuine class outnumbers the fraudulent class, leading to higher uncertainty <ref type="bibr" target="#b18">[19]</ref>). According to the epistemic uncertainty approach (model variability) <ref type="bibr" target="#b19">[20]</ref>, if a model is trained by examining only a limited sample of fraudulent transactions, it will have an unacceptable performance in generating reliable predictions on that. On the other hand, it will yield fewer errors and more reliable predictions regarding legitimate samples. This issue can be addressed by increasing the number of fraudulent transactions while adopting a comprehensive approach.</p><p>The main contributions of our task are summarized as follows. First of all, we deploy the Monte Carlo dropout (MCD), ensemble, and ensemble Monte Carlo dropout (EMCD) methods to estimate uncertainty for the transaction data that are available to the public. These are based on the frequentist approach and need to adjust the parameters slightly. Notably, there is no inherent mechanism in the model to corroborate that needs uncertainty estimation. The leading factor that necessitates the use of UQ techniques in DNNs is the calibration metric which estimates the interval between the probabilities of the classes extracted by the model and the true probabilities pertinent to those classes. Thus, by examining the errors of the proposed DNNs regarding the generated predictions, we illustrate reliable diagrams which serve as clues to validate our study. Importantly, given the UQ confusion matrix and several performance metrics, we evaluate the predictive uncertainty estimates and compare all the mentioned techniques. After obtaining the empirical outcomes, we conclude the study by drafting a statistical and scientific document.</p><p>The remainder of this paper is structured as follows. A review of multiple studies conducted in the task of card fraud detection is provided in section II. Section III provides detailed information on UQ techniques. The UQ confusion matrix and several performance metrics are introduced in section IV. The dataset and experiments are explained in section V. The obtained results are reported in section VI, and the conclusion and future research are presented in VII.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>II. RELATED WORKS</head><p>Due to the nature of the problem, there are a few public transaction datasets, as well as, pertinent research works. Furthermore, irrespective of the differences in size, complexity, and attributes of the available data, there is a drastic discrepancy in the proportion of classes owing to the rise of genuine transactions compared with fraudulent ones. To illustrate, research <ref type="bibr" target="#b4">[5]</ref> has revealed that the fully connected neural network is an efficient classifier to discern malicious transactions. Two sampling mechanisms were deployed to deal with the class imbalance: (i) under-sampling, which is reducing genuine transaction samples and (ii) over-sampling which is increasing fraudulent transaction samples. The obtained accuracies are 99.72% and 99.67%, respectively. Additionally, other alternative options have been propounded to address the problem of transaction ratio, such as (a) leveraging the interpolation technique instead of over-sampling, (b) synthesizing generative adversarial networks (GANs) based on their performance to inflate fraudulent observations artificially, or (c) wielding evaluation metrics other than accuracy in this area such as precision, recall, area under the receiver operating characteristic (ROC) curve (AUC), Matthews correlation coefficient (MCC), and cost of failure <ref type="bibr" target="#b4">[5]</ref>, <ref type="bibr" target="#b5">[6]</ref>, <ref type="bibr" target="#b20">[21]</ref>. As discussed in Section I, the uncertainty is higher for classes with less representation, and this issue should be resolved <ref type="bibr" target="#b18">[19]</ref>.</p><p>In a previous study, criticism was made of this misconception that all types of transactions are at disposal during the initial model training, and accordingly, a basis was formulated to compare a once-trained model with an ensemble of classifiers that is consecutively updated <ref type="bibr" target="#b14">[15]</ref>. Invoking intrusion detection techniques and deep learning methods (multi-layer perceptron (MLP), convolutional neural network (CNN), and deep auto-encoder (DAE)) was attempted to curtail the costs and burden of fraud investigations at related organizations through reducing false positives <ref type="bibr" target="#b6">[7]</ref>. False positives refer to legal transactions that were incorrectly classified as fraudulent. Following encoding the feature vectors in a particular procedure and adjusting parameters by grid search, the optimal configuration out of the MLP was obtained with 35.16% fewer alerts while catching 91.79% of all the fraud observations <ref type="bibr" target="#b6">[7]</ref>.</p><p>In <ref type="bibr" target="#b21">[22]</ref>, DAE and restricted boltzmann machines (RBMs) as unsupervised deep learning (DL) methods were employed to find anomalies using reconstructed legitimate transactions. Another method for detecting anomalies is peer group analysis, which categorizes customers in accordance with their profiles and finds card fraud as it is outside the scope of customer's behavior <ref type="bibr" target="#b22">[23]</ref>. It should be noted that feature extraction using the mentioned methods fails to resolve the problems explained in section I. These features are overconfidently processed in passing the softmax layer.</p><p>In the field of card fraud detection, many studies debated whether supervised methods yield more reliable results as opposed to unsupervised ones. As reported in <ref type="bibr" target="#b23">[24]</ref>, researchers considered both approaches and evaluated the proposed models' performances using the area under the receiver operating curves (AUROC) metric. Experiments revealed that extreme gradient boosting (XGB) and random forest (RF) outperform restricted boltzmann machine (RBM) and generative adversarial networks (GANs) in the range of 98.9% and 98.8%, respectively.</p><p>As practical methods for managing global commercial, association rules provided insight into the normal behavior exerted in fraudulent transactions, which was used to detect and prevent credit card fraud <ref type="bibr" target="#b24">[25]</ref>. Modified Fisher discriminant analysis (MFDA) was used for the first time in this field. It was shown that by appending the weighted average during computation, the linear classifier concentrates on highvalue transactions and discriminates them accurately, thereby avoiding weighty and significant losses <ref type="bibr" target="#b25">[26]</ref>. The hybrid methods based on AdaBoost and majority voting methods were considered in card fraud detection, and the noise was added to the samples to evaluate the robustness of the algorithms as well <ref type="bibr" target="#b26">[27]</ref>.</p><p>All of these studies report promising results, but most of them fail in real-world applications (as is the case typically with DNNs), where we cannot expect the distribution of observations to be the same as that of the training samples. Measuring the uncertainty of generated predictions is neces-sary to improve model adoption and user experience. Table <ref type="table" target="#tab_0">I</ref> presents the contributions of the present study compared to the relevant studies in the literature.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>III. METHODS TO QUANTIFY UNCERTAINTY</head><p>It is an inescapable fact that Bayesian models have shown a systematic, broadly accepted strategy to flagging uncertainty for the long term, howbeit this concept somewhat seems to be costly <ref type="bibr" target="#b38">[39]</ref>. Bayesian methods based on Bayesian probability theory <ref type="bibr" target="#b39">[40]</ref> define a hypothesis space of plausible models a priori (before any data is observed) and exploit deductive reasoning to update these priors as more data becomes available. For example, a Gaussian process which is a Bayesian technique defines a prior distribution over a space of functions F <ref type="bibr" target="#b40">[41]</ref>. This distribution is updated as more data becomes available, i.e., all functions that are consistent with the labels are maintained. At inference time, each of the functions yields an output, and expectation is calculated to generate the final prediction. The variance of these outputs represents a measure of uncertainty. Formulating a deep Gaussian process or other Bayesian models is relatively straightforward, but inference and computing in these models are not easy, and it is indeed problematic to determine the exact posterior distribution. Since this is the case, frequentist approach (Non-Bayesian) has become a preferred way for ML practitioners to estimate uncertainty. More generally, the proposed methods for estimating uncertainty follow two key approaches: Bayesian approach, where the distributions over model parameters represent the uncertainty <ref type="bibr" target="#b41">[42]</ref>, and Non-Bayesian approach, where the distributions over model outputs represent the uncertainty <ref type="bibr" target="#b42">[43]</ref>. We examine the second approach in follow-up work and explain it in three procedures.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. Monte Carlo dropout (MCD)</head><p>DL tools can be cast as Bayesian models to reduce the computational burden without requiring changes in optimization <ref type="bibr" target="#b43">[44]</ref>. The dropout method is one of the most broadly applicable tools to prevent overfitting in DNNs <ref type="bibr" target="#b44">[45]</ref>. It involves dropping hidden layer neurons at random during model training so that with each training step, a variant subset of the network architecture is measured and regulated. Finally, a sub-network is sampled from the full model. The MCD method proposed by <ref type="bibr" target="#b43">[44]</ref> takes this randomization technique one step further. It was shown that by using the dropout method the testing time, in addition to the training time, is approximately the same as the Bayesian approximation. In this manner, if one test data point is consecutively passed to the network, the probabilities extracted from the softmax function, which is the most popular objective function for classification, will construct an empirical distribution. In fact, for each test data point, N model configurations are applied to obtain a set of outputs { ŷ}. An empirical distribution is drawn over the obtained outputs, allowing the calculation of the mean value (posterior) and the measurement of uncertainty in terms of distributional variance. The predictive mean (µ pred ) of the </p><formula xml:id="formula_0">µ pred ≈ 1 T ∑ t p(y = c|x, ŵt )<label>(1)</label></formula><p>where x denotes the test input; by knowing x, p(y = c|x, ŵt denotes the probability of y belonging to the c (the output of softmax), and ŵt denotes the network weight matrices which are calculated on the t th iteration; T denotes the number of MC iterations. The predictive entropy (PE) (2) can be used as the uncertainty estimate to determine the distribution variance (predictive uncertainty) <ref type="bibr" target="#b43">[44]</ref>:</p><formula xml:id="formula_1">PE = -∑ c µ pred log µ pred<label>(2)</label></formula><p>where c refers to both classes. A model is more likely to be confident regarding its prediction if its PE is small.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Ensemble</head><p>It is possible to generate ensembles of neural networks in different ways to measure uncertainty. Here we first provide an overview of ensemble learning paradigms and then describe uncertainty computation using an ensemble of deep networks. One of the most popular ensembles is random forest (RF), a subset of decision trees that encourages the training of base learners without any interaction with other base members. In contrast, in the boosting algorithm, base members are trained sequentially. According to <ref type="bibr" target="#b45">[46]</ref>, due to the randomization technique used to curtail the correlation between individual trees' predictions, RF dominates other ensembles. Bootstrap aggregation (also known as bagging algorithm) uses the bootstrap strategy in which data are randomly alternated from the main data; the algorithm members are then trained on random subsamples of the original dataset <ref type="bibr" target="#b46">[47]</ref>. However, a recent study <ref type="bibr" target="#b38">[39]</ref> showed that in an ensemble of DNNs, when the base learner has several local optima, using bootstrap deteriorates the performance since the trained base learner observes just </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Incorrect Correctness</head><p>Fig. <ref type="figure">1:</ref> The UQ confusion matrix and performance metrics 63% of unique data points. As a result, here, the ensemble encompasses M networks that are trained independently on a similar version of the dataset. All networks have the same number of layers, but the number of neurons within each layer is random. While all networks are expected to behave similarly in areas with enough training data, inconsistent probabilities will be obtained where there are no data available. An empirical distribution generated from all the predictions of all networks can provide the single mean (posterior) and variance of one test data point. PE can also be defined as (4) <ref type="bibr" target="#b47">[48]</ref>:</p><formula xml:id="formula_2">p(y|x) ≈ 1 M M ∑ i=0 p θ i (y|x)<label>(3)</label></formula><formula xml:id="formula_3">PE = C ∑ i=0 p(y i |x) log p(y i |x)<label>(4)</label></formula><p>where θ i denotes the set of parameters of i th network element and C denotes the classes. The low PE value indicates that the prediction from all base learners is similar.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>C. Ensemble Monte Carlo dropout (EMCD)</head><p>The EMCD algorithm is developed from the interleaving of an ensemble of deep networks and the MCD algorithm. The notion behind this model comes from a paper stating that combining the existing UQ techniques yields a new UQ method, which may potentially enhance the model's ability to capture uncertainty <ref type="bibr" target="#b19">[20]</ref>. Here, ensemble is a combination of DNNs with various architectures and MCD carries out several stochastic forward passes to evaluate this ensemble of networks. Through the use of dropout and T stochastic forward passes at test time, each network generates multiple probability values for a given input. All probabilities will be represented as a Gaussian mixture distribution, which can be used to estimate both single mean (posterior) and variance. PE is applied the same as the ensemble algorithm, but the posterior is calculated differently <ref type="bibr">(5 and 6)</ref> .</p><formula xml:id="formula_4">p(y|x) ≈ 1 T p( ŷ| x, ŵ)<label>(5)</label></formula><formula xml:id="formula_5">PE = C ∑ i=0 p(y i |x) log p(y i |x)<label>(6)</label></formula><p>where ŵt denotes the model parameters and C denotes the number of classes.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>IV. PREDICTIVE UNCERTAINTY EVALUATION</head><p>The confusion matrix is a beneficial tool to illustrate and compare the results of supervised learning models used for the classification task. This matrix shows the classifier performance on a given test data. Generally, the predicted test data are separated into two categories, correct and incorrect. By assuming the availability of the ground truth of the test data for a binary classifier, there are four sets of possibilities as follows: True positive (T P), which is predicted as a correct label by the classifier, and its ground truth is labeled as correct. True negative (T N), which is predicted as an incorrect label by the classifier, and its ground truth is also labeled as incorrect. False positive (FP), which is predicted as a correct label by the classifier, but its ground truth is labeled as incorrect. False negative (FN), which is predicted as an incorrect label by the classifier, but its ground truth is labeled as correct. Both T P and T N are the ideal outcomes. The weakness of the classifier is conspicuous through FP and FN. Additionally, to evaluate the predictive uncertainty estimates an idea such as the confusion matrix was proposed <ref type="bibr" target="#b48">[49]</ref>. A threshold is used to cast predictions into certain and uncertain categories. Combining the two groups, the results are presented in Fig. <ref type="figure">1</ref>. The four possible combinations are true certainty (TC) where the outcome is correct with certainty; true uncertainty (TU) where the outcome is incorrect with uncertainty; false uncertainty (FU) where the outcome is correct with uncertainty; and false certainty (FC) where the outcome is incorrect with certainty. Both TC and TU are ideal results and correspond to T N and T P, respectively. While FU is almost favorable, FC is the worst case. To quantify predictive uncertainty estimates, performance metrics, similar to the confusion matrix metrics, were also defined as below:</p><p>• Uncertainty sensitivity (USen): Defined as <ref type="bibr" target="#b6">(7)</ref>, USen corresponds to the ratio of incorrect predictions that are flagged as uncertain predictions to all the incorrect predictions (certain or uncertain). Sensitivity, also known as recall, in the traditional confusion matrix is defined as T P/(T P + FN), which is the ratio of T Ps to all positives. High recall indicates that very few positives were incorrectly classified as negatives. High uncertainty recall implies that very few incorrect predictions were erroneously flagged as certain predictions.</p><formula xml:id="formula_6">USen = TU TU + FC<label>(7)</label></formula><p>• Uncertainty specificity (USpe): USpe is defined as <ref type="bibr" target="#b7">(8)</ref>. This measure corresponds to the ratio of correct predictions that are flagged as certain predictions to all the correct predictions whether certain or uncertain. Specificity in conventional confusion matrix is defined as T N/(T N + FP), which is the proportion of T Ns to all negatives. High specificity indicates that very few negatives were incorrectly classified as positives. High USpe implies that very few correct predictions were erroneously flagged as uncertain predictions.</p><formula xml:id="formula_7">USpe = TC TC + FU (8)</formula><p>Accuracy Sensitivity Specificity precision 0.86 0.88 0.90 0.92 0.94 Fig. <ref type="figure">2</ref>: Violin plots depict the distribution of accuracy, sensitivity, specificity and precision performance metrics of a single and simple neural network model after 100 evaluations using transaction data.</p><p>• Uncertainty precision (UPre): UPre is defined as <ref type="bibr" target="#b8">(9)</ref> and measure the ratio of incorrect predictions that are flagged as uncertain predictions to all the predictions with uncertainty whether correct or incorrect. Precision in conventional confusion matrix is defined as T P/(T P + FP), which is the ratio of T Ps to the total predicted positive samples. High precision implies very few negatives were incorrectly classified as positives. High UPre indicates that very few correct predictions were erroneously flagged as uncertain predictions.</p><formula xml:id="formula_8">UPre = TU TU + FU<label>(9)</label></formula><p>• Uncertainty accuracy (UAcc): UAcc is defined as <ref type="bibr" target="#b9">(10)</ref>.</p><p>It corresponds to all the values lying across the "main diagonal" divided by the total number of outcomes. Accuracy, which is used in studying normal classifications, is defined as (T P + T N)/(T P + T N + FP + FN).</p><p>UAcc = TU + TC TU + TC + FU + FC <ref type="bibr" target="#b9">(10)</ref> Ideally, recall, specificity, precision, and accuracy should all be close to 1 in the traditional confusion matrix. The FN rate and FP rate should be close to 0. As illustrated in Fig. <ref type="figure">1</ref> </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>V. EXPERIMENTAL SETUP</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. Dataset</head><p>This study is conducted using a publicly available dataset provided by the Vesta Corporation <ref type="bibr" target="#b49">[50]</ref>. This high-dimensional dataset encompasses 385 features and 41,326 records. There are both categorical and numerical variables within the existing data. An overview of some of the variables that embrace the details of transaction and customer ID includes card numbers, type of card (debit, credit, and charge), type of device, amount of transaction, product/service code, the interval between transactions, email address, numerous engineered features of the transaction, etc. Due to privacy concerns, customers are identified by numbers rather than their actual names. In total, 20663 feature vectors belong to fraudulent transactions, which is the same number as the non-fraudulent ones. Thus, the proportion of the two classes is relatively balanced.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Experiments</head><p>In practice, the dataset has many missing values that could undermine the algorithm efficiency. To address this issue, we employ the simple-imputer technique to impute these values. We operate the standard-scaler to make a similar scale for numerical variables and ordinally encod the categorical features. Before processing, the whole dataset is divided into training and test sets (70% and 30%, respectively). The fully connected neural network is comprised of an input layer with 385 units, three hidden layers, and an output layer. The softmax function is also assigned top of the pipeline. The rectified linear activation function (Relu), dropout rate of 0.30, and 50 epochs are exerted for model development. The adaptive learning rate method (Adam) with a learning rate of 0.001 is utilized to optimize the cross-entropy loss function. For the MCD model, the number of neurons in each layer is 256, 64, and 16, respectively. For the ensemble model, 30 networks are created, all of which have three hidden layers, but the number of neurons in each layer is picked at random between (256, 385), (64, 256), and <ref type="bibr" target="#b15">(16,</ref><ref type="bibr" target="#b31">32)</ref>, respectively. The EMCD algorithm is the same as the ensemble, except that the MCD algorithm is used to evaluate each network (see Table <ref type="table" target="#tab_3">II</ref>).</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>VI. DISCUSSIONS AND RESULTS</head><p>First, we examine how well a single and simple DNN model does in classification. For this purpose, the best configuration of one model among 30 trained models in an ensemble is used as the basis of a new model. Moreover, it is reasonable to divide the whole dataset randomly into training and test sets with the same proportions of samples for each class. In Fig. <ref type="figure">2</ref>, the violin plots of the accuracy, sensitivity, specificity and precision metrics of this model after 100 evaluations are shown. With a standard deviation of 0.003, the average of all accuracies is 0.90 and it appears that the model is qualified to trap suspicious transactions as fraud. The DNN outputs are the probabilities that are the approximation scores of the predictions (confidence) along with the corresponding labels extracted by the model. The first definition of results obtained with the single model only provides a row of classification results, not confidence results. Modern DNNs are prone to produce uncalibrated results, meaning that compared with expected accuracy, the probability is overestimated. Confidence in classifiers is measured using calibration, which indicates how well the probabilities predicted for each class (probability of correctness) align with the empirical accuracy. As stated in <ref type="bibr" target="#b9">[10]</ref>, the expected calibration error (ECE) groups the probability interval into a specified number of buckets and assigns each predicted probability to the bucket that encompasses it. The calibration error is the difference between the fraction of correct predictions in the bucket (accuracy) and the mean of the probabilities in the bucket (confidence). Thus, ECE is computed as the average gap between the within-bucket accuracy and the within-bucket predicted probability for M buckets <ref type="bibr" target="#b10">(11)</ref>.</p><formula xml:id="formula_9">ECE = M ∑ m=1 |B m | n |Acc(B m ) -Con f (B m )|<label>(11)</label></formula><formula xml:id="formula_10">Acc(B m ) = M ∑ m=1 1 |B m | 1( ŷi = y i ) (12) Con f (B m ) = M ∑ m=1 1 |B m |<label>(13)</label></formula><p>where B m is the number of predictions in bucket m, n is the total number of data points, Acc(B m ) (12) and Con f (B m ) (13) are the accuracy and confidence of bucket m, respectively. Also 1(•) is the indicator function. Hence, before commencing the uncertainty analysis, we first verify the calibration of predictions generated by the three proposed DNN models through the ECE diagram. Based on the ECE notion, the ECE diagrams are plotted in Fig. <ref type="figure" target="#fig_0">3</ref> as a visual tool for evaluating the calibration. These diagrams plot expected sample accuracy as a function of confidence. In Fig. We consider 1000 iterations of MC for both MCD and EMCD methods. In all the methods, the class with the bigger softmax output from the last activation function in the pipeline for the distribution mean is considered as the predicted outcome. Then the entropy equations ( <ref type="formula" target="#formula_1">2</ref>), (4), and (6) are applied for each method to estimate the uncertainty associated with this outcome.</p><p>The histogram diagrams in Fig. <ref type="figure" target="#fig_1">4</ref> demonstrate the predictive entropy (PE) of test data set for each proposed model. The obtained PE results after comparison with ground truth labels are categorized to correct and incorrect groups. In the context of MCD analysis, variation in predicting outcomes is associated with the lack of model confidence. The almost steady stream of outputs in every iteration of one test data point highlights the model's confidence regarding the predicted sample. Ensemble and EMCD, regardless of their procedural difference, obey a similar approach. As depicted in the histogram diagram in Fig. <ref type="figure" target="#fig_1">4</ref>, highly certain correct predictions (TC) skew to the left of the histogram (blue peaks with entropy close to 0) while the uncertain incorrect predictions (TU) shift from left to the right of the histogram (red peaks with entropy close to 1). Certain incorrect predictions (FC) and uncertain correct predictions (FU), which manifest UQ model inconsistency, are located in the center of diagram (between two blue and red peaks). Fig. <ref type="figure" target="#fig_1">4</ref> reveals that the majority of incorrect predictions are associated with significant level of uncertainty. In other words, models have confessed "Do not trust my uncertain outputs", which gives users a chance to conduct the inspection to avoid possible Considering the ensemble method, most of the correct predictions are captured with a high certainty level (entropy close to zero) as there is an agreement among ensemble members regarding the predicted labels. In contrast, most of the incorrect predictions are flagged with a high uncertainty level (entropy close to maximum) as there is an inconsistency between ensemble members regarding the predicted labels. EMCD and MCD, irrespective of their procedural difference, obey a similar approach. Fig. <ref type="figure">5</ref>: The density plots show the distribution of the predicted probabilities and the distribution of estimated predictive uncertainty estimates (entropy) for three UQ methods. Correct classification and misclassification predictions are delineated in each plot. In terms of the best separation between two groups, there is no considerable difference between the UQ techniques (bottom row).</p><p>losses. A model can be considered confident when incorrect predictions have entropy close to 1 (i.e. greater uncertainty) as well as correct predictions with entropy close to 0 (i.e. greater certainty). This means that in Fig. <ref type="figure" target="#fig_1">4</ref>, the two blue and red peaks should place at left and right of the diagram respectively with the maximum possible distance along with the maximum smoothness between these two peaks. Note that Fig. <ref type="figure" target="#fig_1">4</ref> provides qualitative quantification of uncertainty to reflect a general comparison between proposed models. Accordingly, it is not accurate to infer the finest model based on Fig. <ref type="figure" target="#fig_1">4</ref> results.</p><p>In Fig. <ref type="figure">5</ref>, kernel density estimation (KDE) plots of predicted probabilities and entropy estimates, corresponding to the value of the max softmax output, for three UQ methods are illustrated. The correct classification and the misclassification predictions are well grouped in each plot. Due to the high accuracy of the models in the accurate predictions, the centers of the two groups are relatively apart from each other. The correct classified group tends to have a more centered distribution, whereas the incorrect group has a more scattered distribution. Meanwhile, the estimated uncertainties are bigger for misclassified feature vectors. As it can be observed from the three predictive entropy plots, similar to the results in Fig. <ref type="figure" target="#fig_1">4</ref>, the mean of the uncertainty of misclassified group is greater than the correct classified one. The findings of plots clarify the model promising ability to express its confidence (or lack thereof) in generated predictions. The results are practically Additionally, the performance metrics explained in section IV help to evaluate the predictive uncertainty estimates. In Fig. <ref type="figure" target="#fig_2">6</ref>, the UAcc, USen, USpe, and UPre metrics are illustrated. The value of these metrics depends on a threshold which defines the boundary between certainty and uncertainty. By changing the threshold, values of TC, FC, TU and FU would change leading to variant in aforementioned metrics. In this study, further analysis is done by setting the thresholds between 0.1 and 0.9. In contrast to USen, as the rate of threshold increases, the rates of UAcc, USpe, and UPre increase as well. There is a little difference between these three metrics in terms of direction at variant thresholds. High USen implies that all the three UQ methods can flag incorrect predictions and trigger an uncertainty report to appear. Since many correct predictions are uncertain (FU), UQ methods fail to attain a high UPre. Indeed, the number of feature vectors that are correctly classified is higher than the number of misclassified feature vectors, which results in a low UPre.</p><p>Setting the threshold value depends on how important or sensitive the issue is to the stakeholders or end-users. Preferably, we consider 0.4 as the threshold rate for the three UQ techniques. Based on the empirical data, the uncertainty performance metrics for all the methods are compared in Table <ref type="table" target="#tab_6">III</ref>. While the deep ensemble networks achieve 0.85 UAcc, this result for MCD and EMCD is 0.82 and 0.84, respectively. This corroborates that the ensemble model is somewhat superior.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>VII. CONCLUSION AND FUTURE RESEARCH</head><p>International e-commerce is rapidly expanding throughout the world, which has led to an increase in card fraud resulting in millions of dollars lost every year. In many existing studies and practical applications, DNNs have been broadly applied to detect card fraud. These networks fail to reliably measure and report their predictive confidence. In this study, three deep UQ techniques (MCD, ensemble, and EMCD) are introduced to measure the degree of uncertainty associated with generated predictions, which can lead to a reliable classification. In fraud detection, capturing uncertainty of predicted fraud transactions, provide extra insights for decision makers to enhance fraud prevention process. UQ confusion matrix and several performance metrics are also used to evaluate the predictive uncertainty estimates. Following empirical findings, we observe that the ensemble method is more effective in capturing uncertainties corresponding to predictions. For future research in the realm of card fraud detection, these proposed UQ models can be extended or ameliorated in several ways. A further possibility seems to be the concrete dropout technique. In this case, the optimal rate of dropout in each layer is evaluated, leading to a well-calibrated estimate of UQ in the MCD and EMCD methods. Another approach is to optimally combine uncertainty estimates from three UQ methods to improve the quality of final uncertainty estimates.</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head>Fig. 3 :</head><label>3</label><figDesc>Fig.3: The reliability diagrams of the trained DNNs. The red section is called the gap, and a smaller gap is better. High ECE values obtained by three models reveal the miscalibration of generated probabilities. EMCD achieves the best calibration results amongs UQ methods.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head>Fig. 4 :</head><label>4</label><figDesc>Fig.4: Histogram graphs indicate the predictive entropy results for three UQ methods using feature vectors. Considering the ensemble method, most of the correct predictions are captured with a high certainty level (entropy close to zero) as there is an agreement among ensemble members regarding the predicted labels. In contrast, most of the incorrect predictions are flagged with a high uncertainty level (entropy close to maximum) as there is an inconsistency between ensemble members regarding the predicted labels. EMCD and MCD, irrespective of their procedural difference, obey a similar approach.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_2"><head>Fig. 6 :</head><label>6</label><figDesc>Fig.6: Evaluating three UQ techniques using performance metrics (uncertainty accuracy, sensitivity, specificity, and precision) are plotted for threshold values in the range of 0.1 and 0.9.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_0"><head>TABLE I :</head><label>I</label><figDesc>Survey of recent studies on fraud detection</figDesc><table><row><cell>Study</cell><cell>Issue year</cell><cell>Fraudulent activity</cell><cell>Technique investigated</cell><cell>Data set</cell><cell>Main objective</cell><cell>Uncertainty Quantification</cell></row><row><cell>[5]</cell><cell>2019</cell><cell>Credit Card Transactions</cell><cell>Fully connected neural network, sampling techniques</cell><cell>European credit card dataset</cell><cell>Improving point estimation with regard to class imbalances</cell><cell></cell></row><row><cell>[7]</cell><cell>2020</cell><cell>Credit Card Transactions</cell><cell>MLP, CNN, DAE</cell><cell>Spanish payments processing organization</cell><cell>Reducing false positives</cell><cell></cell></row><row><cell>[28]</cell><cell>2017</cell><cell>Credit Card Transactions</cell><cell>OAE, SAE</cell><cell>German credit card dataset</cell><cell>Improving point estimation and mitigating variances</cell><cell></cell></row><row><cell>[29]</cell><cell>2018</cell><cell>Credit Card Transactions</cell><cell>LSTM</cell><cell>The data was collected from March to May 2015 in the corresponding organization</cell><cell>Modeling the credit card fraud as a sequence classification problem and improving point estimation</cell><cell></cell></row><row><cell>[24]</cell><cell>2019</cell><cell>Credit Card Transactions</cell><cell>LR, KNN, SVM, DT, RF, XGB, OCSVM, DAE, RBM, GAN</cell><cell>European credit card dataset</cell><cell>Comparing supervised and unsupervised procedures in the realm of card fraud detection</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell>Vector</cell><cell></cell><cell></cell><cell></cell></row><row><cell>[30]</cell><cell>2020</cell><cell>Credit Card Transactions</cell><cell>Machine-Recursive Feature Elimination,</cell><cell>European credit card dataset, Africa PaySim mobile money transactions</cell><cell>A proposed hybrid model that improves class prediction</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell>SMOTE, RF</cell><cell></cell><cell></cell><cell></cell></row><row><cell>[31]</cell><cell>2020</cell><cell>Credit Card Transactions</cell><cell>LightGBM</cell><cell>E-commerce transactions of 2009 UCSD-FICO Data Mining Contest, European credit card dataset</cell><cell>Tuning parameters of the LightGBM using a Bayesian-based algorithm to improve point estimation</cell><cell></cell></row><row><cell>[32]</cell><cell>2021</cell><cell>Credit Card Transactions</cell><cell>LSTM, GRU</cell><cell>European credit card dataset, Brazilian Bank data collected in 2004</cell><cell>An ensemble model based on sequential modeling of data using deep recurrent neural networks to improve point estimation</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell>RF, Adaboost, MLP,</cell><cell></cell><cell></cell><cell></cell></row><row><cell>[33]</cell><cell>2016</cell><cell>Automobile Insurance</cell><cell>Decision Table, SVM, Naïve Bayes, PART, J48,</cell><cell>Automobile Insurance Company claims</cell><cell>Comparing various supervised learning algorithms in the task of fraud detection</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell>Logistic, SGD</cell><cell></cell><cell></cell><cell></cell></row><row><cell>[34]</cell><cell>2018</cell><cell>Automobile Insurance</cell><cell>Latent Dirichlet Allocation, Fully connected neural network</cell><cell>Automobile Insurance Company claims</cell><cell>Training DNN model using extracted text features of claims descriptions to detect fraud</cell><cell></cell></row><row><cell>[35]</cell><cell>2020</cell><cell>Automobile Insurance</cell><cell>Adaptive genetic algorithm, Neural network</cell><cell>Automobile Insurance Company claims</cell><cell>Combining an adaptive genetic algorithm with a neural network to improve ANNs' convergence speed and prediction accuracy in fraud detection</cell><cell></cell></row><row><cell>[36]</cell><cell>2019</cell><cell>Health Insurance</cell><cell>Genetic Support Vector Machines (GSVM)</cell><cell>Ghana National Health Insurance claims data</cell><cell>A comparative study, Proposing GSVM and compare its performance with SVM kernel classifiers</cell><cell></cell></row><row><cell>[37]</cell><cell>2021</cell><cell>Health Insurance</cell><cell>CatBoost, LightGBM</cell><cell>Medicare insurance claims</cell><cell>Analyzing Boosting algorithms in presence of categorical features</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell>SMOTE,</cell><cell></cell><cell>Analyzing the performance of various</cell><cell></cell></row><row><cell>[38]</cell><cell>2021</cell><cell>Health Insurance</cell><cell>ADASYN,TGANs, DT, RF, XGBoost,</cell><cell>India health insurance data</cell><cell>over-sampling techniques to balance data and multiple supervised models to detect</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell>LightGBM, GBM</cell><cell></cell><cell>fraud</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>Proposed three</cell></row><row><cell>Present Study</cell><cell>-</cell><cell>Credit Card Transactions</cell><cell>ensemble, MCD, EMCD</cell><cell>Financial organization providing e-commerce payment solutions</cell><cell>Building a trustworthy AI system to compute confidence values of predicted outcomes in addition to point estimation</cell><cell>different techniques of quantifying</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>uncertainties</cell></row><row><cell cols="5">model for one test data point over MC iterations is evaluated</cell><cell></cell><cell></cell></row><row><cell cols="2">as follows (1):</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_2"><head></head><label></label><figDesc>, a favorable model should have high uncertainty accuracy. The best result for the uncertainty metrics is 1 and the worst is 0. Having the best result in the above metrics signifies that the model is conscious of what it knows and what it does not know. It clarifies when a prediction is reliable and when it is not.</figDesc><table /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_3"><head>TABLE II :</head><label>II</label><figDesc>Configurations of proposed methods</figDesc><table><row><cell>Method</cell><cell></cell><cell>MCD</cell><cell>Ensemble</cell><cell>EMCD</cell></row><row><cell>Units of the input layer</cell><cell></cell><cell>385</cell><cell>385</cell><cell>385</cell></row><row><cell></cell><cell>Layer 1</cell><cell>256</cell><cell cols="2">(256, 385) (256, 385)</cell></row><row><cell>Units of hidden layers</cell><cell>Layer 2</cell><cell>64</cell><cell>(64, 256)</cell><cell>(64, 256)</cell></row><row><cell></cell><cell>Layer 3</cell><cell>16</cell><cell>(16, 32)</cell><cell>(16, 32)</cell></row><row><cell cols="2">Output layer activation function</cell><cell>Softmax</cell><cell>Softmax</cell><cell>Softmax</cell></row><row><cell>Dropout rate</cell><cell></cell><cell>0.3</cell><cell>0.3</cell><cell>0.3</cell></row><row><cell>Activation function</cell><cell></cell><cell>Relu</cell><cell>Relu</cell><cell>Relu</cell></row><row><cell>Adam learning rate</cell><cell></cell><cell>0.001</cell><cell>0.001</cell><cell>0.001</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_4"><head></head><label></label><figDesc>3, three reliability diagrams specify that none of the probabilities generated by the proposed DNN models are calibrated. This figure demonstrates that these classifiers reflect samples in an overconfident manner that could be detrimental. The ensemble and EMCD obtain lower ECE values. It is also imperative to note that the model can be calibrated through a variety of procedures, although this does not eliminate the reliance on UQ techniques. A wellcalibrated model would obtain a low ECE leading to reliable and favorable results. Even results obtained by well-calibrated (low ECE) model with scant accuracy is more reliable.</figDesc><table /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_6"><head>TABLE III :</head><label>III</label><figDesc>Comparison of uncertainty performance metrics for three UQ methods using 12,398 feature vectors of transactions (threshold set to 0.4)</figDesc><table><row><cell>UQ Method</cell><cell>UAcc</cell><cell>USen</cell><cell>USpe</cell><cell>UPre</cell></row><row><cell>MCD</cell><cell>0.82</cell><cell>0.63</cell><cell>0.84</cell><cell>0.33</cell></row><row><cell>Ensemble</cell><cell>0.85</cell><cell>0.67</cell><cell>0.86</cell><cell>0.32</cell></row><row><cell>EMCD</cell><cell>0.84</cell><cell>0.69</cell><cell>0.86</cell><cell>0.32</cell></row><row><cell cols="5">important since reliable uncertainty estimates provide much-</cell></row><row><cell cols="5">needed insight into the predicted probabilities. Investigators</cell></row><row><cell cols="5">can use these techniques to flag uncertain predictions as</cell></row><row><cell cols="2">suspicious transactions.</cell><cell></cell><cell></cell><cell></cell></row></table></figure>
+		</body>
+		<back>
+
+			<div type="funding">
+<div><p>This research was partially supported by the <rs type="funder">Australian Research Council</rs>'s <rs type="programName">Discovery Projects funding scheme</rs> (project <rs type="grantNumber">DP190102181</rs>).</p><p><rs type="person">M. Habibpour</rs> is with <rs type="person">Lian Sazeh</rs> group, Tehran, Iran</p></div>
+			</div>
+			<listOrg type="funding">
+				<org type="funding" xml:id="_Shqtdm6">
+					<idno type="grant-number">DP190102181</idno>
+					<orgName type="program" subtype="full">Discovery Projects funding scheme</orgName>
+				</org>
+			</listOrg>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<monogr>
+		<ptr target="https://www.experian.com/decision-analytics/identity-and-fraud/juniper-online-fraud-whitepaper" />
+		<title level="m">Juniper research: Online payment fraud whitepaper -experian</title>
+		<imprint/>
+	</monogr>
+	<note type="raw_reference">&quot;Juniper research: Online payment fraud whitepaper -expe- rian.&quot; [Online]. Available: https://www.experian.com/decision-analytics/ identity-and-fraud/juniper-online-fraud-whitepaper</note>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<monogr>
+		<ptr target="https://www.ftc.gov/news-events/press-releases/2021/02/new-data-shows-ftc-received-2-2-million-fraud-reports-consumers" />
+		<title level="m">New data shows ftc received 2.2 million fraud reports from consumers in 2020</title>
+		<imprint>
+			<date type="published" when="2021-02">Feb 2021. 2021-05-25</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">&quot;New data shows ftc received 2.2 million fraud reports from consumers in 2020,&quot; https://www.ftc.gov/news-events/press-releases/2021/02/ new-data-shows-ftc-received-2-2-million-fraud-reports-consumers, Feb 2021, accessed: 2021-05-25.</note>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<analytic>
+		<title level="a" type="main">An uncertaintyaware transfer learning-based framework for covid-19 diagnosis</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Shamsi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Asgharnezhad</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">S</forename><surname>Jokandan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Khosravi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><forename type="middle">M</forename><surname>Kebria</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Nahavandi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Nahavandi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Srinivasan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Neural Networks and Learning Systems</title>
+		<imprint>
+			<biblScope unit="volume">32</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="1408" to="1417" />
+			<date type="published" when="2021">2021</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">A. Shamsi, H. Asgharnezhad, S. S. Jokandan, A. Khosravi, P. M. Kebria, D. Nahavandi, S. Nahavandi, and D. Srinivasan, &quot;An uncertainty- aware transfer learning-based framework for covid-19 diagnosis,&quot; IEEE Transactions on Neural Networks and Learning Systems, vol. 32, no. 4, pp. 1408-1417, 2021.</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<monogr>
+		<title level="m" type="main">Confidence aware neural networks for skin cancer detection</title>
+		<author>
+			<persName><forename type="first">D</forename><surname>Khaledyan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Tajally</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Sarkhosh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Shamsi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Asgharnezhad</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Khosravi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Nahavandi</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2107.09118</idno>
+		<imprint>
+			<date type="published" when="2021">2021</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">D. Khaledyan, A. Tajally, R. Sarkhosh, A. Shamsi, H. Asgharnezhad, A. Khosravi, and S. Nahavandi, &quot;Confidence aware neural networks for skin cancer detection,&quot; arXiv preprint arXiv:2107.09118, 2021.</note>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<analytic>
+		<title level="a" type="main">Credit card fraud detection using deep learning</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Shenvi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><surname>Samant</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Kumar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">V</forename><surname>Kulkarni</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">2019 IEEE 5th International Conference for Convergence in Technology (I2CT)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2019">2019</date>
+			<biblScope unit="page" from="1" to="5" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">P. Shenvi, N. Samant, S. Kumar, and V. Kulkarni, &quot;Credit card fraud de- tection using deep learning,&quot; in 2019 IEEE 5th International Conference for Convergence in Technology (I2CT). IEEE, 2019, pp. 1-5.</note>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<analytic>
+		<title level="a" type="main">Fraud detection using machine learning and deep learning</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Raghavan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">El</forename><surname>Gayar</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">2019 International Conference on Computational Intelligence and Knowledge Economy (ICCIKE)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2019">2019</date>
+			<biblScope unit="page" from="334" to="339" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">P. Raghavan and N. El Gayar, &quot;Fraud detection using machine learning and deep learning,&quot; in 2019 International Conference on Computational Intelligence and Knowledge Economy (ICCIKE). IEEE, 2019, pp. 334- 339.</note>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<analytic>
+		<title level="a" type="main">Evaluation of deep neural networks for reduction of credit card fraud alerts</title>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">S M</forename><surname>Carrasco</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M.-Á</forename><surname>Sicilia-Urbán</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Access</title>
+		<imprint>
+			<biblScope unit="volume">8</biblScope>
+			<biblScope unit="page" from="186" to="421" />
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">R. S. M. Carrasco and M.-Á. Sicilia-Urbán, &quot;Evaluation of deep neural networks for reduction of credit card fraud alerts,&quot; IEEE Access, vol. 8, pp. 186 421-186 432, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<monogr>
+		<title level="m" type="main">Understanding intermediate layers using linear classifier probes</title>
+		<author>
+			<persName><forename type="first">G</forename><surname>Alain</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Bengio</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1610.01644</idno>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">G. Alain and Y. Bengio, &quot;Understanding intermediate layers using linear classifier probes,&quot; arXiv preprint arXiv:1610.01644, 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">Samplingfree epistemic uncertainty estimation using approximated variance propagation</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Postels</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Ferroni</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Coskun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><surname>Navab</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Tombari</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the IEEE/CVF International Conference on Computer Vision</title>
+		<meeting>the IEEE/CVF International Conference on Computer Vision</meeting>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+			<biblScope unit="page" from="2931" to="2940" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. Postels, F. Ferroni, H. Coskun, N. Navab, and F. Tombari, &quot;Sampling- free epistemic uncertainty estimation using approximated variance prop- agation,&quot; in Proceedings of the IEEE/CVF International Conference on Computer Vision, 2019, pp. 2931-2940.</note>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<analytic>
+		<title level="a" type="main">On calibration of modern neural networks</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Guo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Pleiss</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Sun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">Q</forename><surname>Weinberger</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning</title>
+		<imprint>
+			<publisher>PMLR</publisher>
+			<date type="published" when="2017">2017</date>
+			<biblScope unit="page" from="1321" to="1330" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">C. Guo, G. Pleiss, Y. Sun, and K. Q. Weinberger, &quot;On calibration of modern neural networks,&quot; in International Conference on Machine Learning. PMLR, 2017, pp. 1321-1330.</note>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<monogr>
+		<title level="m" type="main">Simple and principled uncertainty estimation with deterministic deep learning via distance awareness</title>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">Z</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Lin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Padhy</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Tran</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Bedrax-Weiss</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Lakshminarayanan</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2006.10108</idno>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">J. Z. Liu, Z. Lin, S. Padhy, D. Tran, T. Bedrax-Weiss, and B. Lak- shminarayanan, &quot;Simple and principled uncertainty estimation with deterministic deep learning via distance awareness,&quot; arXiv preprint arXiv:2006.10108, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<monogr>
+		<title level="m" type="main">Concrete problems in ai safety</title>
+		<author>
+			<persName><forename type="first">D</forename><surname>Amodei</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Olah</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Steinhardt</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Christiano</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Schulman</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Mané</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1606.06565</idno>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">D. Amodei, C. Olah, J. Steinhardt, P. Christiano, J. Schulman, and D. Mané, &quot;Concrete problems in ai safety,&quot; arXiv preprint arXiv:1606.06565, 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<analytic>
+		<title level="a" type="main">Classification in presence of drift and latency</title>
+		<author>
+			<persName><forename type="first">G</forename><surname>Krempl</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">V</forename><surname>Hofer</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">IEEE 11th International Conference on Data Mining Workshops</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2011">2011. 2011</date>
+			<biblScope unit="page" from="596" to="603" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">G. Krempl and V. Hofer, &quot;Classification in presence of drift and latency,&quot; in 2011 IEEE 11th International Conference on Data Mining Workshops. IEEE, 2011, pp. 596-603.</note>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<analytic>
+		<title level="a" type="main">Apate: A novel approach for automated credit card transaction fraud detection using network-based extensions</title>
+		<author>
+			<persName><forename type="first">V</forename><surname>Van Vlasselaer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Bravo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">O</forename><surname>Caelen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Eliassi-Rad</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Akoglu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Snoeck</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Baesens</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Decision Support Systems</title>
+		<imprint>
+			<biblScope unit="volume">75</biblScope>
+			<biblScope unit="page" from="38" to="48" />
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">V. Van Vlasselaer, C. Bravo, O. Caelen, T. Eliassi-Rad, L. Akoglu, M. Snoeck, and B. Baesens, &quot;Apate: A novel approach for automated credit card transaction fraud detection using network-based extensions,&quot; Decision Support Systems, vol. 75, pp. 38-48, 2015.</note>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<analytic>
+		<title level="a" type="main">Credit card fraud detection: a realistic modeling and a novel learning strategy</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Pozzolo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Boracchi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">O</forename><surname>Caelen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Alippi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Bontempi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE transactions on neural networks and learning systems</title>
+		<imprint>
+			<biblScope unit="volume">29</biblScope>
+			<biblScope unit="issue">8</biblScope>
+			<biblScope unit="page" from="3784" to="3797" />
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">A. Dal Pozzolo, G. Boracchi, O. Caelen, C. Alippi, and G. Bontempi, &quot;Credit card fraud detection: a realistic modeling and a novel learning strategy,&quot; IEEE transactions on neural networks and learning systems, vol. 29, no. 8, pp. 3784-3797, 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<analytic>
+		<title level="a" type="main">A hybrid model for plastic card fraud detection systems</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Krivko</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Expert Systems with Applications</title>
+		<imprint>
+			<biblScope unit="volume">37</biblScope>
+			<biblScope unit="issue">8</biblScope>
+			<biblScope unit="page" from="6070" to="6076" />
+			<date type="published" when="2010">2010</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">M. Krivko, &quot;A hybrid model for plastic card fraud detection systems,&quot; Expert Systems with Applications, vol. 37, no. 8, pp. 6070-6076, 2010.</note>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<analytic>
+		<title level="a" type="main">Explainable machine learning in deployment</title>
+		<author>
+			<persName><forename type="first">U</forename><surname>Bhatt</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Xiang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Sharma</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Weller</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Taly</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Jia</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Ghosh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Puri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">M</forename><surname>Moura</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Eckersley</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 2020 Conference on Fairness, Accountability, and Transparency</title>
+		<meeting>the 2020 Conference on Fairness, Accountability, and Transparency</meeting>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+			<biblScope unit="page" from="648" to="657" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">U. Bhatt, A. Xiang, S. Sharma, A. Weller, A. Taly, Y. Jia, J. Ghosh, R. Puri, J. M. Moura, and P. Eckersley, &quot;Explainable machine learning in deployment,&quot; in Proceedings of the 2020 Conference on Fairness, Accountability, and Transparency, 2020, pp. 648-657.</note>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<analytic>
+		<title level="a" type="main">Understanding deep neural networks through input uncertainties</title>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">J</forename><surname>Thiagarajan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">I</forename><surname>Kim</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Anirudh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P.-T</forename><surname>Bremer</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">ICASSP 2019-2019 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2019">2019</date>
+			<biblScope unit="page" from="2812" to="2816" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. J. Thiagarajan, I. Kim, R. Anirudh, and P.-T. Bremer, &quot;Understanding deep neural networks through input uncertainties,&quot; in ICASSP 2019- 2019 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP). IEEE, 2019, pp. 2812-2816.</note>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<analytic>
+		<title level="a" type="main">Striking the right balance with uncertainty</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Khan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Hayat</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">W</forename><surname>Zamir</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Shen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Shao</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition</title>
+		<meeting>the IEEE/CVF Conference on Computer Vision and Pattern Recognition</meeting>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+			<biblScope unit="page" from="103" to="112" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S. Khan, M. Hayat, S. W. Zamir, J. Shen, and L. Shao, &quot;Striking the right balance with uncertainty,&quot; in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, 2019, pp. 103-112.</note>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<monogr>
+		<title level="m" type="main">What uncertainties do we need in bayesian deep learning for computer vision?</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Kendall</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Gal</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1703.04977</idno>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">A. Kendall and Y. Gal, &quot;What uncertainties do we need in bayesian deep learning for computer vision?&quot; arXiv preprint arXiv:1703.04977, 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<analytic>
+		<title level="a" type="main">Comparative analysis of machine learning algorithms through credit card fraud detection</title>
+		<author>
+			<persName><forename type="first">R</forename><surname>Banerjee</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Bourla</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Kashyap</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Purohit</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">2018 IEEE MIT Undergraduate Research Technology Conference (URTC)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2018">2018</date>
+			<biblScope unit="page" from="1" to="4" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">R. Banerjee, G. Bourla, S. Chen, M. Kashyap, and S. Purohit, &quot;Compar- ative analysis of machine learning algorithms through credit card fraud detection,&quot; in 2018 IEEE MIT Undergraduate Research Technology Conference (URTC). IEEE, 2018, pp. 1-4.</note>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<analytic>
+		<title level="a" type="main">Credit card fraud detection using deep learning based on auto-encoder and restricted boltzmann machine</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Pumsirirat</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Yan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of advanced computer science and applications</title>
+		<imprint>
+			<biblScope unit="volume">9</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="18" to="25" />
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">A. Pumsirirat and L. Yan, &quot;Credit card fraud detection using deep learning based on auto-encoder and restricted boltzmann machine,&quot; International Journal of advanced computer science and applications, vol. 9, no. 1, pp. 18-25, 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b22">
+	<analytic>
+		<title level="a" type="main">Plastic card fraud detection using peer group analysis</title>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">J</forename><surname>Weston</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">J</forename><surname>Hand</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">M</forename><surname>Adams</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Whitrow</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Juszczak</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Advances in Data Analysis and Classification</title>
+		<imprint>
+			<biblScope unit="volume">2</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="45" to="62" />
+			<date type="published" when="2008">2008</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">D. J. Weston, D. J. Hand, N. M. Adams, C. Whitrow, and P. Juszczak, &quot;Plastic card fraud detection using peer group analysis,&quot; Advances in Data Analysis and Classification, vol. 2, no. 1, pp. 45-62, 2008.</note>
+</biblStruct>
+
+<biblStruct xml:id="b23">
+	<monogr>
+		<title level="m" type="main">A comparison study of credit card fraud detection: Supervised versus unsupervised</title>
+		<author>
+			<persName><forename type="first">X</forename><surname>Niu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Yang</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1904.10604</idno>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">X. Niu, L. Wang, and X. Yang, &quot;A comparison study of credit card fraud detection: Supervised versus unsupervised,&quot; arXiv preprint arXiv:1904.10604, 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b24">
+	<analytic>
+		<title level="a" type="main">Association rules applied to credit card fraud detection</title>
+		<author>
+			<persName><forename type="first">D</forename><surname>Sánchez</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Vila</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Cerda</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J.-M</forename><surname>Serrano</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Expert systems with applications</title>
+		<imprint>
+			<biblScope unit="volume">36</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="3630" to="3640" />
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">D. Sánchez, M. Vila, L. Cerda, and J.-M. Serrano, &quot;Association rules applied to credit card fraud detection,&quot; Expert systems with applications, vol. 36, no. 2, pp. 3630-3640, 2009.</note>
+</biblStruct>
+
+<biblStruct xml:id="b25">
+	<analytic>
+		<title level="a" type="main">Detecting credit card fraud by modified fisher discriminant analysis</title>
+		<author>
+			<persName><forename type="first">N</forename><surname>Mahmoudi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Duman</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Expert Systems with Applications</title>
+		<imprint>
+			<biblScope unit="volume">42</biblScope>
+			<biblScope unit="issue">5</biblScope>
+			<biblScope unit="page" from="2510" to="2516" />
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">N. Mahmoudi and E. Duman, &quot;Detecting credit card fraud by modified fisher discriminant analysis,&quot; Expert Systems with Applications, vol. 42, no. 5, pp. 2510-2516, 2015.</note>
+</biblStruct>
+
+<biblStruct xml:id="b26">
+	<analytic>
+		<title level="a" type="main">Credit card fraud detection using adaboost and majority voting</title>
+		<author>
+			<persName><forename type="first">K</forename><surname>Randhawa</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">K</forename><surname>Loo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Seera</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">P</forename><surname>Lim</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">K</forename><surname>Nandi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE access</title>
+		<imprint>
+			<biblScope unit="volume">6</biblScope>
+			<biblScope unit="page" from="14" to="277" />
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">K. Randhawa, C. K. Loo, M. Seera, C. P. Lim, and A. K. Nandi, &quot;Credit card fraud detection using adaboost and majority voting,&quot; IEEE access, vol. 6, pp. 14 277-14 284, 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b27">
+	<analytic>
+		<title level="a" type="main">Using deep networks for fraud detection in the credit card transactions</title>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Kazemi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Zarrabi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">2017 IEEE 4th International Conference on Knowledge-Based Engineering and Innovation (KBEI)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2017">2017</date>
+			<biblScope unit="page" from="630" to="0633" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Z. Kazemi and H. Zarrabi, &quot;Using deep networks for fraud detection in the credit card transactions,&quot; in 2017 IEEE 4th International Conference on Knowledge-Based Engineering and Innovation (KBEI). IEEE, 2017, pp. 0630-0633.</note>
+</biblStruct>
+
+<biblStruct xml:id="b28">
+	<analytic>
+		<title level="a" type="main">Sequence classification for credit-card fraud detection</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Jurgovsky</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Granitzer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Ziegler</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Calabretto</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P.-E</forename><surname>Portier</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>He-Guelton</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">O</forename><surname>Caelen</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Expert Systems with Applications</title>
+		<imprint>
+			<biblScope unit="volume">100</biblScope>
+			<biblScope unit="page" from="234" to="245" />
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. Jurgovsky, M. Granitzer, K. Ziegler, S. Calabretto, P.-E. Portier, L. He- Guelton, and O. Caelen, &quot;Sequence classification for credit-card fraud detection,&quot; Expert Systems with Applications, vol. 100, pp. 234-245, 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b29">
+	<analytic>
+		<title level="a" type="main">Enhanced credit card fraud detection based on svm-recursive feature elimination and hyper-parameters optimization</title>
+		<author>
+			<persName><forename type="first">N</forename><surname>Rtayli</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><surname>Enneya</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Information Security and Applications</title>
+		<imprint>
+			<biblScope unit="volume">55</biblScope>
+			<biblScope unit="page">102596</biblScope>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">N. Rtayli and N. Enneya, &quot;Enhanced credit card fraud detection based on svm-recursive feature elimination and hyper-parameters optimization,&quot; Journal of Information Security and Applications, vol. 55, p. 102596, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b30">
+	<analytic>
+		<title level="a" type="main">An intelligent approach to credit card fraud detection using an optimized light gradient boosting machine</title>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">A</forename><surname>Taha</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">J</forename><surname>Malebary</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Access</title>
+		<imprint>
+			<biblScope unit="volume">8</biblScope>
+			<biblScope unit="page" from="25" to="579" />
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">A. A. Taha and S. J. Malebary, &quot;An intelligent approach to credit card fraud detection using an optimized light gradient boosting machine,&quot; IEEE Access, vol. 8, pp. 25 579-25 587, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b31">
+	<analytic>
+		<title level="a" type="main">Ensemble of deep sequential models for credit card fraud detection</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Forough</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Momtazi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Applied Soft Computing</title>
+		<imprint>
+			<biblScope unit="volume">99</biblScope>
+			<biblScope unit="page">106883</biblScope>
+			<date type="published" when="2021">2021</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. Forough and S. Momtazi, &quot;Ensemble of deep sequential models for credit card fraud detection,&quot; Applied Soft Computing, vol. 99, p. 106883, 2021.</note>
+</biblStruct>
+
+<biblStruct xml:id="b32">
+	<analytic>
+		<title level="a" type="main">Performance comparative study of machine learning algorithms for automobile insurance fraud detection</title>
+		<author>
+			<persName><forename type="first">B</forename><surname>Itri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Mohamed</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Q</forename><surname>Mohammed</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Omar</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Third International Conference on Intelligent Computing in Data Sciences (ICDS)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2019">2019. 2019</date>
+			<biblScope unit="page" from="1" to="4" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">B. Itri, Y. Mohamed, Q. Mohammed, and B. Omar, &quot;Performance com- parative study of machine learning algorithms for automobile insurance fraud detection,&quot; in 2019 Third International Conference on Intelligent Computing in Data Sciences (ICDS). IEEE, 2019, pp. 1-4.</note>
+</biblStruct>
+
+<biblStruct xml:id="b33">
+	<analytic>
+		<title level="a" type="main">Leveraging deep learning with lda-based text analytics to detect automobile insurance fraud</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><surname>Xu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Decision Support Systems</title>
+		<imprint>
+			<biblScope unit="volume">105</biblScope>
+			<biblScope unit="page" from="87" to="95" />
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Y. Wang and W. Xu, &quot;Leveraging deep learning with lda-based text ana- lytics to detect automobile insurance fraud,&quot; Decision Support Systems, vol. 105, pp. 87-95, 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b34">
+	<analytic>
+		<title level="a" type="main">Improved adaptive genetic algorithm for the vehicle insurance fraud identification model based on a bp neural network</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Yan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Qi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Theoretical Computer Science</title>
+		<imprint>
+			<biblScope unit="volume">817</biblScope>
+			<biblScope unit="page" from="12" to="23" />
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">C. Yan, M. Li, W. Liu, and M. Qi, &quot;Improved adaptive genetic algorithm for the vehicle insurance fraud identification model based on a bp neural network,&quot; Theoretical Computer Science, vol. 817, pp. 12-23, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b35">
+	<analytic>
+		<title level="a" type="main">Decision support system (dss) for fraud detection in health insurance claims using genetic support vector machines (gsvms)</title>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">A</forename><surname>Sowah</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Kuuboore</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Ofoli</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Kwofie</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Asiedu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">M</forename><surname>Koumadi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">O</forename><surname>Apeadu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Engineering</title>
+		<imprint>
+			<date type="published" when="2019">2019. 2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">R. A. Sowah, M. Kuuboore, A. Ofoli, S. Kwofie, L. Asiedu, K. M. Koumadi, and K. O. Apeadu, &quot;Decision support system (dss) for fraud detection in health insurance claims using genetic support vector machines (gsvms),&quot; Journal of Engineering, vol. 2019, 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b36">
+	<analytic>
+		<title level="a" type="main">Gradient boosted decision tree algorithms for medicare fraud detection</title>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">T</forename><surname>Hancock</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><forename type="middle">M</forename><surname>Khoshgoftaar</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">SN Computer Science</title>
+		<imprint>
+			<biblScope unit="volume">2</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="1" to="12" />
+			<date type="published" when="2021">2021</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. T. Hancock and T. M. Khoshgoftaar, &quot;Gradient boosted decision tree algorithms for medicare fraud detection,&quot; SN Computer Science, vol. 2, no. 4, pp. 1-12, 2021.</note>
+</biblStruct>
+
+<biblStruct xml:id="b37">
+	<analytic>
+		<title level="a" type="main">A comparative study of using various machine learning and deep learning-based fraud detection models for universal health coverage schemes</title>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">Y</forename><surname>Gupta</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">S</forename><surname>Mudigonda</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><forename type="middle">K</forename><surname>Baruah</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Engineering Trends and Technology</title>
+		<imprint>
+			<biblScope unit="volume">69</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="96" to="102" />
+			<date type="published" when="2021">2021</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">R. Y. Gupta, S. S. Mudigonda, and P. K. Baruah, &quot;A comparative study of using various machine learning and deep learning-based fraud detection models for universal health coverage schemes,&quot; International Journal of Engineering Trends and Technology, vol. 69, no. 3, pp. 96-102, 2021.</note>
+</biblStruct>
+
+<biblStruct xml:id="b38">
+	<monogr>
+		<title level="m" type="main">Simple and scalable predictive uncertainty estimation using deep ensembles</title>
+		<author>
+			<persName><forename type="first">B</forename><surname>Lakshminarayanan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Pritzel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Blundell</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1612.01474</idno>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">B. Lakshminarayanan, A. Pritzel, and C. Blundell, &quot;Simple and scalable predictive uncertainty estimation using deep ensembles,&quot; arXiv preprint arXiv:1612.01474, 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b39">
+	<monogr>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">M</forename><surname>Bernardo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">F</forename><surname>Smith</surname></persName>
+		</author>
+		<title level="m">Bayesian theory</title>
+		<imprint>
+			<publisher>John Wiley &amp; Sons</publisher>
+			<date type="published" when="2009">2009</date>
+			<biblScope unit="volume">405</biblScope>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. M. Bernardo and A. F. Smith, Bayesian theory. John Wiley &amp; Sons, 2009, vol. 405.</note>
+</biblStruct>
+
+<biblStruct xml:id="b40">
+	<analytic>
+		<title level="a" type="main">Gaussian processes in machine learning</title>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">E</forename><surname>Rasmussen</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Summer school on machine learning</title>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2003">2003</date>
+			<biblScope unit="page" from="63" to="71" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">C. E. Rasmussen, &quot;Gaussian processes in machine learning,&quot; in Summer school on machine learning. Springer, 2003, pp. 63-71.</note>
+</biblStruct>
+
+<biblStruct xml:id="b41">
+	<analytic>
+		<title level="a" type="main">Weight uncertainty in neural network</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Blundell</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Cornebise</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Kavukcuoglu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Wierstra</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning</title>
+		<imprint>
+			<publisher>PMLR</publisher>
+			<date type="published" when="2015">2015</date>
+			<biblScope unit="page" from="1613" to="1622" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">C. Blundell, J. Cornebise, K. Kavukcuoglu, and D. Wierstra, &quot;Weight uncertainty in neural network,&quot; in International Conference on Machine Learning. PMLR, 2015, pp. 1613-1622.</note>
+</biblStruct>
+
+<biblStruct xml:id="b42">
+	<monogr>
+		<title level="m" type="main">Sde-net: Equipping deep neural networks with uncertainty estimates</title>
+		<author>
+			<persName><forename type="first">L</forename><surname>Kong</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Sun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Zhang</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2008.10546</idno>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">L. Kong, J. Sun, and C. Zhang, &quot;Sde-net: Equipping deep neural networks with uncertainty estimates,&quot; arXiv preprint arXiv:2008.10546, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b43">
+	<analytic>
+		<title level="a" type="main">Dropout as a bayesian approximation: Representing model uncertainty in deep learning</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Gal</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Ghahramani</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">international conference on machine learning</title>
+		<imprint>
+			<publisher>PMLR</publisher>
+			<date type="published" when="2016">2016</date>
+			<biblScope unit="page" from="1050" to="1059" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Y. Gal and Z. Ghahramani, &quot;Dropout as a bayesian approximation: Representing model uncertainty in deep learning,&quot; in international conference on machine learning. PMLR, 2016, pp. 1050-1059.</note>
+</biblStruct>
+
+<biblStruct xml:id="b44">
+	<analytic>
+		<title level="a" type="main">Dropout: a simple way to prevent neural networks from overfitting</title>
+		<author>
+			<persName><forename type="first">N</forename><surname>Srivastava</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Hinton</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Krizhevsky</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">I</forename><surname>Sutskever</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Salakhutdinov</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">The journal of machine learning research</title>
+		<imprint>
+			<biblScope unit="volume">15</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="1929" to="1958" />
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">N. Srivastava, G. Hinton, A. Krizhevsky, I. Sutskever, and R. Salakhut- dinov, &quot;Dropout: a simple way to prevent neural networks from over- fitting,&quot; The journal of machine learning research, vol. 15, no. 1, pp. 1929-1958, 2014.</note>
+</biblStruct>
+
+<biblStruct xml:id="b45">
+	<analytic>
+		<title level="a" type="main">Random forests</title>
+		<author>
+			<persName><forename type="first">L</forename><surname>Breiman</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Machine learning</title>
+		<imprint>
+			<biblScope unit="volume">45</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="5" to="32" />
+			<date type="published" when="2001">2001</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">L. Breiman, &quot;Random forests,&quot; Machine learning, vol. 45, no. 1, pp. 5-32, 2001.</note>
+</biblStruct>
+
+<biblStruct xml:id="b46">
+	<analytic>
+		<title level="a" type="main">Bagging Predictors</title>
+		<author>
+			<persName><forename type="first">L</forename><forename type="middle">'</forename><surname>Breiman</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Machine Learning</title>
+		<imprint>
+			<biblScope unit="volume">24</biblScope>
+			<biblScope unit="page" from="123" to="140" />
+			<date type="published" when="1996">1996</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">L. &apos;Breiman, &quot;Bagging Predictors,&quot; Machine Learning, vol. 24, pp. 123- 140, 1996.</note>
+</biblStruct>
+
+<biblStruct xml:id="b47">
+	<monogr>
+		<title level="m" type="main">Simple and scalable epistemic uncertainty estimation using a single deep deterministic neural network</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Van Amersfoort</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Smith</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><forename type="middle">W</forename><surname>Teh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Gal</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2003.02037</idno>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">J. van Amersfoort, L. Smith, Y. W. Teh, and Y. Gal, &quot;Simple and scalable epistemic uncertainty estimation using a single deep deterministic neural network,&quot; arXiv preprint arXiv:2003.02037, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b48">
+	<monogr>
+		<author>
+			<persName><forename type="first">H</forename><surname>Asgharnezhad</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Shamsi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Alizadehsani</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Khosravi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Nahavandi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><forename type="middle">A</forename><surname>Sani</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Srinivasan</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2012.11840</idno>
+		<title level="m">Objective evaluation of deep uncertainty predictions for covid-19 detection</title>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">H. Asgharnezhad, A. Shamsi, R. Alizadehsani, A. Khosravi, S. Na- havandi, Z. A. Sani, and D. Srinivasan, &quot;Objective evaluation of deep uncertainty predictions for covid-19 detection,&quot; arXiv preprint arXiv:2012.11840, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b49">
+	<monogr>
+		<ptr target="https://www.kaggle.com/c/ieee-fraud-detection" />
+		<title level="m">Ieee-cis fraud detection</title>
+		<imprint>
+			<date type="published" when="2021-05-25">2021-05-25</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">&quot;Ieee-cis fraud detection,&quot; https://www.kaggle.com/c/ ieee-fraud-detection, accessed: 2021-05-25.</note>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

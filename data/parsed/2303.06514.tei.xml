@@ -1,0 +1,1268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">Credit Card Fraud Detection Using Enhanced Random Forest Classifier for Imbalanced Data</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability status="unknown"><licence/></availability>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><forename type="first">Alsharifhasan</forename><forename type="middle">Mohamad</forename><surname>Aburbeian</surname></persName>
+							<email>a.aburbeian@student.aaup.edu</email>
+							<affiliation key="aff0">
+								<orgName type="department">Department of Natural, Engineering and Technology Sciences</orgName>
+								<orgName type="institution">Arab American University Ramallah</orgName>
+								<address>
+									<postCode>P600</postCode>
+									<country key="PS">Palestine</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Huthaifa</forename><forename type="middle">I</forename><surname>Ashqar</surname></persName>
+							<email>huthaifa.ashqar@aaup.edu</email>
+							<affiliation key="aff0">
+								<orgName type="department">Department of Natural, Engineering and Technology Sciences</orgName>
+								<orgName type="institution">Arab American University Ramallah</orgName>
+								<address>
+									<postCode>P600</postCode>
+									<country key="PS">Palestine</country>
+								</address>
+							</affiliation>
+						</author>
+						<title level="a" type="main">Credit Card Fraud Detection Using Enhanced Random Forest Classifier for Imbalanced Data</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date/>
+						</imprint>
+					</monogr>
+					<idno type="MD5">9A3FC2BFC42D150FB5ADAE8CAA31AC5F</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.2-SNAPSHOT" ident="GROBID" when="2026-08-31T18:11+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<textClass>
+				<keywords>
+					<term>fraud detection</term>
+					<term>machine learning</term>
+					<term>Random Forest</term>
+					<term>oversampling</term>
+					<term>SMOTE I</term>
+				</keywords>
+			</textClass>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>The credit card has become the most popular payment method for both online and offline transactions. The necessity to create a fraud detection algorithm to precisely identify and stop fraudulent activity arises as a result of both the development of technology and the rise in fraud cases. This paper implements the random forest (RF) algorithm to solve the issue in the hand. A dataset of credit card transactions was used in this study. The main problem when dealing with credit card fraud detection is the imbalanced dataset in which most of the transaction are non-fraud ones. To overcome the problem of the imbalanced dataset, the synthetic minority over-sampling technique (SMOTE) was used. Implementing the hyperparameters technique to enhance the performance of the random forest classifier. The results showed that the RF classifier gained an accuracy of 98% and about 98% of F1-score value, which is promising. We also believe that our model is relatively easy to apply and can overcome the issue of imbalanced data for fraud detection applications.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Introduction</head><p>Financial fraud is a serious problem that is only getting worse and has far-reaching effects on the financial sector, businesses, and the government <ref type="bibr" target="#b0">[1]</ref>. Fraud is defined as criminal deception done with the intention of making money <ref type="bibr" target="#b1">[2]</ref>. Credit card transactions have surged thanks to a high reliance on internet technology. The rate of credit card fraud is rising as credit card transactions take over as the preferred method of payment for both online and offline transactions <ref type="bibr" target="#b2">[3]</ref>. There are two types of credit card fraud: internal and external <ref type="bibr" target="#b3">[4]</ref>. While external card fraud entails using a stolen credit card to obtain money through illegal ways, inner card fraud happens as a result of an agreement between cardholders and the bank and involves using a fake identity to commit fraud. Most credit card frauds are external card fraud, which has been the subject of much investigation. Another classification has been made into three categories: classic card-related frauds (application, stolen, account takeover, fake, and counterfeit), frauds involving retailers (merchant collusion and triangulation), and frauds involving the internet (site cloning, credit card generators, and false merchant sites) <ref type="bibr" target="#b4">[5]</ref>.</p><p>Due to their time-consuming nature and ineffectiveness, manual methods of fraud detection have become increasingly impracticable with the introduction of big data. The challenge of credit card fraud, however, has drawn the attention of financial institutions to current computational approaches. One significant way for detecting credit fraud is the use of data mining techniques. The technique of separating fraudulent transactions into two categories: legitimate and fraudulent transactions is known as credit card fraud detection <ref type="bibr" target="#b0">[1]</ref>. Machine learning has many techniques to solve this problem including but not limited to Artificial Neural Networks (ANNs), Naive Bayesian Classifier, support vector machines (SVMs), decision trees, random forests, k-nearest neighbors, logistic regression, intelligent decision engines (IDE), meta-learning strategy <ref type="bibr" target="#b5">[6]</ref>- <ref type="bibr" target="#b11">[12]</ref>.</p><p>The remainder of the page is divided as follows: discussing the related studies and addressing the research gap in Section II. Dataset acquisition, preprocessing, and feature selection are discussed in Section III. The methodology is illustrated in Section IV. Showing the results and metrics used to improve the reliability of the proposed classifier in section V. Finally, we provided conclusion in Section VI.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>II.</head><p>Literature review A. Related work Credit card transaction classification is typically a binary classification issue <ref type="bibr" target="#b12">[13]</ref>. Here, a credit card transaction falls into one of two categories: either it was fraudulent (negative class) or it was legal (positive class). Data from credit card transactions are primarily distinguished by an unusual phenomenon. Transactions that are both legitimate and fraudulent frequently have the same characteristics. Fraudsters continually find new ways to imitate the spending habits of legitimate cards. The characteristics of legitimate and fraudulent behavior are thus continually changing. Due to this innate property, there are fewer actual fraudulent cases detected in a pool of credit card transaction data, which leads to a distribution that is significantly skewed in favor of the negative class (legitimate transactions). For example, the dataset examined by <ref type="bibr" target="#b15">[16]</ref>, <ref type="bibr" target="#b16">[17]</ref>, and <ref type="bibr" target="#b8">[9]</ref> contains 20%, 0.025%, and 0.172% respectively fraud cases in all transactions. The highly skewed credit card transaction data have been sampled using a variety of methods. Using a random sample methodology such as <ref type="bibr" target="#b15">[16]</ref>, <ref type="bibr" target="#b17">[18]</ref> presents experimental findings showing that classifiers with the highest true positive rate and the lowest false positive rate are produced by artificially distributing training data in a 50:50 ratio between fraud and non-fraud. For a meaningful number, the study of <ref type="bibr" target="#b8">[9]</ref> employs stratified sampling to under-sample the valid records. With reference to performance comparisons on the 1:99 set, the experiment on 50:50, 10:90, and 1:99 distributions of fraud to valid instances finds that the 10:90 distribution performs better since it is most representative of the actual distribution of frauds and legitimate cases. Stratified sampling is used in <ref type="bibr" target="#b18">[19]</ref> as well, in order to preserve important patterns from the data, a combination of under-sampling the negative cases and oversampling the positive cases is used in this study. The goal of fraud detection is typically seen as a data mining classification challenge, where the classification of credit card transactions as legal or fraudulent must be done correctly <ref type="bibr" target="#b13">[14]</ref>, <ref type="bibr" target="#b14">[15]</ref>.</p><p>Typically, there are two different ways for credit card fraud detection in the real world. Firstly, using data mining to manually detect fraud, which is an inaccurate and time-consuming process. The second one is the use of rule-based systems also known as machine learning techniques or Expert systems which are used to store and modify fraud knowledge in order to interpret the information in a meaningful way to combat fraud events. These expert systems can be classified into supervised, unsupervised, and semi-supervised <ref type="bibr" target="#b15">[16]</ref>. In order to categorize new transactions as fraudulent or legitimate in supervised fraud detection methods, models are estimated based on samples of fraudulent and legitimate transactions, whereas in unsupervised fraud detection, outliers' transactions are identified as potential examples of fraudulent transactions <ref type="bibr" target="#b16">[17]</ref>. While combining both supervised and unsupervised is called a semi-supervised technique. Many studies implement the random forest algorithm to solve the issue in the hand. For example, a brief study conducted by <ref type="bibr" target="#b17">[18]</ref>, <ref type="bibr" target="#b18">[19]</ref> according to these studies, their classifier has an accuracy of 90%, and 98.6% respectively for detecting fraud and non-fraud transactions. In the study of <ref type="bibr" target="#b19">[20]</ref>, the behavior characteristics of normal and fraud transactions are trained using two different types of random forests algorithms which differ in their underlying classifiers, the best algorithm gains an accuracy of 96.77%, precision, recall, and F1 score of 89.46%, 95.27%, and 96.1% respectively. In the study <ref type="bibr" target="#b20">[21]</ref>, the researchers compare many algorithms for fraud detection. The results show that the random forest classifier accuracy was 99.7%, precision, recall, and F1 score for class 1 which indicates the fraud transactions were 31%, 89%, and 46% respectively. Another comparative study <ref type="bibr" target="#b21">[22]</ref> investigates different classification algorithms for highly skewed dataset namely logistic regression, random forest, decision trees, and naïve Bayes. According to the results, the random forest classifier has the best performance with an accuracy of 96.77%, precision of 100%, recall of 91.11%, and F1 score of 95.43%. Comparing the performance of random forest, logistic regression, and support vector machine was conducted by <ref type="bibr" target="#b22">[23]</ref>. In this study, the researchers use the area under the ROC curve (AUC) and average precision (AP) as metrics to evaluate the mentioned algorithms. According to the results, the random forest classifier gave the best performance with an AUC score of 91.48%, and an AP of 84.83%. Another comparative study <ref type="bibr" target="#b23">[24]</ref>, investigates the efficiency of logistic regression, k-nearest neighbor, random forest, support vector machine, and decision tree. After implementing the five models the best one was the random forest model with an accuracy of 88%. The main problem when dealing with credit card fraud detection is the imbalanced dataset in which the majority of the transaction are non-fraud ones. This issue makes any supervised learning algorithms able to predict only nonfraud transaction transactions. Although the importance of the F1 score is considered the most real metric to evaluate algorithm performance <ref type="bibr" target="#b24">[25]</ref>- <ref type="bibr" target="#b26">[27]</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Research gap</head><p>The main problem when dealing with credit card fraud detection is the imbalanced dataset in which the majority of the transaction are non-fraud ones. Mentioned studies tried to solve this problem using a supervised learning algorithm but they showed only accuracy which is not sufficient to address the credit card issue. Because the implemented classifier will be obviously biased to the major class and unable to predict the fraud transaction. The classifier's performance should be evaluated in terms of other metrics like precision, recall, and F1-score, to get a better understanding of the classifier's performance. Therefore, this study aims to implement an enhanced binary random forest classifier with the ability to predict both classes (fraud and non-fraud) accurately and measure the result using different metrics to improve the classifier's performance.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>III.</head><p>Dataset The dataset used in this study contains details of about 94,682 online credit card transactions labeled as fraud or legitimate ones. After collection, the dataset was masked according to the customer's privacy issues and published on the Kaggle website <ref type="bibr" target="#b27">[28]</ref>. It contains 20 features shown in Table <ref type="table" target="#tab_0">1</ref>, which illustrates a sample of the dataset. The domain feature is the domain name of the customer's email address that was used for the transaction (masked), the state feature is the state code of the customer's location, the ZIP code feature is the zip code of the customer's location, time1 and time 2 features illustrating the beginning and the finish time of the transaction, TRN_AMT feature is the transaction amount, TOTAL_TRN_AMT is the total transaction amount, TRN_TYPE is the classification of the transaction (fraudulent or legitimate). While the rest of the twelve features are anonymized via a principal component analysis (PCA) transform. For ethical and legal concerns, the PCA approach is used to conceal the cardholders' private information.  <ref type="table" target="#tab_0">1</ref>, there are two columns for time and two columns for the amount of the transaction. To investigate whether these columns have the same values or not we perform the heat map for them in Figure <ref type="figure" target="#fig_0">1</ref>. Figure <ref type="figure" target="#fig_0">1</ref> shows that the Time1 and Time 2 features are quite the same (i.e., correlation of about 0.99) and this is logical because these features belong to the start and finish time for the transaction. The heat map also shows that the TOTAL_TRN_AMT, and TRN_AMT features are the same (i.e., correlation of about 1). So at this phase, we decided the following according to previous studies <ref type="bibr" target="#b28">[29]</ref>- <ref type="bibr" target="#b30">[31]</ref>:</p><p>• Delete TOTAL_TRN_AMT feature.</p><p>• Delete Domain, and State features as they lack to provide logical correlations with classification. • Convert the TRN_TYPE feature, which is the target classes, into zero (not fraud) and 1 (fraud), to be used as input for binary classifier.</p><p>B. Data preprocessing The original dataset contains details of total 94,682 transactions; of which about 87,562 transactions were not fraud with a percentage of (97.7%), and about 2,052 were fraud ones with a percentage of (2.3%). Data from credit card transactions are primarily distinguished by an unusual phenomenon. Transactions that are both legitimate and fraudulent frequently have the same characteristics. Fraudsters continually find new ways to imitate the spending habits of legitimate cards. The characteristics of legitimate and fraudulent behavior are thus continually changing. Because of the imbalanced dataset would produce various unexpected behaviors; it is not appropriate to use it directly as the input of our model. As shown in Figure <ref type="figure" target="#fig_1">2</ref>, there is a huge contrast in numbers between positive and negative samples for fraud and legitimate classes, it is very likely that positive samples (fraudulent class) may be mistaken and the classifier will be biased to predict the negative (legitimate) class only <ref type="bibr" target="#b31">[32]</ref>. The solution, in this case, is to perform over-sampling or under-sampling techniques. The synthetic minority over-sampling technique (SMOTE) is the most used one in the literature <ref type="bibr" target="#b32">[33]</ref>- <ref type="bibr" target="#b35">[36]</ref>. It includes creating synthetic samples and oversampling the minority class. According to the required number of synthetic samples, neighbors from the k-nearest neighbors would first be randomly selected, and then one sample would be generated in the general direction of each of the selected neighbors. then determine how much the feature vector (sample) under examination differs from its neighbor, multiply the difference by a random number between 0 and 1, then add it to the feature vector under consideration <ref type="bibr" target="#b36">[37]</ref>- <ref type="bibr" target="#b38">[39]</ref>. After performing the SMOTE over-sampling technique, the data distribution for both classes was a 50:50 ratio with a count of about 87,562 transactions for each class. Finally, we check for duplicated rows, and about 5,068 were found. we deleted them and get the dataset ready to perform the random forest classifier.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>IV.</head><p>Methodology Random forest is a machine-learning approach for supervised learning based on ensemble learning. Ensemble learning is an algorithm that generates predictions through several iterations of the same model or a comparable model. Similar to this, the random forest algorithm employs numerous algorithms, or different decision trees, creating a forest of trees as a result. Both regression and classification tasks can be completed using the random forest technique <ref type="bibr" target="#b39">[40]</ref>. Compared to the decision tree, the random forest has an advantage because it breaks the bad tendency of overfitting the training set. Each node of the decision tree is split on a chosen feature from a randomly selected subset of the entire feature set once a decision tree has been formed and a subset of the training set has been randomly sampled to train each individual tree. Because each tree in a random forest is trained independently of the others, training is incredibly quick even for big data sets with numerous characteristics and data occurrences. It has been discovered that the Random Forest algorithm is resistant to overfitting and offers a good approximation of the generalization error <ref type="bibr" target="#b40">[41]</ref>, <ref type="bibr" target="#b41">[42]</ref>. The random forest algorithm was chosen because it acts as a binary classifier, which makes it suitable for credit card fraud detection, as soon as any transaction is classified as one of two classes (0 or 1) fraud or not a fraud. The methodology adopted in this study is illustrated in Figure <ref type="figure" target="#fig_2">3</ref>. As shown in Figure <ref type="figure" target="#fig_2">3</ref>, the first step is to prepare the dataset for the random forest implementation, after that enhancement of the algorithm will be performed to gain the highest possible accuracy. Finally, evaluate the result using different metrics which will be discussed in the result section. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>V.</head><p>Results and discussions</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. Experiment</head><p>The experimental work was conducted using Anaconda Jupyter V3, and the code was written using python language. The aim of the experiment was to offer a reliable fraud detection classifier that can successfully classify and detect fraud transactions. The dataset was split into training and testing data. performing SMOTE oversampling technique to avoid bias when running the random forest classifier and overcome the problem of the imbalanced dataset. Finally, we run the grid search to find the best parameters to run the classifier again to gain the highest possible accuracy.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Metrics and results</head><p>Although dealing with a highly skewed dataset, testing the algorithm showing only the accuracy is not sufficient to show the reliability of the algorithm. As a result, the confusion matrix, precision, recall, F1 score, and Receiver Operator Characteristic (ROC) curve measures were applied.</p><p>1) Confusion matrix is a metric that provides details on classes that were successfully and erroneously classified. The output of the confusion matrix is a 2X2 matrix that illustrates the value of TP, TN, FP, and FN. True Positive (TP), illustrating that your model predicted positive and it's true. True Negative (TN) means that you predicted negative and it's true. False Positive (FP) (Type 1 Error) means you predicted positive and it's false. False Negative (FN) (Type 2 Error) means you predicted negative and it's false <ref type="bibr" target="#b42">[43]</ref>. The confusion matrix of our classifier is shown in   As shown in Table <ref type="table" target="#tab_1">2</ref>, the classifier gained an accuracy of 98% to predict the fraud transaction of all transactions, with precision, recall, and F1 score of 100%, 96%, and 98% respectively for class 0 which indicates non-fraud transactions. And 96%, 100%, and 98% respectively for class 1 which indicates fraud transactions.</p><p>3) The ROC curve is a graphical plot that illustrates the diagnostic ability of a binary classifier system as its discrimination threshold. By plotting the true positive rate (TPR) also known as sensitivity, and recall against the false positive rate (FPR) also known as the probability of false alarms <ref type="bibr" target="#b43">[44]</ref>. It also means that the false positive rate is low, which is the rate at which the classifier incorrectly classifies negative examples as positive. Our results are in the same line as other studies <ref type="bibr" target="#b18">[19]</ref>, <ref type="bibr" target="#b20">[21]</ref>, <ref type="bibr" target="#b21">[22]</ref>, <ref type="bibr" target="#b31">[32]</ref>, <ref type="bibr" target="#b42">[43]</ref>, <ref type="bibr" target="#b44">[45]</ref>- <ref type="bibr" target="#b46">[47]</ref>. Nonetheless, we believe our model is relatively easier to apply and can overcome the issue of imbalanced data in fraud detection.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>VI.</head><p>Conclusion This study implemented an enhanced random forest algorithm using hyperparameters to find the best values to run the classifier and gains the highest possible accuracy. We performed the SMOTE oversampling technique to overcome the imbalanced dataset issue. The result showed that the classifier was able to predict fraudulent transactions with an accuracy of 98%. We evaluate our results using different metrics such as recall, precision, F1 score, and the ROC curve to improve that our classifier is not biased because of the imbalanced dataset and that it's able to detect both classes (fraud, not fraud) with a high accuracy level. Results showed that our model, due to its relatively straightforward application, is well-suited to addressing the challenge of imbalanced data in fraud detection.</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head>Figure 1 .</head><label>1</label><figDesc>Figure 1. Heat map of four features to be further investigated.</figDesc><graphic coords="4,165.79,223.33,301.20,180.15" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head>Figure 2 .</head><label>2</label><figDesc>Figure 2. The distribution of transaction type (not fraud is 0, and fraud is 1)</figDesc><graphic coords="5,131.39,136.59,369.83,176.15" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_2"><head>Figure 3 .</head><label>3</label><figDesc>Figure 3. Framework for predicting fraud in credit card transactions.</figDesc><graphic coords="6,159.89,177.98,294.74,168.90" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_3"><head>Figure 4 .</head><label>4</label><figDesc>The matrix is showing the number of correct predictions (True Positives TP=83736 and True Negatives TN=87242) and the number of incorrect predictions (False Positives FP=3826 and False Negatives FN=320) made by the classifier.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_4"><head>Figure 4 .</head><label>4</label><figDesc>Figure 4. Resulted confusion matrix.2) Accuracy, precision, recall, and F1 score measures. Accuracy is the proportion of correctly anticipated results. The overall accuracy of the classifier can be calculated by adding the number of true positives and true negatives and dividing by the total number of predictions.In that sense, the classifier is performing well in terms of accuracy. However, accuracy is not always the best metric to evaluate a classifier's performance, especially when the classes are imbalanced. The classifier's performance should be evaluated in terms of other metrics including precision, recall, and F1-score to get a better understanding of the classifier's performance. Precision is measured by the number of correctly identified outputs (Precision = [TP/ (TP+FP)]). Recall is the percentage of True Positives that the model properly identified (Recall = [TP/(TP+FN)]). While the harmonic mean of precision and recall is called F1-score (F1 score = [ 2*precision*recall / (precision + recall)]). In summary, the classifier has high accuracy, precision, recall, and F1-score, which are good results.</figDesc><graphic coords="7,219.74,100.99,211.30,137.85" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_5"><head>Figure 5 .</head><label>5</label><figDesc>Figure 5. Random forest ROC AUC has a value between 0 and 1, with a value of 1 indicating perfect performance and a value of 0.5 indicating a classifier no better than random guessing. As shown in Figure 5, the result of the random forest classifier AUC was 0.98. It means that the classifier is able to correctly classify 98% of the positive examples as positive and negative examples as negative.It also means that the false positive rate is low, which is the rate at which the classifier incorrectly classifies negative examples as positive. Our results are in the same line as other studies<ref type="bibr" target="#b18">[19]</ref>,<ref type="bibr" target="#b20">[21]</ref>,<ref type="bibr" target="#b21">[22]</ref>,<ref type="bibr" target="#b31">[32]</ref>,<ref type="bibr" target="#b42">[43]</ref>,<ref type="bibr" target="#b44">[45]</ref>-<ref type="bibr" target="#b46">[47]</ref>. Nonetheless, we believe our model is relatively easier to apply and can overcome the issue of imbalanced data in fraud detection.</figDesc><graphic coords="8,212.74,73.39,225.30,124.53" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_0"><head>Table 1 .</head><label>1</label><figDesc>Dataset sample</figDesc><table><row><cell>DOMAIN</cell><cell>STATE</cell><cell>ZIP</cell><cell>Time</cell><cell>Time2</cell><cell>VIS1</cell><cell>VIS2</cell><cell>XRN</cell><cell>XRN</cell><cell>XRN</cell><cell>XRN</cell><cell>XRN</cell><cell>VAR</cell><cell>VAR</cell><cell>VAR3</cell><cell>VAR</cell><cell>VAR</cell><cell>TRN_</cell><cell>TRN_</cell><cell>TRN_</cell></row><row><cell></cell><cell></cell><cell>CODE</cell><cell>1</cell><cell></cell><cell></cell><cell></cell><cell>1</cell><cell>2</cell><cell>3</cell><cell>4</cell><cell>5</cell><cell>1</cell><cell>2</cell><cell></cell><cell>4</cell><cell>5</cell><cell>AMT</cell><cell>AMT</cell><cell>TYPE</cell></row></table><note><p>A. Feature selection The dataset contains non-numeric values. As shown in the Table</p></note></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_1"><head>Table 2 .</head><label>2</label><figDesc>Classification report</figDesc><table><row><cell>Class</cell><cell cols="2">Precision Recall</cell><cell>F1-score</cell></row><row><cell cols="2">0 (Not fraud) 1.00</cell><cell>0.96</cell><cell>0.98</cell></row><row><cell>1 (Fraud)</cell><cell>0.96</cell><cell>1.00</cell><cell>0.98</cell></row></table></figure>
+		</body>
+		<back>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<monogr>
+		<title level="m" type="main">A Survey of Credit Card Fraud Detection Techniques: Data and Technique Oriented Perspective</title>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Samaneh Sorournejad</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">E</forename><surname>Zojaji</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">H</forename><surname>Atani</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Monadjemi</surname></persName>
+		</author>
+		<idno type="DOI">10.48550/arxiv.1611.06439</idno>
+		<imprint>
+			<date type="published" when="2016-11">Nov. 2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Samaneh Sorournejad, Z. Zojaji, R. E. Atani, and A. H. Monadjemi, &quot;A Survey of Credit Card Fraud Detection Techniques: Data and Technique Oriented Perspective,&quot; Nov. 2016, doi: 10.48550/arxiv.1611.06439.</note>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<monogr>
+		<title level="m" type="main">Challenges and Complexities in Machine Learning based Credit Card Fraud Detection</title>
+		<author>
+			<persName><forename type="first">G</forename><forename type="middle">K</forename><surname>Kulatilleke</surname></persName>
+		</author>
+		<idno type="DOI">10.48550/arxiv.2208.10943</idno>
+		<imprint>
+			<date type="published" when="2022-08">Aug. 2022</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">G. K. Kulatilleke, &quot;Challenges and Complexities in Machine Learning based Credit Card Fraud Detection,&quot; Aug. 2022, doi: 10.48550/arxiv.2208.10943.</note>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<monogr>
+		<ptr target="https://moneytransfers.com/news/content/credit-card-fraud-statistics" />
+		<title level="m">15 Shocking Credit Card Fraud Statistics &amp; Facts for 2022</title>
+		<imprint>
+			<date type="published" when="2022-12-25">Dec. 25, 2022</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">&quot;15 Shocking Credit Card Fraud Statistics &amp; Facts for 2022.&quot; https://moneytransfers.com/news/content/credit-card-fraud-statistics (accessed Dec. 25, 2022).</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<analytic>
+		<title level="a" type="main">Application of classification models on credit card fraud detection</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Aihua</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Rencheng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Yaochen</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/ICSSSM.2007.4280163</idno>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings -ICSSSM&apos;07: 2007 International Conference on Service Systems and Service Management</title>
+		<meeting>-ICSSSM&apos;07: 2007 International Conference on Service Systems and Service Management</meeting>
+		<imprint>
+			<date type="published" when="2007">2007</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S. Aihua, T. Rencheng, and D. Yaochen, &quot;Application of classification models on credit card fraud detection,&quot; Proceedings -ICSSSM&apos;07: 2007 International Conference on Service Systems and Service Management, 2007, doi: 10.1109/ICSSSM.2007.4280163.</note>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<monogr>
+		<title level="m" type="main">Credit card fraud and detection techniques: a review</title>
+		<author>
+			<persName><forename type="first">L</forename><surname>Delamaire</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Abdou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">P</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">-B</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename></persName>
+		</author>
+		<ptr target="http://eprints.hud.ac.uk/19069/1/AbdouCredit.pdf" />
+		<imprint>
+			<date type="published" when="2009-12-25">2009. Dec. 25, 2022</date>
+		</imprint>
+	</monogr>
+	<note>systems, and undefined. eprints.hud.ac.uk</note>
+	<note type="raw_reference">L. Delamaire, H. Abdou, J. P.-B. and B. systems, and undefined 2009, &quot;Credit card fraud and detection techniques: a review,&quot; eprints.hud.ac.uk, Accessed: Dec. 25, 2022. [Online]. Available: http://eprints.hud.ac.uk/19069/1/AbdouCredit.pdf</note>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<analytic>
+		<title level="a" type="main">Intelligent fraudulent detection system based SVM and optimized by danger theory</title>
+		<author>
+			<persName><forename type="first">I</forename><surname>Rajak</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">J</forename><surname>Mathai</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/IC4.2015.7375705</idno>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE International Conference on Computer Communication and Control</title>
+		<imprint>
+			<biblScope unit="volume">4</biblScope>
+			<date type="published" when="2015-01">2015. Jan. 2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">I. Rajak and K. J. Mathai, &quot;Intelligent fraudulent detection system based SVM and optimized by danger theory,&quot; IEEE International Conference on Computer Communication and Control, IC4 2015, Jan. 2016, doi: 10.1109/IC4.2015.7375705.</note>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<analytic>
+		<title level="a" type="main">On Discriminative vs. Generative Classifiers: A comparison of logistic regression and naive Bayes</title>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">Y</forename><surname>Ng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">I</forename><surname>Jordan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Adv Neural Inf Process Syst</title>
+		<imprint>
+			<biblScope unit="volume">14</biblScope>
+			<date type="published" when="2001">2001</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">A. Y. Ng and M. I. Jordan, &quot;On Discriminative vs. Generative Classifiers: A comparison of logistic regression and naive Bayes,&quot; Adv Neural Inf Process Syst, vol. 14, 2001.</note>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<analytic>
+		<title level="a" type="main">Improving credit card fraud detection with calibrated probabilities</title>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">C</forename><surname>Bahnsen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Stojanovic</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Aouada</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Ottersten</surname></persName>
+		</author>
+		<idno type="DOI">10.1137/1.9781611973440.78</idno>
+	</analytic>
+	<monogr>
+		<title level="m">Proc West Mark Ed Assoc Conf</title>
+		<meeting>West Mark Ed Assoc Conf</meeting>
+		<imprint>
+			<date type="published" when="2014">2014</date>
+			<biblScope unit="volume">2</biblScope>
+			<biblScope unit="page" from="677" to="685" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">A. C. Bahnsen, A. Stojanovic, D. Aouada, and B. Ottersten, &quot;Improving credit card fraud detection with calibrated probabilities,&quot; Proc West Mark Ed Assoc Conf, vol. 2, pp. 677-685, 2014, doi: 10.1137/1.9781611973440.78.</note>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">A novel and successful credit card fraud detection system implemented in a Turkish bank</title>
+		<author>
+			<persName><forename type="first">E</forename><surname>Duman</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Buyukkaya</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">I</forename><surname>Elikucuk</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/ICDMW.2013.168</idno>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings -IEEE 13th International Conference on Data Mining Workshops</title>
+		<meeting>-IEEE 13th International Conference on Data Mining Workshops<address><addrLine>ICDMW</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2013">2013. 2013</date>
+			<biblScope unit="page" from="162" to="171" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">E. Duman, A. Buyukkaya, and I. Elikucuk, &quot;A novel and successful credit card fraud detection system implemented in a Turkish bank,&quot; Proceedings -IEEE 13th International Conference on Data Mining Workshops, ICDMW 2013, pp. 162-171, 2013, doi: 10.1109/ICDMW.2013.168.</note>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<analytic>
+		<title level="a" type="main">FraudMiner: A novel credit card fraud detection model based on frequent itemset mining</title>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">R</forename><surname>Seeja</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Zareapoor</surname></persName>
+		</author>
+		<idno type="DOI">10.1155/2014/252797</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Scientific World Journal</title>
+		<imprint>
+			<biblScope unit="volume">2014</biblScope>
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">K. R. Seeja and M. Zareapoor, &quot;FraudMiner: A novel credit card fraud detection model based on frequent itemset mining,&quot; Scientific World Journal, vol. 2014, 2014, doi: 10.1155/2014/252797.</note>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<analytic>
+		<title level="a" type="main">A Machine Learning Approach for Detection of Fraud based on SVM</title>
+		<author>
+			<persName><forename type="first">G</forename><surname>Singh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Gupta</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Rastogi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">D S</forename><surname>Chandel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Ahmad</surname></persName>
+		</author>
+		<ptr target="https://www.indianjournals.com/ijor.aspx?target=ijor:ijset1&amp;volume=1&amp;issue=3&amp;article=043" />
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Scientific Engineering and Technology</title>
+		<imprint>
+			<biblScope unit="volume">1</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="192" to="196" />
+			<date type="published" when="2012-12-25">2012. Dec. 25, 2022</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">G. Singh, R. Gupta, A. Rastogi, M. D. S. Chandel, and R. Ahmad, &quot;A Machine Learning Approach for Detection of Fraud based on SVM,&quot; International Journal of Scientific Engineering and Technology, vol. 1, no. 3, pp. 192-196, 2012, Accessed: Dec. 25, 2022. [Online]. Available: https://www.indianjournals.com/ijor.aspx?target=ijor:ijset1&amp;volume=1&amp;issue=3&amp;article=043</note>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<analytic>
+		<title level="a" type="main">Credit Card Fraud Detection using Decision Tree Induction Algorithm</title>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">R</forename><surname>Gaikwad</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">B</forename><surname>Deshmane</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Somavanshi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Patil</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">A</forename><surname>Badgujar</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Innovative Technology and Exploring Engineering (IJITEE)</title>
+		<imprint>
+			<biblScope unit="issue">6</biblScope>
+			<biblScope unit="page" from="2278" to="3075" />
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. R. Gaikwad, A. B. Deshmane, H. v Somavanshi, S. v Patil, and R. A. Badgujar, &quot;Credit Card Fraud Detection using Decision Tree Induction Algorithm,&quot; International Journal of Innovative Technology and Exploring Engineering (IJITEE), no. 6, pp. 2278-3075, 2014.</note>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<analytic>
+		<title level="a" type="main">Data engineering for fraud detection</title>
+		<author>
+			<persName><forename type="first">B</forename><surname>Baesens</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Höppner</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Verdonck</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/J.DSS.2021.113492</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Decis Support Syst</title>
+		<imprint>
+			<biblScope unit="volume">150</biblScope>
+			<biblScope unit="page">113492</biblScope>
+			<date type="published" when="2021-11">Nov. 2021</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">B. Baesens, S. Höppner, and T. Verdonck, &quot;Data engineering for fraud detection,&quot; Decis Support Syst, vol. 150, p. 113492, Nov. 2021, doi: 10.1016/J.DSS.2021.113492.</note>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<analytic>
+		<title level="a" type="main">Comparison and analysis of logistic regression, Naïve Bayes and KNN machine learning algorithms for credit card fraud detection</title>
+		<author>
+			<persName><forename type="first">F</forename><surname>Itoo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Meenakshi</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Singh</surname></persName>
+		</author>
+		<idno type="DOI">10.1007/S41870-020-00430-Y/METRICS</idno>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Information Technology (Singapore)</title>
+		<imprint>
+			<biblScope unit="volume">13</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="1503" to="1511" />
+			<date type="published" when="2021-08">Aug. 2021</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">F. Itoo, Meenakshi, and S. Singh, &quot;Comparison and analysis of logistic regression, Naïve Bayes and KNN machine learning algorithms for credit card fraud detection,&quot; International Journal of Information Technology (Singapore), vol. 13, no. 4, pp. 1503-1511, Aug. 2021, doi: 10.1007/S41870-020-00430- Y/METRICS.</note>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<monogr>
+		<title level="m" type="main">Challenges and Complexities in Machine Learning based Credit Card Fraud Detection</title>
+		<author>
+			<persName><forename type="first">G</forename><forename type="middle">K</forename><surname>Kulatilleke</surname></persName>
+		</author>
+		<idno type="DOI">10.48550/arxiv.2208.10943</idno>
+		<imprint>
+			<date type="published" when="2022-08">Aug. 2022</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">G. K. Kulatilleke, &quot;Challenges and Complexities in Machine Learning based Credit Card Fraud Detection,&quot; Aug. 2022, doi: 10.48550/arxiv.2208.10943.</note>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<analytic>
+		<title level="a" type="main">Unsupervised profiling methods for fraud detection</title>
+		<author>
+			<persName><forename type="first">R</forename><surname>Bolton</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">H</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">.-C</forename></persName>
+		</author>
+		<ptr target="https://citeseerx.ist.psu.edu/document?repid=rep1&amp;type=pdf&amp;doi=5b640c367ae9cc4bd072006b05a3ed7c2d5f496d" />
+	</analytic>
+	<monogr>
+		<title level="j">Citeseer</title>
+		<imprint>
+			<date type="published" when="2001-01-26">2001. Jan. 26, 2023</date>
+		</imprint>
+	</monogr>
+	<note>scoring and credit control VII, and undefined</note>
+	<note type="raw_reference">R. Bolton, D. H.-C. scoring and credit control VII, and undefined 2001, &quot;Unsupervised profiling methods for fraud detection,&quot; Citeseer, Accessed: Jan. 26, 2023. [Online]. Available: https://citeseerx.ist.psu.edu/document?repid=rep1&amp;type=pdf&amp;doi=5b640c367ae9cc4bd072006b05a3ed7c2d 5f496d</note>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<analytic>
+		<title level="a" type="main">Survey of fraud detection techniques</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Kou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">T</forename><surname>Lu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Sirwongwattana</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><forename type="middle">P</forename><surname>Huang</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/ICNSC.2004.1297040</idno>
+	</analytic>
+	<monogr>
+		<title level="m">Conference Proceeding -IEEE International Conference on Networking, Sensing and Control</title>
+		<imprint>
+			<date type="published" when="2004">2004</date>
+			<biblScope unit="volume">2</biblScope>
+			<biblScope unit="page" from="749" to="754" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Y. Kou, C. T. Lu, S. Sirwongwattana, and Y. P. Huang, &quot;Survey of fraud detection techniques,&quot; Conference Proceeding -IEEE International Conference on Networking, Sensing and Control, vol. 2, pp. 749-754, 2004, doi: 10.1109/ICNSC.2004.1297040.</note>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<analytic>
+		<title level="a" type="main">Credit Card Fraud Detection Using Random Forest Algorithm</title>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">S</forename><surname>Kumar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">V</forename><surname>Soundarya</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Kavitha</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><forename type="middle">S</forename><surname>Keerthika</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Aswini</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/ICCCT2.2019.8824930</idno>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 3rd International Conference on Computing and Communications Technologies</title>
+		<meeting>the 3rd International Conference on Computing and Communications Technologies<address><addrLine>ICCCT</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2019-02">2019. 2019. Feb. 2019</date>
+			<biblScope unit="page" from="149" to="153" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">M. S. Kumar, V. Soundarya, S. Kavitha, E. S. Keerthika, and E. Aswini, &quot;Credit Card Fraud Detection Using Random Forest Algorithm,&quot; 2019 Proceedings of the 3rd International Conference on Computing and Communications Technologies, ICCCT 2019, pp. 149-153, Feb. 2019, doi: 10.1109/ICCCT2.2019.8824930.</note>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<analytic>
+		<title level="a" type="main">Credit Card Fraud Detection Using Random Forest Algorithm</title>
+		<author>
+			<persName><forename type="first">G</forename><surname>Niveditha</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Abarna</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><forename type="middle">V</forename><surname>Akshaya</surname></persName>
+		</author>
+		<idno type="DOI">10.32628/CSEIT195261</idno>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Scientific Research in Computer Science, Engineering and Information Technology</title>
+		<imprint>
+			<biblScope unit="volume">5</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="301" to="306" />
+			<date type="published" when="2019-04">Apr. 2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">G. Niveditha, K. Abarna, and G. v. Akshaya, &quot;Credit Card Fraud Detection Using Random Forest Algorithm,&quot; International Journal of Scientific Research in Computer Science, Engineering and Information Technology, vol. 5, no. 2, pp. 301-306, Apr. 2019, doi: 10.32628/CSEIT195261.</note>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<analytic>
+		<title level="a" type="main">Random forest for credit card fraud detection</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Xuan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Zheng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Jiang</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/ICNSC.2018.8361343</idno>
+	</analytic>
+	<monogr>
+		<title level="m">ICNSC 2018 -15th IEEE International Conference on Networking, Sensing and Control</title>
+		<imprint>
+			<date type="published" when="2018-05">May 2018</date>
+			<biblScope unit="page" from="1" to="6" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S. Xuan, G. Liu, Z. Li, L. Zheng, S. Wang, and C. Jiang, &quot;Random forest for credit card fraud detection,&quot; ICNSC 2018 -15th IEEE International Conference on Networking, Sensing and Control, pp. 1-6, May 2018, doi: 10.1109/ICNSC.2018.8361343.</note>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<analytic>
+		<title level="a" type="main">Credit Card Fraud Detection using Pipeling and Ensemble Learning</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Bagga</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Goyal</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><surname>Gupta</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Goyal</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/J.PROCS.2020.06.014</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Procedia Comput Sci</title>
+		<imprint>
+			<biblScope unit="volume">173</biblScope>
+			<biblScope unit="page" from="104" to="112" />
+			<date type="published" when="2020-01">Jan. 2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S. Bagga, A. Goyal, N. Gupta, and A. Goyal, &quot;Credit Card Fraud Detection using Pipeling and Ensemble Learning,&quot; Procedia Comput Sci, vol. 173, pp. 104-112, Jan. 2020, doi: 10.1016/J.PROCS.2020.06.014.</note>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<analytic>
+		<title level="a" type="main">Credit card fraud detection using machine learning</title>
+		<author>
+			<persName><forename type="first">D</forename><surname>Tanouz</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">R</forename><surname>Subramanian</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Eswar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><forename type="middle">V P</forename><surname>Reddy</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">R</forename><surname>Kumar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">H V N M</forename><surname>Praneeth</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/ICICCS51141.2021.9432308</idno>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings -5th International Conference on Intelligent Computing and Control Systems</title>
+		<meeting>-5th International Conference on Intelligent Computing and Control Systems<address><addrLine>ICICCS</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2021-05">2021. May 2021</date>
+			<biblScope unit="page" from="967" to="972" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">D. Tanouz, R. R. Subramanian, D. Eswar, G. V. P. Reddy, A. R. Kumar, and C. H. V. N. M. Praneeth, &quot;Credit card fraud detection using machine learning,&quot; Proceedings -5th International Conference on Intelligent Computing and Control Systems, ICICCS 2021, pp. 967-972, May 2021, doi: 10.1109/ICICCS51141.2021.9432308.</note>
+</biblStruct>
+
+<biblStruct xml:id="b22">
+	<analytic>
+		<title level="a" type="main">Detecting credit card fraud using selected machine learning algorithms</title>
+		<idno type="DOI">10.23919/MIPRO.2019.8757212</idno>
+	</analytic>
+	<monogr>
+		<title level="m">2019 42nd International Convention on Information and Communication Technology, Electronics and Microelectronics, MIPRO 2019 -Proceedings</title>
+		<imprint>
+			<date type="published" when="2019-05">May 2019</date>
+			<biblScope unit="page" from="1250" to="1255" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">&quot;Detecting credit card fraud using selected machine learning algorithms,&quot; 2019 42nd International Convention on Information and Communication Technology, Electronics and Microelectronics, MIPRO 2019 -Proceedings, pp. 1250-1255, May 2019, doi: 10.23919/MIPRO.2019.8757212.</note>
+</biblStruct>
+
+<biblStruct xml:id="b23">
+	<analytic>
+		<title level="a" type="main">Financial Fraud Detection Model: Based on Random Forest</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Chan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Hasnain</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Kazmi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Fu</surname></persName>
+		</author>
+		<idno type="DOI">10.5539/ijef.v7n7p178</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Int J Econ Finance</title>
+		<imprint>
+			<biblScope unit="volume">7</biblScope>
+			<biblScope unit="issue">7</biblScope>
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">C. Liu, Y. Chan, S. Hasnain, A. Kazmi, and H. Fu, &quot;Financial Fraud Detection Model: Based on Random Forest,&quot; Int J Econ Finance, vol. 7, no. 7, 2015, doi: 10.5539/ijef.v7n7p178.</note>
+</biblStruct>
+
+<biblStruct xml:id="b24">
+	<analytic>
+		<title level="a" type="main">Classification evaluation</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Lever</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Krzywinski</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><surname>Altman</surname></persName>
+		</author>
+		<ptr target="https://www.nature.com/articles/nmeth.3945" />
+	</analytic>
+	<monogr>
+		<title level="j">Nature Methods</title>
+		<imprint>
+			<biblScope unit="volume">13</biblScope>
+			<biblScope unit="issue">8</biblScope>
+			<date type="published" when="2016-01">2016. Jul. 2016. Jan. 08, 2023</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. Lever, M. Krzywinski, and N. Altman, &quot;Classification evaluation,&quot; Nature Methods 2016 13:8, Jul. 2016, Accessed: Jan. 08, 2023. [Online]. Available: https://www.nature.com/articles/nmeth.3945</note>
+</biblStruct>
+
+<biblStruct xml:id="b25">
+	<analytic>
+		<title level="a" type="main">Sequential fraud detection for prepaid cards using hidden Markov model divergence</title>
+		<author>
+			<persName><forename type="first">W</forename><forename type="middle">N</forename><surname>Robinson</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Aria</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/J.ESWA.2017.08.043</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Expert Syst Appl</title>
+		<imprint>
+			<biblScope unit="volume">91</biblScope>
+			<biblScope unit="page" from="235" to="251" />
+			<date type="published" when="2018-01">Jan. 2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">W. N. Robinson and A. Aria, &quot;Sequential fraud detection for prepaid cards using hidden Markov model divergence,&quot; Expert Syst Appl, vol. 91, pp. 235-251, Jan. 2018, doi: 10.1016/J.ESWA.2017.08.043.</note>
+</biblStruct>
+
+<biblStruct xml:id="b26">
+	<analytic>
+		<title level="a" type="main">Feature engineering strategies for credit card fraud detection</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Correa Bahnsen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Aouada</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Stojanovic</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Ottersten</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/J.ESWA.2015.12.030</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Expert Syst Appl</title>
+		<imprint>
+			<biblScope unit="volume">51</biblScope>
+			<biblScope unit="page" from="134" to="142" />
+			<date type="published" when="2016-06">Jun. 2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">A. Correa Bahnsen, D. Aouada, A. Stojanovic, and B. Ottersten, &quot;Feature engineering strategies for credit card fraud detection,&quot; Expert Syst Appl, vol. 51, pp. 134-142, Jun. 2016, doi: 10.1016/J.ESWA.2015.12.030.</note>
+</biblStruct>
+
+<biblStruct xml:id="b27">
+	<analytic>
+		<title/>
+		<ptr target="https://www.kaggle.com/datasets/adityakadiwal/credit-card-fraudulent-transactions" />
+	</analytic>
+	<monogr>
+		<title level="j">Online Credit Card Transactions</title>
+		<imprint>
+			<date type="published" when="2023-08">Jan. 08, 2023</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">&quot;Online Credit Card Transactions | Kaggle.&quot; https://www.kaggle.com/datasets/adityakadiwal/credit-card- fraudulent-transactions (accessed Jan. 08, 2023).</note>
+</biblStruct>
+
+<biblStruct xml:id="b28">
+	<analytic>
+		<title level="a" type="main">A Cost-sensitive weighted Random Forest Technique for Credit Card Fraud Detection</title>
+		<author>
+			<persName><forename type="first">D</forename><surname>Devi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">K</forename><surname>Biswas</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Purkayastha</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/ICCCNT45670.2019.8944885</idno>
+	</analytic>
+	<monogr>
+		<title level="m">2019 10th International Conference on Computing, Communication and Networking Technologies</title>
+		<meeting><address><addrLine>ICCCNT</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2019-07">2019. Jul. 2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">D. Devi, S. K. Biswas, and B. Purkayastha, &quot;A Cost-sensitive weighted Random Forest Technique for Credit Card Fraud Detection,&quot; 2019 10th International Conference on Computing, Communication and Networking Technologies, ICCCNT 2019, Jul. 2019, doi: 10.1109/ICCCNT45670.2019.8944885.</note>
+</biblStruct>
+
+<biblStruct xml:id="b29">
+	<analytic>
+		<title level="a" type="main">Credit Card Fraud Detection Using Random Forest Algorithm</title>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">S</forename><surname>Kumar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">V</forename><surname>Soundarya</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Kavitha</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><forename type="middle">S</forename><surname>Keerthika</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Aswini</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/ICCCT2.2019.8824930</idno>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 3rd International Conference on Computing and Communications Technologies</title>
+		<meeting>the 3rd International Conference on Computing and Communications Technologies<address><addrLine>ICCCT</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2019-02">2019. 2019. Feb. 2019</date>
+			<biblScope unit="page" from="149" to="153" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">M. S. Kumar, V. Soundarya, S. Kavitha, E. S. Keerthika, and E. Aswini, &quot;Credit Card Fraud Detection Using Random Forest Algorithm,&quot; 2019 Proceedings of the 3rd International Conference on Computing and Communications Technologies, ICCCT 2019, pp. 149-153, Feb. 2019, doi: 10.1109/ICCCT2.2019.8824930.</note>
+</biblStruct>
+
+<biblStruct xml:id="b30">
+	<analytic>
+		<title level="a" type="main">Random forest for credit card fraud detection</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Xuan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Zheng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Jiang</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/ICNSC.2018.8361343</idno>
+	</analytic>
+	<monogr>
+		<title level="m">ICNSC 2018 -15th IEEE International Conference on Networking, Sensing and Control</title>
+		<imprint>
+			<date type="published" when="2018-05">May 2018</date>
+			<biblScope unit="page" from="1" to="6" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S. Xuan, G. Liu, Z. Li, L. Zheng, S. Wang, and C. Jiang, &quot;Random forest for credit card fraud detection,&quot; ICNSC 2018 -15th IEEE International Conference on Networking, Sensing and Control, pp. 1-6, May 2018, doi: 10.1109/ICNSC.2018.8361343.</note>
+</biblStruct>
+
+<biblStruct xml:id="b31">
+	<analytic>
+		<title level="a" type="main">Comparative Analysis of Machine Learning Algorithms through Credit Card Fraud Detection</title>
+		<author>
+			<persName><forename type="first">R</forename><surname>Banerjee</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Bourla</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Kashyap</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Purohit</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/URTC45901.2018.9244782</idno>
+	</analytic>
+	<monogr>
+		<title level="m">IEEE MIT Undergraduate Research Technology Conference</title>
+		<meeting><address><addrLine>URTC</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2018-10">2018. 2018. Oct. 2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">R. Banerjee, G. Bourla, S. Chen, M. Kashyap, and S. Purohit, &quot;Comparative Analysis of Machine Learning Algorithms through Credit Card Fraud Detection,&quot; 2018 IEEE MIT Undergraduate Research Technology Conference, URTC 2018, Oct. 2018, doi: 10.1109/URTC45901.2018.9244782.</note>
+</biblStruct>
+
+<biblStruct xml:id="b32">
+	<analytic>
+		<title level="a" type="main">An ensemble based incremental learning framework for concept drift and class imbalance</title>
+		<author>
+			<persName><forename type="first">G</forename><surname>Ditzler</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">P</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">-T</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">I</forename><forename type="middle">J</forename><surname>Conference</surname></persName>
+		</author>
+		<ptr target="https://ieeexplore.ieee.org/abstract/document/5596764/" />
+	</analytic>
+	<monogr>
+		<title level="m">ieeexplore.ieee.org</title>
+		<imprint>
+			<date type="published" when="2010-01-24">2010. 2010. Jan. 24, 2023</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">G. Ditzler, R. P.-T. 2010 I. J. Conference, and undefined 2010, &quot;An ensemble based incremental learning framework for concept drift and class imbalance,&quot; ieeexplore.ieee.org, Accessed: Jan. 24, 2023. [Online]. Available: https://ieeexplore.ieee.org/abstract/document/5596764/</note>
+</biblStruct>
+
+<biblStruct xml:id="b33">
+	<analytic>
+		<title level="a" type="main">An incremental learning algorithm for non-stationary environments and class imbalance</title>
+		<author>
+			<persName><forename type="first">G</forename><surname>Ditzler</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Polikar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">C</forename></persName>
+		</author>
+		<idno type="DOI">10.1109/ICPR.2010.734</idno>
+	</analytic>
+	<monogr>
+		<title level="m">ieeexplore.ieee.org</title>
+		<imprint>
+			<date type="published" when="2010">2010. 2010</date>
+		</imprint>
+	</monogr>
+	<note>20th International, and undefined 2010</note>
+	<note type="raw_reference">G. Ditzler, R. Polikar, N. C.-2010 20th International, and undefined 2010, &quot;An incremental learning algorithm for non-stationary environments and class imbalance,&quot; ieeexplore.ieee.org, 2010, doi: 10.1109/ICPR.2010.734.</note>
+</biblStruct>
+
+<biblStruct xml:id="b34">
+	<analytic>
+		<title level="a" type="main">Applying support vector machines to imbalanced datasets</title>
+		<author>
+			<persName><forename type="first">R</forename><surname>Akbani</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Kwek</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><surname>Japkowicz</surname></persName>
+		</author>
+		<idno type="DOI">10.1007/978-3-540-30115-8_7/COVER</idno>
+	</analytic>
+	<monogr>
+		<title level="s">Lecture Notes in Artificial Intelligence (Subseries of Lecture Notes in Computer Science</title>
+		<imprint>
+			<biblScope unit="volume">3201</biblScope>
+			<biblScope unit="page" from="39" to="50" />
+			<date type="published" when="2004">2004</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">R. Akbani, S. Kwek, and N. Japkowicz, &quot;Applying support vector machines to imbalanced datasets,&quot; Lecture Notes in Artificial Intelligence (Subseries of Lecture Notes in Computer Science), vol. 3201, pp. 39- 50, 2004, doi: 10.1007/978-3-540-30115-8_7/COVER.</note>
+</biblStruct>
+
+<biblStruct xml:id="b35">
+	<analytic>
+		<title level="a" type="main">Detecting credit card fraud using selected machine learning algorithms</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Puh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Brkić</surname></persName>
+		</author>
+		<idno type="DOI">10.23919/MIPRO.2019.8757212</idno>
+	</analytic>
+	<monogr>
+		<title level="m">2019 42nd International Convention on Information and Communication Technology, Electronics and Microelectronics, MIPRO 2019 -Proceedings</title>
+		<imprint>
+			<date type="published" when="2019-05">May 2019</date>
+			<biblScope unit="page" from="1250" to="1255" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">M. Puh and L. Brkić, &quot;Detecting credit card fraud using selected machine learning algorithms,&quot; 2019 42nd International Convention on Information and Communication Technology, Electronics and Microelectronics, MIPRO 2019 -Proceedings, pp. 1250-1255, May 2019, doi: 10.23919/MIPRO.2019.8757212.</note>
+</biblStruct>
+
+<biblStruct xml:id="b36">
+	<analytic>
+		<title level="a" type="main">Synthetic Minority Oversampling TEchnique (SMOTE) and Logistic Model Tree (LMT)-Adaptive Boosting algorithms for classifying imbalanced datasets of nutrient and chlorophyll sufficiency levels of oil palm (Elaeis guineensis) using spectroradiometers and unmanned aerial vehicles</title>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">D</forename><surname>Amirruddin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><forename type="middle">M</forename><surname>Muharam</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">H</forename><surname>Ismail</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">P</forename><surname>Tan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">F</forename><surname>Ismail</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/J.COMPAG.2021.106646</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Comput Electron Agric</title>
+		<imprint>
+			<biblScope unit="volume">193</biblScope>
+			<biblScope unit="page">106646</biblScope>
+			<date type="published" when="2022-02">Feb. 2022</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">A. D. Amirruddin, F. M. Muharam, M. H. Ismail, N. P. Tan, and M. F. Ismail, &quot;Synthetic Minority Over- sampling TEchnique (SMOTE) and Logistic Model Tree (LMT)-Adaptive Boosting algorithms for classifying imbalanced datasets of nutrient and chlorophyll sufficiency levels of oil palm (Elaeis guineensis) using spectroradiometers and unmanned aerial vehicles,&quot; Comput Electron Agric, vol. 193, p. 106646, Feb. 2022, doi: 10.1016/J.COMPAG.2021.106646.</note>
+</biblStruct>
+
+<biblStruct xml:id="b37">
+	<analytic>
+		<title level="a" type="main">Application of Machine Learning and Resampling Techniques to Credit Card Fraud Detection</title>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">L</forename><surname>Udeze</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">I</forename><forename type="middle">E</forename><surname>Eteng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">E</forename><surname>Ibor</surname></persName>
+		</author>
+		<idno type="DOI">10.46481/JNSPS.2022.769</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of the Nigerian Society of Physical Sciences</title>
+		<imprint>
+			<biblScope unit="volume">4</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="769" to="769" />
+			<date type="published" when="2022-08">Aug. 2022</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">C. L. Udeze, I. E. Eteng, and A. E. Ibor, &quot;Application of Machine Learning and Resampling Techniques to Credit Card Fraud Detection,&quot; Journal of the Nigerian Society of Physical Sciences, vol. 4, no. 3, pp. 769- 769, Aug. 2022, doi: 10.46481/JNSPS.2022.769.</note>
+</biblStruct>
+
+<biblStruct xml:id="b38">
+	<analytic>
+		<title level="a" type="main">Synthetic minority over-sampling technique nominal continous logistic regression for imbalanced data</title>
+		<author>
+			<persName><forename type="first">I</forename><forename type="middle">D</forename><surname>Ratih</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">M</forename><surname>Retnaningsih</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">I</forename><surname>Islahulhaq</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">V</forename><forename type="middle">M</forename><surname>Dewi</surname></persName>
+		</author>
+		<idno type="DOI">10.1063/5.0111804</idno>
+	</analytic>
+	<monogr>
+		<title level="j">AIP Conf Proc</title>
+		<imprint>
+			<biblScope unit="volume">2668</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page">70021</biblScope>
+			<date type="published" when="2022-10">Oct. 2022</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">I. D. Ratih, S. M. Retnaningsih, I. Islahulhaq, and V. M. Dewi, &quot;Synthetic minority over-sampling technique nominal continous logistic regression for imbalanced data,&quot; AIP Conf Proc, vol. 2668, no. 1, p. 070021, Oct. 2022, doi: 10.1063/5.0111804.</note>
+</biblStruct>
+
+<biblStruct xml:id="b39">
+	<analytic>
+		<title level="a" type="main">Random forests</title>
+		<author>
+			<persName><forename type="first">L</forename><surname>Breiman</surname></persName>
+		</author>
+		<idno type="DOI">10.1023/A:1010933404324</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Mach Learn</title>
+		<imprint>
+			<biblScope unit="volume">45</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="5" to="32" />
+			<date type="published" when="2001-10">Oct. 2001</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">L. Breiman, &quot;Random forests,&quot; Mach Learn, vol. 45, no. 1, pp. 5-32, Oct. 2001, doi: 10.1023/A:1010933404324.</note>
+</biblStruct>
+
+<biblStruct xml:id="b40">
+	<analytic>
+		<title level="a" type="main">Comparative Analysis of Machine Learning Algorithms through Credit Card Fraud Detection</title>
+		<author>
+			<persName><forename type="first">R</forename><surname>Banerjee</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Bourla</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Kashyap</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Purohit</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/URTC45901.2018.9244782</idno>
+	</analytic>
+	<monogr>
+		<title level="m">IEEE MIT Undergraduate Research Technology Conference</title>
+		<meeting><address><addrLine>URTC</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2018-10">2018. 2018. Oct. 2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">R. Banerjee, G. Bourla, S. Chen, M. Kashyap, and S. Purohit, &quot;Comparative Analysis of Machine Learning Algorithms through Credit Card Fraud Detection,&quot; 2018 IEEE MIT Undergraduate Research Technology Conference, URTC 2018, Oct. 2018, doi: 10.1109/URTC45901.2018.9244782.</note>
+</biblStruct>
+
+<biblStruct xml:id="b41">
+	<analytic>
+		<title level="a" type="main">Credit card fraud detection using Random Forest Algorithm</title>
+		<author>
+			<persName><forename type="first">V</forename><surname>Jonnalagadda</surname></persName>
+		</author>
+		<ptr target="www.IJARIIT.com" />
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Advance Research</title>
+		<imprint>
+			<date type="published" when="2019-01">2019. Jan. 07, 2023</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">V. Jonnalagadda, &quot;Credit card fraud detection using Random Forest Algorithm,&quot; International Journal of Advance Research, 2019, Accessed: Jan. 07, 2023. [Online]. Available: www.IJARIIT.com</note>
+</biblStruct>
+
+<biblStruct xml:id="b42">
+	<analytic>
+		<title level="a" type="main">Credit card fraud detection using machine learning techniques: A comparative analysis</title>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">O</forename><surname>Awoyemi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">O</forename><surname>Adetunmbi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">A</forename><surname>Oluwadare</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/ICCNI.2017.8123782</idno>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the IEEE International Conference on Computing, Networking and Informatics</title>
+		<meeting>the IEEE International Conference on Computing, Networking and Informatics<address><addrLine>ICCNI</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2017-01">2017. 2017-January. Nov. 2017</date>
+			<biblScope unit="page" from="1" to="9" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. O. Awoyemi, A. O. Adetunmbi, and S. A. Oluwadare, &quot;Credit card fraud detection using machine learning techniques: A comparative analysis,&quot; Proceedings of the IEEE International Conference on Computing, Networking and Informatics, ICCNI 2017, vol. 2017-January, pp. 1-9, Nov. 2017, doi: 10.1109/ICCNI.2017.8123782.</note>
+</biblStruct>
+
+<biblStruct xml:id="b43">
+	<analytic>
+		<title level="a" type="main">The relationship between precision-recall and ROC curves</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Davis</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Goadrich</surname></persName>
+		</author>
+		<idno type="DOI">10.1145/1143844.1143874</idno>
+	</analytic>
+	<monogr>
+		<title level="m">ACM International Conference Proceeding Series</title>
+		<imprint>
+			<date type="published" when="2006">2006</date>
+			<biblScope unit="volume">148</biblScope>
+			<biblScope unit="page" from="233" to="240" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. Davis and M. Goadrich, &quot;The relationship between precision-recall and ROC curves,&quot; ACM International Conference Proceeding Series, vol. 148, pp. 233-240, 2006, doi: 10.1145/1143844.1143874.</note>
+</biblStruct>
+
+<biblStruct xml:id="b44">
+	<analytic>
+		<title level="a" type="main">Comparative Analysis of Machine Learning Algorithms through Credit Card Fraud Detection</title>
+		<author>
+			<persName><forename type="first">R</forename><surname>Banerjee</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Bourla</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Kashyap</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Purohit</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/URTC45901.2018.9244782</idno>
+	</analytic>
+	<monogr>
+		<title level="m">IEEE MIT Undergraduate Research Technology Conference</title>
+		<meeting><address><addrLine>URTC</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2018-10">2018. 2018. Oct. 2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">R. Banerjee, G. Bourla, S. Chen, M. Kashyap, and S. Purohit, &quot;Comparative Analysis of Machine Learning Algorithms through Credit Card Fraud Detection,&quot; 2018 IEEE MIT Undergraduate Research Technology Conference, URTC 2018, Oct. 2018, doi: 10.1109/URTC45901.2018.9244782.</note>
+</biblStruct>
+
+<biblStruct xml:id="b45">
+	<analytic>
+		<title level="a" type="main">Fraudulent Transaction Detection in Credit Card by Applying Ensemble Machine Learning techniques</title>
+		<author>
+			<persName><forename type="first">D</forename><surname>Prusti</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">K</forename><surname>Rath</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/ICCCNT45670.2019.8944867</idno>
+	</analytic>
+	<monogr>
+		<title level="m">2019 10th International Conference on Computing, Communication and Networking Technologies</title>
+		<meeting><address><addrLine>ICCCNT</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2019-07">2019. Jul. 2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">D. Prusti and S. K. Rath, &quot;Fraudulent Transaction Detection in Credit Card by Applying Ensemble Machine Learning techniques,&quot; 2019 10th International Conference on Computing, Communication and Networking Technologies, ICCCNT 2019, Jul. 2019, doi: 10.1109/ICCCNT45670.2019.8944867.</note>
+</biblStruct>
+
+<biblStruct xml:id="b46">
+	<analytic>
+		<title level="a" type="main">Credit Card Fraud Detection Based on Random Forest Model</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Li</surname></persName>
+		</author>
+		<idno type="DOI">10.25236/AJCIS.2022.051309</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Academic Journal of Computing &amp; Information Science</title>
+		<imprint>
+			<biblScope unit="volume">5</biblScope>
+			<biblScope unit="page" from="55" to="61" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">P. Li, &quot;Credit Card Fraud Detection Based on Random Forest Model,&quot; Academic Journal of Computing &amp; Information Science, vol. 5, pp. 55-61, doi: 10.25236/AJCIS.2022.051309.</note>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

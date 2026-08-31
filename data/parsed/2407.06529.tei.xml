@@ -1,0 +1,969 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">Advanced Financial Fraud Detection Using GNN-CL Model</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability status="unknown"><licence/></availability>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><forename type="first">Yu</forename><surname>Cheng</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="institution">Columbia University</orgName>
+								<address>
+									<country key="US">USA</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Junjie</forename><surname>Guo</surname></persName>
+							<affiliation key="aff1">
+								<orgName type="institution">Rutgers University</orgName>
+								<address>
+									<country key="US">USA</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Shiqing</forename><surname>Long</surname></persName>
+							<affiliation key="aff2">
+								<orgName type="institution">Independent Researcher</orgName>
+								<address>
+									<country key="CN">China</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">You</forename><surname>Wu</surname></persName>
+							<affiliation key="aff3">
+								<orgName type="institution">College of William &amp; Mary</orgName>
+								<address>
+									<country key="US">USA</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Mengfang</forename><surname>Sun</surname></persName>
+							<affiliation key="aff4">
+								<orgName type="institution">Stevens Institute of Technological</orgName>
+								<address>
+									<country key="US">USA</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Rong</forename><surname>Zhang</surname></persName>
+							<affiliation key="aff5">
+								<orgName type="institution">University of California</orgName>
+								<address>
+									<settlement>Davis</settlement>
+									<country key="US">USA</country>
+								</address>
+							</affiliation>
+						</author>
+						<title level="a" type="main">Advanced Financial Fraud Detection Using GNN-CL Model</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date/>
+						</imprint>
+					</monogr>
+					<idno type="MD5">4BC8DE354989C50E360896BCF678F0BB</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.2-SNAPSHOT" ident="GROBID" when="2026-08-31T18:11+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<textClass>
+				<keywords>
+					<term>GNN-CL model</term>
+					<term>Financial fraud detection</term>
+					<term>Deep learning algorithm</term>
+				</keywords>
+			</textClass>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>The innovative GNN-CL model proposed in this paper marks a breakthrough in the field of financial fraud detection by synergistically combining the advantages of graph neural networks (gnn), convolutional neural networks (cnn) and long short-term memory (LSTM) networks. This convergence enables multifaceted analysis of complex transaction patterns, improving detection accuracy and resilience against complex fraudulent activities. A key novelty of this paper is the use of multilayer perceptrons (MLPS) to estimate node similarity, effectively filtering out neighborhood noise that can lead to false positives. This intelligent purification mechanism ensures that only the most relevant information is considered, thereby improving the model's understanding of the network structure. Feature weakening often plagues graph-based models due to the dilution of key signals. In order to further address the challenge of feature weakening, GNN-CL adopts reinforcement learning strategies. By dynamically adjusting the weights assigned to central nodes, it reinforces the importance of these influential entities to retain important clues of fraud even in less informative data. Experimental evaluations on Yelp datasets show that the results highlight the superior performance of GNN-CL compared to existing methods.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>I. INTRODUCTION</head><p>In today's digital financial era, with the vigorous development of Internet finance, mobile payment, and e-commerce, the convenience and popularity of financial services have been improved unprecedentedly. However, this series of progress also brings new challenges to financial security, especially the diversification and concealment of financial fraud, which seriously threatens the stability of the financial system and the safety of users' property. Financial institutions around the world report tens of billions of dollars in economic losses from fraudulent activities every year, and this number continues to grow. Therefore, building an efficient and accurate financial fraud detection system has become an urgent need to maintain financial security <ref type="bibr" target="#b0">[1]</ref>.</p><p>As a revolutionary technology in the field of artificial intelligence, deep learning has made remarkable achievements in many fields such as image recognition <ref type="bibr" target="#b1">[2]</ref><ref type="bibr" target="#b2">[3]</ref><ref type="bibr" target="#b3">[4]</ref> and natural language processing <ref type="bibr" target="#b4">[5]</ref><ref type="bibr" target="#b5">[6]</ref><ref type="bibr" target="#b6">[7]</ref><ref type="bibr" target="#b7">[8]</ref> with its powerful data processing ability, automatic feature extraction, and highly abstract learning mechanism. In recent years, its application in the field of financial fraud detection has also attracted increasing attention. Analyzing a large number of transaction data through deep neural networks can capture complex patterns and abnormal behaviors that are difficult to be found by traditional methods, thereby improving the accuracy and efficiency of fraud detection.</p><p>However, the application of deep learning algorithms in financial fraud detection is not smooth. Problems such as data imbalance, feature selection, insufficient generalization ability of the model, and the continuous evolution of fraud methods pose severe challenges to the effectiveness and stability of the model. Therefore, how to optimize the deep learning algorithm to build a more accurate and robust financial fraud risk assessment model has become a research hotspot of common concern in academia and industry. This paper aims to deeply explore the application of deep learning algorithms in financial fraud detection, focusing on the optimization of risk assessment models. This paper proposes a new risk assessment framework combining adaptive feature learning, attention mechanism and ensemble learning to solve the problem of data imbalance, enhance the learning ability of the model for complex fraud patterns, and improve the generalization performance of the model. In addition, this paper will also conduct experimental verification through actual financial transaction data sets, and compare and analyze the performance differences between the proposed model and the existing methods, in order to provide a more advanced and practical fraud detection solution for the financial industry.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>II.CORRELATIONAL RESEARCH</head><p>With the advent of the era of big data and the rapid development of machine learning technology, deep learning algorithms have shown great potential in the field of financial fraud detection because of their excellent performance in data processing ability and pattern recognition ability. In contrast to conventional machine learning techniques, deep architectures comprising multiple layers provide enhanced learning capabilities. These advanced structures have been successfully applied across various domains, including long short-term memory (LSTM) networks <ref type="bibr" target="#b8">[9]</ref><ref type="bibr" target="#b9">[10]</ref><ref type="bibr" target="#b10">[11]</ref>, computer vision <ref type="bibr" target="#b11">[12]</ref><ref type="bibr" target="#b12">[13]</ref><ref type="bibr" target="#b13">[14]</ref>, and medical diagnosis <ref type="bibr" target="#b14">[15]</ref><ref type="bibr" target="#b15">[16]</ref>. In view of the diversity and complexity of financial fraud, the risk assessment model needs to have higher accuracy and rapid response, and deep learning technology can meet this series of requirements.</p><p>In recent years, due to the obvious limitations of rule-based fraud detection methods, many researchers have turned to Machine Learning (ML) methods to improve the ability of fraudulent transaction detection. Through in-depth analysis of money laundering characteristics, the decision tree technology is applied to anti-money laundering practice. Ketenci et al. <ref type="bibr" target="#b16">[17]</ref> innovatively introduced a set of feature sets based on time-frequency analysis in order to improve the efficiency of anti-money laundering system. This set uses the binary representation of financial transactions, combines random forest as a machine learning tool, and uses simulated annealing algorithm for hyperparameter tuning. This study proves the utility of time-frequency features for distinguishing suspicious and non-suspicious entities. Lee et al. <ref type="bibr" target="#b17">[18]</ref> used supervised machine learning algorithm to classify illegal nodes in the Bitcoin network environment, and specifically used random forest and artificial neural network to identify illegal transactions. By integrating the statistical characteristics of trading volume in a fixed time window, the entropy value was formed, and the derivative characteristics of entropy were used as the model input to further enrich the identification dimension of fraud. Le et al. <ref type="bibr" target="#b18">[19]</ref> proposed a composite method combining clustering analysis and Multi-layer Perceptron (MLP), which used a simple center-based clustering technique to screen suspected money laundering cases, and used the frequency and amount of transactions as the training features of the MLP model. These studies highlight the broad impact of machine learning on financial fraud prevention and highlight how model design is evolving from multiple perspectives to accommodate the complexity and variability of fraud. Although traditional methods focus on the statistical attribute analysis of users and ignore the importance of the relationship between users, the development of graph neural network technology makes up for this defect. For example, the MvMoE model introduced by Liang et al. <ref type="bibr" target="#b19">[20]</ref> integrates heterogeneous financial data through a multi-view network with hierarchical attention mechanism, which promotes the effective extraction of information and the collaborative improvement of task performance. Inspired by the connected subgraph strategy, the work of Liu et al. <ref type="bibr" target="#b20">[21]</ref> dynamically learns feature representations from the account device network for the attacker's behavior patterns. Wang et al. used RNN to mine the temporal patterns of user click sequences to enhance the accuracy of behavior analysis <ref type="bibr" target="#b21">[22]</ref>. Yvan Lucas <ref type="bibr" target="#b22">[23]</ref> applied multi-view HMM to construct features automatically, which improved the efficiency of credit card fraud recognition. The champion-challenger framework proposed by Eunji Kima <ref type="bibr" target="#b23">[24]</ref> fuses ensemble learning with deep learning models, demonstrating the advantages of cross-method cooperation in complex fraud detection tasks. The work of <ref type="bibr">Van Vlasselaer[25]</ref> comprehensively considers a variety of transaction characteristics, including cardholder habits and geographical locations, and enhances the accuracy of the model through network analysis. Song Yang <ref type="bibr" target="#b25">[26]</ref> and Ju Chunhua <ref type="bibr" target="#b26">[27]</ref> optimized the fraud detection model from the aspects of feature selection, data balance and sequence learning with the help of SVM, k-means and LSTM combined with KNN-SMOTE technology, and achieved more refined classification and performance improvement. Together, these studies advance the frontier of fraud detection techniques in fintech, continuously exploring more comprehensive and efficient solutions.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>III.METHOD</head><p>The model structure GNN-CL proposed in this paper is innovative, as shown in Figure <ref type="figure" target="#fig_0">1</ref>. The core of the model consists of three layers of GNN, CNN and LSTM, and is designed around three key modules: neighborhood noise purifier, core node intensifier and relationship summarizer. The neighborhood noise purifier uses MLP to construct a similarity evaluation mechanism, which discriminates and reduces the noise in the neighborhood information according to the similarity between nodes. Despite the initial filtering, the impact of noise still exists, and it is urgent to optimize the strategy to mitigate its interference and ensure the balance between the core node and its neighbors. In view of this, the core node strengthening mechanism comes into being, which implements a weighting strategy for core nodes when aggregating neighborhood information, aiming to weaken the adverse effect of residual noise, ensure the brightness of core node characteristics in the fusion process, and avoid information flooding. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. GNN layer</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1.">Neighborhood noise purifier</head><p>Fraudulent behaviors often evade the monitoring of anti-fraud systems by changing the usual operation mode or imitating normal behaviors, such as implementing relationship disguise strategies <ref type="bibr" target="#b27">[28]</ref>. Fraudsters can evade the screening of typical detection models by establishing dense connections with normal users. However, the neglect of such strategies in early models (e.g., GCN, GAT) undoubtedly adds difficulty to the identification of fraud.</p><p>(1) Similarity measure method To deal with the challenge of feature and relation masquerading, many similarity measures have been proposed, including the classic cosine similarity. However, the limitation of cosine similarity is that it only focuses on the direction of the vector rather than its magnitude, fails to fully consider the scale change of different user feature values, and ignores the potential value of node label information in similarity calculation. In view of this, this paper introduces an improved similarity measurement strategy, which uses Multi-layer Perceptron (MLP) in each layer as the prediction model, and uses the L1 distance between the prediction results to quantify the similarity between nodes, aiming to evaluate the relationship between nodes more comprehensively, overcome the limitations of the original method, and improve the accuracy and robustness of fraud detection.</p><formula xml:id="formula_0">𝐷 𝑙 (𝑣, 𝑢) = ∥ ∥ 𝐿 𝑙 (ℎ 𝑣 (𝑙-1) ) -𝐿 𝑙 (ℎ 𝑢 (𝑙-1) ) ∥ ∥ 1<label>(1)</label></formula><p>In the formula, 𝐿 𝑙 (ℎ 𝑣 (𝑙-1) ) = 𝜎(𝑀𝐿𝑃 𝑙 ((ℎ 𝑣 (𝑙-1) ))) represents the similarity score of the feature embeddings obtained by node v at the l-th layer after being transformed by the multi-layer perceptron MLP. Here, σ stands for the activation function. However, a large value of 𝐷 𝑙 (𝑣, 𝑢) indicates that the similarity between node v and node u is weak. To enhance the intuition, we can simplify the similarity measure statement as follows.</p><formula xml:id="formula_1">𝑆𝑖𝑚𝑖𝑙𝑎𝑟𝑖𝑡𝑦 𝑙 (𝑣, 𝑢) = 1 1 + 𝐷 𝑙 (𝑣, 𝑢)<label>(2)</label></formula><p>Therefore, when 𝑆𝑖𝑚𝑖𝑙𝑎𝑟𝑖𝑡𝑦 𝑙 (𝑣, 𝑢) is close to 1, it means that node v and node u are highly similar. If 𝑆𝑖𝑚𝑖𝑙𝑎𝑟𝑖𝑡𝑦 𝑙 (𝑣, 𝑢) is close to 0, it means that the two nodes are significantly different, which intuitively shows the closeness of the association between nodes. In view of the fact that we use a learnable MLP to estimate the similarity score, in order to optimize this process, we introduce the cross-entropy loss function as a key indicator to measure the performance of the neighbor noise filter, so as to guide the model to better distinguish and reduce the interference of irrelevant neighbors during training.</p><formula xml:id="formula_2">ℒ 𝐷 (𝑙) = -∑ 𝑅 𝑟 ∑ 𝑣∈𝑉 𝑦 𝑣 𝑙𝑜𝑔 (𝑀𝐿𝑃 (𝑙) (ℎ 𝑣,𝑟 (𝑙) )) + (1 -𝑦 𝑣 )𝑙𝑜𝑔 (1 -(𝑀𝐿𝑃 (𝑙) (ℎ 𝑣,𝑟 (𝑙) ))) (3)</formula><p>The similarity measure directly participated in the parameter iteration through the loss function shown in Equation (3), which not only exceeded the traditional limitation of only relying on the measurement direction, but also ensured that the measurement of each layer was dynamically updated with the training process, effectively overcoming the limitations of static methods such as cosine similarity that could not be self-optimized.</p><p>(2) Sampling method Since fraud is often accompanied by complex and variable impersonation methods, it is crucial to effectively identify and exclude these impersonation nodes. The limitations of existing sampling strategies are prominent, such as relying on human intervention with preset thresholds, which not only increases the dependence on developer experience and subjective judgment, but also introduces unnecessary randomness, which reduces the universality and stability of the method. Therefore, it is crucial to develop a strategy that can autonomously learn and dynamically optimize the sampling scale of neighbor nodes, aiming at realizing the intelligent and adaptive adjustment of the sampling process. The following formula is an attempt to solve this problem by dynamically calculating the number of nodes sampled.</p><formula xml:id="formula_3">𝑆𝑝𝑙 𝑣,𝑟 (𝑙) = 𝑝 𝑟 (𝑙) ⋅ 𝑉 𝑣 𝑟 (4)</formula><p>Specifically, 𝑆𝑝𝑙 𝑣,𝑟 (𝑙) is defined as the sampling number of node v under relation r in the LTH layer, 𝑝 𝑟 (𝑙) is the filtering threshold set for relation r at this level, and 𝑉 𝑣 𝑟 represents the total number of neighbors of node v under relation r. After determining the number of sampled neighbors for each node, the sampling process is performed based on the similarity between them, and the sampling formula is as follows:</p><formula xml:id="formula_4">𝐶 𝑣,𝑟 (𝑙) = 𝐶ℎ𝑜𝑜𝑠𝑒 𝑠𝑝𝑙 𝑣,𝑟 (𝑙) (𝑆𝑜𝑟𝑡(𝐷 𝑙 (𝑣, 𝑢))) (5)</formula><p>The Sort function is responsible for sorting the neighbors based on the calculated similarity, while 𝐶ℎ𝑜𝑜𝑠𝑒 𝑠𝑝𝑙 𝑣,𝑟 (𝑙) selects the neighbors with the first 𝑠𝑝𝑙 𝑣,𝑟 (𝑙) name, and these nodes form 𝐶 𝑣,𝑟 (𝑙) . That is, the set of neighbors of layer l node v after similarity filtering under relation r. This sampling strategy based on similarity effectively filters a large number of potential noisy neighbor data, and significantly enhances the ability to identify and exclude the masquerading behavior of fraudsters.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.">Core node reinforcers</head><p>(1) Weighted aggregation of central nodes After completing the neighbor noise cancellation, the immediate next step is to update the information of the central node, which is achieved through the message passing process. The classical message passing mechanism can be summarized as follows:</p><formula xml:id="formula_5">𝐻 𝑣,𝑟 (𝑙) = 𝑅𝑒𝐿𝑈 (𝐴𝐺𝐺 𝑟 (𝑙) ({𝐻 𝑣,𝑣 ′ 𝑙-1 , 𝑣 ′ ∈ 𝑁 𝑟 (𝑣), 𝑣 ∈ 𝑉}))<label>(6)</label></formula><p>Here, 𝑁 𝑟 (𝑣)identifies the set of all neighbor nodes of node v under relation r, while 𝐴𝐺𝐺 𝑟 (𝑙) represents the average aggregation operation of graph neural network performed on relation r at layer l.</p><p>Although the above message passing process borrows the mechanism of graph neural network to update the state of the central node, it still faces a challenge: even after neighbor noise filtering, a node with a large number of neighbors may still lead to residual noise information. It is difficult to completely eliminate all interference by relying on the noise filter alone, especially when the number of neighbors is large. In fact, the advantage of graph neural network in fraud detection is that it can effectively use the key neighbor information, but too much neighbor data may have a negative effect, as shown in Equation <ref type="bibr" target="#b6">(7)</ref>.</p><p>Therefore, it is necessary to introduce a weighting strategy for the central node in the aggregation step, that is, to increase the weight of the central node itself, which aims to ensure that the integrity of the central node features is maintained to the greatest extent while integrating neighbor information. This strategy aims to balance the relationship between the influence of global neighbors and maintaining the uniqueness of individual features, so as to improve the anti-noise ability and detection accuracy of the model.</p><formula xml:id="formula_6">ℎ 𝑟 (𝑙+1) = 𝜎 (𝐷 ̃-1 2𝐴 ̃𝐷 ̃-1 2ℎ 𝑟 (𝑙) 𝑊 (𝑙) )<label>(7)</label></formula><p>Here, 𝐷 ̃𝑖𝑖 represents the degree of each node, and 𝐴 ̃= 𝐴 + 𝐼 is the adjacency matrix of the self-connected graph formed by the original adjacency matrix A plus the identity matrix I, which aims to consider the contribution of the node itself. 𝑊 (𝑙) for the training parameters, ℎ 𝑟 (𝑙) ∈ 𝑅 𝑁×𝐷 said in the activation of relation R first l layer node embedded vector, initialization time ℎ 𝑟 (0) = 𝑋.</p><p>Although the feature of the center node may be diluted due to too many neighbor nodes in the propagation process of Graph Convolutional Network (GCN), which has been alleviated by the above neighbor noise filtering step, it is particularly important to keep the feature of the center node fresh in the financial fraud detection scenario. Inspired by GCN, the consideration of the central node can be strengthened by increasing the weight of the self-loop edge, and the specific implementation is reflected in Equation ( <ref type="formula" target="#formula_7">8</ref>). This strategy aims to balance the global information aggregation and protect the uniqueness of individual features, so as to optimize the performance of the model in complex fraud pattern recognition.</p><formula xml:id="formula_7">ℎ 𝑟 (𝑙+1) = 𝜎 (𝑀 ̃-1 2𝑉 ̃𝑀-1 2ℎ 𝑟 (𝑙) 𝑊 (𝑙) )<label>(8)</label></formula><p>Where ℎ 𝑟 (𝑙+1) represents the updated embedding representation of each node at the l+1 layer under relation r, 𝑉 ̃= 𝐴 + 𝐼 ⋅ (1 + 𝑝 𝑟 (𝑙) )is the adjusted adjacency matrix, and the filtering threshold 𝑝 𝑟 (𝑙) is introduced as the weight of the central node. This design aims to not only maintain the integrity of the characteristics of the central node, but also efficiently integrate the information from the neighbor nodes, so as to strengthen the characteristics of the central node without ignoring the surrounding environment information.</p><p>(2) Reinforcement learning module Many studies adopt the average aggregation strategy in the aggregation step, which is simple but not efficient. Although the neighborhood information of a fraud node can reveal fraud features to some extent, its addition may inadvertently weaken the unique information of the central node. Therefore, it is particularly critical to build an update mechanism that can balance the information weight of the central node and its neighbor nodes. However, since 𝑝 𝑟 (𝑙) is essentially a probability value and lacks derivability, it is impossible to directly use gradient descent method for parameter optimization. Therefore, when measuring the distance, it is particularly important to take into account the average distance between a fraudulent node and its neighbors, which can help to evaluate the relationship between nodes more comprehensively. The average distance is quantified as follows:</p><formula xml:id="formula_8">𝐷 ̅ 𝑟 (𝑙,𝑒) = ∑ 𝑣∈𝑉 𝑝𝑜𝑠 𝐷 𝑟 (𝑙) (𝑣, 𝑣 ′ ) (𝑒) |𝑉 𝑡𝑟𝑎𝑖𝑛 | , 𝑣 ′ ∈ 𝐶 𝑣,𝑟 (𝑙) , 𝑟 ∈ {1, … , 𝑅}<label>(9)</label></formula><p>Here, 𝑉 𝑝𝑜𝑠 indicates the set of fraud nodes identified in the training phase, v' represents the nodes adjacent to the fraud node v, and 𝐷 ̅ 𝑟 (𝑙,𝑒) represents the average distance between the fraud node in level l and its corresponding neighbor nodes under the relationship r. Reinforcement learning (RL) mechanisms assign rewards or penalties based on this change in average distance: if the average distance of the current iteration has decreased compared to the previous one, a positive incentive is given; Conversely, if the distance increases, penalties will be imposed. Specific to the action policy, the decision logic of RL can be formulated as the following functional form: 𝑓(𝑝 𝑟 (𝑙) ) { +𝜏, 𝐷 ̅ 𝑟 (𝑙,𝑒-1) -𝐷 ̅ 𝑟 (𝑙,𝑒) ≥ 0 -𝜏, 𝐷 ̅ 𝑟 (𝑙,𝑒-1) -𝐷 ̅ 𝑟 (𝑙,𝑒) &lt; 0 <ref type="bibr" target="#b9">(10)</ref> Here, τ represents the step size to update the threshold in reinforcement learning. The iteration process stops when a predetermined termination condition is reached, that is, either a predetermined number of iterations is reached or convergence is observed within 10 consecutive epochs, indicating that the optimal threshold has been found. Once the reinforcement learning module completes its task, the obtained 𝑝 𝑟 (𝑙) value is not only used as the final neighbor filtering threshold, but also determines the weighting coefficient of the central node. The termination logic of reinforcement learning module can be formalized as follows.</p><formula xml:id="formula_9">| ∑ 𝑒 𝑒-10 𝑓(𝑝 𝑟 (𝑙) )| ≤ 2𝜏, 𝑤ℎ𝑒𝑟𝑒𝑒 ≥ 10𝑎𝑛𝑑𝑒 ≤ 𝐸<label>(11)</label></formula><p>Here, e marks the current iteration round, while E is defined as the total iteration number bound set for the whole experiment.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.">Relationship aggregators</head><p>After enhancing the central node features, the next step is to perform aggregation across relations. This involves integrating the embedding ℎ 𝑣,𝑟 (𝑙) of each node under a specific relation r with the embedding ℎ 𝑣 (𝑙-1) obtained by the node in the previous layer after the cross-relation aggregation to generate a comprehensive final embedding representation. See Equation <ref type="bibr" target="#b11">(12)</ref> for the specific mathematical expression.</p><formula xml:id="formula_10">ℎ 𝑣 (𝑙) = 𝑅𝑒𝐿𝑈 (𝑊 (𝑙) (ℎ 𝑣 (𝑙-1) ⊕ {ℎ 𝑣,𝑟 (𝑙) }| 𝑟=1 𝑅 ))<label>(12)</label></formula><p>Here, the symbol ⊕ refers to the concatenation operation, ℎ 𝑣,𝑟 (𝑙) represents the embedding vector of node v at layer l under relation r, and ℎ 𝑣 (𝑙-1) represents the final embedding vector of node v at layer l-1 after aggregation.</p><p>For any node v, its final embedding in the model is represented as the output ℎ 𝑣 (𝐿) obtained by the GNN at the topmost L level. In order to evaluate the performance of the model and guide the optimization process, the cross-entropy loss function is selected as the main loss metric.</p><formula xml:id="formula_11">ℒ 𝐺𝑁𝑁 = -∑ 𝑣∈𝑉 𝑦 𝑣 𝑙𝑜𝑔 (𝑀𝐿𝑃(ℎ 𝑣 (𝐿) )) + (1 -𝑦 𝑣 )𝑙𝑜𝑔 (1 -(𝑀𝐿𝑃(ℎ 𝑣 (𝐿) ))<label>(13)</label></formula></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. CNN layer</head><p>The output produced by the GNN layer is used as the input data of the subsequent CNN layer. In the CNN layer, the convolution process can be summarized by Eq. ( <ref type="formula" target="#formula_12">14</ref>), which generates the local feature vector ci, which involves the convolution kernel wj, the bias term b, the convolution kernel size k, and the application of the activation function f.</p><formula xml:id="formula_12">𝑐 𝑖 = 𝑓 ( ∑ 𝑖+𝑘 𝑖=𝑖-𝑘 𝑊 𝑗 𝑥 𝑗 + 𝑏) (<label>14</label></formula><formula xml:id="formula_13">)</formula><p>The description of the pooling step can be simplified by using equation <ref type="bibr" target="#b14">(15)</ref>, where pi refers to the pooling result, that is, the fixed-length feature vector, and k is the size of the pooling region. Then, the fully connected layer integrates all the local feature vectors p1,p2,... ,pn becomes an integrated global feature vector. This global feature vector is subsequently used as input information to the LSTM unit.</p><formula xml:id="formula_14">𝑝 𝑖 = 𝑚𝑎𝑥 𝑗=𝑗-𝑘 𝑖+𝑘 𝑐 𝑗 (15)</formula></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>C. LSTM layer</head><p>CNN layer output values are transformed by tanh function to generate vector set 𝑋 = {𝑥 1 , 𝑥 2 , . . . , 𝑥 𝑛 } ∈ ℝ 𝑛×𝑛 , which is directly used as the input of the LSTM layer.</p><p>The vectors are fed into the bidirectional LSTM model and processed independently by the hidden layers in both directions. This includes forward and reverse hidden layers, which generate outputs at each time step. Specifically, the forward hidden state at the NTH time step is denoted as ℎ ⃗ 𝑛 , while the reverse hidden state is denoted as ℎ 𝑛 ̅̅̅ , which is calculated according to equations ( <ref type="formula">16</ref>) and <ref type="bibr" target="#b16">(17)</ref>.</p><formula xml:id="formula_15">ℎ ⃗ 𝑛 = 𝑔(𝑊 𝑎 𝑓 𝑥 𝑖 + 𝑊 𝑛-1 𝑓 ℎ 𝑛-1 ⃗⃗⃗⃗⃗⃗⃗⃗⃗ ) (16) ℎ 𝑛 ̅̅̅ = 𝑔(𝑊 𝑎 𝑏 𝑥 𝑖 + 𝑊 𝑛-1 𝑏 ℎ 𝑛-1 ̅̅̅̅̅̅ )<label>(17)</label></formula><p>In the formulation, 𝑊 𝑎 𝑓 represents the weight matrix from the input xi to the feedforward hidden layer, and 𝑊 𝑛-1 𝑓 is the weight matrix corresponding to the feedforward hidden layer output ℎ 𝑛-1 ⃗⃗⃗⃗⃗⃗⃗⃗⃗ at the previous time step n-1. Similarly, 𝑊 𝑎 𝑏 is the weight matrix of the input xi matched to the backward hidden layer, and 𝑊 𝑛-1 𝑏 involves the weight matrix of the backward hidden layer output at time n-1ℎ 𝑛-1</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>̅̅̅̅̅.</head><p>Next, by merging the forward hidden state ℎ ⃗ 𝑛 at the current time step n with the backward hidden state ℎ 𝑛 ̅̅̅ , we obtain the integrated hidden layer output hn at that time step, which follows Equation <ref type="bibr" target="#b17">(18)</ref>.</p><formula xml:id="formula_16">ℎ 𝑛 = 𝛼(𝑊 𝑓 ℎ ⃗ 𝑛 + 𝑊 𝑏 ℎ 𝑛-1 ⃗⃗⃗⃗⃗⃗⃗⃗⃗ )<label>(18)</label></formula><p>In the formula, Wf represents the weight matrix associated with the forward hidden layer output, while Wb is the weight matrix corresponding to the backward hidden layer output; 𝛼 uses a sigmoid activation function to introduce nonlinearity and control the degree of fusion of different hidden state information.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>IV.APPLICATION OF MODEL</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. Dataset and evaluation metrics</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>1.Data sets</head><p>In order to test the fraud detection performance of the proposed GNN-CL model, the Yelp public data set is selected as the platform. Yelp data sets are widely used in business rating, sentiment analysis, personalized recommendation and regional search research. With their massive user feedback information on various types of local businesses, Yelp has become a treasure house in the fields of social network analysis, natural language processing and machine learning. The dataset is managed using the Linked Data methodology, which integrates multiple data formats, a fundamental component in academic research <ref type="bibr" target="#b28">[29]</ref>. This systematic approach enables the cross-referencing of data, enhancing interoperability among various datasets. This capability is especially beneficial in fields such as machine learning and artificial intelligence, where the quality of data is critical for the effective training of models and the attainment of accurate results. The unique ternary structure of this dataset covers three core relationships of Yelp review spam datasets: repeated reviews by users (R-U-R), reviews with the same rating of the same item (R-T-R), and reviews with the same month of the same item (R-S-R), which deeply describes user behavior, review patterns, and time characteristics. d. F Score: A single measure of precision and recall that is the harmonic mean of them.</p><formula xml:id="formula_17">F = 2 × Precision × Recall Precision + Recall<label>(22)</label></formula><p>In the experiments, we choose the well-known GCN algorithm as the basic reference, and compare the performance with the current state-of-art PC-GNN and CARE-GNN algorithms, so as to verify the superiority and practicability of our proposed algorithm in solving the fraud detection task based on graph structure.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Experimental environment and parameters</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1.">Experimental environment</head><p>The implementation of GNN-CL is based on Pytorch version 1.10.2, and the dataset is evenly split with 40% of the training data and 60% of the test data. The environment is configured to run Python 3.8.5 on Ubuntu 18.04.1 with a GeForce RTX 2080 Ti GPU, 16GB RAM, and Intel Xeon Silver 4214 processor (2.20GHz). For PC-GNN and CARE-GNN, we directly adopt the code of the original author to conduct experiments. However, the experiment of GCN is implemented through the DGL library.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.">Experimental parameters</head><p>In view of the large number of nodes in the dataset, we adopt the minibatch training strategy to efficiently train GNN-CL and various baseline models. We use Adam optimizer for parameter optimization, and the initial learning rate is set to 0.01. In the configuration of GNN-CL, the hyperparameters are set as E=50, L=1, λ=2, and the step size of reinforcement learning τ=0.02. For Yelp dataset, the batch size is 1024 and the learning rate is 0.01. GCN, PC-GNN and CARE-GNN are also trained by Adam optimizer, and the configuration of iteration number, network layer number and batch size is consistent with GNN-CL on Yelp dataset to ensure the fairness and comparability of experiments. In particular, GNN-CL adopts a fixed weight threshold of 0.5 as a preset parameter to simplify hyperparameter tuning during model training.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>C. Experimental results and analysis</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>1.Performance comparison</head><p>Table <ref type="table">2</ref> summarizes the performance comparison between our proposed GNN-CL and other basic algorithms on Yelp dataset, which clearly shows that GNN-CL has an advantage in most evaluation metrics. By integrating reinforcement learning into the feature enhancement process of the center node, the model effectively dealt with the challenge of the feature dilution of the center node when the graph neural network aggregated neighbor information. In contrast, state-of-the-art fraud detection algorithms CARE-GNN and PC-GNN focus on solving the difficult problem of feature disguising and label imbalance.</p><p>The experimental results verify that our GNN-CL model outperforms CARE-GNN and PC-GNN in performance. Traditional graph neural network models, such as GCN, process node features according to the original adjacency matrix, which may contain noise and be non-optimized, further highlighting the advantages of GNN-CL innovative method. In order to verify the effectiveness of the proposed central node enhancement module, this study selected the Yelp data set for experiments, and set up the control group: one was the variant model GNN-CL-Y that removed the module, and the other was the model GNN-CL-W that adopted the fixed weight strategy. The experimental results are shown in Figure <ref type="figure" target="#fig_1">2</ref>. The experimental results show that GNN-CL-W outperforms GNN-CL-Y in all evaluation indicators, which is specifically reflected in the AUC increased by 0.5 percentage points, the F1 score increased by 0.4%, the Recall increased by 0.3%, and the Precision and Accuracy were also improved. This strongly proves that the introduced central node enhancement module can effectively enhance the fraud detection performance of the model.</p><p>The key of graph convolution is to use the information of neighbor nodes for feature aggregation to enhance the classification performance. However, after multiple iterations, it is easy to cause the problem of node feature homogeneity and over-smoothing, that is, the difference between nodes decreases, which affects the discrimination ability. Therefore, the strategy of assigning differentiated weights to central nodes, as shown in this study, is an effective means to mitigate this problem and improve model performance.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>2.Parameter sensitivity experiments</head><p>To evaluate the robustness of GNN-CL, we conduct experiments on the Yelp dataset, investigate its performance under varying parameter configurations, and conduct an exhaustive parameter sensitivity analysis. The experiments cover a variety of parameter Settings and show the corresponding sensitivity results. We present an in-depth comparison focusing on three key fraud detection performance metrics: AUC, F-score, and Recall <ref type="bibr" target="#b29">[30]</ref>.  Figure <ref type="figure" target="#fig_3">4</ref> shows the effect of varying the weight λ of the loss function on the performance of the model, which reveals that when λ is set to 0.5, the model has the best AUC performance. On the other hand, F-score and recall peak when λ is equal to 1.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>V.CONCLUSIONS</head><p>This paper introduces an innovative fraud detection model, GNN-CL, which implements intelligent weighted aggregation of central nodes with the help of reinforcement learning. The core of the GNN-CL model consists of three layers of GNN, CNN, and LSTM, and is designed around three key modules: neighborhood noise purifier, core node intensifier, and relationship summarizer. Firstly, Multi-layer Perceptron (MLP) was used to predict node attributes and evaluate the similarity between nodes, and then the neighbors with low similarity to the central node were filtered out in the training phase to reduce the interference of feature camouflage. Secondly, faced with the problem of weakening central features in aggregation, the central node reinforcement module used reinforcement learning to dynamically adjust the weight of central nodes. In this process, rewards and punishments are imposed according to the change of the distance between the fraud node and its neighbors (punishment is punishment when the distance increases, and reward is reward when the distance decreases) to ensure that the model gradually learns the strategy to optimize the weight of the central node. Finally, the node representations under each relation are summed up by the relation integrator to form a comprehensive feature representation for each node. Experiments on Yelp public datasets verify the effectiveness and advancement of ER-GNN in fraud detection tasks.</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head>Figure 1 .</head><label>1</label><figDesc>Figure 1. GNN-CL model architecture</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head>Figure 2 .</head><label>2</label><figDesc>Figure 2. Impact of the central node enhancer on performance</figDesc><graphic coords="5,66.45,313.78,208.75,138.50" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_2"><head>Figure 3 .</head><label>3</label><figDesc>Figure 3. Effect of the training ratio on the resultsFigure3shows the fluctuation of the AUC metric as the ratio of training data changes. It can be seen that no matter how the proportion of training set is adjusted, GNN-CL always maintains its superiority over the current optimal algorithm, and reaches its best performance when the training proportion is 40%.</figDesc><graphic coords="5,339.10,54.00,204.15,134.53" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_3"><head>Figure 4 .</head><label>4</label><figDesc>Figure 4. Effect of the loss weight on the results</figDesc><graphic coords="5,339.92,253.43,202.05,146.85" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_0"><head>TABLE I .</head><label>I</label><figDesc>THE DATASET The evaluation metrics of classification models are important tools to measure the prediction performance of the model. They are used to judge the accuracy of the model when classifying unknown data. a. Accuracy: This fundamental metric represents the ratio of correctly classified samples by the model to the overall sample count, reflecting its basic performance. Where TP is a True Positive, TN is a True Negative, FP is a False Positive, and FN is a False Negative. b. Precision: A measure of the fraction of examples that the model predicts to be positive are actually positive. Measure the proportion of all true positive examples found by the model, that is, the proportion of all actual positive examples identified by the model.</figDesc><table><row><cell></cell><cell></cell><cell></cell><cell></cell><cell>573616</cell><cell>R-T-R</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell>3402743</cell><cell>R-S-R</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell>3846979</cell><cell>ALL</cell></row><row><cell></cell><cell></cell><cell></cell><cell>2.Evaluation metrics</cell></row><row><cell></cell><cell></cell><cell></cell><cell>Accuracy=</cell><cell>𝑇𝑃 + 𝑇𝑁 𝑇𝑃 + 𝑇𝑁 + 𝐹𝑃 + 𝐹𝑁</cell><cell>(19)</cell></row><row><cell></cell><cell></cell><cell></cell><cell cols="2">Precision= c. Recall: Recall= 𝑇𝑃 + 𝐹𝑁 𝑇𝑃 𝑇𝑃 + 𝐹𝑃 𝑇𝑃</cell><cell>(20) (21)</cell></row><row><cell>Dataset</cell><cell>Nodes</cell><cell>Edge</cell><cell>Relations</cell></row><row><cell>Yelp</cell><cell>45954</cell><cell>49315</cell><cell>R-U-R</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_1"><head>TABLE II .</head><label>II</label><figDesc>FRAUD DETECTION PERFORMANCE OF EACH MODEL ON YELP In the evaluation of Yelp dataset, GNN-CL shows significant advantages, surpassing the current top algorithms in all performance indicators, especially improving the F-score by 2.7 percentage points, and also surpassing the best existing algorithms in terms of Precision and Accuracy.</figDesc><table><row><cell></cell><cell></cell><cell cols="2">DATASET</cell><cell></cell><cell></cell></row><row><cell>Models</cell><cell>Precision Ratio</cell><cell>Recall Rate</cell><cell>F</cell><cell>Accuracy</cell><cell>AUC</cell></row><row><cell>GCN</cell><cell>0.5994</cell><cell>0.6437</cell><cell>0.6208</cell><cell>0.7325</cell><cell>0.6849</cell></row><row><cell>PC-GNN</cell><cell>0.7937</cell><cell>0.8221</cell><cell>0.8077</cell><cell>0.8233</cell><cell>0.7595</cell></row><row><cell>CARE-GNN</cell><cell>0.8619</cell><cell>0.8311</cell><cell>0.8462</cell><cell>0.8559</cell><cell>0.7904</cell></row><row><cell>GNN-CL</cell><cell>0.8912</cell><cell>0.8878</cell><cell>0.8895</cell><cell>0.8969</cell><cell>0.8136</cell></row></table></figure>
+		</body>
+		<back>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<analytic>
+		<title level="a" type="main">Financial fraud detection using the relatedparty transaction knowledge graph</title>
+		<author>
+			<persName><forename type="first">X</forename><surname>Mao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Sun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Zhu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">J]. Procedia Computer Science</title>
+		<imprint>
+			<biblScope unit="volume">199</biblScope>
+			<biblScope unit="page" from="733" to="740" />
+			<date type="published" when="2022">2022</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Mao X, Sun H, Zhu X, et al. Financial fraud detection using the related- party transaction knowledge graph[J]. Procedia Computer Science, 2022, 199: 733-740.</note>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<analytic>
+		<title level="a" type="main">Deep Learning-Based Lung Medical Image Recognition</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Chai</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Fei</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Dai</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Sui</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Innovative Research in Computer Science &amp; Technology</title>
+		<imprint>
+			<biblScope unit="volume">12</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="100" to="105" />
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Chai, S., Fei, X., Wang, Y., Dai, L., &amp; Sui, M. (2024). Deep Learning- Based Lung Medical Image Recognition. International Journal of Innovative Research in Computer Science &amp; Technology, 12(3), 100- 105.</note>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<analytic>
+		<title level="a" type="main">A new method of image recognition based on deep learning generates adversarial networks and integrates traditional algorithms</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Yang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Yan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Gegen</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Computing and Electronic Information Management</title>
+		<imprint>
+			<biblScope unit="volume">13</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="57" to="61" />
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Yang, Y., Chen, Z., Yan, Y., Li, M., &amp; Gegen, T. (2024). A new method of image recognition based on deep learning generates adversarial networks and integrates traditional algorithms. Journal of Computing and Electronic Information Management, 13(1), 57-61.</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<analytic>
+		<title level="a" type="main">Multi-scale image recognition strategy based on convolutional neural network</title>
+		<author>
+			<persName><forename type="first">H</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Diao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Yang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Zhong</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Yan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Computing and Electronic Information Management</title>
+		<imprint>
+			<biblScope unit="volume">12</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="107" to="113" />
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zhang, H., Diao, S., Yang, Y., Zhong, J., &amp; Yan, Y. (2024). Multi-scale image recognition strategy based on convolutional neural network. Journal of Computing and Electronic Information Management, 12(3), 107-113.</note>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<analytic>
+		<title level="a" type="main">A Self-training Framework for Automated Medical Report Generation</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Peng</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing</title>
+		<meeting>the 2023 Conference on Empirical Methods in Natural Language Processing</meeting>
+		<imprint>
+			<date type="published" when="2023-12">2023, December</date>
+			<biblScope unit="page" from="16443" to="16449" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Wang, S., Liu, Z., &amp; Peng, B. (2023, December). A Self-training Framework for Automated Medical Report Generation. In Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing (pp. 16443-16449).</note>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<analytic>
+		<title level="a" type="main">Scaling-up medical visionand-language representation learning with federated learning</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Lu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><surname>Zhou</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Engineering Applications of Artificial Intelligence</title>
+		<imprint>
+			<biblScope unit="volume">126</biblScope>
+			<biblScope unit="page">107037</biblScope>
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Lu, S., Liu, Z., Liu, T., &amp; Zhou, W. (2023). Scaling-up medical vision- and-language representation learning with federated learning. Engineering Applications of Artificial Intelligence, 126, 107037.</note>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<monogr>
+		<title level="m" type="main">Integrating Medical Imaging and Clinical Reports Using Multimodal Deep Learning for Advanced Disease Analysis</title>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Yao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Lin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Chai</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><surname>He</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Dai</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Fei</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2405.17459</idno>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Yao, Z., Lin, F., Chai, S., He, W., Dai, L., &amp; Fei, X. (2024). Integrating Medical Imaging and Clinical Reports Using Multimodal Deep Learning for Advanced Disease Analysis. arXiv preprint arXiv:2405.17459.</note>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<monogr>
+		<title level="m" type="main">Efficiency optimization of large-scale language models based on deep learning in natural language processing tasks</title>
+		<author>
+			<persName><forename type="first">T</forename><surname>Mei</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Cheng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Gao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Q</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Yang</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2405.11704</idno>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Mei, T., Zi, Y., Cheng, X., Gao, Z., Wang, Q., &amp; Yang, H. (2024). Efficiency optimization of large-scale language models based on deep learning in natural language processing tasks. arXiv preprint arXiv:2405.11704.</note>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">Innovations in Time Related Expression Recognition Using LSTM Networks</title>
+		<author>
+			<persName><forename type="first">Q</forename><surname>Zhan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Ma</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Gao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Sun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Yang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Innovative Research in Computer Science &amp; Technology</title>
+		<imprint>
+			<biblScope unit="volume">12</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="120" to="125" />
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zhan, Q., Ma, Y., Gao, E., Sun, D., &amp; Yang, H. (2024). Innovations in Time Related Expression Recognition Using LSTM Networks. International Journal of Innovative Research in Computer Science &amp; Technology, 12(3), 120-125.</note>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<analytic>
+		<title level="a" type="main">Addressing Unintended Bias in Toxicity Detection: An LSTM and Attention-Based Approach</title>
+		<author>
+			<persName><forename type="first">W</forename><surname>Dai</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Tao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Yan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Feng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Chen</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">2023 International Conference on Artificial Intelligence and Computer Applications (ICAICA)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2023-11">2023, November</date>
+			<biblScope unit="page" from="375" to="379" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Dai, W., Tao, J., Yan, X., Feng, Z., &amp; Chen, J. (2023, November). Addressing Unintended Bias in Toxicity Detection: An LSTM and Attention-Based Approach. In 2023 International Conference on Artificial Intelligence and Computer Applications (ICAICA) (pp. 375- 379). IEEE.</note>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<monogr>
+		<title level="m" type="main">Exploration of Attention Mechanism-Enhanced Deep Learning Models in the Mining of Medical Textual Data</title>
+		<author>
+			<persName><forename type="first">L</forename><surname>Xiao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Feng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Zhu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Chen</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2406.00016</idno>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Xiao, L., Li, M., Feng, Y., Wang, M., Zhu, Z., &amp; Chen, Z. (2024). Exploration of Attention Mechanism-Enhanced Deep Learning Models in the Mining of Medical Textual Data. arXiv preprint arXiv:2406.00016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<monogr>
+		<title level="m" type="main">An Enhanced Encoder-Decoder Network Architecture for Reducing Information Loss in Image Semantic Segmentation</title>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Gao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Q</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Mei</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Cheng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Yang</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2406.01605</idno>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Gao, Z., Wang, Q., Mei, T., Cheng, X., Zi, Y., &amp; Yang, H. (2024). An Enhanced Encoder-Decoder Network Architecture for Reducing Information Loss in Image Semantic Segmentation. arXiv preprint arXiv:2406.01605.</note>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<analytic>
+		<title level="a" type="main">Comparison of Tree-based Feature Selection Algorithms on Biological Omics Dataset</title>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Song</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 5th International Conference on Advances in Artificial Intelligence</title>
+		<meeting>the 5th International Conference on Advances in Artificial Intelligence</meeting>
+		<imprint>
+			<date type="published" when="2021-11">2021, November</date>
+			<biblScope unit="page" from="165" to="169" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Liu, Z., &amp; Song, J. (2021, November). Comparison of Tree-based Feature Selection Algorithms on Biological Omics Dataset. In Proceedings of the 5th International Conference on Advances in Artificial Intelligence (pp. 165-169).</note>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<monogr>
+		<title level="m" type="main">Improving depth gradient continuity in transformers: A comparative study on monocular depth estimation with cnn</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Yao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Wu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Zhang</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2308.08333</idno>
+		<imprint>
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Yao, J., Wu, T., &amp; Zhang, X. (2023). Improving depth gradient continuity in transformers: A comparative study on monocular depth estimation with cnn. arXiv preprint arXiv:2308.08333.</note>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<monogr>
+		<title level="m" type="main">Survival Prediction Across Diverse Cancer Types Using Neural Networks</title>
+		<author>
+			<persName><forename type="first">X</forename><surname>Yan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Xiao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Gao</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2404.08713</idno>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Yan, X., Wang, W., Xiao, M., Li, Y., &amp; Gao, M. (2024). Survival Prediction Across Diverse Cancer Types Using Neural Networks. arXiv preprint arXiv:2404.08713.</note>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<monogr>
+		<title level="m" type="main">Investigation of Customized Medical Decision Algorithms Utilizing Graph Neural Networks</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Yan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>He</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Yu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Yuan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Chen</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2405.17460</idno>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Yan, Y., He, S., Yu, Z., Yuan, J., Liu, Z., &amp; Chen, Y. (2024). Investigation of Customized Medical Decision Algorithms Utilizing Graph Neural Networks. arXiv preprint arXiv:2405.17460.</note>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<analytic>
+		<title level="a" type="main">A time-frequency based suspicious activity detection for anti-money laundering</title>
+		<author>
+			<persName><forename type="first">U</forename><forename type="middle">G</forename><surname>Ketenci</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Kurt</forename><forename type="middle">T</forename><surname>Önal</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Access</title>
+		<imprint>
+			<biblScope unit="volume">9</biblScope>
+			<biblScope unit="page" from="59957" to="59967" />
+			<date type="published" when="2021">2021</date>
+		</imprint>
+	</monogr>
+	<note>J</note>
+	<note type="raw_reference">Ketenci U G, Kurt T, Önal S, et al. A time-frequency based suspicious activity detection for anti-money laundering[J]. IEEE Access, 2021, 9: 59957-59967.</note>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<analytic>
+		<title level="a" type="main">Toward detecting illegal transactions on bitcoin using machine-learning methods</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Lee</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Maharjan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Ko</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Blockchain and Trustworthy Systems: First International Conference</title>
+		<meeting><address><addrLine>Singapore</addrLine></address></meeting>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2020">2020</date>
+			<biblScope unit="page" from="520" to="533" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Lee C, Maharjan S, Ko K, et al. Toward detecting illegal transactions on bitcoin using machine-learning methods[C]. Blockchain and Trustworthy Systems: First International Conference. Springer Singapore, 2020: 520-533.</note>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<analytic>
+		<title level="a" type="main">Towards a new data miningbased approach for anti-money laundering in an international investment bank</title>
+		<author>
+			<persName><forename type="first">Le-Khac N A</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Markos</forename><forename type="middle">S</forename><surname>Kechadi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Digital Forensics and Cyber Crime: First International ICST Conference</title>
+		<meeting><address><addrLine>Berlin Heidelberg</addrLine></address></meeting>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2010">2010</date>
+			<biblScope unit="page" from="77" to="84" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Le-Khac N A, Markos S, Kechadi M T. Towards a new data mining- based approach for anti-money laundering in an international investment bank[C]. Digital Forensics and Cyber Crime: First International ICST Conference, Springer Berlin Heidelberg. 2010: 77-84.</note>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<analytic>
+		<title level="a" type="main">Credit risk and limits forecasting in ecommerce consumer lending service via multi-view-aware mixture-ofexperts nets</title>
+		<author>
+			<persName><forename type="first">T</forename><surname>Liang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Zeng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Q</forename><surname>Zhong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 14th ACM International Conference on Web search &amp; Data Mining</title>
+		<meeting>the 14th ACM International Conference on Web search &amp; Data Mining</meeting>
+		<imprint>
+			<date type="published" when="2021">2021</date>
+			<biblScope unit="page" from="229" to="237" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Liang T, Zeng G, Zhong Q, et al. Credit risk and limits forecasting in e- commerce consumer lending service via multi-view-aware mixture-of- experts nets[C]. Proceedings of the 14th ACM International Conference on Web search &amp; Data Mining. 2021: 229-237.</note>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<analytic>
+		<title level="a" type="main">Heterogeneous graph neural networks for malicious account detection</title>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Yang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 27th ACM International Conference on Information &amp; Knowledge Management</title>
+		<meeting>the 27th ACM International Conference on Information &amp; Knowledge Management</meeting>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+			<biblScope unit="page" from="2077" to="2085" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Liu Z, Chen C, Yang X, et al. Heterogeneous graph neural networks for malicious account detection[C]. Proceedings of the 27th ACM International Conference on Information &amp; Knowledge Management. 2018: 2077-2085.</note>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<analytic>
+		<title level="a" type="main">Session-Based Fraud Detection in Online Commerce Transactions Using Recurrent Neural Networks</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Gao</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Machine Learning and Knowledge Discovery in Databases</title>
+		<title level="s">Lecture Notes in Computer Science</title>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+			<biblScope unit="page">10536</biblScope>
+		</imprint>
+	</monogr>
+	<note>ECML PKDD 2017</note>
+	<note type="raw_reference">Wang S, Liu C, Gao X, et al. Session-Based Fraud Detection in Online Commerce Transactions Using Recurrent Neural Networks[C]. In: Machine Learning and Knowledge Discovery in Databases. ECML PKDD 2017. Lecture Notes in Computer Science, 2017. 10536.</note>
+</biblStruct>
+
+<biblStruct xml:id="b22">
+	<analytic>
+		<title level="a" type="main">Towards automated feature engineering for credit card fraud detectionusing multi-perspective hmms</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Lucas</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><forename type="middle">E</forename><surname>Portier</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Laporte</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>He-Guelton</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">O</forename><surname>Caelen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Granitzer</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Future generations computer systems: FGCS</title>
+		<imprint>
+			<biblScope unit="volume">102</biblScope>
+			<biblScope unit="page">102</biblScope>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Lucas, Y. , Portier, P. E. , Laporte, L. , He-Guelton, L. , Caelen, O. , &amp; Granitzer, M. , et al. (2020). Towards automated feature engineering for credit card fraud detectionusing multi-perspective hmms. Future generations computer systems: FGCS(102-), 102.</note>
+</biblStruct>
+
+<biblStruct xml:id="b23">
+	<analytic>
+		<title level="a" type="main">Champion-challenger analysis for credit card fraud detection: hybrid ensemble and deep learning</title>
+		<author>
+			<persName><forename type="first">E</forename><surname>Kim</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Lee</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Shin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Yang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Cho</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">K</forename><surname>Nam</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Expert Systems with Applications</title>
+		<imprint>
+			<biblScope unit="volume">128</biblScope>
+			<biblScope unit="page" from="214" to="224" />
+			<date type="published" when="2019">2019</date>
+			<pubPlace>AUG</pubPlace>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Kim, E. , Lee, J. , Shin, H. , Yang, H. , Cho, S. , &amp; Nam, S. K. , et al. (2019). Champion-challenger analysis for credit card fraud detection: hybrid ensemble and deep learning. Expert Systems with Applications, 128(AUG.), 214-224.</note>
+</biblStruct>
+
+<biblStruct xml:id="b24">
+	<analytic>
+		<title level="a" type="main">Apate: a novel approach for automated credit card transaction fraud detection using network-based extensions</title>
+		<author>
+			<persName><forename type="first">V</forename><forename type="middle">V</forename><surname>Vlasselaer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Bravo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">O</forename><surname>Caelen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Eliassi-Rad</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Akoglu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Snoeck</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Decision Support Systems</title>
+		<imprint>
+			<biblScope unit="volume">75</biblScope>
+			<biblScope unit="page" from="38" to="48" />
+			<date type="published" when="2015">2015</date>
+			<pubPlace>JUL</pubPlace>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Vlasselaer, V. V. , Bravo, C. , Caelen, O. , Eliassi-Rad, T. , Akoglu, L. , &amp; Snoeck, M. , et al. (2015). Apate: a novel approach for automated credit card transaction fraud detection using network-based extensions. Decision Support Systems, 75(JUL.), 38-48.</note>
+</biblStruct>
+
+<biblStruct xml:id="b25">
+	<analytic>
+		<title level="a" type="main">Credit card fraud detection based on feature selection</title>
+		<author>
+			<persName><forename type="first">Song</forename><surname>Yang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">J]. Guizhou Science</title>
+		<imprint>
+			<biblScope unit="volume">035</biblScope>
+			<biblScope unit="issue">006</biblScope>
+			<biblScope unit="page" from="83" to="87" />
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Song Yang. Credit card fraud detection based on feature selection [J]. Guizhou Science, 2017, 035(006):83-87.</note>
+</biblStruct>
+
+<biblStruct xml:id="b26">
+	<analytic>
+		<title level="a" type="main">Risk detection model of consumer finance based on kNN-Smote-LSTM [J</title>
+		<author>
+			<persName><forename type="first">Ju</forename><surname>Chun-Hua</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Chen</forename><surname>Guan-Yu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Bao</forename><surname>Fu-Guang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Systems Science and Mathematics</title>
+		<imprint>
+			<biblScope unit="volume">41</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="481" to="498" />
+			<date type="published" when="2021">2021</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ju Chun-hua, Chen Guan-yu, BAO Fu-guang. Risk detection model of consumer finance based on kNN-Smote-LSTM [J]. Journal of Systems Science and Mathematics, 2021, 41(2):481-498.</note>
+</biblStruct>
+
+<biblStruct xml:id="b27">
+	<monogr>
+		<title level="m" type="main">Research on Intelligent Aided Diagnosis System of Medical Image Based on Computer Deep Learning</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Yuan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Wu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Gong</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Yu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>He</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2404.18419</idno>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Yuan, J., Wu, L., Gong, Y., Yu, Z., Liu, Z., &amp; He, S. (2024). Research on Intelligent Aided Diagnosis System of Medical Image Based on Computer Deep Learning. arXiv preprint arXiv:2404.18419.</note>
+</biblStruct>
+
+<biblStruct xml:id="b28">
+	<analytic>
+		<title level="a" type="main">Investigation of Creating Accessibility Linked Data Based on Publicly Available Accessibility Datasets</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Yan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Xiao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Zhang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 2023 13th International Conference on Communication and Network Security</title>
+		<meeting>the 2023 13th International Conference on Communication and Network Security</meeting>
+		<imprint>
+			<publisher>Association for Computing Machinery</publisher>
+			<date type="published" when="2024">2024</date>
+			<biblScope unit="page" from="77" to="81" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Li, Y., Yan, X., Xiao, M., Wang, W., &amp; Zhang, F. (2024). Investigation of Creating Accessibility Linked Data Based on Publicly Available Accessibility Datasets. In Proceedings of the 2023 13th International Conference on Communication and Network Security (pp. 77-81). Association for Computing Machinery.</note>
+</biblStruct>
+
+<biblStruct xml:id="b29">
+	<analytic>
+		<title level="a" type="main">Beyond accuracy, F-score and ROC: a family of discriminant measures for performance evaluation</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Sokolova</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><surname>Japkowicz</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Szpakowicz</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Australasian joint conference on artificial intelligence</title>
+		<meeting><address><addrLine>Berlin, Heidelberg; Berlin Heidelberg</addrLine></address></meeting>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2006-12">2006, December</date>
+			<biblScope unit="page" from="1015" to="1021" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Sokolova, M., Japkowicz, N., &amp; Szpakowicz, S. (2006, December). Beyond accuracy, F-score and ROC: a family of discriminant measures for performance evaluation. In Australasian joint conference on artificial intelligence (pp. 1015-1021). Berlin, Heidelberg: Springer Berlin Heidelberg.</note>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

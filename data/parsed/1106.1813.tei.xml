@@ -1,0 +1,1076 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">SMOTE: Synthetic Minority Over-sampling Technique</title>
+				<funder>
+					<orgName type="full">United States Department of Energy</orgName>
+				</funder>
+				<funder ref="#_QbYkQVV">
+					<orgName type="full">Sandia National Laboratories ASCI</orgName>
+				</funder>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability status="unknown"><licence/></availability>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><forename type="first">Nitesh</forename><forename type="middle">V</forename><surname>Chawla</surname></persName>
+							<email>chawla@csee.usf.edu</email>
+							<affiliation key="aff0">
+								<orgName type="department">Department of Computer Science and Engineering</orgName>
+								<orgName type="institution">ENB 118 University of South Florida</orgName>
+								<address>
+									<addrLine>4202 E. Fowler Ave.</addrLine>
+									<postCode>33620-5399</postCode>
+									<settlement>Tampa</settlement>
+									<region>FL</region>
+									<country key="US">USA</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Kevin</forename><forename type="middle">W</forename><surname>Bowyer</surname></persName>
+							<affiliation key="aff1">
+								<orgName type="department">Department of Computer Science and Engineering 384</orgName>
+								<orgName type="institution">Fitzpatrick Hall University of Notre Dame Notre Dame</orgName>
+								<address>
+									<postCode>46556</postCode>
+									<region>IN</region>
+									<country key="US">USA</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Lawrence</forename><forename type="middle">O</forename><surname>Hall</surname></persName>
+							<email>hall@csee.usf.edu</email>
+							<affiliation key="aff2">
+								<orgName type="department">Department of Computer Science and Engineering</orgName>
+								<orgName type="institution">ENB 118 University of South Florida</orgName>
+								<address>
+									<addrLine>4202 E. Fowler Ave.</addrLine>
+									<postCode>33620-5399</postCode>
+									<settlement>Tampa</settlement>
+									<region>FL</region>
+									<country key="US">USA</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">W</forename><forename type="middle">Philip</forename><surname>Kegelmeyer</surname></persName>
+							<affiliation key="aff3">
+								<orgName type="institution">Sandia National Laboratories Biosystems Research Department</orgName>
+								<address>
+									<postBox>P.O. Box 969</postBox>
+									<postCode>9951 94551-0969</postCode>
+									<settlement>Livermore</settlement>
+									<region>MS CA</region>
+									<country key="US">USA</country>
+								</address>
+							</affiliation>
+						</author>
+						<title level="a" type="main">SMOTE: Synthetic Minority Over-sampling Technique</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date/>
+						</imprint>
+					</monogr>
+					<idno type="MD5">E84C70CFF2D1B65BD583593D5247237A</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.2-SNAPSHOT" ident="GROBID" when="2026-08-31T18:08+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>An approach to the construction of classifiers from imbalanced datasets is described. A dataset is imbalanced if the classification categories are not approximately equally represented. Often real-world data sets are predominately composed of "normal" examples with only a small percentage of "abnormal" or "interesting" examples. It is also the case that the cost of misclassifying an abnormal (interesting) example as a normal example is often much higher than the cost of the reverse error. Under-sampling of the majority (normal) class has been proposed as a good means of increasing the sensitivity of a classifier to the minority class. This paper shows that a combination of our method of over-sampling the minority (abnormal) class and under-sampling the majority (normal) class can achieve better classifier performance (in ROC space) than only under-sampling the majority class. This paper also shows that a combination of our method of over-sampling the minority class and under-sampling the majority class can achieve better classifier performance (in ROC space) than varying the loss ratios in Ripper or class priors in Naive Bayes. Our method of over-sampling the minority class involves creating synthetic minority class examples. Experiments are performed using C4.5, Ripper and a Naive Bayes classifier. The method is evaluated using the area under the Receiver Operating Characteristic curve (AUC) and the ROC convex hull strategy.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1.">Introduction</head><p>A dataset is imbalanced if the classes are not approximately equally represented. Imbalance on the order of 100 to 1 is prevalent in fraud detection and imbalance of up to 100,000 to 1 has been reported in other applications <ref type="bibr" target="#b32">(Provost &amp; Fawcett, 2001)</ref>. There have been attempts to deal with imbalanced datasets in domains such as fraudulent telephone calls <ref type="bibr" target="#b16">(Fawcett &amp; Provost, 1996)</ref>, telecommunications management <ref type="bibr" target="#b14">(Ezawa, Singh, &amp; Norton, 1996)</ref>, text classification <ref type="bibr" target="#b24">(Lewis &amp; Catlett, 1994;</ref><ref type="bibr" target="#b13">Dumais, Platt, Heckerman, &amp; Sahami, 1998;</ref><ref type="bibr" target="#b28">Mladenić &amp; Grobelnik, 1999;</ref><ref type="bibr" target="#b26">Lewis &amp; Ringuette, 1994;</ref><ref type="bibr">Cohen, 1995a)</ref> and detection of oil spills in satellite images <ref type="bibr" target="#b20">(Kubat, Holte, &amp; Matwin, 1998)</ref>.</p><p>The performance of machine learning algorithms is typically evaluated using predictive accuracy. However, this is not appropriate when the data is imbalanced and/or the costs of different errors vary markedly. As an example, consider the classification of pixels in mammogram images as possibly cancerous <ref type="bibr" target="#b43">(Woods, Doss, Bowyer, Solka, Priebe, &amp; Kegelmeyer, 1993)</ref>. A typical mammography dataset might contain 98% normal pixels and 2% abnormal pixels. A simple default strategy of guessing the majority class would give a predictive accuracy of 98%. However, the nature of the application requires a fairly high rate of correct detection in the minority class and allows for a small error rate in the majority class in order to achieve this. Simple predictive accuracy is clearly not appropriate in such situations. The Receiver Operating Characteristic (ROC) curve is a standard technique for summarizing classifier performance over a range of tradeoffs between true positive and false positive error rates <ref type="bibr" target="#b39">(Swets, 1988)</ref>. The Area Under the Curve (AUC) is an accepted traditional performance metric for a ROC curve <ref type="bibr" target="#b12">(Duda, Hart, &amp; Stork, 2001;</ref><ref type="bibr" target="#b1">Bradley, 1997;</ref><ref type="bibr" target="#b23">Lee, 2000)</ref>. The ROC convex hull can also be used as a robust method of identifying potentially optimal classifiers <ref type="bibr" target="#b32">(Provost &amp; Fawcett, 2001)</ref>. If a line passes through a point on the convex hull, then there is no other line with the same slope passing through another point with a larger true positive (TP) intercept. Thus, the classifier at that point is optimal under any distribution assumptions in tandem with that slope.</p><p>The machine learning community has addressed the issue of class imbalance in two ways. One is to assign distinct costs to training examples <ref type="bibr" target="#b30">(Pazzani, Merz, Murphy, Ali, Hume, &amp; Brunk, 1994;</ref><ref type="bibr" target="#b10">Domingos, 1999)</ref>. The other is to re-sample the original dataset, either by oversampling the minority class and/or under-sampling the majority class <ref type="bibr" target="#b21">(Kubat &amp; Matwin, 1997;</ref><ref type="bibr" target="#b19">Japkowicz, 2000;</ref><ref type="bibr" target="#b24">Lewis &amp; Catlett, 1994;</ref><ref type="bibr" target="#b27">Ling &amp; Li, 1998)</ref>. Our approach <ref type="bibr" target="#b2">(Chawla, Bowyer, Hall, &amp; Kegelmeyer, 2000)</ref> blends under-sampling of the majority class with a special form of over-sampling the minority class. Experiments with various datasets and the C4.5 decision tree classifier <ref type="bibr" target="#b35">(Quinlan, 1992)</ref>, Ripper <ref type="bibr" target="#b5">(Cohen, 1995b)</ref>, and a Naive Bayes Classifier show that our approach improves over other previous re-sampling, modifying loss ratio, and class priors approaches, using either the AUC or ROC convex hull.</p><p>Section 2 gives an overview of performance measures. Section 3 reviews the most closely related work dealing with imbalanced datasets. Section 4 presents the details of our approach. Section 5 presents experimental results comparing our approach to other re-sampling approaches. Section 6 discusses the results and suggests directions for future work.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.">Performance Measures</head><p>The performance of machine learning algorithms is typically evaluated by a confusion matrix as illustrated in Figure <ref type="figure">1</ref>  Predictive accuracy is the performance measure generally associated with machine learning algorithms and is defined as Accuracy = (T P + T N )/(T P + F P + T N + F N ). In the context of balanced datasets and equal error costs, it is reasonable to use error rate as a performance metric. Error rate is 1 -Accuracy. In the presence of imbalanced datasets with unequal error costs, it is more appropriate to use the ROC curve or other similar techniques <ref type="bibr" target="#b27">(Ling &amp; Li, 1998;</ref><ref type="bibr" target="#b11">Drummond &amp; Holte, 2000;</ref><ref type="bibr" target="#b32">Provost &amp; Fawcett, 2001;</ref><ref type="bibr" target="#b1">Bradley, 1997;</ref><ref type="bibr" target="#b41">Turney, 1996)</ref>.</p><p>ROC curves can be thought of as representing the family of best decision boundaries for relative costs of TP and FP. On an ROC curve the X-axis represents %F P = F P/(T N +F P ) and the Y-axis represents %T P = T P/(T P +F N ). The ideal point on the ROC curve would be (0,100), that is all positive examples are classified correctly and no negative examples are misclassified as positive. One way an ROC curve can be swept out is by manipulating the balance of training samples for each class in the training set. Figure <ref type="figure" target="#fig_1">2</ref> shows an illustration. The line y = x represents the scenario of randomly guessing the class. Area Under the ROC Curve (AUC) is a useful metric for classifier performance as it is independent of the decision criterion selected and prior probabilities. The AUC comparison can establish a dominance relationship between classifiers. If the ROC curves are intersecting, the total AUC is an average comparison between models <ref type="bibr" target="#b23">(Lee, 2000)</ref>. However, for some specific cost and class distributions, the classifier having maximum AUC may in fact be suboptimal. Hence, we also compute the ROC convex hulls, since the points lying on the ROC convex hull are potentially optimal <ref type="bibr" target="#b33">(Provost, Fawcett, &amp; Kohavi, 1998;</ref><ref type="bibr" target="#b32">Provost &amp; Fawcett, 2001)</ref>. <ref type="bibr" target="#b21">Kubat and Matwin (1997)</ref> selectively under-sampled the majority class while keeping the original population of the minority class. They have used the geometric mean as a performance measure for the classifier, which can be related to a single point on the ROC curve.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.">Previous Work: Imbalanced datasets</head><p>The minority examples were divided into four categories: some noise overlapping the positive class decision region, borderline samples, redundant samples and safe samples. The borderline examples were detected using the Tomek links concept <ref type="bibr" target="#b40">(Tomek, 1976)</ref>. Another related work proposed the SHRINK system that classifies an overlapping region of minority (positive) and majority (negative) classes as positive; it searches for the "best positive region" <ref type="bibr" target="#b20">(Kubat et al., 1998)</ref>. <ref type="bibr" target="#b19">Japkowicz (2000)</ref> discussed the effect of imbalance in a dataset. She evaluated three strategies: under-sampling, resampling and a recognition-based induction scheme. We focus on her sampling approaches. She experimented on artificial 1D data in order to easily measure and construct concept complexity. Two resampling methods were considered. Random resampling consisted of resampling the smaller class at random until it consisted of as many samples as the majority class and "focused resampling" consisted of resampling only those minority examples that occurred on the boundary between the minority and majority classes. Random under-sampling was considered, which involved under-sampling the majority class samples at random until their numbers matched the number of minority class samples; focused under-sampling involved under-sampling the majority class samples lying further away. She noted that both the sampling approaches were effective, and she also observed that using the sophisticated sampling techniques did not give any clear advantage in the domain considered <ref type="bibr" target="#b19">(Japkowicz, 2000)</ref>.</p><p>One approach that is particularly relevant to our work is that of <ref type="bibr" target="#b27">Ling and Li (1998)</ref>. They combined over-sampling of the minority class with under-sampling of the majority class. They used lift analysis instead of accuracy to measure a classifier's performance. They proposed that the test examples be ranked by a confidence measure and then lift be used as the evaluation criteria. A lift curve is similar to an ROC curve, but is more tailored for the marketing analysis problem <ref type="bibr" target="#b27">(Ling &amp; Li, 1998)</ref>. In one experiment, they under-sampled the majority class and noted that the best lift index is obtained when the classes are equally represented <ref type="bibr" target="#b27">(Ling &amp; Li, 1998)</ref>. In another experiment, they over-sampled the positive (minority) examples with replacement to match the number of negative (majority) examples to the number of positive examples. The over-sampling and under-sampling combination did not provide significant improvement in the lift index. However, our approach to oversampling differs from theirs. <ref type="bibr" target="#b37">Solberg and Solberg (1996)</ref> considered the problem of imbalanced data sets in oil slick classification from SAR imagery. They used over-sampling and under-sampling techniques to improve the classification of oil slicks. Their training data had a distribution of 42 oil slicks and 2,471 look-alikes, giving a prior probability of 0.98 for look-alikes. This imbalance would lead the learner (without any appropriate loss functions or a methodology to modify priors) to classify almost all look-alikes correctly at the expense of misclassifying many of the oil slick samples <ref type="bibr" target="#b37">(Solberg &amp; Solberg, 1996)</ref>. To overcome this imbalance problem, they over-sampled (with replacement) 100 samples from the oil slick, and they randomly sampled 100 samples from the non oil slick class to create a new dataset with equal probabilities. They learned a classifier tree on this balanced data set and achieved a 14% error rate on the oil slicks in a leave-one-out method for error estimation; on the look alikes they achieved an error rate of 4% <ref type="bibr" target="#b37">(Solberg &amp; Solberg, 1996)</ref>.</p><p>Another approach that is similar to our work is that of <ref type="bibr" target="#b10">Domingos (1999)</ref>. He compares the "metacost" approach to each of majority under-sampling and minority over-sampling. He finds that metacost improves over either, and that under-sampling is preferable to minority over-sampling. Error-based classifiers are made cost-sensitive. The probability of each class for each example is estimated, and the examples are relabeled optimally with respect to the misclassification costs. The relabeling of the examples expands the decision space as it creates new samples from which the classifier may learn <ref type="bibr" target="#b10">(Domingos, 1999)</ref>.</p><p>A feed-forward neural network trained on an imbalanced dataset may not learn to discriminate enough between classes <ref type="bibr" target="#b9">(DeRouin, Brown, Fausett, &amp; Schneider, 1991)</ref>. The authors proposed that the learning rate of the neural network be adapted to the statistics of class representation in the data. They calculated an attention factor from the proportion of samples presented to the neural network for training. The learning rate of the network elements was adjusted based on the attention factor. They experimented on an artificially generated training set and on a real-world training set, both with multiple (more than two) classes. They compared this to the approach of replicating the minority class samples to balance the data set used for training. The classification accuracy on the minority class was improved. <ref type="bibr" target="#b24">Lewis and Catlett (1994)</ref> examined heterogeneous uncertainty sampling for supervised learning. This method is useful for training samples with uncertain classes. The training samples are labeled incrementally in two phases and the uncertain instances are passed on to the next phase. They modified C4.5 to include a loss ratio for determining the class values at the leaves. The class values were determined by comparison with a probability threshold of LR/(LR + 1), where LR is the loss ratio <ref type="bibr" target="#b24">(Lewis &amp; Catlett, 1994)</ref>.</p><p>The information retrieval (IR) domain <ref type="bibr" target="#b13">(Dumais et al., 1998;</ref><ref type="bibr" target="#b28">Mladenić &amp; Grobelnik, 1999;</ref><ref type="bibr" target="#b26">Lewis &amp; Ringuette, 1994;</ref><ref type="bibr">Cohen, 1995a)</ref> also faces the problem of class imbalance in the dataset. A document or web page is converted into a bag-of-words representation; that is, a feature vector reflecting occurrences of words in the page is constructed. Usually, there are very few instances of the interesting category in text categorization. This overrepresentation of the negative class in information retrieval problems can cause problems in evaluating classifiers' performances. Since error rate is not a good metric for skewed datasets, the classification performance of algorithms in information retrieval is usually measured by precision and recall: recall = T P T P + F N precision = T P T P + F P <ref type="bibr" target="#b28">Mladenić and Grobelnik (1999)</ref> proposed a feature subset selection approach to deal with imbalanced class distribution in the IR domain. They experimented with various feature selection methods, and found that the odds ratio <ref type="bibr" target="#b42">(van Rijsbergen, Harper, &amp; Porter, 1981)</ref> when combined with a Naive Bayes classifier performs best in their domain. Odds ratio is a probabilistic measure used to rank documents according to their relevance to the positive class (minority class). Information gain for a word, on the other hand, does not pay attention to a particular target class; it is computed per word for each class. In an imbalanced text dataset (assuming 98 to 99% is the negative class), most of the features will be associated with the negative class. Odds ratio incorporates the target class information in its metric giving better results when compared to information gain for text categorization. <ref type="bibr">Provost and Fawcett (1997)</ref> introduced the ROC convex hull method to estimate the classifier performance for imbalanced datasets. They note that the problems of unequal class distribution and unequal error costs are related and that little work has been done to address either problem <ref type="bibr" target="#b32">(Provost &amp; Fawcett, 2001)</ref>. In the ROC convex hull method, the ROC space is used to separate classification performance from the class and cost distribution information.</p><p>To summarize the literature, under-sampling the majority class enables better classifiers to be built than over-sampling the minority class. A combination of the two as done in previous work does not lead to classifiers that outperform those built utilizing only undersampling. However, the over-sampling of the minority class has been done by sampling with replacement from the original data. Our approach uses a different method of over-sampling.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.">SMOTE: Synthetic Minority Over-sampling TEchnique</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.1">Minority over-sampling with replacement</head><p>Previous research <ref type="bibr" target="#b27">(Ling &amp; Li, 1998;</ref><ref type="bibr" target="#b19">Japkowicz, 2000)</ref> has discussed over-sampling with replacement and has noted that it doesn't significantly improve minority class recognition. We interpret the underlying effect in terms of decision regions in feature space. Essentially, as the minority class is over-sampled by increasing amounts, the effect is to identify similar but more specific regions in the feature space as the decision region for the minority class. This effect for decision trees can be understood from the plots in Figure <ref type="figure">3</ref>. The data for the plot in Figure <ref type="figure">3</ref> was extracted from a Mammography dataset<ref type="foot" target="#foot_1">foot_1</ref>  <ref type="bibr" target="#b43">(Woods et al., 1993)</ref>. The minority class samples are shown by + and the majority class samples are shown by o in the plot. In Figure <ref type="figure">3</ref>(a), the region indicated by the solid-line rectangle is a majority class decision region. Nevertheless, it contains three minority class samples shown by '+' as false negatives. If we replicate the minority class, the decision region for the minority class becomes very specific and will cause new splits in the decision tree. This will lead to more terminal nodes (leaves) as the learning algorithm tries to learn more and more specific regions of the minority class; in essence, overfitting. Replication of the minority class does not cause its decision boundary to spread into the majority class region. Thus, in Figure <ref type="figure">3</ref>(b), the three samples previously in the majority class decision region now have very specific decision regions.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.2">SMOTE</head><p>We propose an over-sampling approach in which the minority class is over-sampled by creating "synthetic" examples rather than by over-sampling with replacement. This approach is inspired by a technique that proved successful in handwritten character recognition <ref type="bibr" target="#b17">(Ha &amp; Bunke, 1997)</ref>. They created extra training data by performing certain operations on real data. In their case, operations like rotation and skew were natural ways to perturb the training data. We generate synthetic examples in a less application-specific manner, by operating in "feature space" rather than "data space". The minority class is over-sampled by taking each minority class sample and introducing synthetic examples along the line segments joining any/all of the k minority class nearest neighbors. Depending upon the amount of over-sampling required, neighbors from the k nearest neighbors are randomly chosen. Our implementation currently uses five nearest neighbors. For instance, if the amount of over-sampling needed is 200%, only two neighbors from the five nearest neighbors are chosen and one sample is generated in the direction of each. Synthetic samples are generated in the following way: Take the difference between the feature vector (sample) under consideration and its nearest neighbor. Multiply this difference by a random number between 0 and 1, and add it to the feature vector under consideration. This causes the selection of a random point along the line segment between two specific features. This approach effectively forces the decision region of the minority class to become more general.</p><p>Algorithm SMOTE , on the next page, is the pseudo-code for SMOTE. Table <ref type="table" target="#tab_7">4</ref>.2 shows an example of calculation of random synthetic samples. The amount of over-sampling is a parameter of the system, and a series of ROC curves can be generated for different populations and ROC analysis performed.</p><p>The synthetic examples cause the classifier to create larger and less specific decision regions as shown by the dashed lines in Figure <ref type="figure">3</ref>(c), rather than smaller and more specific regions. More general regions are now learned for the minority class samples rather than those being subsumed by the majority class samples around them. The effect is that decision trees generalize better. The minority class was over-sampled at 100%, 200%, 300%, 400% and 500% of its original size. The graphs show that the tree sizes for minority over-sampling with replacement at higher degrees of replication are much greater than those for SMOTE, and the minority class recognition of the minority over-sampling with replacement technique at higher degrees of replication isn't as good as SMOTE.</p><p>Algorithm Consider a sample (6,4) and let (4,3) be its nearest neighbor. (6,4) is the sample for which k-nearest neighbors are being identified. (4,3) is one of its k-nearest neighbors. Let:</p><formula xml:id="formula_0">f1 1 = 6 f2 1 = 4 f2 1 -f1 1 = -2 f1 2 = 4 f2 2 = 3 f2 2 -f1 2 = -1</formula><p>The new samples will be generated as (f1',f2') = (6,4) + rand(0-1) * (-2,-1) rand(0-1) generates a random number between 0 and 1.  The majority class is under-sampled by randomly removing samples from the majority class population until the minority class becomes some specified percentage of the majority class. This forces the learner to experience varying degrees of under-sampling and at higher degrees of under-sampling the minority class has a larger presence in the training set. In describing our experiments, our terminology will be such that if we under-sample the majority class at 200%, it would mean that the modified dataset will contain twice as many elements from the minority class as from the majority class; that is, if the minority class had 50 samples and the majority class had 200 samples and we under-sample majority at 200%, the majority class would end up having 25 samples. By applying a combination of under-sampling and over-sampling, the initial bias of the learner towards the negative (majority) class is reversed in the favor of the positive (minority) class. Classifiers are learned on the dataset perturbed by "SMOTING" the minority class and under-sampling the majority class.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.">Experiments</head><p>We used three different machine learning algorithms for our experiments. Figure <ref type="figure" target="#fig_6">6</ref> provides an overview of our experiments.</p><p>1. C4.5: We compared various combinations of SMOTE and under-sampling with plain under-sampling using C4.5 release 8 <ref type="bibr" target="#b35">(Quinlan, 1992)</ref> as the base classifier. Loss-Ratio varied from 0.9 to 0.001.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Modify costs of majority and minority</head><p>classes by changing priors.</p><p>ROC's generated for SMOTE, Undersampling and Loss Ratio comparisons. Performance evaluated with AUC and ROC convex hull.</p><p>ROC's generated for comparison between SMOTE and Under-sampling using C4.5, and SMOTE using C4.5 and Naive bayes. Performance evaluated with AUC and ROC convex hull. plain under-sampling using Ripper <ref type="bibr" target="#b5">(Cohen, 1995b)</ref> as the base classifier. We also varied Ripper's loss ratio <ref type="bibr" target="#b7">(Cohen &amp; Singer, 1996;</ref><ref type="bibr" target="#b24">Lewis &amp; Catlett, 1994</ref>) from 0.9 to 0.001 (as a means of varying misclassification cost) and compared the effect of this variation with the combination of SMOTE and under-sampling. By reducing the loss ratio from 0.9 to 0.001 we were able to build a set of rules for the minority class.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.">Naive Bayes Classifier:</head><p>The Naive Bayes Classifier<ref type="foot" target="#foot_2">foot_2</ref> can be made cost-sensitive by varying the priors of the minority class. We varied the priors of the minority class from 1 to 50 times the majority class and compared with C4.5's SMOTE and under-sampling combination.</p><p>These different learning algorithms allowed SMOTE to be compared to some methods that can handle misclassification costs directly. %FP and %TP were averaged over 10-fold cross-validation runs for each of the data combinations. The minority class examples were over-sampled by calculating the five nearest neighbors and generating synthetic examples. The AUC was calculated using the trapezoidal rule. We extrapolated an extra point of TP = 100% and FP = 100% for each ROC curve. We also computed the ROC convex hull to identify the optimal classifiers, as the points lying on the hull are potentially optimal classifiers <ref type="bibr" target="#b32">(Provost &amp; Fawcett, 2001)</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.1">Datasets</head><p>We experimented on nine different datasets. These datasets are summarized in Table <ref type="table" target="#tab_8">5</ref>.2. These datasets vary extensively in their size and class proportions, thus offering different domains for SMOTE. In order of increasing imbalance they are:</p><p>1. The Pima Indian Diabetes <ref type="bibr" target="#b0">(Blake &amp; Merz, 1998)</ref> has 2 classes and 768 samples. The data is used to identify the positive diabetes cases in a population near Phoenix, Arizona. The number of positive class samples is only 268. Good sensitivity to detection of diabetes cases will be a desirable attribute of the classifier.</p><p>2. The Phoneme dataset is from the ELENA project<ref type="foot" target="#foot_3">foot_3</ref> . The aim of the dataset is to distinguish between nasal (class 0) and oral sounds (class 1). There are 5 features. The class distribution is 3,818 samples in class 0 and 1,586 samples in class 1.</p><p>3. The Adult dataset <ref type="bibr" target="#b0">(Blake &amp; Merz, 1998)</ref>  Briefly, a series of about 60,000 compounds were tested against a series of 6 yeast strains at a given concentration. The test was a high-throughput screen at only one concentration so the results are subject to contamination, etc. The growth inhibition of the yeast strain when exposed to the given compound (with respect to growth of the yeast in a neutral solvent) was measured.</p><p>The activity classes are either active -at least one single yeast strain was inhibited more than 70%, or inactive -no yeast strain was inhibited more than 70%. The dataset has 53,220 samples with 6,351 samples of active compounds.</p><p>5. The Satimage dataset <ref type="bibr" target="#b0">(Blake &amp; Merz, 1998)</ref> has 6 classes originally. We chose the smallest class as the minority class and collapsed the rest of the classes into one as was done in <ref type="bibr" target="#b33">(Provost et al., 1998)</ref>. This gave us a skewed 2-class dataset, with 5809 majority class samples and 626 minority class samples.</p><p>6. The Forest Cover dataset is from the UCI repository <ref type="bibr" target="#b0">(Blake &amp; Merz, 1998)</ref>. This dataset has 7 classes and 581,012 samples. This dataset is for the prediction of forest cover type based on cartographic variables. Since our system currently works for binary classes we extracted data for two classes from this dataset and ignored the rest. Most other approaches only work for only two classes <ref type="bibr" target="#b27">(Ling &amp; Li, 1998;</ref><ref type="bibr" target="#b19">Japkowicz, 2000;</ref><ref type="bibr" target="#b21">Kubat &amp; Matwin, 1997;</ref><ref type="bibr" target="#b32">Provost &amp; Fawcett, 2001)</ref>. 7. The Oil dataset was provided by Robert Holte and is used in their paper <ref type="bibr" target="#b20">(Kubat et al., 1998)</ref>. This dataset has 41 oil slick samples and 896 non-oil slick samples.</p><p>8. The Mammography dataset <ref type="bibr" target="#b43">(Woods et al., 1993)</ref> has 11,183 samples with 260 calcifications. If we look at predictive accuracy as a measure of goodness of the classifier for this case, the default accuracy would be 97.68% when every sample is labeled noncalcification. But, it is desirable for the classifier to predict most of the calcifications correctly.</p><p>9. The Can dataset was generated from the Can ExodusII data using the AVATAR <ref type="bibr" target="#b3">(Chawla &amp; Hall, 1999)</ref> version of the Mustafa Visualization tool 5 . The portion of the can being crushed was marked as "very interesting" and the rest of the can was marked as "unknown." A dataset of size 443,872 samples with 8,360 samples marked as "very interesting" was generated.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.2">ROC Creation</head><p>A ROC curve for SMOTE is produced by using C4.5 or Ripper to create a classifier for each one of a series of modified training datasets. A given ROC curve is produced by first over-sampling the minority class to a specified degree and then under-sampling the majority class at increasing degrees to generate the successive points on the curve. The amount of under-sampling is identical to plain under-sampling. So, each corresponding point on each ROC curve for a dataset represents the same number of majority class samples. Different ROC curves are produced by starting with different levels of minority over-sampling. ROC curves were also generated by varying the loss ratio in Ripper from 0.9 to 0.001 and by varying the priors of the minority class from the original distribution to up to 50 times the majority class for a Naive Bayes Classifier.</p><p>5. The Mustafa visualization tool was developed by Mike Glass of Sandia National Labs.  Figures 9 through 23 show the experimental ROC curves obtained for the nine datasets with the three classifiers. The ROC curve for plain under-sampling of the majority class <ref type="bibr" target="#b27">(Ling &amp; Li, 1998;</ref><ref type="bibr" target="#b19">Japkowicz, 2000;</ref><ref type="bibr" target="#b21">Kubat &amp; Matwin, 1997;</ref><ref type="bibr" target="#b32">Provost &amp; Fawcett, 2001</ref>) is compared with our approach of combining synthetic minority class over-sampling (SMOTE) with majority class under-sampling. The plain under-sampling curve is labeled "Under", and the SMOTE and under-sampling combination ROC curve is labeled "SMOTE". Depending on the size and relative imbalance of the dataset, one to five SMOTE and undersampling curves are created. We only show the best results from SMOTE combined with under-sampling and the plain under-sampling curve in the graphs. The SMOTE ROC curve from C4.5 is also compared with the ROC curve obtained from varying the priors of minority class using a Naive Bayes classifier -labeled as "Naive Bayes". "SMOTE", "Under", and "Loss Ratio" ROC curves, generated using Ripper are also compared. For a given family of ROC curves, an ROC convex hull <ref type="bibr" target="#b32">(Provost &amp; Fawcett, 2001)</ref> is generated. The ROC convex hull is generated using the Graham's algorithm <ref type="bibr" target="#b29">(O'Rourke, 1998)</ref>. For reference, we show the ROC curve that would be obtained using minority over-sampling by replication in Figure <ref type="figure" target="#fig_9">19</ref>.</p><p>Each point on the ROC curve is the result of either a classifier (C4.5 or Ripper) learned for a particular combination of under-sampling and SMOTE, a classifier (C4.5 or Ripper) learned with plain under-sampling, or a classifier (Ripper) learned using some loss ratio or a classifier (Naive Bayes) learned for a different prior for the minority class. Each point represents the average (%TP and %FP) 10-fold cross-validation result. The lower leftmost point for a given ROC curve is from the raw dataset, without any majority class under-    sampling or minority class over-sampling. The minority class was over-sampled at 50%, 100%, 200%, 300%, 400%, 500%. The majority class was under-sampled at 10%, 15%, 25%, 50%, 75%, 100%, 125%, 150%, 175%, 200%, 300%, 400%, 500%, 600%, 700%, 800%, 1000%, and 2000%. The amount of majority class under-sampling and minority class oversampling depended on the dataset size and class proportions. For instance, consider the ROC curves in Figure <ref type="figure" target="#fig_8">17</ref> for the mammography dataset. There are three curves -one for plain majority class under-sampling in which the range of under-sampling is varied between 5% and 2000% at different intervals, one for a combination of SMOTE and majority class under-sampling, and one for Naive Bayes -and one ROC convex hull curve. The ROC curve shown in Figure <ref type="figure" target="#fig_8">17</ref> is for the minority class over-sampled at 400%. Each point on the SMOTE ROC curves represents a combination of (synthetic) over-sampling and undersampling, the amount of under-sampling follows the same range as for plain under-sampling.</p><p>For a better understanding of the ROC graphs, we have shown different sets of ROC curves for one of our datasets in Appendix A.</p><p>For the Can dataset, we had to SMOTE to a lesser degree than for the other datasets due to the structural nature of the dataset. For the Can dataset there is a structural neighborhood already established in the mesh geometry, so SMOTE can lead to creating neighbors which are under the surface (and hence not interesting), since we are looking at the feature space of physics variables and not the structural information.</p><p>The ROC curves show a trend that as we increase the amount of under-sampling coupled with over-sampling, our minority classification accuracy increases, of course at the expense of more majority class errors. For almost all the ROC curves, the SMOTE approach dom-    inates. Adhering to the definition of ROC convex hull, most of the potentially optimal classifiers are the ones generated with SMOTE.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.3">AUC Calculation</head><p>The Area Under the ROC curve (AUC) is calculated using a form of the trapezoid rule. The lower leftmost point for a given ROC curve is a classifier's performance on the raw data.</p><p>The upper rightmost point is always (100%, 100%). If the curve does not naturally end at this point, the point is added. This is necessary in order for the AUC's to be compared over the same range of %FP.</p><p>The AUCs listed in Table <ref type="table" target="#tab_8">5</ref>.3 show that for all datasets the combined synthetic minority over-sampling and majority over-sampling is able to improve over plain majority under-sampling with C4.5 as the base classifier. Thus, our SMOTE approach provides an improvement in correct classification of data in the underrepresented class. The same conclusion holds from an examination of the ROC convex hulls. Some of the entries are missing in the table, as SMOTE was not applied at the same amounts to all datasets. The amount of SMOTE was less for less skewed datasets. Also, we have not included AUC's for Ripper/Naive Bayes. The ROC convex hull identifies SMOTE classifiers to be potentially optimal as compared to plain under-sampling or other treatments of misclassification costs, generally. Exceptions are as follows: for the Pima dataset, Naive Bayes dominates over SMOTE-C4.5; for the Oil dataset, Under-Ripper dominates over SMOTE-Ripper.   curves overlap in the ROC space. For all the other datasets, SMOTE-classifier has more potentially optimal classifiers than any other approach.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.4">Additional comparison to changing the decision thresholds</head><p>Provost <ref type="bibr">(2000)</ref> suggested that simply changing the decision threshold should always be considered as an alternative to more sophisticated approaches. In the case of C4.5, this would mean changing the decision threshold at the leaves of the decision trees. For example, a leaf could classify examples as the minority class even if more than 50% of the training examples at the leaf represent the majority class. We experimented by setting the decision thresholds at the leaves for the C4.5 decision tree learner at 0.5, 0.45, 0.42, 0.4, 0.35, 0.32, 0.3, 0.27, 0.25, 0.22, 0.2, 0.17, 0.15, 0.12, 0.1, 0.05, 0.0. We experimented on the Phoneme dataset. Figure <ref type="figure" target="#fig_1">24</ref> shows the comparison of the SMOTE and under-sampling combination against C4.5 learning by tuning the bias towards the minority class. The graph shows that the SMOTE and under-sampling combination ROC curve is dominating over the entire range of values.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.5">Additional comparison to one-sided selection and SHRINK</head><p>For the oil dataset, we also followed a slightly different line of experiments to obtain results comparable to <ref type="bibr" target="#b20">(Kubat et al., 1998)</ref>. To alleviate the problem of imbalanced datasets the authors have proposed (a) one-sided selection for under-sampling the majority class <ref type="bibr" target="#b21">(Kubat &amp; Matwin, 1997)</ref> and (b) the SHRINK system <ref type="bibr" target="#b20">(Kubat et al., 1998)</ref>. Table <ref type="table" target="#tab_8">5</ref>.5 contains the results from <ref type="bibr" target="#b20">(Kubat et al., 1998)</ref>. Acc+ is the accuracy on positive (minority) examples and Acc-is the accuracy on the negative (majority) examples. Figure <ref type="figure" target="#fig_1">25</ref> shows the trend for Acc+ and Acc-for one combination of the SMOTE strategy and varying degrees of undersampling of the majority class. The Y-axis represents the accuracy and the X-axis represents the percentage majority class under-sampled. The graphs indicate that in the band of under-sampling between 50% and 125% the results are comparable to those achieved by SHRINK and better than SHRINK in some cases. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="6.">Future Work</head><p>There are several topics to be considered further in this line of research. Automated adaptive selection of the number of nearest neighbors would be valuable. Different strategies for creating the synthetic neighbors may be able to improve the performance. Also, selecting nearest neighbors with a focus on examples that are incorrectly classified may improve performance. A minority class sample could possibly have a majority class sample as its nearest neighbor rather than a minority class sample. This crowding will likely contribute to the redrawing of the decision surfaces in favor of the minority class. In addition to these topics, the following subsections discuss two possible extensions of SMOTE, and an application of SMOTE to information retrieval.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="6.1">SMOTE-NC</head><p>While our SMOTE approach currently does not handle data sets with all nominal features, it was generalized to handle mixed datasets of continuous and nominal features. We call this approach Synthetic Minority Over-sampling TEchnique-Nominal Continuous [SMOTE-NC].</p><p>We tested this approach on the Adult dataset from the UCI repository. The SMOTE-NC algorithm is described below.</p><p>1. Median computation: Compute the median of standard deviations of all continuous features for the minority class. If the nominal features differ between a sample and its potential nearest neighbors, then this median is included in the Euclidean distance computation. We use median to penalize the difference of nominal features by an amount that is related to the typical difference in continuous feature values.</p><p>2. Nearest neighbor computation: Compute the Euclidean distance between the feature vector for which k-nearest neighbors are being identified (minority class sample) and the other feature vectors (minority class samples) using the continuous feature space.</p><p>For every differing nominal feature between the considered feature vector and its potential nearest-neighbor, include the median of the standard deviations previously computed, in the Euclidean distance computation. Table <ref type="table" target="#tab_3">2</ref> demonstrates an example. F1 = 1 2 3 A B C [Let this be the sample for which we are computing nearest neighbors] F2 = 4 6 5 A D E F3 = 3 5 6 A B K So, Euclidean Distance between F2 and F1 would be:</p><formula xml:id="formula_1">Eucl = sqrt[(4-1) 2 + (6-2) 2 + (5-3) 2 + Med 2 + Med 2 ]</formula><p>Med is the median of the standard deviations of continuous features of the minority class. The median term is included twice for feature numbers 5: B→D and 6: C→E, which differ for the two feature vectors: F1 and F2. The SMOTE-NC experiments reported here are set up the same as those with SMOTE, except for the fact that we examine one dataset only. SMOTE-NC with the Adult dataset differs from our typical result: it performs worse than plain under-sampling based on AUC, as shown in Figures <ref type="figure" target="#fig_17">26</ref> and<ref type="figure" target="#fig_8">27</ref>. We extracted only continuous features to separate the effect of SMOTE and SMOTE-NC on this dataset, and to determine whether this oddity was due to our handling of nominal features. As shown in Figure <ref type="figure" target="#fig_1">28</ref>, even SMOTE with only continuous features applied to the Adult dataset, does not achieve any better performance than plain under-sampling. Some of the minority class continuous features have a very high variance, so, the synthetic generation of minority class samples could be overlapping with the majority class space, thus leading to more false positives than plain under-sampling. This hypothesis is also supported by the decreased AUC measure as we SMOTE at degrees greater than 50%. The higher degrees of SMOTE lead to more minority class samples in the dataset, and thus a greater overlap with the majority class decision space. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="6.2">SMOTE-N</head><p>Potentially, SMOTE can also be extended for nominal features -SMOTE-N -with the nearest neighbors computed using the modified version of Value Difference Metric <ref type="bibr" target="#b38">(Stanfill &amp; Waltz, 1986)</ref> proposed by <ref type="bibr" target="#b8">Cost and Salzberg (1993)</ref>. The Value Difference Metric (VDM) looks at the overlap of feature values over all feature vectors. A matrix defining the distance between corresponding feature values for all feature vectors is created. The distance δ between two corresponding feature values is defined as follows.</p><formula xml:id="formula_2">δ(V 1 , V 2 ) = n i=1 | C 1i C 1 - C 2i C 2 | k<label>(1)</label></formula><p>In the above equation, V 1 and V 2 are the two corresponding feature values. C 1 is the total number of occurrences of feature value V 1 , and C 1i is the number of occurrences of feature value V 1 for class i. A similar convention can also be applied to C 2i and C 2 . k is a constant, usually set to 1. This equation is used to compute the matrix of value differences for each nominal feature in the given set of feature vectors. Equation 1 gives a geometric distance on a fixed, finite set of values <ref type="bibr" target="#b8">(Cost &amp; Salzberg, 1993)</ref>. Cost and Salzberg's modified VDM omits the weight term w a f included in the δ computation by Stanfill and Waltz, which has an effect of making δ symmetric. The distance ∆ between two feature vectors is given by:</p><formula xml:id="formula_3">∆(X, Y ) = w x w y N i=1 δ(x i , y i ) r</formula><p>(2) r = 1 yields the Manhattan distance, and r = 2 yields the Euclidean distance <ref type="bibr" target="#b8">(Cost &amp; Salzberg, 1993)</ref>. w x and w y are the exemplar weights in the modified VDM. w y = 1 for a new example (feature vector), and w x is the bias towards more reliable examples (feature vectors) and is computed as the ratio of the number of uses of a feature vector to the number of correct uses of the feature vector; thus, more accurate feature vectors will have w x ≈ 1. For SMOTE-N we can ignore these weights in equation 2, as SMOTE-N is not used for classification purposes directly. However, we can redefine these weights to give more weight to the minority class feature vectors falling closer to the majority class feature vectors; thus, making those minority class features appear further away from the feature vector under consideration. Since, we are more interested in forming broader but accurate regions of the minority class, the weights might be used to avoid populating along neighbors which fall closer to the majority class. To generate new minority class feature vectors, we can create new set feature values by taking the majority vote of the feature vector in consideration and its k nearest neighbors. Table <ref type="table" target="#tab_9">6</ref>.2 shows an example of creating a synthetic feature vector.  We are investigating the application of SMOTE to information retrieval (IR). The IR problems come with a plethora of features and potentially many categories. SMOTE would have to be applied in conjunction with a feature selection algorithm, after transforming the given document or web page in a bag-of-words format.</p><p>An interesting comparison to SMOTE would be the combination of Naive Bayes and Odds ratio. Odds ratio focuses on a target class, and ranks documents according to their relevance to the target or positive class. SMOTE also focuses on a target class by creating more examples of that class.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="7.">Summary</head><p>The results show that the SMOTE approach can improve the accuracy of classifiers for a minority class. SMOTE provides a new approach to over-sampling. The combination of SMOTE and under-sampling performs better than plain under-sampling. SMOTE was tested on a variety of datasets, with varying degrees of imbalance and varying amounts of data in the training set, thus providing a diverse testbed. The combination of SMOTE and under-sampling also performs better, based on domination in the ROC space, than varying loss ratios in Ripper or by varying the class priors in Naive Bayes Classifier: the methods that could directly handle the skewed class distribution. SMOTE forces focused learning and introduces a bias towards the minority class. Only for Pima -the least skewed dataset -does the Naive Bayes Classifier perform better than SMOTE-C4.5. Also, only for the Oil dataset does the Under-Ripper perform better than SMOTE-Ripper. For the Can dataset, SMOTE-classifier and Under-classifier ROC curves overlap in the ROC space. For all the rest of the datasets SMOTE-classifier performs better than Under-classifier, Loss Ratio, and Naive Bayes. Out of a total of 48 experiments performed, SMOTE-classifier does not perform the best only for 4 experiments.</p><p>The interpretation of why synthetic minority over-sampling improves performance where as minority over-sampling with replacement does not is fairly straightforward. Consider the effect on the decision regions in feature space when minority over-sampling is done by replication (sampling with replacement) versus the introduction of synthetic examples. With replication, the decision region that results in a classification decision for the minority class can actually become smaller and more specific as the minority samples in the region are replicated. This is the opposite of the desired effect. Our method of synthetic over-sampling works to cause the classifier to build larger decision regions that contain nearby minority class points. The same reasons may be applicable to why SMOTE performs better than Ripper's loss ratio and Naive Bayes; these methods, nonetheless, are still learning from the information provided in the dataset, albeit with different cost information. SMOTE provides more related minority class samples to learn from, thus allowing a learner to carve broader decision regions, leading to more coverage of the minority class.</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head></head><label></label><figDesc>Figure 1: Confusion Matrix</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head>Figure 2 :</head><label>2</label><figDesc>Figure 2: Illustration of sweeping out a ROC curve through under-sampling. Increased under-sampling of the majority (negative) class will move the performance from the lower left point to the upper right.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_2"><head></head><label></label><figDesc>Figure 3: a) Decision region in which the three minority class samples (shown by '+') reside after building a decision tree. This decision region is indicated by the solid-line rectangle. b) A zoomed-in view of the chosen minority class samples for the same dataset. Small solid-line rectangles show the decision regions as a result of oversampling the minority class with replication. c) A zoomed-in view of the chosen minority class samples for the same dataset. Dashed lines show the decision region after over-sampling the minority class with synthetic generation.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_3"><head></head><label></label><figDesc>Figures 4 and 5 compare the minority over-sampling with replacement and SMOTE. The experiments were conducted on the mammography dataset. There were 10923 examples in the majority class and 260 examples in the minority class originally. We have approximately 9831 examples in the majority class and 233 examples in the minority class for the training set used in 10-fold cross-validation.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_4"><head>Figure 4 :Figure 5 :</head><label>45</label><figDesc>Figure 4: Comparison of decision tree sizes for replicated over-sampling and SMOTE for the Mammography dataset</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_6"><head>Figure 6 :</head><label>6</label><figDesc>Figure 6: Experiments Overview</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_8"><head>Figure 7 :</head><label>7</label><figDesc>Figure 7: Phoneme. Comparison of SMOTE-C4.5, Under-C4.5, and Naive Bayes. SMOTE-C4.5 dominates over Naive Bayes and Under-C4.5 in the ROC space. SMOTE-C4.5 classifiers are potentially optimal classifiers.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_9"><head>Figure 9 :</head><label>9</label><figDesc>Figure 9: Pima Indians Diabetes. Comparison of SMOTE-C4.5, Under-C4.5, and Naive Bayes. Naive Bayes dominates over SMOTE-C4.5 in the ROC space.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_11"><head>Figure 10 :</head><label>10</label><figDesc>Figure 10: Pima Indians Diabetes. Comparison of SMOTE-Ripper, Under-Ripper, and modifying Loss Ratio in Ripper. SMOTE-Ripper dominates over Under-Ripper and Loss Ratio in the ROC space.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_13"><head>Figure 11 :</head><label>11</label><figDesc>Figure 11: Satimage. Comparison of SMOTE-C4.5, Under-C4.5, and Naive Bayes. The ROC curves of Naive Bayes and SMOTE-C4.5 show an overlap; however, at higher TP's more points from SMOTE-C4.5 lie on the ROC convex hull.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_14"><head>Figure 12 :</head><label>12</label><figDesc>Figure 12: Satimage. Comparison of SMOTE-Ripper, Under-Ripper, and modifying Loss Ratio in Ripper. SMOTE-Ripper dominates the ROC space. The ROC convex hull is mostly constructed with points from SMOTE-Ripper.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_15"><head>Figure 13 :</head><label>13</label><figDesc>Figure 13: Forest Cover. Comparison of SMOTE-C4.5, Under-C4.5, and Naive Bayes. SMOTE-C4.5 and Under-C4.5 ROC curves are very close to each other. However, more points from the SMOTE-C4.5 ROC curve lie on the ROC convex hull, thus establishing a dominance.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_16"><head>Figure 22 :</head><label>22</label><figDesc>Figure 22: Can. Comparison of SMOTE-C4.5, Under-C4.5, and Naive Bayes. SMOTE-C4.5 and Under-C4.5 ROC curves overlap for most of the ROC space.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_17"><head>Figure 26 :</head><label>26</label><figDesc>Figure 26: Adult. Comparison of SMOTE-C4.5, Under-C4.5, and Naive Bayes. SMOTE-C4.5 and Under-C4.5 ROC curves overlap for most of the ROC space.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_18"><head></head><label></label><figDesc>Let F1 = A B C D E be the feature vector under consideration and let its 2 nearest neighbors be F2= A F C G N F3 = H B C D NThe application of SMOTE-N would create the following feature vector: FS = A B C D N</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_1"><head>Table 1 :</head><label>1</label><figDesc>Example of generation of synthetic examples (SMOTE).</figDesc><table /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_2"><head></head><label></label><figDesc>has 48,842 samples with 11,687 samples belonging to the minority class. This dataset has 6 continuous features and 8 nominal features. SMOTE and SMOTE-NC (see Section 6.1) algorithms were evaluated on this dataset. For SMOTE, we extracted the continuous features and generated a new dataset with only continuous features.</figDesc><table /><note><p><p><p>4. The E-state data 4</p><ref type="bibr" target="#b18">(Hall, Mohney, &amp; Kier, 1991)</ref> </p>consists of electrotopological state descriptors for a series of compounds from the National Cancer Institute's Yeast Anti-Cancer drug screen. E-state descriptors from the NCI Yeast AntiCancer Drug Screen were generated by Tripos, Inc.</p></note></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_3"><head>Table 2 :</head><label>2</label><figDesc>Dataset distribution samples. Nevertheless, the SMOTE technique can be applied to a multiple class problem as well by specifying what class to SMOTE for. However, in this paper, we have focused on 2-classes problems, to explicitly represent positive and negative classes.</figDesc><table><row><cell>The two classes we con-</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_6"><head>Table 3 :</head><label>3</label><figDesc>AUC's [C4.5 as the base classifier] with the best highlighted in bold.</figDesc><table /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_7"><head>Table 4 :</head><label>4</label><figDesc>Table5.5 summarizes the results for the SMOTE at 500% and under-sampling combination. We also tried combinations of SMOTE at 100-400% and varying degrees of under-sampling and achieved comparable results. The Cross-validation results<ref type="bibr" target="#b20">(Kubat et al., 1998)</ref> </figDesc><table><row><cell>10</cell><cell>20</cell><cell>30</cell><cell>40</cell><cell>50</cell><cell>60</cell><cell>70</cell><cell>80</cell><cell>90</cell><cell>100</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_8"><head>Table 5 :</head><label>5</label><figDesc>Cross-validation results for SMOTE at 500% SMOTE on the Oil data set.</figDesc><table /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_9"><head>Table 6 :</head><label>6</label><figDesc>Example of nearest neighbor computation for SMOTE-NC.3. Populate the synthetic sample:The continuous features of the new synthetic minority class sample are created using the same approach of SMOTE as described earlier. The nominal feature is given the value occuring in the majority of the k-nearest neighbors.</figDesc><table /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_10"><head>Table 7 :</head><label>7</label><figDesc>Example of SMOTE-N6.3 Application of SMOTE to Information Retrieval</figDesc><table /></figure>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot" xml:id="foot_0"><p>c 2002 AI Access Foundation and Morgan Kaufmann Publishers. All rights reserved.</p></note>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot" n="1" xml:id="foot_1"><p>The data is available from the USF Intelligent Systems Lab, http://morden.csee.usf.edu/˜chawla.</p></note>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot" n="2" xml:id="foot_2"><p>The source code was downloaded from http://fuzzy.cs.uni-magdeburg.de/˜borgelt/software.html.</p></note>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot" n="3" xml:id="foot_3"><p>ftp.dice.ucl.ac.be in the directory pub/neural-nets/ELENA/databases.</p></note>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot" n="4" xml:id="foot_4"><p>We would like to thank Steven Eschrich for providing the dataset and description to us.</p></note>
+		</body>
+		<back>
+
+			<div type="acknowledgement">
+<div><head>Acknowledgments</head><p>This research was partially supported by the <rs type="funder">United States Department of Energy</rs> through the <rs type="funder">Sandia National Laboratories ASCI</rs> <rs type="programName">VIEWS Data Discovery Program</rs>, contract number <rs type="grantNumber">DE-AC04-76DO00789</rs>. We thank <rs type="person">Robert Holte</rs> for providing the oil spill dataset used in their paper. We also thank <rs type="person">Foster Provost</rs> for clarifying his method of using the Satimage dataset. We would also like to thank the anonymous reviewers for their various insightful comments and suggestions.</p></div>
+			</div>
+			<listOrg type="funding">
+				<org type="funding" xml:id="_QbYkQVV">
+					<idno type="grant-number">DE-AC04-76DO00789</idno>
+					<orgName type="program" subtype="full">VIEWS Data Discovery Program</orgName>
+				</org>
+			</listOrg>
+			<div type="annex">
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Appendix A. ROC graphs for Oil Dataset</head><p>The following figures show different sets of ROC curves for the oil dataset. Figure <ref type="figure">29 (</ref> </p></div>			</div>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<monogr>
+		<title level="m" type="main">UCI Repository of Machine Learning Databases</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Blake</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Merz</surname></persName>
+		</author>
+		<ptr target="http://www.ics.uci.edu/∼mlearn/∼MLRepository.html" />
+		<imprint>
+			<date type="published" when="1998">1998</date>
+		</imprint>
+		<respStmt>
+			<orgName>Department of Information and Computer Sciences, University of California, Irvine</orgName>
+		</respStmt>
+	</monogr>
+	<note type="raw_reference">Blake, C., &amp; Merz, C. (1998). UCI Repository of Machine Learning Databases http://www.ics.uci.edu/∼mlearn/∼MLRepository.html. Department of Information and Computer Sciences, University of California, Irvine.</note>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<analytic>
+		<title level="a" type="main">The Use of the Area Under the ROC Curve in the Evaluation of Machine Learning Algorithms</title>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">P</forename><surname>Bradley</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Pattern Recognition</title>
+		<imprint>
+			<biblScope unit="volume">30</biblScope>
+			<biblScope unit="issue">6</biblScope>
+			<biblScope unit="page" from="1145" to="1159" />
+			<date type="published" when="1997">1997</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Bradley, A. P. (1997). The Use of the Area Under the ROC Curve in the Evaluation of Machine Learning Algorithms. Pattern Recognition, 30(6), 1145-1159.</note>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<analytic>
+		<title level="a" type="main">SMOTE: Synthetic Minority Over-sampling TEchnique</title>
+		<author>
+			<persName><forename type="first">N</forename><surname>Chawla</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Bowyer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Hall</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Kegelmeyer</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference of Knowledge Based Computer Systems</title>
+		<meeting><address><addrLine>Mumbai, India</addrLine></address></meeting>
+		<imprint>
+			<publisher>Allied Press</publisher>
+			<date type="published" when="2000">2000</date>
+			<biblScope unit="page" from="46" to="57" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Chawla, N., Bowyer, K., Hall, L., &amp; Kegelmeyer, P. (2000). SMOTE: Synthetic Minority Over-sampling TEchnique. In International Conference of Knowledge Based Com- puter Systems, pp. 46-57. National Center for Software Technology, Mumbai, India, Allied Press.</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<monogr>
+		<title level="m" type="main">Modifying MUSTAFA to capture salient data</title>
+		<author>
+			<persName><forename type="first">N</forename><surname>Chawla</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Hall</surname></persName>
+		</author>
+		<idno>ISL-99-01</idno>
+		<imprint>
+			<date type="published" when="1999">1999</date>
+		</imprint>
+		<respStmt>
+			<orgName>University of South Florida, Computer Science and Eng. Dept</orgName>
+		</respStmt>
+	</monogr>
+	<note type="report_type">Tech. rep.</note>
+	<note type="raw_reference">Chawla, N., &amp; Hall, L. (1999). Modifying MUSTAFA to capture salient data. Tech. rep. ISL-99-01, University of South Florida, Computer Science and Eng. Dept.</note>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<analytic>
+		<title level="a" type="main">Learning to Classify English Text with ILP Methods</title>
+		<author>
+			<persName><forename type="first">W</forename><surname>Cohen</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 5th International Workshop on Inductive Logic Programming</title>
+		<meeting>the 5th International Workshop on Inductive Logic Programming</meeting>
+		<imprint>
+			<date type="published" when="1995">1995</date>
+			<biblScope unit="page" from="3" to="24" />
+		</imprint>
+		<respStmt>
+			<orgName>Department of Computer Science, Katholieke Universiteit Leuven</orgName>
+		</respStmt>
+	</monogr>
+	<note type="raw_reference">Cohen, W. (1995a). Learning to Classify English Text with ILP Methods. In Proceed- ings of the 5th International Workshop on Inductive Logic Programming, pp. 3-24. Department of Computer Science, Katholieke Universiteit Leuven.</note>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<analytic>
+		<title level="a" type="main">Fast Effective Rule Induction</title>
+		<author>
+			<persName><forename type="first">W</forename><forename type="middle">W</forename><surname>Cohen</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proc. 12th International Conference on Machine Learning</title>
+		<meeting>12th International Conference on Machine Learning<address><addrLine>Lake Tahoe, CA</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="1995">1995b</date>
+			<biblScope unit="page" from="115" to="123" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Cohen, W. W. (1995b). Fast Effective Rule Induction. In Proc. 12th International Confer- ence on Machine Learning, pp. 115-123 Lake Tahoe, CA.</note>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Morgan</forename><surname>Kaufmann</surname></persName>
+		</author>
+		<imprint/>
+	</monogr>
+	<note type="raw_reference">Morgan Kaufmann.</note>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<analytic>
+		<title level="a" type="main">Context-sensitive Learning Methods for Text Categorization</title>
+		<author>
+			<persName><forename type="first">W</forename><forename type="middle">W</forename><surname>Cohen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Singer</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of SIGIR-96, 19th ACM International Conference on Research and Development in Information Retrieval</title>
+		<editor>
+			<persName><forename type="first">H.-P</forename><surname>Frei</surname></persName>
+		</editor>
+		<editor>
+			<persName><forename type="first">D</forename><surname>Harman</surname></persName>
+		</editor>
+		<editor>
+			<persName><forename type="first">P</forename><surname>Schäuble</surname></persName>
+		</editor>
+		<editor>
+			<persName><forename type="first">R</forename><surname>Wilkinson</surname></persName>
+		</editor>
+		<meeting>SIGIR-96, 19th ACM International Conference on Research and Development in Information Retrieval<address><addrLine>Zürich, CH; New York, US</addrLine></address></meeting>
+		<imprint>
+			<publisher>ACM Press</publisher>
+			<date type="published" when="1996">1996</date>
+			<biblScope unit="page" from="307" to="315" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Cohen, W. W., &amp; Singer, Y. (1996). Context-sensitive Learning Methods for Text Catego- rization. In Frei, H.-P., Harman, D., Schäuble, P., &amp; Wilkinson, R. (Eds.), Proceedings of SIGIR-96, 19th ACM International Conference on Research and Development in Information Retrieval, pp. 307-315 Zürich, CH. ACM Press, New York, US.</note>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">A Weighted Nearest Neighbor Algorithm for Learning with Symbolic Features</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Cost</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Salzberg</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Machine Learning</title>
+		<imprint>
+			<biblScope unit="volume">10</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="57" to="78" />
+			<date type="published" when="1993">1993</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Cost, S., &amp; Salzberg, S. (1993). A Weighted Nearest Neighbor Algorithm for Learning with Symbolic Features. Machine Learning, 10 (1), 57-78.</note>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<analytic>
+		<title level="a" type="main">Neural Network Training on Unequally Represented Classes</title>
+		<author>
+			<persName><forename type="first">E</forename><surname>Derouin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Brown</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Fausett</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Schneider</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Intellligent Engineering Systems Through Artificial Neural Networks</title>
+		<meeting><address><addrLine>New York</addrLine></address></meeting>
+		<imprint>
+			<publisher>ASME Press</publisher>
+			<date type="published" when="1991">1991</date>
+			<biblScope unit="page" from="135" to="141" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">DeRouin, E., Brown, J., Fausett, L., &amp; Schneider, M. (1991). Neural Network Training on Unequally Represented Classes. In Intellligent Engineering Systems Through Artificial Neural Networks, pp. 135-141 New York. ASME Press.</note>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<analytic>
+		<title level="a" type="main">Metacost: A General Method for Making Classifiers Cost-sensitive</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Domingos</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the Fifth ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</title>
+		<meeting>the Fifth ACM SIGKDD International Conference on Knowledge Discovery and Data Mining<address><addrLine>San Diego, CA</addrLine></address></meeting>
+		<imprint>
+			<publisher>ACM Press</publisher>
+			<date type="published" when="1999">1999</date>
+			<biblScope unit="page" from="155" to="164" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Domingos, P. (1999). Metacost: A General Method for Making Classifiers Cost-sensitive. In Proceedings of the Fifth ACM SIGKDD International Conference on Knowledge Discovery and Data Mining, pp. 155-164 San Diego, CA. ACM Press.</note>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<analytic>
+		<title level="a" type="main">Explicitly Representing Expected Cost: An Alternative to ROC Representation</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Drummond</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Holte</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the Sixth ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</title>
+		<meeting>the Sixth ACM SIGKDD International Conference on Knowledge Discovery and Data Mining<address><addrLine>Boston</addrLine></address></meeting>
+		<imprint>
+			<publisher>ACM</publisher>
+			<date type="published" when="2000">2000</date>
+			<biblScope unit="page" from="198" to="207" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Drummond, C., &amp; Holte, R. (2000). Explicitly Representing Expected Cost: An Alternative to ROC Representation. In Proceedings of the Sixth ACM SIGKDD International Conference on Knowledge Discovery and Data Mining, pp. 198-207 Boston. ACM.</note>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<monogr>
+		<title level="m" type="main">Pattern Classification</title>
+		<author>
+			<persName><forename type="first">R</forename><surname>Duda</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Hart</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Stork</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2001">2001</date>
+			<publisher>Wiley-Interscience</publisher>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Duda, R., Hart, P., &amp; Stork, D. (2001). Pattern Classification. Wiley-Interscience.</note>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<analytic>
+		<title level="a" type="main">Inductive Learning Algorithms and Representations for Text Categorization</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Dumais</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Platt</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Heckerman</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Sahami</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the Seventh International Conference on Information and Knowledge Management</title>
+		<meeting>the Seventh International Conference on Information and Knowledge Management</meeting>
+		<imprint>
+			<date type="published" when="1998">1998</date>
+			<biblScope unit="page" from="148" to="155" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Dumais, S., Platt, J., Heckerman, D., &amp; Sahami, M. (1998). Inductive Learning Algo- rithms and Representations for Text Categorization. In Proceedings of the Seventh International Conference on Information and Knowledge Management., pp. 148-155.</note>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<analytic>
+		<title level="a" type="main">Learning Goal Oriented Bayesian Networks for Telecommunications Risk Management</title>
+		<author>
+			<persName><forename type="first">K</forename><surname>Ezawa</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Singh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Norton</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the International Conference on Machine Learning, ICML-96</title>
+		<meeting>the International Conference on Machine Learning, ICML-96<address><addrLine>Bari, Italy</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="1996">1996</date>
+			<biblScope unit="page" from="139" to="147" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ezawa, K., J., Singh, M., &amp; Norton, S., W. (1996). Learning Goal Oriented Bayesian Networks for Telecommunications Risk Management. In Proceedings of the Interna- tional Conference on Machine Learning, ICML-96, pp. 139-147 Bari, Italy.</note>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Morgan</forename><surname>Kauffman</surname></persName>
+		</author>
+		<imprint/>
+	</monogr>
+	<note type="raw_reference">Morgan Kauffman.</note>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<analytic>
+		<title level="a" type="main">Combining Data Mining and Machine Learning for Effective User Profile</title>
+		<author>
+			<persName><forename type="first">T</forename><surname>Fawcett</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Provost</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 2nd International Conference on Knowledge Discovery and Data Mining</title>
+		<meeting>the 2nd International Conference on Knowledge Discovery and Data Mining<address><addrLine>Portland, OR</addrLine></address></meeting>
+		<imprint>
+			<publisher>AAAI</publisher>
+			<date type="published" when="1996">1996</date>
+			<biblScope unit="page" from="8" to="13" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Fawcett, T., &amp; Provost, F. (1996). Combining Data Mining and Machine Learning for Ef- fective User Profile. In Proceedings of the 2nd International Conference on Knowledge Discovery and Data Mining, pp. 8-13 Portland, OR. AAAI.</note>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<analytic>
+		<title level="a" type="main">Off-line, Handwritten Numeral Recognition by Perturbation Method</title>
+		<author>
+			<persName><forename type="first">T</forename><forename type="middle">M</forename><surname>Ha</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Bunke</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Pattern Analysis and Machine Intelligence</title>
+		<imprint>
+			<biblScope unit="volume">19</biblScope>
+			<biblScope unit="issue">5</biblScope>
+			<biblScope unit="page" from="535" to="539" />
+			<date type="published" when="1997">1997</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ha, T. M., &amp; Bunke, H. (1997). Off-line, Handwritten Numeral Recognition by Perturbation Method. Pattern Analysis and Machine Intelligence, 19/5, 535-539.</note>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<analytic>
+		<title level="a" type="main">The Electrotopological State: Structure Information at the Atomic Level for Molecular Graphs</title>
+		<author>
+			<persName><forename type="first">L</forename><surname>Hall</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Mohney</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Kier</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Chemical Information and Computer Science</title>
+		<imprint>
+			<biblScope unit="volume">31</biblScope>
+			<biblScope unit="issue">76</biblScope>
+			<date type="published" when="1991">1991</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Hall, L., Mohney, B., &amp; Kier, L. (1991). The Electrotopological State: Structure Information at the Atomic Level for Molecular Graphs. Journal of Chemical Information and Computer Science, 31 (76).</note>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<analytic>
+		<title level="a" type="main">The Class Imbalance Problem: Significance and Strategies</title>
+		<author>
+			<persName><forename type="first">N</forename><surname>Japkowicz</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 2000 International Conference on Artificial Intelligence (IC-AI&apos;2000): Special Track on Inductive Learning</title>
+		<meeting>the 2000 International Conference on Artificial Intelligence (IC-AI&apos;2000): Special Track on Inductive Learning<address><addrLine>Las Vegas, Nevada</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2000">2000</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Japkowicz, N. (2000). The Class Imbalance Problem: Significance and Strategies. In Pro- ceedings of the 2000 International Conference on Artificial Intelligence (IC-AI&apos;2000): Special Track on Inductive Learning Las Vegas, Nevada.</note>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<analytic>
+		<title level="a" type="main">Machine Learning for the Detection of Oil Spills in Satellite Radar Images</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Kubat</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Holte</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Matwin</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Machine Learning</title>
+		<imprint>
+			<biblScope unit="volume">30</biblScope>
+			<biblScope unit="page" from="195" to="215" />
+			<date type="published" when="1998">1998</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Kubat, M., Holte, R., &amp; Matwin, S. (1998). Machine Learning for the Detection of Oil Spills in Satellite Radar Images. Machine Learning, 30, 195-215.</note>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<analytic>
+		<title level="a" type="main">Addressing the Curse of Imbalanced Training Sets: One Sided Selection</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Kubat</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Matwin</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the Fourteenth International Conference on Machine Learning</title>
+		<meeting>the Fourteenth International Conference on Machine Learning<address><addrLine>Nashville, Tennesse</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="1997">1997</date>
+			<biblScope unit="page" from="179" to="186" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Kubat, M., &amp; Matwin, S. (1997). Addressing the Curse of Imbalanced Training Sets: One Sided Selection. In Proceedings of the Fourteenth International Conference on Machine Learning, pp. 179-186 Nashville, Tennesse.</note>
+</biblStruct>
+
+<biblStruct xml:id="b22">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Morgan</forename><surname>Kaufmann</surname></persName>
+		</author>
+		<imprint/>
+	</monogr>
+	<note type="raw_reference">Morgan Kaufmann.</note>
+</biblStruct>
+
+<biblStruct xml:id="b23">
+	<analytic>
+		<title level="a" type="main">Noisy Replication in Skewed Binary Classification</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Lee</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Computational Statistics and Data Analysis</title>
+		<imprint>
+			<biblScope unit="volume">34</biblScope>
+			<date type="published" when="2000">2000</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Lee, S. (2000). Noisy Replication in Skewed Binary Classification. Computational Statistics and Data Analysis, 34.</note>
+</biblStruct>
+
+<biblStruct xml:id="b24">
+	<analytic>
+		<title level="a" type="main">Heterogeneous Uncertainity Sampling for Supervised Learning</title>
+		<author>
+			<persName><forename type="first">D</forename><surname>Lewis</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Catlett</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the Eleventh International Conference of Machine Learning</title>
+		<meeting>the Eleventh International Conference of Machine Learning<address><addrLine>San Francisco, CA</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="1994">1994</date>
+			<biblScope unit="page" from="148" to="156" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Lewis, D., &amp; Catlett, J. (1994). Heterogeneous Uncertainity Sampling for Supervised Learn- ing. In Proceedings of the Eleventh International Conference of Machine Learning, pp. 148-156 San Francisco, CA.</note>
+</biblStruct>
+
+<biblStruct xml:id="b25">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Morgan</forename><surname>Kaufmann</surname></persName>
+		</author>
+		<imprint/>
+	</monogr>
+	<note type="raw_reference">Morgan Kaufmann.</note>
+</biblStruct>
+
+<biblStruct xml:id="b26">
+	<analytic>
+		<title level="a" type="main">A Comparison of Two Learning Algorithms for Text Categorization</title>
+		<author>
+			<persName><forename type="first">D</forename><surname>Lewis</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Ringuette</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of SDAIR-94, 3rd Annual Symposium on Document Analysis and Information Retrieval</title>
+		<meeting>SDAIR-94, 3rd Annual Symposium on Document Analysis and Information Retrieval</meeting>
+		<imprint>
+			<date type="published" when="1994">1994</date>
+			<biblScope unit="page" from="81" to="93" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Lewis, D., &amp; Ringuette, M. (1994). A Comparison of Two Learning Algorithms for Text Categorization. In Proceedings of SDAIR-94, 3rd Annual Symposium on Document Analysis and Information Retrieval, pp. 81-93.</note>
+</biblStruct>
+
+<biblStruct xml:id="b27">
+	<analytic>
+		<title level="a" type="main">Data Mining for Direct Marketing Problems and Solutions</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Ling</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Li</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the Fourth International Conference on Knowledge Discovery and Data Mining (KDD-98)</title>
+		<meeting>the Fourth International Conference on Knowledge Discovery and Data Mining (KDD-98)<address><addrLine>New York, NY</addrLine></address></meeting>
+		<imprint>
+			<publisher>AAAI Press</publisher>
+			<date type="published" when="1998">1998</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ling, C., &amp; Li, C. (1998). Data Mining for Direct Marketing Problems and Solutions. In Proceedings of the Fourth International Conference on Knowledge Discovery and Data Mining (KDD-98) New York, NY. AAAI Press.</note>
+</biblStruct>
+
+<biblStruct xml:id="b28">
+	<analytic>
+		<title level="a" type="main">Feature Selection for Unbalanced Class Distribution and Naive Bayes</title>
+		<author>
+			<persName><forename type="first">D</forename><surname>Mladenić</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Grobelnik</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 16th International Conference on Machine Learning</title>
+		<meeting>the 16th International Conference on Machine Learning</meeting>
+		<imprint>
+			<date type="published" when="1999">1999</date>
+			<biblScope unit="page" from="258" to="267" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Mladenić, D., &amp; Grobelnik, M. (1999). Feature Selection for Unbalanced Class Distribution and Naive Bayes. In Proceedings of the 16th International Conference on Machine Learning., pp. 258-267.</note>
+</biblStruct>
+
+<biblStruct xml:id="b29">
+	<monogr>
+		<author>
+			<persName><forename type="first">Morgan</forename><surname>Kaufmann</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>O'rourke</surname></persName>
+		</author>
+		<title level="m">Computational Geometry in C</title>
+		<meeting><address><addrLine>UK</addrLine></address></meeting>
+		<imprint>
+			<publisher>Cambridge University Press</publisher>
+			<date type="published" when="1998">1998</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Morgan Kaufmann. O&apos;Rourke, J. (1998). Computational Geometry in C. Cambridge University Press, UK.</note>
+</biblStruct>
+
+<biblStruct xml:id="b30">
+	<analytic>
+		<title level="a" type="main">Reducing Misclassification Costs</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Pazzani</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Merz</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Murphy</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Ali</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Hume</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Brunk</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the Eleventh International Conference on Machine Learning</title>
+		<meeting>the Eleventh International Conference on Machine Learning<address><addrLine>San Francisco, CA</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="1994">1994</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Pazzani, M., Merz, C., Murphy, P., Ali, K., Hume, T., &amp; Brunk, C. (1994). Reducing Misclassification Costs. In Proceedings of the Eleventh International Conference on Machine Learning San Francisco, CA.</note>
+</biblStruct>
+
+<biblStruct xml:id="b31">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Morgan</forename><surname>Kauffmann</surname></persName>
+		</author>
+		<imprint/>
+	</monogr>
+	<note type="raw_reference">Morgan Kauffmann.</note>
+</biblStruct>
+
+<biblStruct xml:id="b32">
+	<analytic>
+		<title level="a" type="main">Robust Classification for Imprecise Environments</title>
+		<author>
+			<persName><forename type="first">F</forename><surname>Provost</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Fawcett</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Machine Learning</title>
+		<imprint>
+			<biblScope unit="volume">42</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="203" to="231" />
+			<date type="published" when="2001">2001</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Provost, F., &amp; Fawcett, T. (2001). Robust Classification for Imprecise Environments. Ma- chine Learning, 42/3, 203-231.</note>
+</biblStruct>
+
+<biblStruct xml:id="b33">
+	<analytic>
+		<title level="a" type="main">The Case Against Accuracy Estimation for Comparing Induction Algorithms</title>
+		<author>
+			<persName><forename type="first">F</forename><surname>Provost</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Fawcett</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Kohavi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the Fifteenth International Conference on Machine Learning</title>
+		<meeting>the Fifteenth International Conference on Machine Learning<address><addrLine>Madison, WI</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="1998">1998</date>
+			<biblScope unit="page" from="445" to="453" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Provost, F., Fawcett, T., &amp; Kohavi, R. (1998). The Case Against Accuracy Estimation for Comparing Induction Algorithms. In Proceedings of the Fifteenth International Conference on Machine Learning, pp. 445-453 Madison, WI.</note>
+</biblStruct>
+
+<biblStruct xml:id="b34">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Morgan</forename><surname>Kauffmann</surname></persName>
+		</author>
+		<imprint/>
+	</monogr>
+	<note type="raw_reference">Morgan Kauffmann.</note>
+</biblStruct>
+
+<biblStruct xml:id="b35">
+	<monogr>
+		<title level="m" type="main">C4.5: Programs for Machine Learning</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Quinlan</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="1992">1992</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Quinlan, J. (1992). C4.5: Programs for Machine Learning.</note>
+</biblStruct>
+
+<biblStruct xml:id="b36">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Morgan</forename><surname>Kaufmann</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">San</forename><surname>Mateo</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Ca</surname></persName>
+		</author>
+		<imprint/>
+	</monogr>
+	<note type="raw_reference">Morgan Kaufmann, San Mateo, CA.</note>
+</biblStruct>
+
+<biblStruct xml:id="b37">
+	<analytic>
+		<title level="a" type="main">A Large-Scale Evaluation of Features for Automatic Detection of Oil Spills in ERS SAR Images</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Solberg</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Solberg</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Geoscience and Remote Sensing Symposium</title>
+		<meeting><address><addrLine>Lincoln, NE</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="1996">1996</date>
+			<biblScope unit="page" from="1484" to="1486" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Solberg, A., &amp; Solberg, R. (1996). A Large-Scale Evaluation of Features for Automatic Detection of Oil Spills in ERS SAR Images. In International Geoscience and Remote Sensing Symposium, pp. 1484-1486 Lincoln, NE.</note>
+</biblStruct>
+
+<biblStruct xml:id="b38">
+	<analytic>
+		<title level="a" type="main">Toward Memory-based Reasoning</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Stanfill</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Waltz</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Communications of the ACM</title>
+		<imprint>
+			<biblScope unit="volume">29</biblScope>
+			<biblScope unit="issue">12</biblScope>
+			<biblScope unit="page" from="1213" to="1228" />
+			<date type="published" when="1986">1986</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Stanfill, C., &amp; Waltz, D. (1986). Toward Memory-based Reasoning. Communications of the ACM, 29 (12), 1213-1228.</note>
+</biblStruct>
+
+<biblStruct xml:id="b39">
+	<analytic>
+		<title level="a" type="main">Measuring the Accuracy of Diagnostic Systems</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Swets</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Science</title>
+		<imprint>
+			<biblScope unit="volume">240</biblScope>
+			<biblScope unit="page" from="1285" to="1293" />
+			<date type="published" when="1988">1988</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Swets, J. (1988). Measuring the Accuracy of Diagnostic Systems. Science, 240, 1285-1293.</note>
+</biblStruct>
+
+<biblStruct xml:id="b40">
+	<analytic>
+		<title level="a" type="main">Two Modifications of CNN</title>
+		<author>
+			<persName><forename type="first">I</forename><surname>Tomek</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Systems, Man and Cybernetics</title>
+		<imprint>
+			<biblScope unit="volume">6</biblScope>
+			<biblScope unit="page" from="769" to="772" />
+			<date type="published" when="1976">1976</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Tomek, I. (1976). Two Modifications of CNN. IEEE Transactions on Systems, Man and Cybernetics, 6, 769-772.</note>
+</biblStruct>
+
+<biblStruct xml:id="b41">
+	<monogr>
+		<title level="m" type="main">Cost Sensitive Bibliography</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Turney</surname></persName>
+		</author>
+		<ptr target="http://ai.iit.nrc.ca/bibiliographies/cost-sensitive.html" />
+		<imprint>
+			<date type="published" when="1996">1996</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Turney, P. (1996). Cost Sensitive Bibliography. http://ai.iit.nrc.ca/bibiliographies/cost- sensitive.html.</note>
+</biblStruct>
+
+<biblStruct xml:id="b42">
+	<analytic>
+		<title level="a" type="main">The Selection of Good Search Terms</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Van Rijsbergen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Harper</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Porter</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Information Processing and Management</title>
+		<imprint>
+			<biblScope unit="volume">17</biblScope>
+			<biblScope unit="page" from="77" to="91" />
+			<date type="published" when="1981">1981</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">van Rijsbergen, C., Harper, D., &amp; Porter, M. (1981). The Selection of Good Search Terms. Information Processing and Management, 17, 77-91.</note>
+</biblStruct>
+
+<biblStruct xml:id="b43">
+	<analytic>
+		<title level="a" type="main">Comparative Evaluation of Pattern Recognition Techniques for Detection of Microcalcifications in Mammography</title>
+		<author>
+			<persName><forename type="first">K</forename><surname>Woods</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Doss</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Bowyer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Solka</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Priebe</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Kegelmeyer</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Pattern Recognition and Artificial Intelligence</title>
+		<imprint>
+			<biblScope unit="volume">7</biblScope>
+			<biblScope unit="issue">6</biblScope>
+			<biblScope unit="page" from="1417" to="1436" />
+			<date type="published" when="1993">1993</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Woods, K., Doss, C., Bowyer, K., Solka, J., Priebe, C., &amp; Kegelmeyer, P. (1993). Compara- tive Evaluation of Pattern Recognition Techniques for Detection of Microcalcifications in Mammography. International Journal of Pattern Recognition and Artificial Intel- ligence, 7(6), 1417-1436.</note>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

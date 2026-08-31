@@ -1,0 +1,773 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">The Role of Federated Learning in Improving Financial Security: A Survey</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability  status="unknown">
+					<licence/>
+				</availability>
+				<date type="published" when="2025-10-07">7 Oct 2025</date>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><forename type="first">Houston</forename><surname>Cade</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="department">Department of Computer Science</orgName>
+								<orgName type="institution">Tennessee Technological University</orgName>
+								<address>
+									<settlement>Cookeville</settlement>
+									<country key="US">USA</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><surname>Kennedy</surname></persName>
+							<email>chkennedy42@tntech.edu</email>
+							<affiliation key="aff0">
+								<orgName type="department">Department of Computer Science</orgName>
+								<orgName type="institution">Tennessee Technological University</orgName>
+								<address>
+									<settlement>Cookeville</settlement>
+									<country key="US">USA</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Amr</forename><surname>Hilal</surname></persName>
+							<email>ahilal@tntech.edu</email>
+							<affiliation key="aff1">
+								<orgName type="department">Department of Computer Science</orgName>
+								<orgName type="institution">Tennessee Technological University</orgName>
+								<address>
+									<settlement>Cookeville</settlement>
+									<country key="US">USA</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Morteza</forename><surname>Momeni</surname></persName>
+							<email>mmomeni@tntech.edu</email>
+							<affiliation key="aff2">
+								<orgName type="department">Department of Finance</orgName>
+								<orgName type="institution">Tennessee Technological University</orgName>
+								<address>
+									<settlement>Cookeville</settlement>
+									<country key="US">USA</country>
+								</address>
+							</affiliation>
+						</author>
+						<title level="a" type="main">The Role of Federated Learning in Improving Financial Security: A Survey</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date type="published" when="2025-10-07">7 Oct 2025</date>
+						</imprint>
+					</monogr>
+					<idno type="MD5">07F375E423B281097B115629BD58E8B0</idno>
+					<idno type="arXiv">arXiv:2510.14991v1[cs.CR]</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.2-SNAPSHOT" ident="GROBID" when="2026-08-31T18:12+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>With the growth of digital financial systems, robust security and privacy have become a concern for financial institutions. Even though traditional machine learning models have shown to be effective in fraud detections, they often compromise user data by requiring centralized access to sensitive information. In IoT-enabled financial endpoints such as ATMs and POS Systems that regularly produce sensitive data that is sent over the network. Federated Learning (FL) offers a privacy-preserving, decentralized model training across institutions without sharing raw data. FL enables cross-silo collaboration among banks while also using cross-device learning on IoT endpoints. This survey explores the role of FL in enhancing financial security and introduces a novel classification of its applications based on regulatory and compliance exposure levels-ranging from low-exposure tasks such as collaborative portfolio optimization [16] to high-exposure tasks like real-time fraud detection [7], <ref type="bibr" target="#b7">[8]</ref>. Unlike prior surveys, this work reviews FL's practical use within financial systems, discussing its regulatory compliance and recent successes in fraud prevention and blockchainintegrated frameworks. However, FL's deployment in finance is not without challenges. Data heterogeneity, adversarial attacks, and regulatory compliance make implementation far from easy. This survey reviews current defense mechanisms and discusses future directions, including blockchain integration, differential privacy, secure multi-party computation, and quantum-secure frameworks. Ultimately, this work aims to be a resource for researchers exploring FL's potential to advance secure, privacycompliant financial systems.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>I. INTRODUCTION</head><p>Over the past decade, Machine Learning is a technology that has been utilized in several different industries, such as healthcare, transportation, and manufacturing. The finance industry has recently adopted this technology for several different use cases, most prominently, fraud detection <ref type="bibr" target="#b28">[29]</ref>- <ref type="bibr" target="#b30">[31]</ref>, loan approvals <ref type="bibr" target="#b31">[32]</ref>, and stock market analysis <ref type="bibr" target="#b32">[33]</ref>. Unfortunately, the evolution of this technology is heavily reliant on rich and high-quality datasets to train a highly accurate machine learning model <ref type="bibr" target="#b0">[1]</ref>. This need for data has shifted the focus to obtaining data for these models. However, due to the highly sensitive nature of financial data, collecting large datasets often requires collaboration between financial institutions. This inter-institutional data sharing introduces significant privacy and security challenges regarding transparency of data collection, storage, and usage <ref type="bibr" target="#b1">[2]</ref>. Federated Learning (FL) is a machine learning framework that opens the avenue of decentralized training on user-specific data where client data never leaves the device or institution in this case. In particular, cross-silo federated learning refers to the collaboration between a small number of trusted institutions (such as banks or financial firms) that jointly train a shared model without exposing their local datasets. In contrast, cross-device FL applies FL at the edge level like mobile banking apps, or POS terminals allowing financial institutions to make real-time predictions without pulling sensitive data from individual endpoints. This is particularly important as IoT-enabled financial devices generate large volumes of highly sensitive data.</p><p>Given the macroeconomic dependency of certain financial applications such as loan approvals <ref type="bibr" target="#b33">[34]</ref>, institutions can greatly benefit from this collective intelligence to make more informed decisions. But this kind of training comes with several challenges, especially when considering the rapid development of FL. As shown in Fig. <ref type="figure" target="#fig_0">1</ref>, in a standard federated learning protocol, the server sends a global model to selected institutions as local models and later sends their trained model updates back to the server. After this, the server updates the global model by aggregating the local updates to later send back to the institutions.</p><p>Throughout this process, the individual institution's data can only be accessed by that institution, inherently ensuring data privacy. However, recent research identified several security risks in federated learning, such as data reconstruction and backdoor attacks <ref type="bibr" target="#b3">[4]</ref>, <ref type="bibr" target="#b4">[5]</ref>. Despite these challenges, there has been promising progress in leveraging federated learning to enhance financial security. For instance, studies have explored blockchain-integrated cross-silo frameworks as a means to strengthen privacy and accountability <ref type="bibr" target="#b5">[6]</ref>. In the area of fraud detection, FL has shown the potential to significantly improve accuracy by utilizing the collective insights of multiple institutions' data without compromising individual user privacy <ref type="bibr" target="#b6">[7]</ref>. Additional research has demonstrated the broader impact of federated learning in financial security, including detecting counterfeit data through blockchain-based frameworks <ref type="bibr" target="#b7">[8]</ref>, addressing data heterogeneity across clients via federated transfer learning <ref type="bibr" target="#b8">[9]</ref>, and integrating quantum computing with federated learning for advanced financial services <ref type="bibr" target="#b9">[10]</ref>. Given the evolution and interdisciplinary nature of this field, a comprehensive survey is needed to consolidate knowledge and discuss emerging trends and challenges. This survey aims to fill that gap by organizing and analyzing existing research on federated learning in financial security, with a novel focus on classifying methodologies according to their regulatory and compliance exposure levels:</p><p>• Low-exposure: e.g., credit risk assessment • Moderate-exposure: e.g., loan approvals • High-exposure: e.g., real-time fraud detection By structuring the survey this way, the goal is to offer clarity on the suitability, effectiveness, and limitations of various FL approaches based on how critical or sensitive the financial application can be. This classification not only helps researchers and practitioners navigate a wide range of FL solutions more effectively but also highlights areas that require further exploration. Ultimately, this survey contributes to research in FL by mapping out the current state of FL in financial security and proposing directions for future research.</p><p>The remainder of this paper is organized as follows. Section II reviews prior surveys and establishes the background for our study. Section III describes a proposed classification of regulatory and compliance exposure. Section IV presents realworld challenges that Federated Learning faces in finance. A brief discussion of the ethics and social implications of Federated Learning in finance is provided in section V. Finally, section VI discusses possible future practices of Federated Learning in financial security, and section VII concludes the paper.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>II. BACKGROUND AND FUNDAMENTALS</head><p>Machine Learning (ML) and Artificial Intelligence (AI) has consumed our everyday life now more than ever. Television has advertisements about AI, some businesses run on AI, and most prominently Large Language Models (LLMs) such as ChatGPT has sparked a revolution of using AI not only in research but in many industries and even everyday life.</p><p>Financial services, banking, and insurance remain one of the biggest sectors that has a very high potential in utilizing ML with the availability of rich data and innovative algorithms <ref type="bibr" target="#b10">[11]</ref>. In fact, there has already been rapid development in the usage of this technology in things such as risk modeling and stock portfolio management to algorithmic trading and fraud detection. However, traditional ML approaches often rely on centralized data collection, which raises serious concerns around privacy, security, and regulatory compliance. Centralizing sensitive financial data increases the risk of breaches, limits data sharing between institutions due to legal restrictions, and complicates compliance with regulations like GDPR <ref type="bibr" target="#b16">[17]</ref>. Moreover, the "black-box" nature of traditional ML models makes analysis of their outputs and internal operations hinder acceptance and deployment into the real-world <ref type="bibr" target="#b10">[11]</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. Federated Learning</head><p>Federated learning (FL) is an alternative to traditional ML that allows multiple institutions to collaboratively train a shared model without transferring their raw data. In this decentralized framework, each participant such as a bank or financial institution trains the model locally on its own dataset and generates model updates (such as gradients or weights). The server aggregates these updates from all participants using algorithms like Federated Averaging <ref type="bibr" target="#b13">[14]</ref> to update the global model, which is then redistributed to the participants for further training in successive rounds. This process repeats until the global model converges.</p><p>To further enhance privacy and security, secure aggregation <ref type="bibr" target="#b11">[12]</ref> and differential privacy <ref type="bibr" target="#b12">[13]</ref> are often incorporated FL systems. Secure aggregation ensures that individual model updates remain confidential by using cryptographic techniques to combine updates in such a way that only the final aggregated result is visible. This prevents any single update from being traced back to a participant. Differential privacy, on the other hand, introduces Gaussian noise into the updates before they are shared. This technique provides formal privacy guarantees, making it mathematically improbable to infer sensitive information about any single data point from the shared model. Together, these defenses make FL a robust, privacypreserving approach for sensitive industries like finance. This allows financial institutions to collaborate more effectively in areas like fraud detection, risk assessment, and loan approvals without violating data protection laws <ref type="bibr" target="#b1">[2]</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Prior Surveys</head><p>Current surveys have addressed the progress, challenges, and threats within the field of Federated Learning. In fact, <ref type="bibr" target="#b0">[1]</ref> focus exclusively on the security threats in FL, including backdoor, Byzantine, and adversarial attacks. This work is valuable in showing the vulnerabilities that come with decentralized learning systems and the countermeasures being developed. However, their scope remains large, and fails to explore the domain-specific considerations such as financial applications and the regulations and risks that can come with those applications.</p><p>Another comprehensive survey is provided by <ref type="bibr" target="#b34">[35]</ref> who conduct a holistic review of FL challenges, design, and application domains. They classify prior work by core system challenges and emerging aggregation and personalization techniques. However, their survey heavily focuses on FL applications in fields such as healthcare, mobile devices, and IoT. In fact, exposure classification is entirely excluded from their survey which we show to be extremely relevant in Financial applications.</p><p>None of the surveyed literature addresses how FL frameworks can be customized to meet the strict demands of finance regulations, privacy concerns, and exposure classifications, where models must be accurate, explainable, and even auditable. While some works address general statistical heterogeneity and personalization in FL, they do not correlate these challenges to the implications they pose in finance, such as bias in credit scoring models or adversarial manipulation of loan approval systems.</p><p>This work aims to fill the gap in this overlooked domain of FL applications. This survey provides a focused investigation into how FL can be adapted for varying levels of financial exposure in financial applications. By doing so, researchers can have an outline for deploying federated learning in finance.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>III. REGULATORY AND COMPLIANCE EXPOSURE CLASSIFICATION</head><p>This section categorizes FL applications according to their regulatory and compliance exposure. Regulatory and compliance exposure is the institution's exposure to potential legal or regulatory sanctions, loss of reputation, and financial loss due to bad practice of topics like data protection or failure to comply with internal policies or laws and regulations <ref type="bibr" target="#b37">[38]</ref>. Compliance risk refers to an event with the likelihood of potential regulatory, financial, or reputational losses for the institution due to noncompliance <ref type="bibr" target="#b37">[38]</ref>. We discuss the different levels of regulatory and compliance exposure below, and present different FL applications under each level along with key aspects and associated challenges. A summary of these applications is provided at the end of this section in Table <ref type="table" target="#tab_1">I</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. Low-Exposure</head><p>Low-exposure applications are characterized by minimal immediate regulatory oversight and involve compliance obligations that are primarily internal in nature or based on voluntarily adopted codes of conduct <ref type="bibr" target="#b37">[38]</ref>. These applications typically involve personal decision making support systems where model outputs guide long-term decision making such as credit risk assessment <ref type="bibr" target="#b14">[15]</ref> or collaborative portfolio optimization <ref type="bibr" target="#b15">[16]</ref>. Generally, oversight in internal policies or best practices may lead to reputational risk, but the probability and impact of legal sanctions are minimal <ref type="bibr" target="#b37">[38]</ref>.</p><p>1) Credit Risk Assessment: Credit risk assessment is an easy-to-understand example of a low-exposure yet impactful application of FL in finance. A recent study proposed a FL prototype system where multiple financial institutions could collaboratively predict mortgage default risk without sharing raw data <ref type="bibr" target="#b14">[15]</ref>. Using the Freddie Mac Single-Family Loan-Level dataset and economic indicators like delinquency, charge-off, and interest rate levels in the US at the national level <ref type="bibr" target="#b14">[15]</ref>, the authors trained 14 simulated financial institutions on a time-series LSTM model. Under the assumption of Federated Learning architecture and FedAvg, the study found that data locality and privacy was preserved, while also enabling smaller financial institutions (smaller datasets) benefited from shared insights. In their experimentation, five scenarios were tested including setups with and without major contributors. The empirical results of this study showed that the FL model consistently outperformed both local (individual financial institutions) and centralized models, achieving a 99.04% accuracy and a 98.22% F1 score, compared to 95.04% accuracy and 92.65% F1 score on local models, even with the largest data contributors excluded.</p><p>While these numbers demonstrate FL's potential, the nearperfect performance may raise questions about their validity in today's world. The experiment relied on historical mortgage data curated under specific conditions (2006-2009 mortgage crisis), which may not reflect today's more diverse credit environment. Although the exclusion of major data contributors did not affect performance, real-world FL networks may experience more volatility due to uneven data quality or client dropouts. However, the study shows promise but should be interpreted as an optimistic upper bound rather than a guaranteed result.</p><p>These findings demonstrate FL's robustness and scalability while preserving regulatory compliance. The study further emphasized that the model performance correlated strongly with data volume, underscoring the value of collaboration among smaller institutions. This work serves as an empirical demonstration of FL in credit risk modeling using real mortgage portfolios, highlighting FL's potential to enhance risk estimation without compromising privacy.</p><p>2) Collaborative Portfolio Optimization: Collaborative Portfolio Optimization is another interesting low-exposure application of Federated Learning in Finance, enabling financial institutions to improve investment strategies while maintaining data privacy. A study conducted in December 2024 explores the concept of applying FL to the portfolio optimization process, which traditionally relies on centralized models constrained by fragmented data and regulatory limitations <ref type="bibr" target="#b15">[16]</ref>. The authors frame FL as a solution that allows multiple institutions to co-train on local models on local datasets, preserving the confidentiality of proprietary trading data, client profiles, and risk metrics. Much like the risk assessment study <ref type="bibr" target="#b14">[15]</ref>, this study shows that collaboration is especially beneficial to institutions with limited data because it allows them to leverage the macro view of the market without compromising compliance with regulations like GDPR <ref type="bibr" target="#b16">[17]</ref> or CCPA <ref type="bibr" target="#b17">[18]</ref>.</p><p>This study designed a simulation framework where several institutions collaboratively train optimization models without sharing raw data. Each institution optimizes portfolios locally using techniques based on Modern Portfolio Theory (MPT) <ref type="bibr" target="#b18">[19]</ref>, while the global model updates through iterative weight aggregation via FedAvg. The proposed architecture supported varying data formats by allowing flexible aggregation techniques. Importantly, the author addressed challenges like data heterogeneity and computational complexity by distributing the training workload and enabling real-time adaptability in portfolio updates.</p><p>Unlike the risk assessment study <ref type="bibr" target="#b14">[15]</ref>, this study did not provide experimentation metrics or benchmarks comparisons but contributes significantly by demonstrating a conceptual and technical framework for implementing FL in portfolio management. It highlights how FL can enhance model robustness, simulate diverse market conditions, and reduce systemic risk <ref type="bibr" target="#b15">[16]</ref>. Compared to traditional ML approaches, the proposed FL model offers scalability, privacy, and resilience without sacrificing the quality of portfolio decisions; setting the stage for future empirical studies, encouraging the adoption of privacy-preserving, collaborative optimization in portfolio management.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Moderate-Exposure</head><p>Moderate-exposure applications involve regulatory obligations, often requiring compliance with laws, regulations, rules, and codes of conduct applicable to the application <ref type="bibr" target="#b37">[38]</ref>. This kind of exposure typically involves sanctions, financial loss, and most importantly increased monitoring and corrective measures <ref type="bibr" target="#b37">[38]</ref>. These applications typically analyze sensitive data like income, credit behavior, employment history, and debt profiles. Traditional ML approaches for such predictions raise concerns over data breaches, lack of transparency, and inflexibility toward dynamic customer profiles. Federated Learning (FL) offers a promising alternative by enabling decentralized training of predictive models across multiple financial institutions without requiring raw data sharing.</p><p>A study published in December 2024 proposes and Federated Machine Learning and Explainable AI (FML-XAI) framework designed for dynamic customer loan predictions <ref type="bibr" target="#b19">[20]</ref>. By utilizing SHAP <ref type="bibr" target="#b20">[21]</ref> and LIME <ref type="bibr" target="#b21">[22]</ref> the Explainable AI (XAI) portion of this framework aims to offer interpretable insights into key drivers of model decisions like credit score, debt-toincome ratio, and income in hopes of building customer trust. This study directly addresses several research gaps such as:</p><p>• Privacy and Transparency: FML lacks interpretability.</p><p>XAI lacks privacy preservation. Implementing their own framework to combat these issues <ref type="bibr" target="#b19">[20]</ref>, the authors demonstrate a solution that addresses these issues. Adaptability is addressed with real-time data drift <ref type="bibr" target="#b35">[36]</ref>, where customer profiles change continuously due to changes in income, employment, spending patterns, and credit behavior. By using incremental learning and online federated learning, the proposed framework enables local models to incorporate new data while the global model evolves to understand emerging trends so predictions remain relevant. In addition to its adaptability, the framework offers strong privacy guarantees by ensuring that sensitive customer data never leaves each financial institution using FML. Transparency is addressed by using XAI techniques to provide interpretable explanations for model predictions. In their experimentation, the authors demonstrate the framework's scalbility and communication efficiency. Using FedAvg, along with optional differential privacy techniques, their system supports deployment across diverse financial institutions that may have differing capabilities and customer bases. In their results, model accuracy improved from 84% to 92% across federated rounds, while communication costs remained manageable; proving that the framework generalizes well across non-IID datasets and scales efficiently for real-world deployment. In short, by combining FML and XAI together their proposed framework ultimately enhances privacy, interpretability, adaptability, and scalability, making it ideal for modern loan approval systems.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>C. High-Exposure</head><p>High-exposure applications occur in heavily regulated domains and typically carry not only regulatory and compliance risk but also integrity risks which may need continuous monitoring of changes in the regulatory environment to prevent exposure to crippling legal sanctions, substantial financial loss, or even detrimental reputational loss <ref type="bibr" target="#b37">[38]</ref>. These applications typically involve real-time fraud detection <ref type="bibr" target="#b6">[7]</ref>, <ref type="bibr" target="#b7">[8]</ref>, securing financial transactions <ref type="bibr" target="#b22">[23]</ref>, and even Anti-Money Laundering (AML) <ref type="bibr" target="#b22">[23]</ref>, <ref type="bibr" target="#b23">[24]</ref>. Federated Learning has become a focus in this research as a way to preserve privacy while enabling collaborative intelligence.</p><p>1) Anti-Money Laundering: Anti-Money Laundering (AML) compliance refers to the legal and regulatory processes financial institutions follow to detect, prevent, and report suspicious activities that aim to disguise the origins of illegally obtained money <ref type="bibr" target="#b24">[25]</ref>. AML frameworks typically involve monitoring large volumes of financial transactions for anomalous behavior. However, existing AML systems are often limited by their reliance on centralized models, which are limited by incomplete data and usually produce false positives; estimates suggest that over 98% of alerts are false, leading to increased operational costs <ref type="bibr" target="#b23">[24]</ref>. Much like other financial applications, AML also has privacy regulation concerns which prevent financial institutions from sharing sensitive customer transaction data.</p><p>Federated Learning has come to light as a possible solution to these concerns by enabling multiple financial institutions to collaboratively train ML models on decentralized data, preserving data privacy while improving model performance through exposure to diverse patterns of money laundering. As we can see in Figure <ref type="figure" target="#fig_1">2</ref>, a money launderer starts with dirty money that is simply entered into the legal financial system. However, in order to evade detection, the adversary may disperse these funds to several different sources. These sources could be foreign bank accounts, clean family members, shell companies, and even several domestic bank accounts. Once the money has been layered through sources, the adversary is able to actually integrate or spend their "clean" money back into the economy with no criminal backlash from having illegally obtained money. Intuitively, Federated Learning can be used to directly combat the layering method of money laundering by leveraging combined intelligence to make more informed decisions. For example, JP Morgan and Chase may partner with other domestic banks as well as foreign banks like BNP Paribas to gain a wider range of knowledge in where the money is going. A recent study <ref type="bibr" target="#b23">[24]</ref> proposed a novel FL-based AML detection framework that addresses the shortcomings of traditional systems. Inspired by the Federated Artificial Intelligence Enabler (FATE) framework SecureBoost <ref type="bibr" target="#b36">[37]</ref>, the authors introduce a system where local models are trained individually at five virtual deposit banks and are coordinated through a central server without exchanging data. Each bank trains its model on local data using filter-based feature selection approach using XGBoost to highlight relevant transaction characteristics <ref type="bibr" target="#b24">[25]</ref>. The models are encrypted and enhanced with differential privacy to ensure secure model updates. The architecture is supported by a formal privacy risk quantification using ϵ (privacy loss) and δ (risk of accidental data exposure), as well as the FedAvg protocol that aggregates model weights.</p><p>In their experimentation, the authors discuss results that show the practicality and efficiency of their approach. The PaySim dataset was used, which contained 6 million mobile transactions, including both real and fraudulent behavior. The centralized baseline model achieved an accuracy of 0.99% with a false alarm rate of 0.1%. The classification report further indicates near-perfect scores, with an F1-score of 1.0 for benign transactions and 0.99 for malicious ones. The federated model produced results similar to the baseline model, occasionally lowering performance by a small fraction but still achieving an F1 score close to 1.0. While these findings suggest that FL can match centralized performance while preserving privacy, they should be interpreted with caution. The PaySim dataset is synthetic and highly controlled, which could bring on more desirable results compared to noisy, imbalanced, or even adversarial datasets encountered in realworld AML. Also, the marginal improvements of the federated model over the centralized baseline model suggest that FL's value lies less in accuracy gains and more in enabling privacypreserving collaboration across institutions. Regulators may also be skeptical of near-perfect performance metrics, which often are a result of overfitting.</p><p>Although the FL approach seems to have no utility in terms of significant accuracy improvements of false positive rates, it is important to realize the actual importance of this study. These findings confirm that FL can maintain detection accuracy while overcoming concerns of data privacy, false positives, and model scalability. Ultimately, this approach shows FL's potential in the future of AML compliance, reducing operational costs and improving collaboration without compromising sensitive data.</p><p>2) Fraud Detection with Blockchain-Based FL: Blockchain is a decentralized and distributed ledger system that records transactions across multiple nodes in a tamper-proof and transparent manner <ref type="bibr" target="#b25">[26]</ref>. Each transaction is grouped into a block that is cryptographically secured, and linked to the previous one which makes a permanent chain. Once data is written onto the blockchain, it cannot be altered without consensus from the entire network. In the context of financial security, this inflexibility ensures that all interactions such as exchanges, model updates, or access permissions are verifiable and permanently recorded.</p><p>Traditional fraud detection models often rely on centralized data aggregation, which poses privacy risks and regulatory challenges. A comprehensive and innovative framework that utilizes FL with blockchain technology to enhance the security and, more importantly, the integrity of financial institutions is presented in <ref type="bibr" target="#b7">[8]</ref>. The proposed framework uses blockchain's trustless environment and smart contract capabilities to improve the security and regulation of the FL process. Smart contracts are programmable rules deployed on the blockchain that automatically enforce access control, authentication, and model-sharing policies <ref type="bibr" target="#b7">[8]</ref>, <ref type="bibr" target="#b25">[26]</ref>. This removes the need for intermediaries or centralized authorities, reducing the risks of manipulation, data leakage, or unauthorized access. The blockchain layer ensures that every institution in the FL system follows predefined protocols via smart contracts to ensure secure and accountable collaboration.</p><p>This blockchain-based FL architecture is designed to detect counterfeit financial transactions, including credit card fraud and application fraud. Smart contracts authenticate clients, authorize model submissions, manage version control, and securely synchronize local and global models <ref type="bibr" target="#b7">[8]</ref>. This system guarantees that each update in the federated network is trace- </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>IV. CHALLENGES OF FL IN FINANCE</head><p>As discussed throughout this survey, FL offers compelling advantages for the financial sector, particularly in preserving private data while enabling collaborative intelligence. However, its adoption is not without hurdles. Federated systems must consider unique constraints and risks that are magnified in financial contexts due to high risks in decision outcomes and sensitive data environments.</p><p>This section categorizes the key challenges facing FL in finance into three areas: (1) technical limitations related to data heterogeneity and communication, (2) vulnerability to security threats despite privacy enhancements, and (3) regulatory and trust-related concerns that impact deployment and adoption.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. Data Heterogenity and Communication Overhead</head><p>One of the biggest obstacles FL systems face is data heterogeneity and non-IID distributions. Financial institutions serve different demographics, operate in different regions, and handle diverse transaction types, leading to heterogeneous data distributions. This undermines global model convergence and reduces generalization performance, making it difficult to produce robust models that perform uniformly across all clients <ref type="bibr" target="#b26">[27]</ref>.</p><p>Communication overhead and scalability pose additional concerns. FL relies on iterative exchanges of model parameters between clients and a central server. In cross-silo settings, where financial institutions may have different infrastructure or bandwidth capabilities, communication can become resourceintensive and may introduce latency, limiting FL's suitability to time-sensitive financial tasks mentioned in this survey.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Security Threats and Privacy Vulnerabilities</head><p>Most importantly, although FL improves privacy by design, it remains vulnerable to security threats such as model poisoning <ref type="bibr" target="#b0">[1]</ref> and backdoor attacks <ref type="bibr" target="#b4">[5]</ref>. In model poisoning, malicious participants create and submit manipulated model updates that, when aggregated, degrade the overall performance or inject hidden objectives into the global model. A particular form is the backdoor attack, where the adversary trains their local model on poisoned data or alters weights such that the global model behaves normally on typical inputs but produces attacker-specified outputs when triggered by specific patterns <ref type="bibr" target="#b4">[5]</ref> or inputs (misclassify transactions involving a certain account number). These attacks can be difficult to detect due to secure aggregation which masks individual updates to preserve privacy but also hides malicious behavior unintentionally. In the context of financial security, attackers could manipulate a fraud detection model to consistently ignore activities like money laundering associated with certain triggers like their account number. This allows the attacker to exploit things like fraud detection and money laundering while remaining hidden.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>C. Regulation Roadblocks and Trust</head><p>Also, regulatory compliance is also an issue. Techniques like differential privacy offer formal privacy guarantees, but aligning these with financial industry regulations can become very tedious and complex. Transparency and consent is often demanded by regulators and current FL systems may not fully support these demands.</p><p>Lastly, interpretability and trust are essential in financial applications where model decisions affect financial decisions, loan approvals, and fraud detection. Allowing AI models to make such vital decisions without any explanation of how they got the answer has hindered FL deployment in finance and could even ruin user trust.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>V. ETHICAL AND SOCIAL IMPLICATIONS OF FL IN FINANCE</head><p>While the technical performance of FL frameworks is promising, its deployment in finance also raises broader ethical and societal considerations that extend beyond accuracy metrics.</p><p>Transparency and Interpretability: Current financial regulations often require that risk models be explainable to auditors, regulators, and more importantly, end users. FL frameworks that rely on deep learning may improve accuracy but risk reproducing the "black box" problem. Lack of interpretability may undermine customer trust, particularly in applications like credit scoring or loan approvals, where individual livelihoods are at risk.</p><p>Fairness and Bias: Credit risk datasets often reflect historical bias, such as regional discrepancies in mortgage approvals. FL may amplify these biases if the participating institutions contribute uneven data. Without fairness audits, the benefits of FL could unintentionally reinforce discrimination, creating ethical risks.</p><p>Accountability: Like any machine learning techniques, FL systems will make mistakes, and the question of responsibility can become complex. If multiple banks collaborate on a shared model, accountability for false positives in anti-money laundering or poor credit rejections could be distributed across all of the institutions and even the FL platform. This distribution of responsibility creates not only ethical challenges but also legal challenges.</p><p>Addressing these challenges requires not only technical solutions, such as Explainable AI and fairness-aware training, but also new regulations that could redefine accountability in collaborative systems.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>VI. THE FUTURE OF FL IN FINANCIAL SECURITY</head><p>Addressing these challenges requires a evolution of FL frameworks tailored to the needs of the financial sector.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. Blockchain-FL Integration</head><p>A particularly promising direction is the integration of FL with blockchain technology and smart contracts, as explored in Section III-C2. Blockchain's immutable ledger provides a secure and interpretable record of model updates, enhancing auditability and trust among stakeholders. Otherwise, smart contracts can be employed to automatically enforce compliance and participation rules, reducing the need for manual oversight and minimizing the potential for human error or adversarial attacks.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Quantum Computing &amp; FL</head><p>With the development and growth of quantum computing, traditional cryptographic methods used in current FL systems could become obsolete in years or decades to come. As such, developing quantum secure FL frameworks becomes essential.</p><p>Quantum computers utilize things such as superposition and entanglement <ref type="bibr" target="#b27">[28]</ref> to perform complex computations exponentially faster than classical computers. This capability opens doors for advanced financial analytics simulations for risk analysis and rapid portfolio optimization. However, it also threaten to break traditional encryption protocols such as RSA and elliptic curve cryptography which are foundational to the security of FL communications and data privacy <ref type="bibr" target="#b9">[10]</ref>.</p><p>Beyond security, quantum computing could also enhance the computational efficiency of FL itself. Quantum machine learning algorithms could be adapted to federated settings, enabling clients to perform faster local training or optimization tasks which may reduce convergence time and communication rounds. While still an area of active research, hybrid classicalquantum FL architectures <ref type="bibr" target="#b9">[10]</ref> could become useful in the future, especially in high-frequency trading where speed and accuracy are important. However, these advancements require significant infrastructural and practical developments in quantum computing that are simply many years away from achieving. In 2025, several tech companies such as Google <ref type="bibr" target="#b38">[39]</ref>, IBM <ref type="bibr" target="#b39">[40]</ref>, and Microsoft <ref type="bibr" target="#b40">[41]</ref> have made large advancements in the Quantum Computing realm, but financial institutions are nowhere close to being quantum-ready. Ultimately, Quantum Computing in FL is a great way to combine the speed of Quantum Computing with the privacy guarantees of FL, but will require significant advancements in both fields of research.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>VII. CONCLUSION</head><p>Federated Learning represents a shift in how financial institutions can collaborate on machine learning models while preserving data privacy and regulatory compliance. By enabling decentralized model training, FL minimizes risks associated with centralized data and creates opportunities for secure, scalable AI systems in finance. The analysis across varying exposure levels (credit scoring to fraud detection) demonstrates FL's broad use-cases and potential for real-world impact. However, issues like data heterogeneity, adversarial threats, and the lack of interpretability continue to hinder deployment. Also, the need for integration with regulations and the demand for trust and transparency from users must be addressed.</p><p>In particular, the rise of IoT-enabled financial endpoints such as POS systems and mobile banking devices make privacypreserving machine learning solutions a necessity. Crossdevice FL offers a compelling solution to address these needs, allowing models to learn directly from the endpoints without exposing sensitive data. Looking forward, the fusion of FL with blockchain technology presents an exciting opportunity for verifiable collaboration among financial institutions. Additionally, the rise of Quantum Computing poses both a threat and an opportunity. Quantum-secure FL architectures offer the promise of exponentially better computation speed. As these technologies evolve, the future of FL in finance will depend on efforts across machine learning, cryptography, financial regulation, and distributed learning. With the right frameworks and safeguards in place, FL can become a cornerstone of secure, intelligent, and ethical financial innovation.</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head>Fig. 1 .</head><label>1</label><figDesc>Fig. 1. A visual representation of the federated learning protocol [3]. Each round of federated learning starts with a global model with initialized weights. Then, the FL server sends the global model to the clients. Next, the clients train locally on silo or device specific data and submit local updates only to the FL server. Then, the FL server performs some aggregation method on those local models to update the global model. Finally, the FL server sends the aggregated model back to the clients.</figDesc><graphic coords="2,48.96,50.54,251.05,137.44" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head>Fig. 2 .</head><label>2</label><figDesc>Fig. 2. A visual representation of the money laundering schemes. Image credit: Linkurious, available at https://linkurious.com/ money-laundering-schemes/</figDesc><graphic coords="5,48.96,280.58,251.04,111.82" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_0"><head></head><label></label><figDesc>• Dynamic Data Handling: Most studies rely on static data, typically struggling in real-world deployment.</figDesc><table /><note><p><p>• Scalability and Efficiency: Existing FML systems are not scalable or communication efficient.</p>• Domain-Specific Needs: Financial applications require regulatory compliance and customer trust, which are not addressed in FML or XAI.</p></note></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_1"><head>TABLE I SUMMARY</head><label>I</label><figDesc>OF FEDERATED LEARNING APPLICATIONS IN FINANCE</figDesc><table><row><cell>Application</cell><cell>Exposure</cell><cell>Reported Performance</cell><cell cols="3">Privacy Techniques</cell><cell>Key Limitations</cell></row><row><cell></cell><cell>Level</cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>Credit Risk As-</cell><cell>Low</cell><cell>99.04% accuracy, 98.22 F1 vs.</cell><cell>FedAvg</cell><cell></cell><cell></cell><cell>Results tied to mortgage crisis data</cell></row><row><cell>sessment</cell><cell></cell><cell>95.04% / 92.65% local models</cell><cell></cell><cell></cell><cell></cell><cell>(2006-2009)</cell></row><row><cell>Collaborative</cell><cell>Low</cell><cell>Conceptual framework with Fe-</cell><cell cols="3">FedAvg + Secure Aggregation</cell><cell>No quantitative benchmarks; mainly</cell></row><row><cell>Portfolio</cell><cell></cell><cell>dAvg aggregation across institu-</cell><cell></cell><cell></cell><cell></cell><cell>theoretical</cell></row><row><cell>Optimization</cell><cell></cell><cell>tions</cell><cell></cell><cell></cell><cell></cell></row><row><cell>Loan Approvals</cell><cell cols="2">Moderate Accuracy improved from 84% to</cell><cell>FedAvg</cell><cell>+</cell><cell>Differential</cell><cell>Validation limited to simulation; hetero-</cell></row><row><cell></cell><cell></cell><cell>92% across federated rounds</cell><cell cols="3">Privacy + Explainable AI</cell><cell>geneous data challenges</cell></row><row><cell></cell><cell></cell><cell></cell><cell cols="2">(SHAP/LIME)</cell><cell></cell></row><row><cell>Secure Financial</cell><cell>High</cell><cell>Privacy-preserving verification of</cell><cell cols="3">FedAvg + Encryption</cell><cell>Performance not fully explored</cell></row><row><cell>Transactions</cell><cell></cell><cell>transactions</cell><cell></cell><cell></cell><cell></cell></row><row><cell>Anti-Money</cell><cell>High</cell><cell>Centralized performance equal to</cell><cell cols="3">FATE + SecureBoost + Differ-</cell><cell>Synthetic dataset (PaySim); "perfect"</cell></row><row><cell>Laundering</cell><cell></cell><cell>federated performance but promise</cell><cell cols="2">ential Privacy</cell><cell></cell><cell>scores unlikely in practice</cell></row><row><cell></cell><cell></cell><cell>of privacy preserving and accuracy</cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell></cell><cell>preserving collaboration</cell><cell></cell><cell></cell><cell></cell></row><row><cell>Fraud Detection</cell><cell>High</cell><cell>Detection accuracy improved with</cell><cell cols="3">Differential Privacy</cell><cell>High false positives inflate compliance</cell></row><row><cell>using Blockchain</cell><cell></cell><cell>FL</cell><cell></cell><cell></cell><cell></cell><cell>costs</cell></row><row><cell cols="3">able, tamper-resistant, and compliant. The authors validate</cell><cell></cell><cell></cell><cell></cell></row><row><cell cols="3">their proposed system using a synthetic dataset from Kaggle,</cell><cell></cell><cell></cell><cell></cell></row><row><cell cols="3">which simulates 1.8 million real-world credit card transactions.</cell><cell></cell><cell></cell><cell></cell></row><row><cell cols="3">The data includes 20 features, of which 15 were chosen. Six</cell><cell></cell><cell></cell><cell></cell></row><row><cell cols="3">ML models were evaluated ( KNN, SVM, Decision Trees,</cell><cell></cell><cell></cell><cell></cell></row><row><cell cols="3">Naive Bayes, Logistic Regression, and Random Forest), and</cell><cell></cell><cell></cell><cell></cell></row><row><cell cols="3">the framework demonstrated promising performance in iden-</cell><cell></cell><cell></cell><cell></cell></row><row><cell cols="3">tifying fraudulent behavior while maintaining privacy stan-</cell><cell></cell><cell></cell><cell></cell></row><row><cell cols="3">dards. By combining blockchain's integrity with FL's privacy-</cell><cell></cell><cell></cell><cell></cell></row><row><cell cols="3">preserving model training, the framework allows institutions</cell><cell></cell><cell></cell><cell></cell></row><row><cell cols="3">to share knowledge without sharing sensitive data.</cell><cell></cell><cell></cell><cell></cell></row></table></figure>
+		</body>
+		<back>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<monogr>
+		<title level="m" type="main">A survey of security threats in federated learning</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Feng</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2303.05383*</idno>
+		<imprint>
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">ArXiv preprint</note>
+	<note type="raw_reference">Y. Feng et al., &quot;A survey of security threats in federated learning,&quot; *ArXiv preprint arXiv:2303.05383*, 2023.</note>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<monogr>
+		<title level="m" type="main">Ethical considerations of AI in financial decision</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Wang</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2312.13434*</idno>
+		<imprint>
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">ArXiv preprint</note>
+	<note type="raw_reference">Y. Wang, &quot;Ethical considerations of AI in financial decision,&quot; *ArXiv preprint arXiv:2312.13434*, 2023.</note>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<monogr>
+		<title level="m" type="main">NVFLARE Documentation -Federated Learning Introduction</title>
+		<author>
+			<persName><surname>Nvidia</surname></persName>
+		</author>
+		<ptr target="https://nvflare.readthedocs.io/en/2.4/flintroduction.html" />
+		<imprint/>
+	</monogr>
+	<note type="raw_reference">NVIDIA, &quot;NVFLARE Documentation - Feder- ated Learning Introduction,&quot; [Online]. Available: https://nvflare.readthedocs.io/en/2.4/fl introduction.html</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<analytic>
+		<title level="a" type="main">When the Curious Abandon Honesty: Federated Learning Is Not Private</title>
+		<author>
+			<persName><forename type="first">F</forename><surname>Boenisch</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 2021 IEEE Symposium on Security and Privacy (SP)</title>
+		<meeting>the 2021 IEEE Symposium on Security and Privacy (SP)</meeting>
+		<imprint>
+			<date type="published" when="2021">2021</date>
+			<biblScope unit="page" from="162" to="179" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">F. Boenisch et al., &quot;When the Curious Abandon Honesty: Federated Learning Is Not Private,&quot; in *Proceedings of the 2021 IEEE Symposium on Security and Privacy (SP)*, 2021, pp. 162-179.</note>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<analytic>
+		<title level="a" type="main">How to backdoor federated learning</title>
+		<author>
+			<persName><forename type="first">E</forename><surname>Bagdasaryan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 23rd International Conference on Artificial Intelligence and Statistics</title>
+		<meeting>the 23rd International Conference on Artificial Intelligence and Statistics</meeting>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+			<biblScope unit="page" from="2938" to="2948" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">E. Bagdasaryan et al., &quot;How to backdoor federated learning,&quot; in *Pro- ceedings of the 23rd International Conference on Artificial Intelligence and Statistics*, 2020, pp. 2938-2948.</note>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<monogr>
+		<title level="m" type="main">A Comprehensive Distributed Framework for Crosssilo Federated Learning using Blockchain</title>
+		<author>
+			<persName><forename type="first">P</forename></persName>
+		</author>
+		<idno type="arXiv">arXiv:2304.01338*</idno>
+		<imprint>
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">ArXiv preprint</note>
+	<note type="raw_reference">P. Durgapal, &quot;A Comprehensive Distributed Framework for Cross- silo Federated Learning using Blockchain,&quot; *ArXiv preprint arXiv:2304.01338*, 2023.</note>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<monogr>
+		<title level="m" type="main">Towards Privacy Preserving Financial Fraud Detection</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Abanilla</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2304.07343*</idno>
+		<imprint>
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">ArXiv preprint</note>
+	<note type="raw_reference">S. Abanilla, &quot;Towards Privacy Preserving Financial Fraud Detection,&quot; *ArXiv preprint arXiv:2304.07343*, 2023.</note>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<analytic>
+		<title level="a" type="main">Enhancing security in financial transactions: a novel blockchain-based federated learning framework for detecting counterfeit data in fintech</title>
+		<author>
+			<persName><forename type="first">T</forename><surname>Khanzada</surname></persName>
+		</author>
+		<idno type="DOI">10.7717/peerj-cs.2280</idno>
+	</analytic>
+	<monogr>
+		<title level="j">PeerJ Computer Science*</title>
+		<imprint>
+			<biblScope unit="volume">10</biblScope>
+			<biblScope unit="page">2280</biblScope>
+			<date type="published" when="2024-09">Sep. 2024</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">T. Khanzada et al., &quot;Enhancing security in financial transactions: a novel blockchain-based federated learning framework for detecting counterfeit data in fintech,&quot; *PeerJ Computer Science*, vol. 10, pp. e2280, Sep. 2024, doi: 10.7717/peerj-cs.2280.</note>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">A Federated Learning Mechanism for Preserving Security of Sensitive Data</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Sharma</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Guleria</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/ICDABI60145.2023.10629264</idno>
+	</analytic>
+	<monogr>
+		<title level="m">2023 4th International Conference on Data Analytics for Business and Industry (ICDABI)*</title>
+		<imprint>
+			<date type="published" when="2023-10">Oct. 2023</date>
+			<biblScope unit="page" from="1" to="5" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S. Sharma and K. Guleria, &quot;A Federated Learning Mechanism for Preserving Security of Sensitive Data,&quot; in *2023 4th International Conference on Data Analytics for Business and Industry (ICDABI)*, Oct. 2023, pp. 1-5, doi: 10.1109/ICDABI60145.2023.10629264.</note>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<monogr>
+		<title level="m" type="main">The Future of AI in Fintech: Exploring the Potential of Quantum Computing and Federated Learning for Advanced Financial Services</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Akin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><surname>Hou</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2401.00311*</idno>
+		<imprint>
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">ArXiv preprint</note>
+	<note type="raw_reference">A. Akin and N. Hou, &quot;The Future of AI in Fintech: Exploring the Potential of Quantum Computing and Federated Learning for Advanced Financial Services,&quot; *ArXiv preprint arXiv:2401.00311*, 2023.</note>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<analytic>
+		<title level="a" type="main">Machine Learning in Finance-Emerging Trends and Challenges</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Sen</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Computer Applications*</title>
+		<imprint>
+			<biblScope unit="volume">163</biblScope>
+			<biblScope unit="issue">10</biblScope>
+			<biblScope unit="page" from="39" to="43" />
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. Sen, &quot;Machine Learning in Finance-Emerging Trends and Chal- lenges,&quot; *International Journal of Computer Applications*, vol. 163, no. 10, pp. 39-43, 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<analytic>
+		<title level="a" type="main">Practical Secure Aggregation for Privacy-Preserving Machine Learning</title>
+		<author>
+			<persName><forename type="first">K</forename><surname>Bonawitz</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 2017 ACM SIGSAC Conference on Computer and Communications Security*</title>
+		<meeting>the 2017 ACM SIGSAC Conference on Computer and Communications Security*</meeting>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+			<biblScope unit="page" from="1175" to="1191" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">K. Bonawitz et al., &quot;Practical Secure Aggregation for Privacy-Preserving Machine Learning,&quot; in *Proceedings of the 2017 ACM SIGSAC Con- ference on Computer and Communications Security*, 2017, pp. 1175- 1191.</note>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<analytic>
+		<title level="a" type="main">Learning Differentially Private Recurrent Language Models</title>
+		<author>
+			<persName><forename type="first">H</forename><forename type="middle">B</forename><surname>Mcmahan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 31st International Conference on Neural Information Processing Systems</title>
+		<meeting>the 31st International Conference on Neural Information Processing Systems</meeting>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+			<biblScope unit="page" from="6308" to="6316" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">H. B. McMahan et al., &quot;Learning Differentially Private Recurrent Language Models,&quot; in *Proceedings of the 31st International Conference on Neural Information Processing Systems*, 2017, pp. 6308-6316.</note>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<analytic>
+		<title level="a" type="main">Communication-Efficient Learning of Deep Networks from Decentralized Data</title>
+		<author>
+			<persName><forename type="first">H</forename><forename type="middle">B</forename><surname>Mcmahan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 20th International Conference on Artificial Intelligence and Statistics</title>
+		<meeting>the 20th International Conference on Artificial Intelligence and Statistics</meeting>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+			<biblScope unit="page" from="1273" to="1282" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">H. B. McMahan et al., &quot;Communication-Efficient Learning of Deep Networks from Decentralized Data,&quot; in *Proceedings of the 20th In- ternational Conference on Artificial Intelligence and Statistics*, 2017, pp. 1273-1282.</note>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<monogr>
+		<title level="m" type="main">Federated Learning for Credit Risk Assessment</title>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">M</forename><surname>Lee</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2011.13158*</idno>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">ArXiv preprint</note>
+	<note type="raw_reference">C. M. Lee, &quot;Federated Learning for Credit Risk Assessment,&quot; *ArXiv preprint arXiv:2011.13158*, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<monogr>
+		<title level="m" type="main">Federated Learning in Collaborative Portfolio Optimization</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Paul</surname></persName>
+		</author>
+		<idno>SSRN 4670588*</idno>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. Paul, &quot;Federated Learning in Collaborative Portfolio Optimization,&quot; *Available at SSRN 4670588*, 2024.</note>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<analytic>
+		<title level="a" type="main">Regulation (EU) 2016/679 of the European Parliament and of the Council of 27 April 2016 on the protection of natural persons with regard to the processing of personal data and on the free movement of such data, and repealing Directive 95/46/EC (General Data Protection Regulation)</title>
+		<ptr target="https://gdpr-info.eu" />
+	</analytic>
+	<monogr>
+		<title level="j">Official Journal of the European Union*</title>
+		<imprint>
+			<biblScope unit="volume">59</biblScope>
+			<biblScope unit="issue">119</biblScope>
+			<biblScope unit="page" from="1" to="88" />
+			<date type="published" when="2016">2016</date>
+		</imprint>
+		<respStmt>
+			<orgName>European Parliament and Council</orgName>
+		</respStmt>
+	</monogr>
+	<note type="raw_reference">European Parliament and Council, &quot;Regulation (EU) 2016/679 of the European Parliament and of the Council of 27 April 2016 on the protection of natural persons with regard to the processing of personal data and on the free movement of such data, and repealing Directive 95/46/EC (General Data Protection Regulation),&quot; *Official Journal of the European Union*, vol. 59, no. L 119, pp. 1-88, 2016. [Online]. Available: https://gdpr-info.eu</note>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<monogr>
+		<ptr target="https://oag.ca.gov/privacy/ccpa" />
+		<title level="m">California Office of the Attorney General</title>
+		<imprint/>
+	</monogr>
+	<note>California Consumer Privacy Act (CCPA)</note>
+	<note type="raw_reference">California Office of the Attorney General, &quot;California Consumer Privacy Act (CCPA),&quot; [Online]. Available: https://oag.ca.gov/privacy/ccpa</note>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<monogr>
+		<author>
+			<persName><surname>Investopedia</surname></persName>
+		</author>
+		<ptr target="https://www.investopedia.com/terms/m/modernportfoliotheory.asp" />
+		<title level="m">Modern Portfolio Theory (MPT)</title>
+		<imprint/>
+	</monogr>
+	<note type="raw_reference">Investopedia, &quot;Modern Portfolio Theory (MPT),&quot; [Online]. Available: https://www.investopedia.com/terms/m/modernportfoliotheory.asp</note>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<monogr>
+		<title level="m" type="main">Federated Machine Learning and Explainable AI for Dynamic Customer Loan Prediction Analysis</title>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">N</forename><surname>Kumar</surname></persName>
+		</author>
+		<imprint/>
+	</monogr>
+	<note type="raw_reference">A. N. Kumar, &quot;Federated Machine Learning and Explainable AI for Dynamic Customer Loan Prediction Analysis.</note>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<analytic>
+		<title level="a" type="main">A Unified Approach to Interpreting Model Predictions</title>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">M</forename><surname>Lundberg</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S.-I</forename><surname>Lee</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 31st International Conference on Neural Information Processing Systems</title>
+		<meeting>the 31st International Conference on Neural Information Processing Systems</meeting>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+			<biblScope unit="page" from="4765" to="4774" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S. M. Lundberg and S.-I. Lee, &quot;A Unified Approach to Interpreting Model Predictions,&quot; in *Proceedings of the 31st International Conference on Neural Information Processing Systems*, 2017, pp. 4765-4774.</note>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<analytic>
+		<title level="a" type="main">Why Should I Trust You? Explaining the Predictions of Any Classifier</title>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">T</forename><surname>Ribeiro</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Singh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Guestrin</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</title>
+		<meeting>the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</meeting>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+			<biblScope unit="page" from="1135" to="1144" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">M. T. Ribeiro, S. Singh, and C. Guestrin, &quot;Why Should I Trust You? Explaining the Predictions of Any Classifier,&quot; in *Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining*, 2016, pp. 1135-1144.</note>
+</biblStruct>
+
+<biblStruct xml:id="b22">
+	<monogr>
+		<title level="m" type="main">Federated Learning for Secure Financial Transactions</title>
+		<author>
+			<persName><forename type="first">W</forename><surname>Joseph</surname></persName>
+		</author>
+		<idno>SSRN 4670589*</idno>
+		<imprint>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">W. Joseph, &quot;Federated Learning for Secure Financial Transactions,&quot; *Available at SSRN 4670589*, 2025.</note>
+</biblStruct>
+
+<biblStruct xml:id="b23">
+	<analytic>
+		<title level="a" type="main">A Federated Machine Learning Approaches For Anti-Money Laundering Detection</title>
+		<author>
+			<persName><forename type="first">B</forename><surname>Guembe</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the International Conference on Information Systems and Emerging Technologies (ICISET)*</title>
+		<meeting>the International Conference on Information Systems and Emerging Technologies (ICISET)*</meeting>
+		<imprint>
+			<date type="published" when="2023">2023</date>
+			<biblScope unit="page" from="1" to="13" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">B. Guembe et al., &quot;A Federated Machine Learning Approaches For Anti- Money Laundering Detection,&quot; in *Proceedings of the International Con- ference on Information Systems and Emerging Technologies (ICISET)*, 2023, pp. 1-13.</note>
+</biblStruct>
+
+<biblStruct xml:id="b24">
+	<monogr>
+		<ptr target="https://www.finra.org/rules-guidance/key-topics/aml" />
+		<title level="m">Anti-Money Laundering (AML)</title>
+		<imprint>
+			<publisher>Financial Industry Regulatory Authority (FINRA)</publisher>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Financial Industry Regulatory Authority (FINRA), &quot;Anti-Money Laundering (AML),&quot; [Online]. Available: https://www.finra.org/rules- guidance/key-topics/aml</note>
+</biblStruct>
+
+<biblStruct xml:id="b25">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Blockchain</forename><surname>Investopedia</surname></persName>
+		</author>
+		<ptr target="https://www.investopedia.com/terms/b/blockchain.asp" />
+		<imprint/>
+	</monogr>
+	<note type="raw_reference">Investopedia, Blockchain, [Online]. Available: https://www.investopedia.com/terms/b/blockchain.asp</note>
+</biblStruct>
+
+<biblStruct xml:id="b26">
+	<analytic>
+		<title level="a" type="main">FAIR RESOURCE ALLOCATION IN FEDERATED LEARNING</title>
+		<author>
+			<persName><forename type="first">T</forename><surname>Li</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 9th International Conference on Learning Representations</title>
+		<meeting>the 9th International Conference on Learning Representations</meeting>
+		<imprint>
+			<date type="published" when="2021">2021</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">T. Li et al., &quot;FAIR RESOURCE ALLOCATION IN FEDERATED LEARNING,&quot; in *Proceedings of the 9th International Conference on Learning Representations*, 2021.</note>
+</biblStruct>
+
+<biblStruct xml:id="b27">
+	<monogr>
+		<author>
+			<orgName type="collaboration">Quantum Inspire</orgName>
+		</author>
+		<ptr target="https://www.quantum-inspire.com/kbase/superposition-and-entanglement/" />
+		<title level="m">Superposition and Entanglement</title>
+		<imprint/>
+	</monogr>
+	<note type="raw_reference">Quantum Inspire, &quot;Superposition and Entanglement,&quot; [Online]. Available: https://www.quantum-inspire.com/kbase/superposition-and- entanglement/</note>
+</biblStruct>
+
+<biblStruct xml:id="b28">
+	<monogr>
+		<title level="m" type="main">AI&apos;s Impact on Financial Fraud: A JP Morgan Case Study</title>
+		<author>
+			<persName><forename type="first">L</forename><surname>Ventures</surname></persName>
+		</author>
+		<ptr target="https://www.lum.ventures/blog/ais-impact-on-financial-fraud-jp-morgan-case-study" />
+		<imprint>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note>lum.ventures</note>
+	<note type="raw_reference">L. Ventures, &quot;AI&apos;s Impact on Financial Fraud: A JP Morgan Case Study,&quot; lum.ventures, 2024. [Online]. Available: https://www.lum.ventures/blog/ais-impact-on-financial-fraud-jp-morgan- case-study</note>
+</biblStruct>
+
+<biblStruct xml:id="b29">
+	<monogr>
+		<ptr target="https://redresscompliance.com/ai-case-study-ai-powered-employee-expense-fraud-detection-at-visa/" />
+		<title level="m">AI Case Study: AI-Powered Employee Expense Fraud Detection at Visa</title>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note>redresscompliance.com</note>
+	<note type="raw_reference">Redress Compliance, &quot;AI Case Study: AI-Powered Employee Expense Fraud Detection at Visa,&quot; redresscompliance.com, 2024. [Online]. Available: https://redresscompliance.com/ai-case-study-ai-powered- employee-expense-fraud-detection-at-visa/</note>
+</biblStruct>
+
+<biblStruct xml:id="b30">
+	<monogr>
+		<title level="m" type="main">Danske Bank Saves Millions Fighting Fraud With Deep Learning and AI</title>
+		<author>
+			<persName><surname>Teradata</surname></persName>
+		</author>
+		<imprint/>
+	</monogr>
+	<note>teradata.com. Case Study</note>
+	<note type="raw_reference">Teradata, &quot;Danske Bank Saves Millions Fighting Fraud With Deep Learning and AI,&quot; teradata.com. [Case Study]</note>
+</biblStruct>
+
+<biblStruct xml:id="b31">
+	<monogr>
+		<ptr target="https://redresscompliance.com/ai-case-study-ai-powered-automated-loan-processing-at-wells-fargo/" />
+		<title level="m">AI Case Study: AI-Powered Automated Loan Processing at Wells Fargo</title>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note>Redress Compliance. redresscompliance.com</note>
+	<note type="raw_reference">Redress Compliance, &quot;AI Case Study: AI-Powered Automated Loan Processing at Wells Fargo,&quot; redresscompliance.com, 2024. [Online]. Available: https://redresscompliance.com/ai-case-study-ai-powered- automated-loan-processing-at-wells-fargo/</note>
+</biblStruct>
+
+<biblStruct xml:id="b32">
+	<monogr>
+		<ptr target="https://redresscompliance.com/ai-case-study-ai-for-stock-market-analysis-bloomberg-terminal/" />
+		<title level="m">AI Case Study: AI for Stock Market Analysis -Bloomberg Terminal</title>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note>Redress Compliance. redresscompliance.com</note>
+	<note type="raw_reference">Redress Compliance, &quot;AI Case Study: AI for Stock Market Analysis -Bloomberg Terminal,&quot; redresscompliance.com, 2024. [Online]. Available: https://redresscompliance.com/ai-case-study-ai-for- stock-market-analysis-bloomberg-terminal/</note>
+</biblStruct>
+
+<biblStruct xml:id="b33">
+	<monogr>
+		<author>
+			<persName><surname>Eazybankloan</surname></persName>
+		</author>
+		<ptr target="https://www.eazybankloan.com/blog-detail/The-Influence-of-Economic-Conditions-on-Loan-Approval-and-Rates" />
+		<title level="m">The Influence of Economic Conditions on Loan Approval and Rates</title>
+		<imprint/>
+	</monogr>
+	<note>eazybankloan.com</note>
+	<note type="raw_reference">EazyBankLoan, &quot;The Influence of Economic Conditions on Loan Approval and Rates,&quot; eazybankloan.com. [Online]. Available: https://www.eazybankloan.com/blog-detail/The-Influence-of-Economic- Conditions-on-Loan-Approval-and-Rates</note>
+</biblStruct>
+
+<biblStruct xml:id="b34">
+	<analytic>
+		<title level="a" type="main">Challenges, Applications and Design Aspects of Federated Learning: A Survey</title>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">M J</forename><surname>Rahman</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Access</title>
+		<imprint>
+			<biblScope unit="volume">9</biblScope>
+			<biblScope unit="page" from="124682" to="124700" />
+			<date type="published" when="2021">2021</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">K. M. J. Rahman et al., &quot;Challenges, Applications and Design Aspects of Federated Learning: A Survey,&quot; IEEE Access, vol. 9, pp. 124682- 124700, 2021.</note>
+</biblStruct>
+
+<biblStruct xml:id="b35">
+	<monogr>
+		<author>
+			<persName><surname>Dataiku</surname></persName>
+		</author>
+		<ptr target="https://blog.dataiku.com/managing-data-drift-ensuring-model-performance-over-time" />
+		<title level="m">Managing Data Drift: Ensuring Model Performance Over Time</title>
+		<imprint>
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+	<note>blog.dataiku.com</note>
+	<note type="raw_reference">Dataiku, &quot;Managing Data Drift: Ensuring Model Performance Over Time,&quot; blog.dataiku.com, 2023. [Online]. Available: https://blog.dataiku.com/managing-data-drift-ensuring-model- performance-over-time</note>
+</biblStruct>
+
+<biblStruct xml:id="b36">
+	<monogr>
+		<title level="m" type="main">SecureBoost: A Lossless Federated Learning Framework</title>
+		<author>
+			<persName><forename type="first">K</forename><surname>Cheng</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1901.08755</idno>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">K. Cheng et al., &quot;SecureBoost: A Lossless Federated Learning Frame- work,&quot; arXiv preprint arXiv:1901.08755, 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b37">
+	<analytic>
+		<title level="a" type="main">Compliance Risk Assessment -Results of a Comprehensive Literature Review</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Benedek</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Bognár</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Acta Polytechnica Hungarica</title>
+		<imprint>
+			<biblScope unit="volume">21</biblScope>
+			<biblScope unit="issue">6</biblScope>
+			<biblScope unit="page" from="243" to="258" />
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">P. Benedek and F. Bognár, &quot;Compliance Risk Assessment -Results of a Comprehensive Literature Review,&quot; Acta Polytechnica Hungarica, vol. 21, no. 6, pp. 243-258, 2024.</note>
+</biblStruct>
+
+<biblStruct xml:id="b38">
+	<analytic>
+		<title level="a" type="main">Quantum AI</title>
+		<author>
+			<persName><surname>Google</surname></persName>
+		</author>
+		<ptr target="https://quantumai.google/" />
+	</analytic>
+	<monogr>
+		<title level="m">quantumai.google</title>
+		<imprint>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Google, &quot;Quantum AI,&quot; quantumai.google, 2025. [Online]. Available: https://quantumai.google/</note>
+</biblStruct>
+
+<biblStruct xml:id="b39">
+	<analytic>
+		<title level="a" type="main">IBM Quantum</title>
+		<ptr target="https://quantum.ibm.com/" />
+	</analytic>
+	<monogr>
+		<title level="m">quantum.ibm.com</title>
+		<imprint>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+		<respStmt>
+			<orgName>IBM</orgName>
+		</respStmt>
+	</monogr>
+	<note type="raw_reference">IBM, &quot;IBM Quantum,&quot; quantum.ibm.com, 2025. [Online]. Available: https://quantum.ibm.com/</note>
+</biblStruct>
+
+<biblStruct xml:id="b40">
+	<analytic>
+		<title level="a" type="main">Azure Quantum</title>
+		<author>
+			<orgName type="collaboration">Microsoft</orgName>
+		</author>
+		<ptr target="https://quantum.microsoft.com/" />
+	</analytic>
+	<monogr>
+		<title level="m">quantum.microsoft.com</title>
+		<imprint>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Microsoft, &quot;Azure Quantum,&quot; quantum.microsoft.com, 2025. [Online]. Available: https://quantum.microsoft.com/</note>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

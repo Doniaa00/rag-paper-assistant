@@ -1,0 +1,924 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">Financial Fraud Detection using Quantum Graph Neural Networks</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability  status="unknown">
+					<licence/>
+				</availability>
+				<date type="published" when="2023-09-03">3 Sep 2023</date>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><forename type="first">Nouhaila</forename><surname>Innan</surname></persName>
+							<email>nouhaila.innan-etu@etu.univh2c.ma</email>
+							<idno type="ORCID">0000-0002-1014-3457</idno>
+							<affiliation key="aff0">
+								<orgName type="department">Faculty of Sciences Ben M&apos;sick</orgName>
+								<orgName type="laboratory" key="lab1">Quantum Physics and Magnetism Team</orgName>
+								<orgName type="laboratory" key="lab2">LPMC</orgName>
+								<orgName type="institution">Hassan II University of Casablanca</orgName>
+								<address>
+									<country key="MA">Morocco</country>
+								</address>
+							</affiliation>
+							<affiliation key="aff1">
+								<orgName type="department">Quantum Formalism Fellow</orgName>
+								<orgName type="institution">Zaiku Group Ltd</orgName>
+								<address>
+									<settlement>Liverpool</settlement>
+									<country key="GB">United Kingdom</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Abhishek</forename><surname>Sawaika</surname></persName>
+							<affiliation key="aff2">
+								<orgName type="institution">Indian Institute of Technology</orgName>
+								<address>
+									<settlement>Bombay</settlement>
+									<country key="IN">India</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Ashim</forename><surname>Dhor</surname></persName>
+							<affiliation key="aff3">
+								<orgName type="department">Department of Data Science and Engineering</orgName>
+								<orgName type="institution">Indian Institute of Science Education and Research Bhopal</orgName>
+								<address>
+									<country key="IN">India</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Siddhant</forename><surname>Dutta</surname></persName>
+							<affiliation key="aff4">
+								<orgName type="institution">Dwarkadas J. Sanghvi College of Engineering</orgName>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Sairupa</forename><surname>Thota</surname></persName>
+							<affiliation key="aff5">
+								<orgName type="institution">Guru Nanak Institutions Technical Campus</orgName>
+								<address>
+									<settlement>Hyderabad</settlement>
+									<country key="IN">India</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Husayn</forename><surname>Gokal</surname></persName>
+							<affiliation key="aff6">
+								<orgName type="institution">ASTI Academy</orgName>
+								<address>
+									<settlement>Dubai</settlement>
+									<country key="AE">UAE</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Nandan</forename><surname>Patel</surname></persName>
+							<affiliation key="aff7">
+								<orgName type="institution">Vellore Institute of Technology</orgName>
+								<address>
+									<settlement>Chennai</settlement>
+									<country key="IN">India</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Muhammad</forename><surname>Al-Zafar Khan</surname></persName>
+							<email>muhammadalzafark@gmail.com</email>
+							<idno type="ORCID">0000-0002-1147-7782</idno>
+							<affiliation key="aff1">
+								<orgName type="department">Quantum Formalism Fellow</orgName>
+								<orgName type="institution">Zaiku Group Ltd</orgName>
+								<address>
+									<settlement>Liverpool</settlement>
+									<country key="GB">United Kingdom</country>
+								</address>
+							</affiliation>
+							<affiliation key="aff8">
+								<orgName type="department">School of Computer Science and Applied Mathematics</orgName>
+								<orgName type="laboratory" key="lab1">Robotics</orgName>
+								<orgName type="laboratory" key="lab2">Autonomous Intelligence, and Learning Laboratory (RAIL)</orgName>
+								<orgName type="institution">University of the Witwatersrand</orgName>
+								<address>
+									<addrLine>1 Jan Smuts Ave Braamfontein</addrLine>
+									<postCode>2000</postCode>
+									<settlement>Johannesburg Gauteng</settlement>
+									<country key="ZA">South Africa</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Ioannis</forename><surname>Theodonis</surname></persName>
+							<affiliation key="aff9">
+								<orgName type="department" key="dep1">Department of Physics</orgName>
+								<orgName type="department" key="dep2">School of Applied Mathematical and Physical Sciences</orgName>
+								<orgName type="institution">National Technical University of Athens</orgName>
+								<address>
+									<country key="GR">Greece</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Mohamed</forename><surname>Bennai</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="department">Faculty of Sciences Ben M&apos;sick</orgName>
+								<orgName type="laboratory" key="lab1">Quantum Physics and Magnetism Team</orgName>
+								<orgName type="laboratory" key="lab2">LPMC</orgName>
+								<orgName type="institution">Hassan II University of Casablanca</orgName>
+								<address>
+									<country key="MA">Morocco</country>
+								</address>
+							</affiliation>
+						</author>
+						<title level="a" type="main">Financial Fraud Detection using Quantum Graph Neural Networks</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date type="published" when="2023-09-03">3 Sep 2023</date>
+						</imprint>
+					</monogr>
+					<idno type="MD5">E74E29B3F76E1C21F5AB1DC4FD50E79B</idno>
+					<idno type="arXiv">arXiv:2309.01127v1[quant-ph]</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.2-SNAPSHOT" ident="GROBID" when="2026-08-31T18:11+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<textClass>
+				<keywords>
+					<term>Quantum Machine Learning</term>
+					<term>Quantum Graph Neural Network</term>
+					<term>Variational Quantum Circuit</term>
+					<term>Fraud Detection</term>
+				</keywords>
+			</textClass>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>Financial fraud detection is essential for preventing significant financial losses and maintaining the reputation of financial institutions. However, conventional methods of detecting financial fraud have limited effectiveness, necessitating the need for new approaches to improve detection rates. In this paper, we propose a novel approach for detecting financial fraud using Quantum Graph Neural Networks (QGNNs). QGNNs are a type of neural network that can process graph-structured data and leverage the power of Quantum Computing (QC) to perform computations more efficiently than classical neural networks. Our approach uses Variational Quantum Circuits (VQC) to enhance the performance of the QGNN. In order to evaluate the efficiency of our proposed method, we compared the performance of QGNNs to Classical Graph Neural Networks using a real-world financial fraud detection dataset. The results of our experiments showed that QGNNs achieved an AUC of 0.85, which outperformed classical GNNs. Our research highlights the potential of QGNNs and suggests that QGNNs are a promising new approach for improving financial fraud detection.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1.">Introduction</head><p>In today's dynamic technological landscape, the rapid surge in digital transactions and financial activities has ushered in unprecedented conveniences. However, this digital transformation has also fostered a parallel escalation in financial fraud, posing significant threats to global industries and economies. As financial operations increasingly adopt digital complexities, the susceptibility to exploitation from malicious actors increases, leading to the pursuit of innovative fraud detection methods <ref type="bibr" target="#b0">[1]</ref>.</p><p>The importance of fraud detection extends beyond a single industry, resonating across diverse sectors, including Banking, e-Commerce, Healthcare, FinTech, and Insurance. The integrity of financial transactions is pivotal for optimal functionality in these domains, making robust fraud detection systems indispensable. The banking sector, exemplifying the forefront of this challenge, confronts expanding attack surfaces due to rising online and mobile banking adoption <ref type="bibr" target="#b1">[2]</ref>. Conventional rule-based approaches, while partially effective, struggle to match the ever-evolving tactics of fraudsters. This necessitates advanced, adaptable techniques in order to keep pace with the dynamic landscape of financial fraud <ref type="bibr" target="#b2">[3]</ref>.</p><p>The research community is constantly exploring new ways to detect fraud, as the methods used by fraudsters become increasingly sophisticated. An emerging avenue combines Quantum Machine Learning (QML), and Graph Neural Networks (GNNs); a groundbreaking approach poised to revolutionise financial fraud detection <ref type="bibr" target="#b3">[4]</ref>.</p><p>By harnessing the distinct attributes of Quantum Computing (QC)superposition and entanglement -and integrating them with the effectiveness of GNNs, this hybrid paradigm endeavours to tackle the intricate and everchanging realm of financial fraud. In this paper, we investigate the challenges of financial fraud detection and the potential of Quantum Graph Neural Networks (QGNNs) as a transformative approach to address these challenges. We conduct comprehensive analyses and experiments to demonstrate the efficacy and viability of QGNNs for fraud detection. Our findings contribute to the discourse on advanced fraud detection techniques and pave the way for enhanced security in the financial ecosystem.</p><p>QML emerges at the intersection of QC and conventional Machine Learning (ML) techniques, offering promising avenues for solving complex problems in various domains. In the context of financial fraud detection, QML presents an intriguing approach that harnesses the inherent power of quantum computations to address the intricate challenges posed by fraudulent activities within the financial sector. By leveraging QGNNs, the combination of quantum and graphical techniques offers a novel framework for analysing and classifying financial transactions.</p><p>In financial fraud detection, QML encodes transactional data into quantum states. This can improve the efficiency and accuracy of fraud detection by enabling efficient parallel processing and enhanced feature representation.</p><p>The unique property of quantum entanglement facilitates the capture of intricate relationships among transactional features. This fosters a more comprehensive understanding of fraudulent patterns.</p><p>However, this emerging paradigm also poses significant challenges, including the interpretability of quantum computations and concerns over quantum system security. Nonetheless, the promising outcomes showcased in this study highlight the potential of QML to significantly impact fraud detection by improving accuracy and scalability, opening the door to a new era of enhanced financial security. The inherent ability of quantum systems to process and model complex relationships among variables aligns well with the intricacies of financial transactions.</p><p>In the realm of fraud detection, conventional methods often struggle to navigate the intricate tapestry of relationships and intricate patterns that underlie fraudulent activities. As the complexity and diversity of fraudulent schemes continue to evolve, the demand for adaptable and nuanced detection techniques becomes increasingly apparent. In response, graph-based methods have emerged as a promising avenue, harnessing the intrinsic strength of graph structures to capture and dissect the multifaceted interconnections that define fraudulent behaviours.</p><p>Built upon the foundation of the mathematical study of graph theory, these methods provide an intuitive and comprehensive framework to model, depict, and analyse the labyrinthine-like relationships among entities. From individuals and accounts to transactions and organisations, a broad spectrum of entities can be seamlessly encapsulated within interconnected nodes and edges.</p><p>This unique arrangement empowers graph structures to illustrate the intricate dynamics inherent in fraudulent schemes vividly.</p><p>Diverging from conventional approaches, which rely on isolated data points and predetermined rules, graph-based methods can unveil concealed connections and dependencies, thereby unveiling anomalous or suspicious behaviours that might go unnoticed <ref type="bibr" target="#b4">[5]</ref>.</p><p>The true effectiveness of graph structures in fraud detection lies in their unparalleled ability to uncover latent patterns that elude customary detection techniques. Fraudulent endeavours rarely occur in isolation; rather, they unravel through intertwined actions involving multiple entities. These connections, often obscured by noise and obfuscation, are revealed through meticulous graph analysis. By representing and exploring these relationships, graphbased methods empower fraud detection systems to transcend the confines of isolated data points, capturing the holistic context in which fraudulent activities manifest and thrive.</p><p>This quantum potential extends seamlessly to the detection of financial fraud, where quantuminspired techniques can transform the landscape. By integrating the strengths of quantum mechanics, QC could potentially revolutionise classical ML algorithms used for fraud detection. Techniques such as Quantum Neural Networks (QNNs) can harness the property of quantum parallelism to process and analyse financial data more efficiently. Exploiting superposition, these networks can simultaneously examine multiple data points, accelerating tasks like pattern recognition and data classification, crucial elements in detecting fraudulent activities. Furthermore, quantum feature mapping enhances the ability to identify intricate patterns in financial transactions that might evade classical methods. This intersection of QML and financial fraud detection promises a future where quantum-inspired techniques amplify the accuracy and efficiency of identifying and combating fraudulent behaviours.</p><p>The integration of quantum properties into graphbased fraud detection methodologies is motivated by the imperative to confront the escalating sophistication of fraudulent activities and the inherent limitations of classical computing paradigms.</p><p>In today's landscape of intricate financial systems, fraudulent behaviours manifest intricate and interwoven patterns that defy conventional computational approaches. These conventional methods struggle to unravel the complexities inherent in fraud networks, marked by exponential data growth and non-linear dynamics. As a result, a critical need arises for innovative techniques that transcend classical computing boundaries, leading us to explore the distinctive attributes of QC.</p><p>While graph-based fraud detection methods have shown their ability to capture the intricate relationships within fraudulent activities, they face limitations in handling the explosive data growth and complex dynamics of fraud networks <ref type="bibr" target="#b5">[6]</ref>. The conventional algorithms grounded in classical computing struggle to navigate the intricate patterns that define these networks, often characterised by non-linear structures and extensive solution spaces. This disparity underscores a compelling necessity for pioneering methodologies capable of transcending the confines of classical computation. By delving into quantum properties, we seek to bridge this gap, illuminating concealed fraud schemes and redefining the boundaries of fraud detection in the context of modern financial systems <ref type="bibr" target="#b6">[7]</ref>.</p><p>The primary objective of this study is to conduct a comprehensive investigation into the effectiveness of QGNNs for financial fraud detection. Specifically, we aim to comprehensively assess and analyse the potential advantages and enhancements that QGNNs offer in contrast to classical GNNs, specifically concerning their ability to identify and mitigate fraudulent activities within intricate networks of financial transactions. By meticulously evaluating and comparing the performance, adaptability, and overall effectiveness of QGNNs benchmarked against classical GNNs, we intend to shed light on the transformative possibilities of leveraging QC for refining fraud detection methodologies.</p><p>Through this research endeavour, we aspire to comprehensively understand QGNNs potential to enhance the landscape of fraud detection strategies <ref type="bibr" target="#b7">[8]</ref>. By closely examining the strengths and constraints of QGNNs vis-á-vis classical GNNs, our study seeks to contribute meaningful insights to the QC and fraud detection disciplines.</p><p>The structure of this paper is as follows:</p><p>• Sec. 2, we present a comprehensive literature review on financial fraud detection, graph neural networks, and QML. We highlight the fundamental concepts of GNNs and emphasise the limitations of conventional methods.</p><p>• In Sec. 3, we examine the theory of GNNs and different models, focusing on GraphSAGE architecture.</p><p>• In Sec. 4, we conduct a comprehensive study of our proposed quantum graph neural network model for financial fraud detection.</p><p>• In Sec. 5, we provide a comprehensive understanding of our selected dataset characteristics, including attribute highlighting, class imbalance, and preprocessing steps.</p><p>• In Sec. 6, we evaluate the performance of QGNN and GNN on a real-world financial fraud dataset and discuss the results of our experiments.</p><p>• In Sec. 7, we summarise the key findings of our study and suggest directions for future research.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.">Literature Review</head><p>Transitioning our inquiry from the domain of conventional fraud detection techniques, we direct our attention towards the emerging promise of QGNNs. This transition represents a notable departure from established methodologies and carries the potential to reshape our understanding and implementation of fraud detection strategies. In adopting this advanced technological paradigm, we aim to uncover novel insights and methodologies that may prove instrumental in addressing the complexities of contemporary fraud detection challenges.</p><p>In the classical computing area, there exists a plethora of noteworthy research. We highlight some of the outstanding application-based research works below. <ref type="bibr">Ma et al., 2020 [9]</ref> provide an in-depth exploration of using Deep Learning (DL) techniques to detect anomalies in graph data.</p><p>It emphasises the importance of anomaly detection in domains such as security, finance, and medicine. The paper highlights how conventional methods struggle with graph data complexities, leading to the rise of DL approaches. The authors systematically categorise and analyse contemporary techniques for graph anomaly detection based on their ability to identify different types of anomalous graph objects. The survey underscores the challenges inherent in this field and identifies future research directions.</p><p>In today's rapidly evolving technological landscape, we are witnessing a growing variety of ways in which fraudulent transactions take place. This makes it crucial to understand how we detect fraud and to determine which approach works best to get accurate results. Researchers are on a widespread quest to explore different QML models that fit well for spotting fraud.</p><p>In <ref type="bibr" target="#b9">[10]</ref>, Ahmad et al., 2021 explore the combination of QC and Deep Neural Networks (DNNs) to address network security through anomaly detection. Emphasising the transformative potential of QC, it develops a DNN-based quantum autoencoder to process quantum-encoded data. Applying dimensionality reduction techniques, the research enhances the model's ability to detect subtle anomalies within network data. The results reveal impressive accuracy rates of 100% during training and 99% during testing, demonstrating the framework's efficacy in capturing patterns and its potential to revolutionize anomaly detection in network security. This innovative research establishes a symbiotic relationship between QC and DL, offering a novel avenue for cybersecurity advancements.</p><p>In <ref type="bibr" target="#b10">[11]</ref> QGNNs offer a transformative approach to fraud detection in the financial sector, addressing the escalating complexity of fraudulent schemes. By leveraging their capacity for intricate pattern recognition, enhanced data representation, and adaptability to evolving strategies, these networks hold the potential to significantly enhance the accuracy of fraud detection while mitigating false positives.</p><p>The study by <ref type="bibr">Kyriienko et al., 2022 [12]</ref> focuses on utilising QML to enhance the detection of internal fraud in the financial sector, particularly fraudulent activities conducted by individuals within an organisation. The study employs quantum kernels generated through quantum feature maps based on Instantaneous Quantum Polynomial (IQP) circuits to transform classical data from credit card transactions into a higher-dimensional space for analysis. Applying the one-class support vector machine (OC-SVM) algorithm within this quantum feature space enables to detection of abnormal transactions. Simulations confirm the effectiveness of this quantum kernel-based approach in detecting internal fraud, highlighting the potential of QC to improve fraud detection accuracy in complex financial data.</p><p>Recent research efforts, such as <ref type="bibr" target="#b12">[13]</ref>, Innan et al., 2023 investigate the utility of QML models in enhancing fraud detection within the financial sector. The authors address the pressing need for accurate fraud detection and propose leveraging QML techniques to improve system efficiency. Through a comparative analysis of four QML models -Quantum Support Vector Classifier, Variational Quantum Classifier, Estimator Quantum Neural Network, and Sampler Quantum Neural Network -the study assesses their performances in detecting financial fraud. Employing a synthetic dataset derived from BankSim, the authors employ data preprocessing, logical analysis, and visualisations to identify key discriminatory features. The QSVC emerges as the most effective model, yielding high F1 scores, exceeding 98% for both fraud and nonfraud classes. The study highlights the potential of QML in fraud detection, providing insights into its capabilities and implications while acknowledging areas for future advancement.</p><p>In <ref type="bibr" target="#b13">[14]</ref>, Xiang et al., 2023 address the challenge of credit card fraud detection by introducing a novel semi-supervised approach utilising attributedriven graph representation and a Gated Temporal Attention Network (GTAN). The proposed method effectively enhances fraud detection performance, especially with limited labelled data, according to the study's key findings. The authors constructed a temporal-transaction graph based on transaction records, incorporating temporal transactions and interactions, and utilised GTAN for message passing and learning transaction representations. Risk patterns are further modelled through risk propagation amongst transactions. The research showcases that GTAN outperforms stateof-the-art baselines in detecting fraud across multiple datasets, demonstrating its ability to perform well with only a small fraction of labelled data. The study contributes a comprehensive framework that amalgamates attribute-driven embeddings, temporal attention mechanisms, and risk propagation to advance fraud detection methodologies, offering promising avenues for future research and innovation in the field.</p><p>In <ref type="bibr" target="#b14">[15]</ref>, Schetakis et al., 2023 explore the application of fraud detection for small and mediumsized enterprises.</p><p>The study employs a hybrid approach, comparing quantum classifiers with classical Artificial Neural Networks (ANN), demonstrating more efficient training and potential advantages in credit scoring. The study focuses on a classicalquantum hybrid model's performance using quantum classifiers and classical ANNs, revealing significant efficiency improvements with promising outcomes in credit scoring for SMEs.</p><p>In <ref type="bibr" target="#b15">[16]</ref>, Beer et al., 2023 delve into the realm of QML by investigating the use of quantum neural networks for processing graph-structured quantum data.</p><p>Addressing challenges and opportunities in the Noisy Intermediate-Scale Quantum (NISQ) devices era, the study introduces a novel concept of associating quantum states with graph vertices and correlations with edges. The paper proposes using modified loss functions and quantum training algorithms to learn and characterise complex graph structures with QNNs. The research contributes to the taxonomy of QML approaches, emphasising the significance of correlations and graph structure in advancing quantum information processing capabilities for various applications.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.">Classical Graph Neural Networks</head><p>In this section, we present the theoretical foundations of classical graph neural networks, focusing on the type used in this study. Firstly, we briefly describe the mechanics of ANNs and thereafter describe the GNNs.</p><p>Artificial Neural Networks are a class of ML algorithms whose structure is derived from the workings of the Biological neurons in sentient beings. Analogous to how the neurological systems of these beings transmit information from one neuron to another, the ANN consists of different layers of neurons that transmit information. Below, we clarify further.</p><p>• Neurons: These are the basic units of computa-tion in the ANN. Each neuron consists of an input, hidden, and output layer.</p><p>-The input layers ingest the initial data.</p><p>-The hidden layer transforms the data received by the input layer and performs certain computations. -The output layer then receives the transformed data from the hidden layer and returns the predictive result.</p><p>• Weights and Biases: Each connection between neurons has an associated weight, w ij ∈ [0, 1], between nodes i and j respectively, which indicates the strength of connections between neurons and is learned and updated during the training process. The actual interpretation of weights is different for different types of ANNs.</p><p>In an ANN, a bias term is added to the weighted sum of the inputs to a neuron before the activation function is applied. The bias term allows the neuron to learn a non-linear decision boundary, which is necessary for ANNs to learn complex functions.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Input Layer Hidden Layer Output Layer</head><p>Figure <ref type="figure">1</ref>. The basic structure of an ANN shows the weights and bias along with the respective layers.</p><p>In Fig. <ref type="figure">1</ref>, the inputs are represented by x 1 , x 2 , x 3 , and the weights are represented by w 1 , w 2 , w 3 shown in a summation form in the second layer.</p><p>In terms of the bias, b, the output layer is expressed as</p><formula xml:id="formula_0">ŷ = i w i x i + b = w 1 x 1 + w 2 x 2 + w 3 x 3 + b.<label>(1)</label></formula><p>• Activation Functions: The ANNs consist of an activation function that transforms the given output non-linearly. Several examples of activation functions include the sigmoid, the ReLU and its variations, the hyperbolic tangent, the swish, etc., as shown in Fig. <ref type="figure">2</ref>. The choice of each of these functions is an artefact of the problem at hand that one is trying to solve, and each has its advantages and disadvantages. Plot showing the ReLU, Sigmoid, and Tanh activation functions along with vertical and horizontal lines at x = 0 and y = 0, respectively.</p><p>• Final Output: The final layer of a basic ANN is the output layer, which yields the output of the computations from the hidden layers.</p><p>As we discussed, artificial neural networks are ML models that can be used to learn from data. However, ANNs cannot capture the relationships between entities in a sequence or a grid, as they cannot consider the complex relationships between entities. To solve this problem, we use the where graph neural networks. GNNs are a type of ANN specifically designed to process data structured as a graph. A graph is a group of nodes and edges representing relationships between them. The nodes in a GNN can represent entities such as people, objects, or places, and the edges can represent relationships such as friendships, kinship, or spatial proximity.</p><p>GNNs can process graph-structured data by iteratively aggregating information from neighbouring nodes. This allows GNNs to learn the complex relationships between entities in a graph, making them a powerful tool for node classification, link prediction, and graph classification tasks.</p><p>To express the edges and nodes of a graph as inputs to a neuron in an ANN, we first construct an adjacency matrix A. It is, essentially, a matrix of dimensions n × n where n is the number of nodes in a graph. The entries in the matrix are 1 if an edge exists between the nodes and 0 if there is no edge. Mathematically for each A ij ∈ A, and 1 ≤ i, j ≤ n, we have that</p><formula xml:id="formula_1">A ij =</formula><p>1, if there exists an edge between nodes i and j, 0, otherwise.</p><p>(2) The adjacency matrix approach has several advantages: If the graph is undirected, the adjacency matrix becomes symmetric and has several interesting properties, including the diagonals representing self-loop vertices, the degree of the graph can be inferred from the sum of any row or column, the number of edges in the graphs (the number of connections required in the ANN) is just half the count of the number of nonzero entries, and properties relating the eigenvalues of A.</p><p>In Tab. 1, we observe no self-loops in the graph structure; thus, the diagonal entries of the adjacency matrix will be 0, This is illustrated in Fig. <ref type="figure" target="#fig_2">3</ref>, which shows a directed graph with no self-loops. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A B C D E</head><p>A 0 1 0 0 0 B 0 0 1 1 0 C 0 0 0 0 1 D 1 0 0 0 0 E 0 0 0 1 0 Below, we elaborate on the critical components of GNNs.</p><p>• Graph Convolution This is the key concept underpinning GNN architectures. Graph convolution predicts the features of the node in the next layer as a function of the neighbours' features. It transforms the node's features x i in a latent space h i that can be used for various reasons, as shown in Fig. <ref type="figure" target="#fig_1">4</ref>. • Node classification For a GNN, the objective is firstly to generate latent, from which we would  then be able to work on a wide variety of standard tasks. Mathematically, we have that</p><formula xml:id="formula_2">Z i = f (h i ),<label>(3)</label></formula><p>where h i is the feature vector associated with node i, and it can also be represented in 5.</p><p>• Similarly, can use it classify edges based features. To accomplish this, generally need both the adjacent node vectors and the edge features, if they exist. Mathematically, we have that</p><formula xml:id="formula_3">Z ij = f (h i , h j , e ij ),<label>(4)</label></formula><p>where h i , h j are the feature vectors associated with nodes i and j respectively, and e ij is the edge connecting nodes i and j as shown in Fig. <ref type="figure" target="#fig_4">6</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.1.">Types of Graph Neural Networks</head><p>There are a variety of graph neural networks. Below, we focus on some of the important types of GNNs:</p><p>3.1.1. Feed-forward GNNs: Also known as "Deep feedforward Networks" or "Multi-layer Perceptrons". In these model architectures, input data is propagated through a graph of neurons to produce output by applying the transfer function at the edge weights between each node as represented in Fig. versions of GNNs that work straightforwardly. They process graph data in just one pass and update node information using neighbouring node data.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.1.2.">Graph Recurrent Neural Networks (GRNNs):</head><p>GRNNs relay information from previous to neighbouring nodes. At each step, the GRNN uses a hidden state as a memory of what the network has encountered thus far in the sequence, as represented in Fig. <ref type="figure">9</ref>. The network is updated with each new step based on the current input and the previous hidden state. When working with sequences, the RNN "unrolls" itself through time, treating each step as a separate layer of the network. This helps the GRNN handle sequences of different lengths. In <ref type="bibr" target="#b16">[17]</ref>, it was observed that Recurrent neural networks allow for loops and cycles, giving rise to dynamical systems and flexible behaviour in computation.</p><p>In <ref type="bibr" target="#b17">[18]</ref>, it has been observed that graph neural Networks are an evolution of Recurrent Neural Networks (RNNs) that address the limitations of RNNs by combining gated RNN architectures with graph convolutions.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.1.3.">Graph Convolutional Neural Networks (GC-NNs):</head><p>These architectures are one of the most popular and widely used GNNs in the literature, and they can be represented as shown in Fig. <ref type="figure">8</ref>. The main property of GCNNs is their ability to maintain stability under stochastic perturbations. This means that GCNNs are less likely to be affected by noise or randomness in the data, which can be a major advantage in many applications. In <ref type="bibr" target="#b18">[19]</ref>, a new RES and a GFT model were employed over a GCNNs to test the robustness of the graph filter. GCNN is stable to stochastic perturbations with a factor proportional to the link loss probability. In particular, a wider and deeper GCNN decreases the stability while improving the performance, The GRNN consists of an input layer with 4 nodes, a hidden layer with 5 nodes, and an additional layer with 3 nodes. The architecture is completed with an output layer.</p><p>indicating a trade-off between these two factors. In <ref type="bibr" target="#b19">[20]</ref>, the study leverages the stability property of GNNs to seek stable representations within a distribution. These networks use a message-passing scheme to update node representations by aggregating and transforming information from the neighbourhood. They have been shown to be effective in capturing both the edge features and topological information of a graph, making them suitable for analysing interconnected patterns in network flows.</p><p>The modified E-GraphSAGE and E-ResGAT algorithms integrate residual learning into GNNs to address the challenge of class imbalance and improve performance in minority classes.</p><p>The GraphSAGE model architecture includes two graph convolution layers and uses the mean aggregation method to effectively capture node information from neighbours in the graph, as shown in Fig. <ref type="figure" target="#fig_6">10</ref>.</p><p>For homogeneous graphs, the feature update rule is the mean aggregator, where the aggregation of features of the neighbours of the node v are given by</p><formula xml:id="formula_4">h i N (v) = 1 ||N (v)|| D p h i-1 u , ∀u ∈ N (v),<label>(5)</label></formula><p>where the forward passes through layer k can be added in the future nodes and is given by</p><formula xml:id="formula_5">h i v = σ concat W k self D p h i-1 v , W i neigh h i N (v) + b k .<label>(6)</label></formula><p>In Eq.( <ref type="formula" target="#formula_4">5</ref>) D p [. . .] is a random dropout with probability p applied to its argument vector, and b k is an optional bias.</p><p>Eqs.( <ref type="formula" target="#formula_4">5</ref>) and ( <ref type="formula" target="#formula_5">6</ref>) are the rules deciding how the features get updated in the GNN. The GraphSAGE algorithm was implemented on the dataset to perform predictions using StellarGraph. From the original graph, 30% of edges were removed to form a test set, 65% acted as the train set, and 5% acted as the validation set where the internal parameters were optimised over 10 epochs using the ADAM optimiser. The classifier was then applied to the test set; Scores were generated for the classifier's predictions and are provided in the Sec. 6. In the following, we describe the steps of the GraphSAGE algorithm.</p><p>The algorithm 1 first assigns unique node identifiers to each sample in the dataset.</p><p>A graph is then constructed using the StellarGraph library, where nodes are identified by their unique identifiers. The GraphSAGENodeGenerator is then used to generate a stream of node samples and their corresponding labels. During the training phase, the GraphSAGE model is instantiated by specifying the sizes of the layers and activation functions. The model includes a dense output layer with a sigmoid activation function for generating predictions. After defining the input and output tensors, a Keras model is created </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>is validation then</head><p>Predict on the flow using the trained model. Calculate mode threshold and convert predictions to binary Calculate precision-recall curve points and AUC-PR using true labels and predicted scores end if and compiled using the Adam optimiser, binary crossentropy loss, and accuracy metric. The model is trained over a number of epochs using the generated data stream.</p><p>For non-training data, the trained model is used to predict labels. The predictions are then post-processed by calculating the mode threshold and converting the predicted scores to binary form. Precision-recall curves are then computed to evaluate the model's performance, and the area under the precision-recall curve (AUC-PR) is used to quantify its effectiveness.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.">Quantum Graph Neural Networks</head><p>Our research methodology draws inspiration from the pioneering work of <ref type="bibr">Hu et al., 2022 [22]</ref> in quantum graph neural network development. Our approach unfolds in the following manner:</p><p>• Step 1: Graph Construction and Representation Our initial step involves constructing the graph, where each graph corresponds to dataset transactions. This dataset encompasses 30 encoded attributes, predominantly processed via Principal Component Analysis (PCA) techniques, except for two attributes -transaction amount and time. In this framework, nodes represent encoded features. At the same time, edges symbolise their fusion to get novel graph configurations, and each graph in our feature grouping employs interconnected nodes, totalling 28 nodes per graph.</p><p>• Step 2: Topological Data Analysis (TDA) for Graph Projection Utilising topological data analysis, the graph is embedded into a one-dimensional scatter plot. This technique discriminates between graphs based on their distinct elements, facilitating differentiation between fraudulent and non-fraudulent cases. Following scatter plot creation, node clustering reduces nodes while encapsulating the initial 28 features, minimising quantum resource requirements. A final 28-dimensional feature vector representing the positional attributes is generated.</p><p>• Step 3: Encoding within Quantum Circuit and Linear Transformation Upon acquiring the graphical representation of each transaction, the subsequent step entails encoding it into a quantum state utilising the angle-encoding technique, employing a range of qubits from 1 to 28. To initiate, the encoding process is applied to all node-level features (N × 28), resulting in a dimensionally apt vector (N × q) facilitated by a fully connected linear layer. This vector is subsequently channelled into the designated quantum circuit with q qubits as defined</p><formula xml:id="formula_6">|x⟩ = N i=1 cos(x i ) |0⟩ + i sin(x i ) |1⟩ .<label>(7)</label></formula><p>• Step 4: Enhancing Node Features with Variational Quantum Circuits Following the previous steps, a sequence of twolocal ansatz constructs orchestrates the implementation of a multi-layered Variational Quantum Circuit (VQC) calibrated for the transactional dataset. Fig. <ref type="figure">11</ref> visually portrays a circuit encompassing a 6-qubit with the angle encoding alongside 2 concealed VQC layers. Notably, the ansatz capitalises on Rx, Ry, and CNOT operations while adopting Rx rotations for angle encoding, as explained in the 3rd step. Subsequently, circuit measurement culminates in using Pauli-Z expectation. This strategic circuit design is a conscientious outcome of considerations concerning circuit expressibility and intricate node-node interactions embedded within graphical data. We enhance node features using the VQC, emulating the operational principles of conventional classical graph neural networks with fully connected layers. VQC entails the successive application of variational layers. A single layer transformation L is depicted as</p><formula xml:id="formula_7">L : |ψ(x)⟩ - → |ψ(y)⟩ = U (w) |ψ(x)⟩ ,<label>(8)</label></formula><p>where U (w) represents the VQC with N layers, defined as</p><formula xml:id="formula_8">U (w) = T N k=1 R y (w k ) |ψ(x)⟩ .<label>(9)</label></formula><p>• Step 5: Integration of Unitary Gates and Classification In order to meet the requirements of a quantum graph neural network, it is necessary to have unitary gates that act on two states simultaneously while preserving the others. As we explained, rotational gates are essential to integrate the graph into the quantum circuit. Once these gates are in place, a linear layer can classify the graph as fraudulent or non-fraudulent. The comprehensive procedure outlined in Fig. <ref type="figure">12</ref> sheds light on the architecture and operational aspects of the QGNN, highlighting the distinct components and their produced interplay in fraud detection. Ad- </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.">The Dataset</head><p>We used the publicly available credit card fraud detection dataset <ref type="bibr" target="#b22">[23]</ref> for our analysis. This dataset contains credit card transactions of European cardholders with encrypted feature labels obtained from principal component analysis on actual user data. Each transaction is labelled as either fraud <ref type="bibr" target="#b0">(1)</ref> or not fraud (0) and contains 28 encrypted features along with amount and time values. The dataset is highly imbalanced, with only 492 frauds out of 284 807 transactions. To address this imbalance, we used random undersampling on the non-fraud transactions.</p><p>For a comprehensive understanding of the dataset characteristics, we utilised visual representations. In Fig. <ref type="figure" target="#fig_7">13</ref>, we present the correlation matrix (v 1v 28 ) of the dataset. The figure effectively illustrates the relationships between the features v 1 to v 28 by displaying their correlation values. This information offers insights into how these features interact and influence one another.</p><p>Additionally, Fig. <ref type="figure" target="#fig_8">14</ref> offers histograms that vividly depict the distribution of all features in the dataset. These histograms visually represent the data distribution patterns, assisting us in identifying potential trends and outliers. Furthermore, our q 0 q 1 q 2 q 3 q 4 q 5 </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Output</head><p>Figure <ref type="figure">12</ref>. Architecture of the quantum graph neural network. The QGNN starts with a graph as input, followed by a feature compression step. Angle encoding prepares the data for the VQC processing. The output of the VQC is subjected to average pooling, then fed through a linear layer, and finally to the output layer approach involved translating each transaction as a graph using topological data analysis <ref type="bibr" target="#b23">[24]</ref>. This technique allowed us to capture intricate relationships among the various feature vectors, enhancing our ability to analyse the data effectively. In the following steps, we explain how to apply and implement this technique.</p><p>Given a transaction described by a vector</p><formula xml:id="formula_9">V = [Time, V 1 , V 2 , . . . , V 28 , Amount],<label>(10)</label></formula><p>We create the graph G = (N, E), where N ∈ {R 1 , R 2 , . . . , R 28 } represents the feature vector, and E represents the edge list, where, V 1 , V 2 , . . . , V 28 denotes the encrypted feature labels in the dataset.</p><p>Next, we focus on converting the transaction, {T i } 284 807 i=1</p><p>, into its graphical representations G i via the following steps using TDA:</p><p>(i) Create a set {S i } of 3D data points, where S i = P j | P j = [Time i , V j , Amount i ] , ∀j ∈ <ref type="bibr" target="#b0">[1,</ref><ref type="bibr">28]</ref> . This helps in capturing the correlation of V j with time and amount.</p><p>(ii) Project all data points P j ∈ S i onto a 1D plane.</p><p>We denote these projected points as f j .</p><p>(iii) Draw covers around all the projected data points {f j } 28 j=1 and cluster them using a suitable clustering algorithm, here, we have used DBSCAN. Let these clusters form a set {C i }, where</p><formula xml:id="formula_10">C i = c k | ∃ j,k : f j ∈ c k , ∀j ∈ [1, 28] and 1 &lt; k &lt; |C i |</formula><p>(iv) Draw edges between clusters with common data points to form the graph G i .</p><p>Here, a node N k ∈ G i , represents a cluster c k ∈ {C i }, s.t. N k = (0 . . . V j . . . 0) 28 , ∀f j ∈ c k . Thus, the relation between different features is captured and grouped using the clustering algorithm of highdimensional data via a more representative graphical structure. Each graph represents a transaction labelled fraud or non-fraud for the classification task.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="6.">Results and Discussion</head><p>We tested the performance of our two classical and quantum algorithms on the same dataset described in Sec. 5. The results showed that the GraphSAGE model achieved promising results on the fraud classification task. The model was trained for 10 epochs using the Adam optimiser with a batch size of 5 using Keras, as shown in Tab. 2.</p><p>The aggregation method was set to mean. These hyperparameters were chosen based on preliminary experiments and empirical observations to balance model complexity and generalisation performance. The receiver operating characteristic (ROC) curve presented in Fig. <ref type="figure" target="#fig_9">15</ref> shows the trade-off between the true positive rate (TPR) and the false positive rate (FPR) for the GraphSAGE model. The Area Under Cover (AUC) score measures how well a model can distinguish between positive and negative instances. A higher AUC score indicates a better model. The GraphSAGE model achieves an AUC of 0.77, within the acceptable range for fraud classification tasks. The performance metrics for the GraphSAGE model are also within the acceptable range, with an accuracy of 92.3%, and F1 score of 0.83. These scores are reported in Tab. 3.</p><p>The loss curves in Fig. <ref type="figure" target="#fig_4">16</ref> show that the training loss decreases steadily over time while the validation loss decreases more slowly, which suggests that the model is well-fitted on both the training and validation data.</p><p>We performed experiments on the quantum graph neural network using qiskit <ref type="bibr" target="#b24">[25]</ref> under different scenarios, namely qubit count and hidden layers. The results in Tab. 4 show that a dense encoding scheme of node features using fewer qubits performed better than using more qubits and sparser representations, and this is evident as the model with 6 qubits, with an accuracy of 94.5% and F1 score of 0.86, performed best compared to that with 16 qubits, with an accuracy of 92.0% and F1-score of 0.81.</p><p>The AUC for the precision-recall curve from Fig. <ref type="figure">17</ref> is estimated to be roughly 0.85, which shows high tolerance in our method towards biased datasets with high class imbalances, apart from having highly accurate predictions. A smoother transition curve leads to a better F1 score, and the loss curves show a decrease in the loss function over time for both training and validation, which shows that our model is wellfitted, as presented in Fig. <ref type="figure" target="#fig_12">18</ref>.</p><p>These results are observed on a basic network architecture of quantum circuits and outperform various classical approaches. This is due to the enhanced representation of graphical structures through quantum circuits and efficient feature relations using topological data analysis.</p><p>We can see an improvement of ≈ 3% over classical GNN, such as GraphSAGE, across various metrics. However, it was observed that graphical techniques, in general, help enhance the precision and accuracy of these classification systems more than other non-graphical approaches.</p><p>Careful analysis of quantum techniques suggests that better representation, deeper search space, state entanglement, and qubit parallelism are key factors contributing to the supremacy of quantum circuits for classification tasks.</p><p>In our experiments, we observed the same with a smaller system with 6 qubits and ≈200 parameters, which makes our model QGNN outperform the classical GNN. These results suggest that with more advanced features and complex quantum systems, we can achieve a real quantum advantage in solving problems such as fraud detection      </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="7.">Conclusion</head><p>Our research has demonstrated the potential of quantum graph neural networks in detecting financial fraud. We have compared the performance of QGNNs with classical graph neural networks and found that QGNNs outperformed GNNs in terms of accuracy and efficiency. Our experiments on a real-world financial dataset show that QGNNs can detect fraud with a remarkable accuracy of 94.5%, which is significantly higher than GNNs' accuracy of 92.3%.</p><p>Moreover, we have also studied the influence of the number of qubits and layers on QGNNs' performance. Our research indicates that QGNNs with 6 qubits and one layer exhibit the best performance, with an accuracy of 94.5%. This can be attributed to the fact that fewer qubits are less prone to noise, and a single layer is sufficient to grasp the essential features of the data.</p><p>Our research shows that QGNNs have the potential to revolutionise fraud detection and improve the security of financial systems. It also highlights the need for further research to address the challenges of implementing QC in real-world applications.</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head></head><label></label><figDesc>Figure 2.Plot showing the ReLU, Sigmoid, and Tanh activation functions along with vertical and horizontal lines at x = 0 and y = 0, respectively.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head>Figure 4 .</head><label>4</label><figDesc>Figure 4. A graphical representation showing the dependency of the feature of nodes on the features of its neighbouring nodes.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_2"><head>Figure 3 .</head><label>3</label><figDesc>Figure 3. A directed graph. The arrows indicate the direction of flow. The graph consists of nodes labelled A, B, C, D, and E.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_3"><head>Figure 5 .</head><label>5</label><figDesc>Figure 5. Graphical representation illustrating node classification. Nodes are associated with expressions Z i = f (h i ), where i ranges from 1 to 7, capturing relationships between features Z i and hidden features h i .</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_4"><head>Figure 6 .</head><label>6</label><figDesc>Figure 6. Graphical representation showcasing edge classification</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_5"><head>Figure 8 .Figure 9 .</head><label>89</label><figDesc>Figure 8. Architecture of Graph Convolutional Neural Network. The network includes a convolution layer followed by a ReLU activation function, a subsequent convolution layer with another ReLU activation function, an intermediate dense layer, and finally, a sigmoid activation function before the output layer.</figDesc><graphic coords="8,59.91,75.07,80.66,52.63" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_6"><head>Figure 10 .</head><label>10</label><figDesc>Figure 10. Architecture of the GraphSage. It comprises successive GraphSAGE layers, each followed by a ReLU activation function. An intermediate dense layer bridges the structure, culminating in a sigmoid activation function in the output layer.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_7"><head>Figure 13 .</head><label>13</label><figDesc>Figure 13. Correlation matrix (v 1 -v 28 ) of the dataset. The figure illustrates the relationships between the features v 1 to v 28 by displaying their correlation values.</figDesc><graphic coords="12,80.62,88.94,164.91,164.91" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_8"><head>Figure 14 .</head><label>14</label><figDesc>Figure 14. Histograms illustrating the distribution of all features in the dataset.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_9"><head>Figure 15 .</head><label>15</label><figDesc>Figure 15. Receiver Operating Characteristic Curve for the GraphSAGE model with an AUC of 0.77.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_11"><head>Figure 16 .Figure 17 .</head><label>1617</label><figDesc>Figure 16.Training and validation loss curves for the GraphSAGE model.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_12"><head>Figure 18 .</head><label>18</label><figDesc>Figure 18. Training and validation loss curves for the QGNN model with 6 qubits and 1 hidden layer.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_0"><head></head><label></label><figDesc>, Zheng et al., 2021 introduce a Quantum Graph Convolutional Neural Network (QGCNN) model to address the challenge of applying a QNN to non-Euclidean spatial data, particularly graphstructured data. The QGCNN model efficiently captures graph topology and node features using quantum parametric circuits, making graph-level classification tasks effective. The study bridges the gap in QML research by extending QNNs to handle irregular spatial structures in graph data. The proposed QGCNN model showcases the potential of QC in enhancing graph-based ML tasks, contributing to the advancement of QML research.</figDesc><table /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_1"><head>Table 1 .</head><label>1</label><figDesc>Adjacency matrix representing directed edges between nodes A, B, C, D, and E.</figDesc><table /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_5"><head></head><label></label><figDesc>Figure 11. Quantum circuit for angle encoding and VQC in the QGNN architecture with RY, RX, and CNOT gates.</figDesc><table><row><cell></cell><cell></cell><cell>0.221 R X</cell><cell>0.616 R X 0.276 R Y</cell><cell></cell><cell>0.959 R X</cell><cell>2.7 R Y</cell></row><row><cell></cell><cell></cell><cell>0.609 R X</cell><cell>0.641 R X</cell><cell>0.4 R Y</cell><cell>0.507 R X</cell><cell>1.1 R Y</cell></row><row><cell></cell><cell></cell><cell>0.159 R X</cell><cell></cell><cell>0.22 R X 0.638 R Y</cell><cell>0.699 R X</cell><cell>1.59 R Y</cell></row><row><cell></cell><cell></cell><cell>0.0246 R X</cell><cell></cell><cell>0.586 R X</cell><cell>2.41 R Y</cell><cell>0.221 R X</cell><cell>1.08 R Y</cell></row><row><cell></cell><cell></cell><cell>1.76 R X</cell><cell></cell><cell></cell><cell>0.824 R X</cell><cell>2.21 R Y</cell><cell>0.941 R X</cell><cell>1.07 R Y</cell></row><row><cell></cell><cell></cell><cell>0.8 R X</cell><cell></cell><cell></cell><cell>1.16 R X</cell><cell>0.498 R Y</cell><cell>0.231 R X</cell><cell>3.02 R Y</cell></row><row><cell></cell><cell>Feature</cell><cell>Compress</cell><cell></cell><cell></cell><cell>Linear</cell><cell>Layer</cell></row><row><cell></cell><cell></cell><cell></cell><cell>Angle Encoding</cell><cell>VQC</cell><cell>Average Pooling</cell></row><row><cell>TDA</cell><cell>Transaction</cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell>Records</cell><cell></cell><cell></cell><cell></cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_6"><head>Table 2 .</head><label>2</label><figDesc>Hyperparameters and training details for the GraphSAGE model.</figDesc><table><row><cell>Hyperparameter</cell><cell>Value</cell></row><row><cell>Model Architecture</cell><cell>GraphSAGE</cell></row><row><cell>Number of Epochs</cell><cell>10</cell></row><row><cell>Optimiser</cell><cell>Adam</cell></row><row><cell>Batch Size</cell><cell>5</cell></row><row><cell cols="2">Aggregation Method Mean</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_7"><head>Table 3 .</head><label>3</label><figDesc>Performance test metrics of GraphSAGE</figDesc><table><row><cell cols="4">Accuracy (%) Precision (%) Recall (%) F1 score</cell></row><row><cell>92.3</cell><cell>95.2</cell><cell>76.3</cell><cell>0.83</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_8"><head>Table 4 .</head><label>4</label><figDesc>Performance test metrics of QGNN. The table presents results for various configurations, including the number of qubits and layers.</figDesc><table><row><cell></cell><cell cols="7">Num Qubits Layers Accuracy (%) Precision (%) Recall (%) F1 score</cell></row><row><cell></cell><cell>6</cell><cell></cell><cell>1</cell><cell></cell><cell>94.5</cell><cell>96.1</cell><cell>79.5</cell><cell>0.86</cell></row><row><cell></cell><cell>16</cell><cell></cell><cell>1</cell><cell></cell><cell>92.06</cell><cell>86.5</cell><cell>77.3</cell><cell>0.81</cell></row><row><cell></cell><cell>6</cell><cell></cell><cell>2</cell><cell></cell><cell>91.5</cell><cell>93.3</cell><cell>65.6</cell><cell>0.76</cell></row><row><cell></cell><cell>16</cell><cell></cell><cell>2</cell><cell></cell><cell>89.2</cell><cell>86.6</cell><cell>72</cell><cell>0.77</cell></row><row><cell>0.0</cell><cell>0.2</cell><cell>0.4</cell><cell>Recall</cell><cell>0.6</cell><cell>0.8</cell><cell>1.0</cell></row></table></figure>
+		</body>
+		<back>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<analytic>
+		<title/>
+		<author>
+			<persName><forename type="first">A</forename><surname>Ali</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Abd</forename><surname>Razak</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Othman</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">H</forename><surname>Eisa</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T A E</forename><surname>Al-Dhaqm</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Nasser</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Elhassan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Elshafie</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Saif</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Applied Sciences</title>
+		<imprint>
+			<biblScope unit="volume">12</biblScope>
+			<date type="published" when="2022">2022. 9637</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ali A, Abd Razak S, Othman S H, Eisa T A E, Al-Dhaqm A, Nasser M, Elhassan T, Elshafie H and Saif A 2022 Applied Sciences 12 9637</note>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<analytic>
+		<title/>
+		<author>
+			<persName><forename type="first">I</forename><surname>Sadgali</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><surname>Sael</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Benabbou</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Procedia computer science</title>
+		<imprint>
+			<biblScope unit="volume">148</biblScope>
+			<biblScope unit="page" from="45" to="54" />
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Sadgali I, Sael N and Benabbou F 2019 Procedia computer science 148 45-54</note>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Zojaji</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">E</forename><surname>Atani</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Monadjemi</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1611.06439</idno>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Zojaji Z, Atani R E, Monadjemi A H et al. 2016 arXiv preprint arXiv:1611.06439</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<analytic>
+		<title/>
+		<author>
+			<persName><forename type="first">C</forename><surname>Tüysüz</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Rieger</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Novotny</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Demirköz</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Dobos</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Potamianos</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Vallecorsa</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Vlimant</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Forster</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Quantum Machine Intelligence</title>
+		<imprint>
+			<biblScope unit="volume">3</biblScope>
+			<biblScope unit="page" from="1" to="20" />
+			<date type="published" when="2021">2021</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Tüysüz C, Rieger C, Novotny K, Demirköz B, Dobos D, Potamianos K, Vallecorsa S, Vlimant J R and Forster R 2021 Quantum Machine Intelligence 3 1-20</note>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<analytic>
+		<title/>
+		<author>
+			<persName><forename type="first">T</forename><surname>Pourhabibi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">L</forename><surname>Ong</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Kam</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y L</forename><surname>Boo</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Decision Support Systems</title>
+		<imprint>
+			<biblScope unit="volume">133</biblScope>
+			<biblScope unit="page">113303</biblScope>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Pourhabibi T, Ong K L, Kam B H and Boo Y L 2020 Decision Support Systems 133 113303</note>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<analytic>
+		<title/>
+		<author>
+			<persName><forename type="first">S</forename><surname>Yu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Ren</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Naseriparsa</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Xia</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Frontiers in Artificial Intelligence</title>
+		<imprint>
+			<biblScope unit="volume">5</biblScope>
+			<biblScope unit="page">922589</biblScope>
+			<date type="published" when="2022">2022</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Yu S, Ren J, Li S, Naseriparsa M and Xia F 2022 Frontiers in Artificial Intelligence 5 922589</note>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<analytic>
+		<title/>
+		<author>
+			<persName><forename type="first">M</forename><surname>Grossi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><surname>Ibrahim</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">V</forename><surname>Radescu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Loredo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Voigt</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Von</forename><surname>Altrock</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Rudnik</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Quantum Engineering</title>
+		<imprint>
+			<biblScope unit="volume">3</biblScope>
+			<biblScope unit="page" from="1" to="12" />
+			<date type="published" when="2022">2022</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Grossi M, Ibrahim N, Radescu V, Loredo R, Voigt K, Von Altrock C and Rudnik A 2022 IEEE Transactions on Quantum Engineering 3 1-12</note>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<analytic>
+		<title level="a" type="main">Credit card fraud detection with a neural-network System Sciences</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Ghosh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D L</forename><surname>Reilly</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the Twenty-Seventh Hawaii International Conference on</title>
+		<meeting>the Twenty-Seventh Hawaii International Conference on</meeting>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="1994">1994. 1994</date>
+			<biblScope unit="volume">3</biblScope>
+			<biblScope unit="page" from="621" to="630" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ghosh S and Reilly D L 1994 Credit card fraud detection with a neural-network System Sciences, 1994. Proceedings of the Twenty-Seventh Hawaii International Conference on vol 3 (IEEE) pp 621-630</note>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title/>
+		<author>
+			<persName><forename type="first">X</forename><surname>Ma</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Wu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Xue</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Yang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Zhou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Q</forename><forename type="middle">Z</forename><surname>Sheng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Xiong</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Akoglu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Knowledge and Data Engineering</title>
+		<imprint>
+			<date type="published" when="2021">2021</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ma X, Wu J, Xue S, Yang J, Zhou C, Sheng Q Z, Xiong H and Akoglu L 2021 IEEE Transactions on Knowledge and Data Engineering</note>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<analytic>
+		<title/>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Ahmad</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Shahid</forename><surname>Khan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Nisar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Haider</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">I</forename><surname>Hassan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Haque</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">R</forename><surname>Tarmizi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Rodrigues</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J J</forename></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Applied Sciences</title>
+		<imprint>
+			<biblScope unit="volume">11</biblScope>
+			<biblScope unit="page">7050</biblScope>
+			<date type="published" when="2021">2021</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ahmad Z, Shahid Khan A, Nisar K, Haider I, Hassan R, Haque M R, Tarmizi S and Rodrigues J J 2021 Applied Sciences 11 7050</note>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<analytic>
+		<title level="a" type="main">Quantum graph convolutional neural networks</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Zheng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Q</forename><surname>Gao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Lü</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">40th Chinese Control Conference (CCC)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2021">2021. 2021</date>
+			<biblScope unit="page" from="6335" to="6340" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zheng J, Gao Q and Lü Y 2021 Quantum graph convolu- tional neural networks 2021 40th Chinese Control Con- ference (CCC) (IEEE) pp 6335-6340</note>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">O</forename><surname>Kyriienko</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E B</forename><surname>Magnusson</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2208.01203</idno>
+		<imprint>
+			<date type="published" when="2022">2022</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Kyriienko O and Magnusson E B 2022 arXiv preprint arXiv:2208.01203</note>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">N</forename><surname>Innan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Khan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Bennai</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2308.05237</idno>
+		<imprint>
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Innan N, Khan M A Z and Bennai M 2023 arXiv preprint arXiv:2308.05237</note>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<analytic>
+		<title level="a" type="main">Semi-supervised credit card fraud detection via attribute-driven graph representation</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Xiang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Zhu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Cheng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Zhao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Ouyang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Chen</forename><forename type="middle">L</forename><surname>Zheng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the AAAI Conference on Artificial Intelligence</title>
+		<meeting>the AAAI Conference on Artificial Intelligence</meeting>
+		<imprint>
+			<date type="published" when="2023">2023</date>
+			<biblScope unit="volume">37</biblScope>
+			<biblScope unit="page" from="14557" to="14565" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Xiang S, Zhu M, Cheng D, Li E, Zhao R, Ouyang Y, Chen L and Zheng Y 2023 Semi-supervised credit card fraud detection via attribute-driven graph representation Proceedings of the AAAI Conference on Artificial Intelligence vol 37 pp 14557-14565</note>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">N</forename><surname>Schetakis</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Aghamalyan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Boguslavsky</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Rees</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Raktomalala</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Griffin</forename><forename type="middle">P</forename></persName>
+		</author>
+		<idno type="arXiv">arXiv:2308.03575</idno>
+		<imprint>
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Schetakis N, Aghamalyan D, Boguslavsky M, Rees A, Raktomalala M and Griffin P 2023 arXiv preprint arXiv:2308.03575</note>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<analytic>
+		<title/>
+		<author>
+			<persName><forename type="first">K</forename><surname>Beer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Khosla</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Köhler</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Osborne</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Zhao</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Physical Review A</title>
+		<imprint>
+			<biblScope unit="volume">108</biblScope>
+			<biblScope unit="page">12410</biblScope>
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Beer K, Khosla M, Köhler J, Osborne T J and Zhao T 2023 Physical Review A 108 012410</note>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<analytic>
+		<title/>
+		<author>
+			<persName><forename type="first">H</forename><surname>Siegelmann</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Computer Science Today: Recent Trends and Developments</title>
+		<imprint>
+			<biblScope unit="page" from="29" to="45" />
+			<date type="published" when="2005">2005</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Siegelmann H T 2005 Computer Science Today: Recent Trends and Developments 29-45</note>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Kiran</forename><surname>Kadambari</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Prabhakar</forename><surname>Chepuri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename></persName>
+		</author>
+		<idno>arXiv-2001</idno>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv e-prints</note>
+	<note type="raw_reference">Kiran Kadambari S and Prabhakar Chepuri S 2020 arXiv e-prints arXiv-2001</note>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<analytic>
+		<title/>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Gao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Isufi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Ribeiro</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Signal Processing</title>
+		<imprint>
+			<biblScope unit="volume">188</biblScope>
+			<biblScope unit="page">108216</biblScope>
+			<date type="published" when="2021">2021</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Gao Z, Isufi E and Ribeiro A 2021 Signal Processing 188 108216</note>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<analytic>
+		<title level="a" type="main">Training stable graph neural networks through constrained learning</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Cerviño</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Ruiz</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Ribeiro</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">ICASSP 2022-2022 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2022">2022</date>
+			<biblScope unit="page" from="4223" to="4227" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Cerviño J, Ruiz L and Ribeiro A 2022 Training stable graph neural networks through constrained learning ICASSP 2022-2022 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP) (IEEE) pp 4223-4227</note>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<analytic>
+		<title level="a" type="main">A graph neural network based intrusion detection system for iot NOMS</title>
+		<author>
+			<persName><forename type="first">W</forename><forename type="middle">W</forename><surname>Lo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Layeghy</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Sarhan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Gallagher</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Portmann</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">IEEE/IFIP Network Operations and Management Symposium</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2022">2022. 2022. 2022</date>
+			<biblScope unit="page" from="1" to="9" />
+		</imprint>
+	</monogr>
+	<note>E-graphsage</note>
+	<note type="raw_reference">Lo W W, Layeghy S, Sarhan M, Gallagher M and Portmann M 2022 E-graphsage: A graph neural network based intrusion detection system for iot NOMS 2022- 2022 IEEE/IFIP Network Operations and Management Symposium (IEEE) pp 1-9</note>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<analytic>
+		<title level="a" type="main">On the design of quantum graph convolutional neural network in the nisq-era and beyond</title>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Hu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Pan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S Z L</forename><surname>Yang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Ding</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">O</forename><surname>Khan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Geng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><surname>Jiang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">IEEE 40th International Conference on Computer Design (ICCD)</title>
+		<imprint>
+			<date type="published" when="2022">2022</date>
+			<biblScope unit="page" from="3" to="5" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Hu Z, Li J, Pan Z, Yang S Z L, Ding C, Khan O, Geng T and Jiang W 2022 On the design of quantum graph convolutional neural network in the nisq-era and beyond IEEE 40th International Conference on Computer Design (ICCD) pp 3-5</note>
+</biblStruct>
+
+<biblStruct xml:id="b22">
+	<monogr>
+		<author>
+			<persName><surname>Ulb M L G</surname></persName>
+		</author>
+		<ptr target="https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud" />
+		<title level="m">Credit card fraud detection</title>
+		<imprint>
+			<date type="published" when="2013">2013</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">ULB M L G 2013 Credit card fraud detection URL https://www.kaggle.com/datasets/mlg-ulb/ creditcardfraud</note>
+</biblStruct>
+
+<biblStruct xml:id="b23">
+	<analytic>
+		<title/>
+		<author>
+			<persName><forename type="first">F</forename><surname>Chazal</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Michel</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Frontiers in artificial intelligence</title>
+		<imprint>
+			<biblScope unit="volume">4</biblScope>
+			<biblScope unit="page">108</biblScope>
+			<date type="published" when="2021">2021</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Chazal F and Michel B 2021 Frontiers in artificial intelligence 4 108</note>
+</biblStruct>
+
+<biblStruct xml:id="b24">
+	<monogr>
+		<title level="m" type="main">Qiskit: An Open-source Framework for Quantum Computing</title>
+		<author>
+			<persName><forename type="first">G</forename><surname>Aleksandrowicz</surname></persName>
+		</author>
+		<idno type="DOI">10.5281/zenodo.2562111</idno>
+		<ptr target="https://doi.org/10.5281/zenodo.2562111" />
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Aleksandrowicz G and et al 2019 Qiskit: An Open-source Framework for Quantum Computing URL https://doi. org/10.5281/zenodo.2562111</note>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

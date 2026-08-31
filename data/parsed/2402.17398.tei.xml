@@ -1,0 +1,776 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">A Quantum Approach to Synthetic Minority Oversampling Technique (SMOTE)</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability  status="unknown">
+					<licence/>
+				</availability>
+				<date type="published" when="2024-07-04">4 Jul 2024</date>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><forename type="first">Nishikanta</forename><surname>Mohanty</surname></persName>
+							<email>nishikanta.m.mohanty@student.uts.edu.au</email>
+							<affiliation key="aff0">
+								<orgName type="department">Centre for Quantum Software and Information</orgName>
+								<orgName type="institution">University of Technology Sydney</orgName>
+								<address>
+									<addrLine>15 Broadway Ultimo</addrLine>
+									<postCode>2007</postCode>
+									<settlement>Sydney</settlement>
+									<region>NSW</region>
+									<country key="AU">Australia</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Bikash</forename><forename type="middle">K</forename><surname>Behera</surname></persName>
+							<affiliation key="aff1">
+								<orgName type="institution">Bikash&apos;s Quantum (OPC) Pvt. Ltd</orgName>
+								<address>
+									<addrLine>Balindi</addrLine>
+									<postCode>741246</postCode>
+									<settlement>Mohanpur</settlement>
+									<region>WB</region>
+									<country key="IN">India</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Christopher</forename><surname>Ferrie</surname></persName>
+							<email>christopher.ferrie@uts.edu.au</email>
+							<affiliation key="aff0">
+								<orgName type="department">Centre for Quantum Software and Information</orgName>
+								<orgName type="institution">University of Technology Sydney</orgName>
+								<address>
+									<addrLine>15 Broadway Ultimo</addrLine>
+									<postCode>2007</postCode>
+									<settlement>Sydney</settlement>
+									<region>NSW</region>
+									<country key="AU">Australia</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Pravat</forename><surname>Dash</surname></persName>
+							<email>pravat.dash@outlook.com</email>
+							<affiliation key="aff1">
+								<orgName type="institution">Bikash&apos;s Quantum (OPC) Pvt. Ltd</orgName>
+								<address>
+									<addrLine>Balindi</addrLine>
+									<postCode>741246</postCode>
+									<settlement>Mohanpur</settlement>
+									<region>WB</region>
+									<country key="IN">India</country>
+								</address>
+							</affiliation>
+						</author>
+						<title level="a" type="main">A Quantum Approach to Synthetic Minority Oversampling Technique (SMOTE)</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date type="published" when="2024-07-04">4 Jul 2024</date>
+						</imprint>
+					</monogr>
+					<idno type="MD5">9692B964FF28526E67234EB69546AEC7</idno>
+					<idno type="arXiv">arXiv:2402.17398v3[quant-ph]</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.2-SNAPSHOT" ident="GROBID" when="2026-08-31T18:11+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<textClass>
+				<keywords>
+					<term>Quantum-SMOTE</term>
+					<term>Swaptest</term>
+					<term>Quantum Rotations 1</term>
+				</keywords>
+			</textClass>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>The paper proposes the Quantum-SMOTE method, a novel solution that uses quantum computing techniques to solve the prevalent problem of class imbalance in machine learning datasets. Quantum-SMOTE, inspired by the Synthetic Minority Oversampling Technique (SMOTE), generates synthetic data points using quantum processes such as swap tests and quantum rotation. The process varies from the conventional SMOTE algorithm's usage of K-Nearest Neighbors (KNN) and Euclidean distances, enabling synthetic instances to be generated from minority class data points without relying on neighbor proximity. The algorithm asserts greater control over the synthetic data generation process by introducing hyperparameters such as rotation angle, minority percentage, and splitting factor, which allow for customization to specific dataset requirements. Due to the use of a compact swap test, the algorithm can accommodate a large number of features. Furthermore, the approach is tested on a public dataset of TelecomChurn and evaluated alongside two prominent classification algorithms, Random Forest and Logistic Regression, to determine its impact along with varying proportions of synthetic data.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1">Introduction 1.Unbalanced Classification</head><p>Unbalanced classification is a prevalent problem in machine learning <ref type="bibr" target="#b0">[1,</ref><ref type="bibr" target="#b1">2]</ref>, especially when the classes in a dataset are not represented evenly. Due to this imbalance, models may be biased towards the dominant class, frequently at the price of adequately forecasting the minority class. Such scenarios are common in real-world applications such as fraud detection in banking, insurance, and retail industries, detecting spam in email content, and predicting customer churn in Telecom, where the class of interest is usually underrepresented. To mitigate the problem of unbalanced classes, multiple techniques are used across industries, out of which Synthetic Minority Oversampling Techniques (SMOTE) <ref type="bibr" target="#b2">[3,</ref><ref type="bibr" target="#b3">4]</ref> are quite popular.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1.2">Overview of SMOTE</head><p>SMOTE is a statistical method used to augment the number of instances in a dataset in a balanced manner. The technique was first presented by Chawla et al. <ref type="bibr" target="#b3">[4]</ref>, whose main objective is to tackle the issue of imbalanced datasets, namely in the realm of classification. Imbalanced datasets are common in many real-world circumstances, where the frequency of instances belonging to a certain class is much lower than the others. The disparity may result in unsatisfactory performance of classification models since they have a tendency to exhibit bias towards the dominant class. SMOTE resolves this problem by generating artificial samples from the underrepresented class.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1.3">Existing works on SMOTE</head><p>During our study and implementation of the SMOTE technique and its modifications, we have come across academic papers authored by other researchers that explore the progress and real-world uses of this algorithm <ref type="bibr" target="#b4">[5]</ref><ref type="bibr" target="#b5">[6]</ref><ref type="bibr" target="#b6">[7]</ref>. Research on the incorporation of SMOTE into ensemble learning approaches has been a substantial focus. The combination seeks to use the advantages of both techniques in order to enhance the classification performance on datasets with uneven distribution. The use of SMOTEBoost <ref type="bibr" target="#b7">[8]</ref>, and RusBoost highlights the significance of SMOTE in ensemble learning techniques. Moreover, current research is underway in the domain of image classification with a specific emphasis on the use of SMOTE <ref type="bibr" target="#b8">[9]</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1.4">Purpose and Scope</head><p>Since SMOTE is a widely used technique in machine learning to address unbalanced classification, we believe that a quantum computing approach will greatly enhance its efficiency in quantum machine learning applications. Since quantum computing is greatly useful in problems related to high dimensional datasets, A SMOTE algorithm in quantum machine Learning will be of significant value. In this paper, we propose a novel method of generating synthetic data points by using the quantum swap test and quantum rotations, which can be used to increase the number of minority class representatives in a large dataset and help reduce bias in classification models. We have also applied the method to a publicly available dataset named Telco Customer Churn [10] used for telecom churn classification and recorded the results.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1.5">Organization</head><p>The paper is structured in the following manner. Section 2 explores the core mathematical principles, including the Basic Concept, several versions of the SMOTE algorithm, and the K-Means Clustering technique. Section 3 presents an examination of the development of SMOTE utilising quantum techniques, namely the use of the swap test and rotation principles. This is followed by analyzing the outcomes obtained by applying these concepts to actual data. Section 4 involves the application of the quantum SMOTE algorithm to a real-world dataset. This process comprises data preparation, clustering, and the production of synthetic data using the SMOTE method. We utilise the SMOTE technique on the telecom data, varying the proportions of the minority class to 30%, 40%, and 50%, respectively. In Section 4.2, we provide a summary of the results and model parameters of the classification Models, which elucidate the effects of Quantum SMOTE.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2">Background</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.1">Basic Concept of SMOTE</head><p>SMOTE was proposed way back in 2002 by Chawla et al. <ref type="bibr" target="#b3">[4]</ref> as a way to address issues with unbalanced classification. The primary objective of the SMOTE algorithm is to generate Synthetic data points from minority classes using K Nearest neighbors and Euclidean distances. The synthetic data points, in turn, increase the population of the minority class in the population, which counters the bias towards the majority class in a classification scenario. SMOTE is widely used and accepted, and since then, multiple variants of SMOTE have been proposed by various researchers. In the below subsections, we will cover the working of the SMOTE algorithm and its Variants.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.2">How SMOTE Works</head><p>SMOTE <ref type="bibr" target="#b3">[4]</ref> is an over-sampling technique that addresses imbalanced datasets by generating synthetic instances for the minority class instead of just duplicating existing examples. To address the imbalance in class distribution, the minority class is augmented by generating synthetic samples along the line segments connecting the K nearest neighbours of each minority class sample. Neighbours are randomly selected from the K nearest neighbours, based on the desired level of over-sampling. The initial approach used a set of five closest neighbours. For example, when the required oversampling quantity is 300%, only three neighbours are selected from the five nearest neighbours, and one sample is created in the direction of each selected neighbour.</p><p>Synthetic samples are produced as follows:</p><p>1. Find the feature vector's closest neighbor and compute the difference between the two. 2. Pick a uniformly random number between 0 and 1 and multiply it by this difference.</p><p>3. Add the resulting number to the original feature vector.</p><p>The result is the random creation of a synthetic point along the line segment between two feature vectors. This method broadens the minority group's density and resolves the decision boundary.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Algorithm 1 SMOTE(N, A, m)</head><p>1: Input: 2: N = number of samples in the minority class.</p><p>3: A = the percentage of SMOTE to be applied. 4: m = number of nearest neighbours to be considered. Randomly choose a percentage of the minority class samples to be SMOTEd. A ← int(A/100) numattrs ← total count of attributes for attr = 1 to numattrs do 28:</p><formula xml:id="formula_0">dif f ← Sample[nnarray[nn]][attr] -Sample[i][attr] 29:</formula><p>gap ← random number between 0 and 1 30:</p><formula xml:id="formula_1">Synthetic[newindex][attr] ← Sample[i][attr] + gap × dif f 31: end for 32: newindex ← newindex + 1 33: A ← A -1 34: end while 35:</formula><p>return "End of Populate" 36: end procedure</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.3">Variants of SMOTE</head><p>As the SMOTE algorithm became popular, multiple variations have been proposed. For the sake of reference, we mention some of them in this section.</p><p>Borderline-SMOTE: Borderline-SMOTE specifically targets the minority class samples that are in close proximity to the boundary with the majority class. The objective is to produce artificial samples at close proximity to the boundary rather than over the whole of the distribution of the minority class <ref type="bibr" target="#b9">[11]</ref>.</p><p>ADASYN (Adaptive Synthetic Sampling): ADASYN specifically aims to generate synthetic samples for the minority class. However, unlike SMOTE, ADASYN adjusts its approach based on the unique properties of the dataset. It produces additional synthetic data for minority class samples that are more challenging to learn (i.e., those that are incorrectly categorized using the K-Nearest Neighbor method) in contrast to those that are less difficult. The number of artificial samples to be generated for each underrepresented sample is contingent upon the complexity of learning that particular sample <ref type="bibr" target="#b10">[12]</ref>.</p><p>SMOTE-ENN (SMOTE with Edited Nearest Neighbors): SMOTE-ENN <ref type="bibr" target="#b11">[13]</ref> is a hybrid technique that integrates the concepts of oversampling and under-sampling to tackle the problem of class imbalance in machine learning. The SMOTE method is used to oversample the minority class, whereas the ENN rule is used for undersampling. SMOTE algorithm creates new samples in the minority class by selecting the K-nearest neighbors from the same class and creating interpolations between the original sample and its neighbors.</p><p>Each instance in the dataset undergoes testing by comparing it with its three closest neighbors. If the majority of the neighbors do not have the same class as the instance, the instance is removed. This mostly pertains to the dominant class within skewed datasets. The implementation of SMOTE-ENN involves the following steps: Initial Step: Utilise SMOTE technique to oversample the minority class and generate synthetic instances, hence achieving a balanced distribution of classes. Next, implement the ENN rule on the dataset that has been oversampled. ENN will exclude instances from both the majority and minority classes that are deemed to be noisy or are located on the boundary between the two classes. Result: This integrated method not only resolves the disparity by augmenting the number of instances in the underrepresented category but also enhances the dataset's quality, resulting in a more distinct and less susceptible decision border between the classes, reducing overfitting. This helps in cleaning the space between the majority and minority classes.</p><p>SMOTE-Tomek Links: SMOTE-Tomek Links is a hybrid method that combines the Synthetic Minority Over-sampling Technique (SMOTE) with Tomek Links, an under-sampling technique. This combination is used to mitigate class imbalance in machine learning datasets. A pair of examples belonging to contrasting classes are classified as a Tomek Link if they are the closest neighbours of each other. Essentially, they are closely related points, but belong to separate classes. The objective is to eliminate these Tomek Links in order to enhance the clarity of the class boundaries. Usually, the instance belonging to the majority class in each pair of Tomek Links is eliminated, which helps in minimising the overlap between classes <ref type="bibr" target="#b3">[4,</ref><ref type="bibr" target="#b12">14]</ref>. SVMSMOTE: SVMSMOTE (Support Vector Machine Synthetic Minority Over-sampling Technique) <ref type="bibr" target="#b13">[15]</ref> integrates ideas from Support Vector Machines (SVMs) into SMOTE. SVMSMOTE uses SVMs to detect support vectors among the samples of the minority class. Support vectors are often defined as the data points that are in close proximity to the decision border separating different classes. Within the framework of class imbalance, these minority class samples are often the most crucial ones to prioritise for over-sampling. SVMSMOTE creates synthetic samples in the proximity of the detected support vectors rather than distributing them randomly throughout the whole space of the minority class. The objective of this strategy is to enhance the decision border region where the classifier is prone to uncertainty.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.4">K-Means Clustering</head><p>K-means clustering <ref type="bibr" target="#b14">[16]</ref> is a widely used unsupervised machine learning approach that divides a dataset into K separate and non-overlapping groups. The main goal of the K-means algorithm is to categorise data points into clusters, where each point is assigned to the cluster with the closest average value, which acts as the centre or centroid of the cluster. The technique sequentially allocates data points to the centroid that is closest to them and updates the locations of the centroids by calculating the mean of the points in each cluster. This procedure iterates until convergence, which is achieved when the locations of the centroids no longer exhibit substantial changes or when a predetermined number of iterations is reached. The k-means algorithm is very susceptible to the starting position of centroids, which might result in convergence to local optima. Therefore, it is crucial to do numerous iterations of the algorithm with various initialisations to ensure accurate results. Although K-means is computationally fast and easy to implement, its main strengths lie in its ability to uncover patterns in data, cluster comparable observations, and assist in exploratory data analysis in many domains, such as picture segmentation, customer segmentation, and pattern identification.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.5">ROC Curve</head><p>The Receiver Operating Characteristic (ROC) is a commonly used graphical plot to assess the effectiveness of a binary classifier system while the discrimination threshold is adjusted. It is especially advantageous in scenarios where there is a requirement to strike a balance between a true positive rate and a false positive rate.</p><p>The True Positive Rate (TPR), often referred to as Sensitivity, Recall, or Probability of Detection, is determined by the formula T P R = T P/(T P + F N ), where T P represents the count of true positives and F N represents the count of false negatives. The False Positive Rate (FPR), often referred to as the Probability of False Alarm, is determined by the formula F P R = F P/(F P + T N ), where F P represents the count of false positives and T N represents the count of true negatives.</p><p>An ROC curve illustrates the relationship between the true positive rate (TPR) and the false positive rate (FPR) across different threshold values. The x-axis corresponds to the False Positive Rate, while the y-axis corresponds to the True Positive Rate.</p><p>The AUC, or Area Under the Curve, is a metric that quantifies a classifier's capacity to differentiate between classes. It serves as a concise representation of the ROC curve. A model with a higher AUC value indicates superior performance.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3">Emulating SMOTE Using Quantum</head><p>Upon examining the SMOTE algorithm and its modifications as presented by <ref type="bibr" target="#b3">[4]</ref>, we have adopted a distinct method for oversampling the minority class by using quantum approaches. It is often seen in real-world datasets that the minority class is unevenly distributed in the population. Therefore, producing synthetic data uniformly throughout all distribution zones may not effectively address the issue of bias. Our method entails dynamically segmenting the whole population using clustering methods and thereafter creating synthetic data inside each cluster to achieve the desired minority proportion. The target minority percentage is the overall percentage of minorities in the population following the introduction of synthetic data.</p><p>Synthetic data creation requires using quantum rotation to manipulate individual data points from the minority class. This is done by representing each data point as a multidimensional vector and rotating it along the X (or Y or Z) direction. In the next part, we will get into the specifics of selecting X rotations. The rotation angle is computed as the angle formed between the vector of the minority data point and the centroid vector of the cluster it belongs to. It is important to mention that while determining the angle slice, a relatively tiny angle is used to reduce sudden departures from the initial minority class data point. If there are many synthetic data points to be created, the remaining synthetic data points are obtained by incrementing the angle from the starting value.</p><p>The objective of this strategy is to ensure that the created synthetic data points remain within the statistical bounds of their respective cluster while also boosting the density of the minority class. In the following sections, we will provide a comprehensive analysis of the algorithm, rotation, and data creation process.</p><p>The figures 1 illustrate fundamental difference in Classical and Quantum SMOTE procedures</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.1">Swap Test</head><p>The quantum swap test is a quantum procedure used to ascertain the degree of similarity between two quantum states, ψ and ϕ. The test result quantifies the degree of overlap between the two states, which is directly linked to their inner product ⟨ψ|ϕ⟩. Usually, we tackle the swap test in the following manner.</p><p>Setup: Commence by using a control qubit, normally in the state |0⟩, together with two quantum registers that are in the respective states ψ and ϕ.</p><p>Hadamard Transformation: Perform a Hadamard gate operation on the control qubit. This results in the creation of a superposition state, where the control qubit is in a state that is proportional to the sum of |0⟩ and |1⟩. Controlled Swap: Execute a regulated exchange (or Fredkin gate) using the control qubit. When the control qubit is in the state |1⟩, it performs a swap operation on the two quantum registers. Alternatively, it does not alter them.</p><p>Second Hadamard : Apply a second Hadamard gate to the control qubit.</p><p>Measurement: Conduct a measurement on the control qubit. If the two quantum states |ψ⟩ and |ϕ⟩ are indistinguishable, the control qubit will consistently be seen in the state |0⟩. The likelihood of seeing the state |0⟩ diminishes as the states grow more different.</p><p>Outcome: The chance of seeing the control qubit in the state |0⟩ after the swap test provides information on the similarity of the two quantum states. More precisely, the likelihood is proportional to the square of the magnitude of their inner product. The mathematical expression for the probability P (0) of measuring the state |0⟩ is,</p><formula xml:id="formula_2">P 0 = 1 2 (1 + | ⟨ψ|ϕ⟩ | 2 ).<label>(1)</label></formula><p>From this above expression, ⟨ψ|ϕ⟩ can be determined as,</p><formula xml:id="formula_3">⟨ψ|ϕ⟩ = 2P 0 -1<label>(2)</label></formula><p>Fig. <ref type="figure">2</ref> circuit illustrates the basic swap test.</p><p>The swap test probability can be defined as,</p><formula xml:id="formula_4">swap test probability = 1 -2p 0 + p 1 (3) |0⟩ H • H |ψ⟩ × |ϕ⟩ × Fig. 2: Swap test circuit.</formula><p>where p 0 and p 1 are probabilities of the states |0⟩ and |1⟩ respectively.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.1.1">Compact Swaptest</head><p>For the purpose of this paper, we have adopted a modified version of the swap test to find the inner product of our two vectors, namely the centroid and an arbitrary minority data point within the cluster. The procedure is already discussed in the articles <ref type="bibr" target="#b15">[17,</ref><ref type="bibr" target="#b16">18]</ref>. Though the article describes the procedure as a dissimilarity measure and uses it to calculate Euclidian distance, we have used it to calculate the inner product of quantum states and thereby the angular distance. The advantage of this procedure is that it requires less number of qubits</p><formula xml:id="formula_5">n = log 2 (M ) + 1</formula><p>where n is the number of qubits and M is the classical data encoded by amplitude embedding. The procedure is as follows, We amplitude encode two vectors C (Centroid) and M (Minority) by</p><formula xml:id="formula_6">C -→ |C⟩ = 1 |C| i C i |q i ⟩<label>(4)</label></formula><formula xml:id="formula_7">M -→ |M ⟩ = 1 |M | i M i |q i ⟩<label>(5)</label></formula><p>We define the quantum states |ψ⟩ and |ϕ⟩ as:</p><formula xml:id="formula_8">|ψ⟩ = |0⟩ ⊗ |C⟩ + |1⟩ ⊗ |M ⟩ √ 2 |ϕ⟩ = |C||0⟩ -|M ||1⟩ √ Z Z = |C| 2 + |M | 2 (6) lets divulge into the details of this circuit |0⟩|ϕ⟩|ψ⟩ =|+⟩ (C|0⟩ -M |1⟩) √ Z |0⟩|C⟩ + |1⟩|M ⟩ √ 2 = |0⟩ + |1⟩ √ 2 C|0⟩ -M |1⟩ √ Z |0⟩|C⟩ + |1⟩|M ⟩ √ 2 = 1 2 √ Z [|0⟩(C|0⟩ -M |1⟩)(|0⟩|C⟩ + |1⟩|M ⟩) + |1⟩(C|0⟩ -M |1⟩)(|0⟩|C⟩ + |1⟩|M ⟩)] = 1 2 √ Z [|0⟩(C|0⟩|0⟩|C⟩ + C|0⟩|1⟩|M ⟩ -M |1⟩|0⟩|C⟩ -M |1⟩|1⟩|M ⟩) + |1⟩(C|0⟩|0⟩|C⟩ + C|0⟩|1⟩|M ⟩ -M |1⟩|0⟩|C⟩ -M |1⟩|1⟩|M ⟩)]<label>(7)</label></formula><p>Applying controlled swap operation</p><formula xml:id="formula_9">= 1 2 √ Z [|0⟩(C|0⟩|0⟩|C⟩ + C|0⟩|1⟩|M ⟩ -M |1⟩|0⟩|C⟩ -M |1⟩|1⟩|M ⟩) + |1⟩(C|0⟩|0⟩|C⟩ + C|1⟩|0⟩|M ⟩ -M |0⟩|1⟩|C⟩ -M |1⟩|1⟩|M ⟩]<label>(8)</label></formula><p>Applying Hadamard</p><formula xml:id="formula_10">= 1 2 √ Z [|+⟩(C|0⟩|0⟩|C⟩ + C|0⟩|1⟩|M ⟩ -M |1⟩|0⟩|C⟩ -M |1⟩|1⟩|M ⟩) + |-⟩(C|0⟩|0⟩|C⟩ + C|1⟩|0⟩|M ⟩ -M |0⟩|1⟩|C⟩ -M |1⟩|1⟩|M ⟩] = 1 2 √ 2Z [(|0⟩ + |1⟩)(C|0⟩|0⟩|C⟩ + C|0⟩|1⟩|M ⟩ -M |1⟩|0⟩|C⟩ -M |1⟩|1⟩|M ⟩) + (|0⟩ -|1⟩)(C|0⟩|0⟩|C⟩ + C|1⟩|0⟩|M ⟩ -M |0⟩|1⟩|C⟩ -M |1⟩|1⟩|M ⟩] = 1 2 √ 2Z [|0⟩(2C|0⟩|0⟩|C⟩ + (C|0⟩|1⟩|M ⟩ -M |0⟩|1⟩|C⟩) + (C|1⟩|0⟩|M ⟩ -M |1⟩|0⟩|C⟩) -2M |1⟩|1⟩|M ⟩) + |1⟩(C|0⟩|1⟩|M ⟩ + M |0⟩|1⟩|C⟩ -M |1⟩|0⟩|C⟩ -C|1⟩|0⟩|M ⟩]<label>(9)</label></formula><p>The probability of 0 can be calculated as,</p><formula xml:id="formula_11">P 0 = 1 8Z |(2C|0⟩|0⟩|C⟩ + (C|0⟩|1⟩|M ⟩ -M |0⟩|1⟩|C⟩) + (C|1⟩|0⟩|M ⟩ -M |1⟩|0⟩|C⟩) -2M |1⟩|1⟩|M ⟩)| 2 = 1 8Z |(2C|0⟩|0⟩|C⟩ + |0⟩|1⟩(C|M ⟩ -M |C⟩) + |1⟩|0⟩(C|M ⟩ -M |C⟩) -2M |1⟩|1⟩|M ⟩)| 2 = 1 8Z |(2C|0⟩|0⟩|C⟩ + (|0⟩|1⟩ + |1⟩|0⟩)(C|M ⟩ -M |C⟩) -2M |1⟩|1⟩|M ⟩)| 2 = 1 8Z |(2C|0⟩|0⟩|C⟩ -2M |1⟩|1⟩|M ⟩) + (|0⟩|1⟩ + |1⟩|0⟩)(C|M ⟩ -M |C⟩)| 2 = 1 8Z (|2C|0⟩|0⟩|C⟩ -2M |1⟩|1⟩|M ⟩| 2 + ||0⟩|1⟩ + |1⟩|0⟩| 2 |C|M ⟩ -M |C⟩| 2 ) = 1 8Z (4C 2 + 4M 2 + ||0⟩|1⟩ + |1⟩|0⟩| 2 |C|M ⟩ -M |C⟩| 2 ) = 1 8Z (4Z + 2(C 2 + M 2 -2CM ⟨M |C⟩)) = 1 8Z (4Z + 2(Z -2CM ⟨M |C⟩)) = 1 4Z (2Z + (Z -2CM ⟨M |C⟩)) = 1 4Z (3Z -2CM ⟨M |C⟩) =⇒ ⟨M |C⟩ = (3 -4P 0 )Z 2CM<label>(10)</label></formula><p>The above equation 10 states that after measurement, from the probability of 0, we obtain the inner product between the centroid and minority. In a slightly different perspective, let us calculate inner product of ψ and ϕ,</p><formula xml:id="formula_12">⟨ϕ | ψ⟩ = ⟨C| ⊗ ⟨0| -⟨M | ⊗ ⟨1| √ Z |0⟩ ⊗ |C⟩ + |1⟩ ⊗ |M ⟩ √ 2<label>(11)</label></formula><p>Expanding the inner product:</p><formula xml:id="formula_13">⟨ϕ | ψ⟩ = 1 √ Z 1 √ 2 (⟨C| ⊗ ⟨0|(|0⟩ ⊗ |C⟩) + ⟨C| ⊗ ⟨0|(|1⟩ ⊗ |M ⟩) -⟨M | ⊗ ⟨1|(|0⟩ ⊗ |C⟩) -⟨M | ⊗ ⟨1|(|1⟩ ⊗ |M ⟩))<label>(12)</label></formula><p>Simplifying each term:</p><formula xml:id="formula_14">⟨C| ⊗ 0|(|0⟩ ⊗ |C⟩) = ⟨C | C⟩ ⊗ ⟨0 | 0⟩ = |C| 2 ⟨C| ⊗ ⟨0|(|1⟩ ⊗ |M ⟩) = 0 ⟨M | ⊗ ⟨1|(|0⟩ ⊗ |C⟩) = 0 ⟨M | ⊗ 1|(|1⟩ ⊗ |M ⟩) = ⟨M | M ⟩ ⊗ ⟨1 | 1⟩ = |M | 2<label>(13)</label></formula><p>So, the inner product simplifies to:</p><formula xml:id="formula_15">⟨ϕ | ψ⟩ = 1 √ Z 1 √ 2 |C| 2 -|M | 2 ⟨ϕ | ψ⟩ = |C| 2 -|M | 2 √ 2Z<label>(14)</label></formula><p>Calculating |⟨ϕ | ψ⟩| 2 :</p><formula xml:id="formula_16">|⟨ϕ | ψ⟩| 2 = |C| 2 -|M | 2 √ 2Z 2 = |C| 2 -|M | 2 2 2Z (15) 2Z|⟨ϕ | ψ⟩| 2 = 2Z |C| 2 -|M | 2 2 2Z (<label>16</label></formula><formula xml:id="formula_17">)</formula><p>simplifying:</p><formula xml:id="formula_18">2Z|⟨ϕ | ψ⟩| 2 = |C| 2 -|M | 2 2 (17) Assuming 2Z|⟨ϕ | ψ⟩| 2 = D 2 =⇒ D 2 = 2Z|⟨ϕ | ψ⟩| 2<label>(18)</label></formula><p>The term D refers to the euclidean distance <ref type="bibr" target="#b16">[18]</ref>, and the inner product of ⟨ϕ | ψ⟩ represents the swaptest probability.</p><formula xml:id="formula_19">|0⟩ H • H q 1 |ϕ⟩ × q 2 |ψ⟩ × q 3 q 4 q 5 q 6 q 7 C Fig. 3: Compact Swap test circuit.</formula><p>Based on this, we define the angle between two vectors or angular distance as</p><formula xml:id="formula_20">angular distance = 2 cos -1 ( swap test probability) (<label>19</label></formula><formula xml:id="formula_21">)</formula><p>The above angular distance or the angle between two vectors will be used to rotate the minority class data point, which we will describe subsequently.  </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.2">Applying Rotation to data point</head><p>After calculating the angle (angular distance) between two vectors, we rotate the actual minority data point by an angle less than the calculated angle to create a synthetic data point. We choose to minimize the angle of rotation to prevent abrupt fluctuation of values in the minority data point. We perform rotations along the X, Y, and Z axes to analyze their impact on the minority data points.</p><p>As the angle of rotation is minimal for the minority data point vector, we have derived the angle of rotation with the below logic.</p><p>Algorithm 2 Angle of rotation calculation logic sf : split factor if angular distance &gt; π 2 then angle ← π 2 -angular distance /sf else if angular distance &lt; 0 then angle ← π 2 -angular distance × random(0.5, 1) /sf else angle ← random(0, angular distance)/sf end if split f actor is the factor by which we want to divide the generated angle, we have experimented with 2, 5, 10 and 100 for various rotations mentioned above and will outline the result of rotation for a sample containing 10 data points.</p><p>The aforementioned figures illustrate the influence of rotation on data points. Initially, we selected a subset of data points from the minority class and visually represented them in Figure <ref type="figure" target="#fig_3">4</ref>. This figure displays a scatter plot of the data points. Subsequently, we have performed X, Y, and Z rotations on these data points, using the split f actor as a basis. We conducted experiments by incrementally increasing the split factor and evaluating the resulting effects on rotations.</p><p>X Rotation: X Rotation refers to the rotation of a data point in relation to the X axis. We conducted experiments with split factors of 2, 5, and 10. Upon increasing the split factor from 2 to 10, we see that the synthetic data points created by each split factor exhibit a greater proximity to the original data points. When the split factor 2 is used for X rotation, the resulting data points are located at a certain distance from the original location. As we go from 5 to 10, the freshly created data points get increasingly closer together. At 10, the synthetic data point is the closest among the three dividing factors.</p><p>Y Rotation: Y Rotation refers to the rotational movement of data points around the Y axis. From the analysis of figure <ref type="figure">6</ref>, it is evident that the newly created data points exhibit a high sensitivity to Y rotations. Additionally, these data points need the generation of extremely tiny angles in order to be positioned in close proximity to the Source(the minority sample). It is evident that as the splitting factor (100) increases, resulting in extremely tiny angles, the created data point is closest to the source. Conversely, small splitting factors (5) yield data points that deviate significantly from the nature of the data point sample.</p><p>Z Rotation: Z rotation refers to the rotation of data points around the Z axis. Based on the evidence shown in Figure <ref type="figure" target="#fig_10">7</ref>, we can confidently infer that the behavior of Z rotation is similar to that of X rotation. Additionally, it is evident that using splitting factors of 5 and 10 results in the generation of additional data points that are in close proximity to the source.</p><p>In general, it can be confidently said that all rotations have the ability to generate synthetic data points. However, the Y rotation is more sensitive, but the X and Z rotations provide similar outcomes.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.3">Quantum SMOTE Algorithm</head><p>We now introduce QuantumSMOTE. Broadly, our algorithm proceeds in two steps: clustering of the population and generating synthetic data points by the swap test and rotation of minority class data points. We believe clustering is an essential pre-step to synthetic data generation. Though we can use any clustering method that produces clusters in data, we have used K-Means Clustering in our research with a minimum of 3 clusters, and we recommend the same for further research on this topic.</p><p>Post clustering, we proceed with synthetic data generation, and for the purpose of simplicity, we name this part the QuantumSMOTE function. The pseudocode of this is described in the section below. Generally, it comprises four distinct parts: Data preparation for the swap test, application of the swap test, rotation of synthetic data points, and generation of synthetic data points for each cluster based on the target. Z ← round(data point1 norm 2 + data point2 norm 2 )</p><formula xml:id="formula_22">14: ϕ ← [round(data point1 norm/ √ Z, 3), -round(data point2 norm/ √ Z,<label>3)] 15:</label></formula><p>Initialize array ψ 16:</p><p>for i ← 0 to length(data point1) -1 do Print angular distance</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>23:</head><p>return swap test probability, angular distance 24: end function following subsections, we will describe data behavior, data preparation for modeling, and applying QuantumSMOTE on the data.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.1">Improving Telecom Churn Prediction Using SMOTE</head><p>The telecom churn dataset is purposefully developed to predict customer behavior and help in generating customer retention programs. Each row in the dataset represents an individual consumer, with each column representing different attributes of these customers. Notably, the dataset has such characteristics as:</p><p>Churn Indicator: This column identifies customers who have terminated their service during the previous month. return normalized arr 9: end function Subscribed Services: A detailed list of all services that each customer has signed up for, such as phone service, multiple lines, internet, online security, online backup, device protection, tech support, and streaming TV and movies.</p><p>Account Information: comprises of how long they have been a client for, the terms of the contract they entered into with their company, and which method they would prefer to use when making payments so as to keep track of their spending habits effectively through electronic means like electronic mail that may save on transaction costs like envelope usage, monthly expenditure and cumulative costs incurred so far.</p><p>Demographic Information: It provides information about the customer's gender, age group, whether or not they are married, and whether they have dependent children.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.1.1">Preparing Data For Quantum SMOTE</head><p>The Telco churn dataset is amenable to a usual data preparation process, which broadly includes the following phases.</p><p>Missing Value Tearment: Inspect the telco churn dataset for null values and adapt a strategy to handle them. Since we found a very small percentage of records (11, to be precise) that have missing values across multiple columns, we proceeded with dropping them.</p><p>Removing Irrelevant Data: Identify and remove any columns that are not relevant to churn prediction, such as customer IDs that are unique and not predictive of churn.</p><p>Data Type Convertion: To ensure that each column is of the appropriate data type, we have converted multiple columns with text data as to category. These included columns such as PhoneService, MultipleLines, InternetService, OnlineSecurity, OnlineBackup, DeviceProtection, TechSupport, StreamingTV, StreamingMovies, Contract, PaperlessBilling, PaymentMethod, gender, SeniorCitizen, Partner and Dependents. We also converted the numerical columns such as TotalCharges, tenure Algorithm 6 Create Synthetic Data Print "rotation angle", angle 16:</p><p>angle ← angle + angle increment 17:</p><p>for l ← 0 to n -1 do</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>18:</head><p>Apply RX gate to circuit at qubit l with angle angle 19:</p><p>end for Simulate the quantum circuit 20:</p><p>Set up quantum simulator</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>21:</head><p>Execute circuit on the simulator and store result in job return new data point 26: end function and MonthlyCharges to float to avoid any of them being treated as text due to import issues.</p><p>Exploratory Data Analysis (EDA): EDA was performed to understand the distribution and relationship of variables. We applied various univariate, and bivariate analyses to understand the behavior of data, particularly numeric variables, which are essential for creating models. The variables TotalCharges, tenure, and MonthlyCharges are particularly important since the distribution of these variables later will be used to verify the effect of the SMOTE procedure.</p><p>Label Encoding: For the sake of better visualization and correlation analysis with the target variable, we performed label encoding of multiple categorical variables.</p><p>Correlation Analysis: We conducted a correlation analysis of numerical variables to eliminate multicollinearity. Also, we conducted a correlation analysis of all the variables with the target to select the best-fit variables for modeling. Post correlation Algorithm 7 Quantum Synthetic Minority Over-sampling Technique total count in cluster ← Find total number of samples in the cluster Print "minority% in cluster clus idx is =", minority percent if synthetic loop itr1 ≥ 0 then 20:</p><p>for syn loop ← 0 to synthetic loop itr1 -1 do</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>21:</head><p>if syn loop = synthetic loop itr1 -1 then</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>22:</head><p>Select centroid temp and minority temp as a fraction of minority in cluster clus idx return syn dataf rame 52: end function analysis, we are able to drop multiple variables that are not relevant for the purpose of modeling.</p><p>Onehot Encoding: Post selection of features, we converted all the categorical variables to Onehot encoding, thereby creating multiple numerical columns for each categorical value.</p><p>Feature Scaling: Since Onehot encoding created multiple numerical columns with values 0 and 1, the continuous variables such as TotalCharges, tenure and MonthlyCharges are scaled by minmax scaling to lie between 0 and 1.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.1.2">Clustering</head><p>As we have indicated earlier, the Quantum SMOTE algorithm relies on unique customer segments to calculate the angle between the segment centroid (mean) and minority data point; we have used the K-Means clustering method approach to derive segments. The approach for identifying inherent groupings among customers is based on their attributes, which can further assist in understanding customer behavior and improving retention strategies. For the sake of our experiment, we have identified 3 clusters using the K-Means approach to generate new data and highlight the achievements. The outcome of the clustering approach is at least 3 clusters (datasets that are dynamically segmented) with different majority-minority populations. These are useful when deriving angles based on which minority population across clusters will be most valuable for the SMOTE algorithm.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.1.3">Quantum SMOTE and Synthetic Data</head><p>After applying the Clustering algorithm to the Telecom Churn dataset and processing the data, we proceeded to apply the Quantum SMOTE Algorithm <ref type="bibr" target="#b6">(7)</ref> to each cluster. The goal was to enhance the representation of the minority population to a certain percentage of the overall dataset. The procedure used two primary approaches previously mentioned, namely the swap test (Algo. 4) and rotation (Algo. 6).</p><p>Swap Test: The fundamental operation of the swap test has been previously explained in the preceding sections. We use the swap test in a modified manner 3.1.1 to compute the angular distance between the vector representing the minority data point and the vector representing the centroid. The procedure is effectively executed in Ref. <ref type="bibr" target="#b15">[17,</ref><ref type="bibr" target="#b16">18]</ref>. The swap test requires two inputs, denoted as ϕ and ψ. The state ϕ is determined by computing the norms of the inputs, which consist of the centroid and minority data points. On the other hand, the state ψ is obtained by concatenating the normalized components of the inputs. The execution of this preparation is shown in the auxiliary function 3. The circuit that is obtained is rendered in Fig. <ref type="figure">3</ref>.</p><p>The main purpose of using this technique to swap test is to minimize the required number of qubits in constructing the swap test circuit, which becomes particularly advantageous as the dataset dimension expands. After performing feature selection and Onehot encoding, we obtained a final count of 32 columns. Consequently, our swap test circuit necessitates the use of 8 qubits and a classical register. Nevertheless, using a traditional methodology may have resulted in the use of 65 qubits. The swap test circuit facilitates the calculation of the angular distance between the cluster centroid and the minority data point. Rotation: After performing the swap test, it is necessary to rotate the minority data point by an angle that represents a minute fraction of the total angular distance. The rotation circuit executes the rotation of the normalized minority data point vector. In the preceding section 3.2, we have provided a detailed explanation of the different rotations of X, Y, and Z. In this experiment, we applied X rotations to all of the minority data points. To account for numerous interactions or repeated rotations of a single minority data point, we have adjusted the rotation angle by 0.0174, which corresponds to the conversion from radians to degrees. We are attempting to adjust the angle of the minority data point using angular degrees, even though the angular distance generated by the swap test is in radians. The rotation circuit comprises the state vector of the normalized data point and rotation gates (Fig. <ref type="figure" target="#fig_12">8</ref>). By rotating minority data points, synthetic data points that closely resemble the original data points are created, thanks to the use of modest rotation angles. When the synthetic data points are included in the original dataset, it leads to an increase in the total density of the minority class. The scatter distribution of synthetic data points in the population is shown in Fig. <ref type="figure" target="#fig_13">9</ref>. The data illustrates the distribution of classes (majority, minority, and synthetic minority) as the proportion of the minority class increases from 30% to 50%.   </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.1.4">Observation from generated data</head><p>Following the generation of synthetic data points by rotation, our next step is to examine the general distribution of important variables throughout the whole population. The objective is to assess if the introduction of artificial data points has caused any significant statistical deviation in the distribution of the variable. The figures 10, 11, 12, and 13 illustrate the distribution of three important variables in the dataset: Tenure, MonthlyCharges, and Total charges. The distribution before the induction of synthetic data points is shown in Fig. <ref type="figure" target="#fig_14">10</ref>. The distributions following the induction of synthetic data points, resulting in total minority percentages of 30, 40, and 50, are shown in figures 11, 12, and 13 accordingly. After applying SMOTE, we can confidently state that there is a little distortion to the distribution of variables, but the bins have increased in size. The use of relatively modest angles during rotation prevents any significant deformation to the geometry of the distribution. By comparing the charts depicting the variables after using the SMOTE technique, we see a progressive rise in the values within each category, ranging from 30% to 50%. This confirms the successful use of the SMOTE method.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.1.5">Applying Classification Models</head><p>In order to comprehensively evaluate the effectiveness of the Synthetic Minority Oversampling Technique (SMOTE) in addressing class imbalances, our research used two classification models, namely Random Forest and Logistic Regression, on the Telecom Churn Dataset. The selection of these models was made to assess the influence of using SMOTE on the performance of the models, particularly in situations characterized by an imbalance in class distribution. The Random Forest algorithm is well recognized for its ability to efficiently handle skewed datasets. This model utilizes ensemble learning by creating multiple decision trees and aggregating their predictions to mitigate overfitting. The algorithm natively addresses class imbalances by using techniques such as bootstrap sampling and adjusting its class weights parameter to enhance sensitivity towards the minority class. This eliminates the requirement for external interventions like SMOTE <ref type="bibr" target="#b17">[19]</ref>. On the other hand, Logistic Regression, a model well regarded for its simplicity and effectiveness in situations where binary classification is needed, was selected to provide a contrasting analytical viewpoint. The classification strategy of Logistic Regression, which entails estimating the likelihood that a certain data point belongs to a specific class, does not inherently tackle the issue of class imbalance <ref type="bibr" target="#b18">[20]</ref>. This attribute makes it a perfect contender for evaluating the immediate impacts of SMOTE on model efficacy, providing valuable observations on how SMOTE might augment a model's capacity to identify the underrepresented class in unbalanced datasets. The research seeks to evaluate the efficiency of the SMOTE method across various modeling techniques by comparing the performances of these models before and after their deployment. An investigation of SMOTE's adaptability in enhancing classification results is crucial, especially for models such as Logistic Regression that lack inherent methods for addressing data imbalances <ref type="bibr" target="#b3">[4]</ref> .</p><p>To evaluate the model, we have used the Confusion Matrix, Accuracy, Precision, Recall, F1-Score, and the Area Under the Receiver Operating Characteristic Curve (AUC-ROC). Below are the model evaluation charts for the Random Forest Model followed by the Logistic Regression Model.          In the next section we will describe the impact of SMOTE on the above evaluation charts.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.1.6">Impact of Quantum SMOTE on Model Statistics</head><p>As we applied SMOTE on our two chosen models, we observed different behaviors of the models post-application of QuantumSMOTE.</p><p>Random Forest: The Random Forest model excels in effectively addressing the Telecom Churn Dataset, particularly when dealing with imbalances in class distribution. The model's intrinsic advantages, together with its performance improvements using the SMOTE, provide a detailed analysis of its impact in tricky classification scenarios. As we walk through the model's performance parameters of Confusion matrices (Figs. <ref type="bibr">16 and 17)</ref>, Receiver Operating Characteristic Curve (AUC-ROC) (Fig. <ref type="figure" target="#fig_20">18</ref>), Precision Recall Curve (AUC) (Fig. <ref type="figure" target="#fig_21">19</ref>) we can see gradual improvements with induction of synthetic samples using SMOTE. We discuss the overall improvements in the points below.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>• Performance Without Synthetic Data</head><p>The introduction of SMOTE to the dataset led to observable improvements across various performance measures. Notably, as the percentage of synthetic minority increased, both test accuracy and F1 scores saw visible improvements. These improvements highlight the synergy between Random Forest's ensemble methodology and the balanced class distribution achieved through SMOTE. The model's adaptability to handle more balanced datasets and improve in predictive accuracy and precision recall underscores its versatility and effectiveness in handling imbalanced data scenarios. Logistic Regression: Performance in the analysis of the Logistic Regression model depicts its ability to handle class imbalance, especially when augmented with the SMOTE. We describe the behavior of Logistic Regression and its outcomes across different scenarios in following sections based on Confusion matrices (Figs. <ref type="bibr">20 and 21)</ref>, Receiver Operating Characteristic Curve (AUC-ROC) (Fig. <ref type="figure" target="#fig_24">22</ref>), Precision-Recall Curve (AUC) (Fig. <ref type="figure" target="#fig_25">23</ref>).</p><p>• Performance Without Synthetic Data: Initially, the Logistic Regression model showed decent performance with a test accuracy of 0.796622, indicating its ability to accurately predict outcomes in over 80% of cases.</p><p>Nevertheless, the F1 score, which is calculated as the harmonic mean of accuracy and recall, had a relatively low value of 0.523878. This suggests that while the model was usually reliable, it had challenges in achieving a trade-off between accuracy and recall, especially in correctly identifying the minority class. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.2">Inferences from Simulation</head><p>In the process of creating the Quantum-SMOTE algorithm, we have come across several conclusions that we want to outline in the points below.</p><p>• The QuantumSMOTE algorithm functions similarly to the traditional SMOTE method but has the benefit of quantum phenomena. • The QuantumSMOTE technique utilizes the swap test and quantum rotation, distinguishing it from the standard SMOTE algorithm that relies on K Nearest Neighbors (KNN) <ref type="bibr" target="#b19">[21,</ref><ref type="bibr" target="#b20">22]</ref> and Euclidean distances <ref type="bibr" target="#b3">[4,</ref><ref type="bibr" target="#b9">11,</ref><ref type="bibr" target="#b11">13,</ref><ref type="bibr" target="#b21">23]</ref>. • The QuantumSMOTE technique utilizes quantum rotation to eliminate neighbor dependencies and create several synthetic data points from a single data point in the minority class. • The technique includes hyperparameters that enable users to manage various elements of synthetic data creation, such as rotation angle, minority percentage, and splitting factor. • The QuantumSMOTE procedure generates synthetic data points to ensure that the distribution of variables closely resembles the original data distribution. • By selecting a smaller angle of rotation, the synthetic data points are positioned near the original minority data point, increasing the density of minority data points in a sparsely populated area. • The rotation circuit for minority data points does not encourage the use of any entanglement process or similar gates such as CNOT, ZZ, etc., since they will generate undesired effects on rotation and result in unexpected outcomes. • By using the compact swap test approach, more columns may be stored in fewer qubits. We used 5 qubits to handle 32 variables, and by scaling, we can handle 1024 variables with just 10 qubits. • The algorithm's use of low-depth circuits makes it less susceptible to issues associated with lengthy circuits like noise and decoherence. It effectively showcases how quantum techniques may enhance traditional machine-learning methods. • Similar to classical SMOTE, QuantumSMOTE generates synthetic data that enhances the Precision-Recall score of machine learning algorithms such as Logistic Regression <ref type="bibr" target="#b18">[20]</ref> and significantly benefits ensemble algorithms like Random Forest <ref type="bibr" target="#b17">[19]</ref>. This suggests its alignment with contemporary machine learning environments and confirms its applicability in current unbalanced classification scenarios.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5">Conclusion</head><p>The QuantumSMOTE technique improves conventional class imbalance correction by employing quantum computing, particularly swap tests and quantum rotation, as opposed to classical approaches that rely on K Nearest Neighbors (KNN) and Euclidean distances. This quantum approach allows for the direct production of synthetic data points from minority class instances using quantum rotations, preventing the need for neighbor-based interpolation. QuantumSMOTE has customisable hyperparameters such as rotation angle, minority percentage, and splitting factor, allowing for personalised synthetic data synthesis to accurately solve dataset imbalances. One notable feature of QuantumSMOTE is its capacity to generate synthetic instances that closely resemble the original data distribution, along with enhancing the balance of minority classes in datasets. The algorithm's use of compact swap tests enables efficient data representation, needing fewer qubits to manage a high number of variables, hence improving scalability and lowering quantum computing resource needs. Furthermore, its use of low-depth circuits reduces sensitivity to quantum noise and decoherence, making it a reliable option for quantum-enhanced data augmentation.</p><p>QuantumSMOTE's success is proven by its favorable influence on the Precision-Recall scores of machine learning algorithms such as Logistic Regression and Random Forest, highlighting its compatibility and utility in modern machine learning procedures. This technique is a forward-thinking integration of quantum computing with data science, providing an innovative and efficient solution to the problem of class imbalance in machine learning datasets.</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head>17 : 19 : 21 : 22 :</head><label>17192122</label><figDesc>Sample[][] ← array containing the original minority class samples18: newindex ← 0 Synthetic[][] ← array for creating artificial samples 20: for i = 1 to N do Compute m closest neighbours for i and save indices in nnarray Fill array A with values from nnarray starting at index i Select a random integer from 1 to m as nn 27:</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_2"><head>Fig. 1 :</head><label>1</label><figDesc>Fig. 1: Plot illustrating different SMOTE mechanisms. (a) Classical SMOTE, (b) Quantum SMOTE.</figDesc><graphic coords="8,124.60,73.70,185.31,169.05" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_3"><head>Fig. 4 :</head><label>4</label><figDesc>Fig. 4: Plot illustrating Sample data points of Minority class from population without any rotation.</figDesc><graphic coords="13,100.07,116.53,370.63,273.52" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_4"><head>Fig. 5 :Fig. 6 :Fig. 7 :</head><label>567</label><figDesc>Fig. 5: Plot illustrating impact of X Rotation on Sample data points of Minority class. (a) X Rotation with split f actor = 2, (b) X Rotation with split f actor = 5, (c) X Rotation with split f actor = 10.</figDesc><graphic coords="13,100.07,459.13,122.30,90.26" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_5"><head>Algorithm 3 7 : 8 :</head><label>378</label><figDesc>Preparation for Swap Test 1: function Prepswap test(data point1, data point2)for i ← 0 to length(data point1) -1 do 6: norm data point1 ← norm data point1 + data point1[i] 2 norm data point2 ← norm data point2 + data point2[i] 2 Dist ← Dist + (data point1[i] + data point2[i])</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_6"><head>2 : 3 : 4 : 5 : 6 : 7 : 8 : 9 : 11 : 12 : 20 :</head><label>23456789111220</label><figDesc>and ResultsTo test the QuantumSMOTE algorithm, we analyse the publicly available dataset of telecom churn[10]. This dataset is widely used to experiment and test various models for customer retention and is quite useful in comparing classical models with the models post-induction of synthetic data by the quantum SMOTE algorithm. In the Algorithm 4 Swap Test 1: function swap testV1(ψ, ϕ) Initialize Quantum Register q1 with 1 qubit Initialize Quantum Register q2 with n+2 qubits Initialize Classical Register c with 1 bit Create Quantum Circuit with q1, q2, and c States initialization Initialize q2[0] with state ϕ Initialize q2[1 : n + 2] with state ψ The swap test operator Apply Pauli-X Gate to q2[1] Swap Test Apply Hadamard Gate to q1[0] 10: Apply Controlled SWAP Gate on q1[0], q2[0], and q2[1] Apply Hadamard Gate to q1[0] Measure q1 into classical register c Simulation and result collection 13: Set up quantum simulator 14: Execute the quantum circuit on the simulator 15: Collect the result into a variable result 16: Extract measurement counts from result Calculate the Swap Test probability 17: p0 ← counts.get('0', 0) total shots 18: p1 ← counts.get('1', 0) total shots 19: swap test probability ← 1 -2 × p0 + p1 Print swap test probability Calculate the angular distance 21: angular distance ← 2 × arccos( √ swap test probability) 22:</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_7"><head>Algorithm 5 2 : 3 : 6 : 7 :</head><label>52367</label><figDesc>Normalize Array 1: function NormalizeArray(arr) Calculate the sum of squares of the elements in the array sum of squares ← SumOfSquares(arr) Check if the sum of squares is already very close to 1 if IsClose(sum of squares, 1.0, rtol = 1ethe scaling factor to make the sum of squares equal to 1 scaling f actor ← 1.0/ √ sum of squares Normalize the array by multiplying each element by the scaling factor normalized arr ← arr × scaling f actor 8:</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_8"><head></head><label></label><figDesc>statevector ← result.get statevector() Extract the final data point from the statevector 24: new data point ← Real(statevector) 25:</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_9"><head>1 : 2 : 4 :</head><label>124</label><figDesc>function QuantumSMOTE(Data, Target pct, cluster centroids) Create an empty DataFrame syn dataf rame 3: target synthetic percent ← 30 for each cluster with index clus idx in centroid df do 5: minority count in cluster ← Find number of minority samples in the cluster 6:</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_10"><head>7 :</head><label>7</label><figDesc>minority percent ← Calculate minority percentage in the cluster 8:</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_11"><head>9 : 13 :</head><label>913</label><figDesc>synthetic loop itr ← (Target pct -minority percent)/minority percent 10: Print "Number of synthetic datapoint iteration is =", synthetic loop itr 11: if synthetic loop itr &gt; 0 and synthetic loop itr &lt; 1 then 12: synthetic loop itr1 ← 1 else if synthetic loop itr &gt; 1 then 14: synthetic loop itr1 ← Ceil(synthetic loop itr) 15:f raction part ← synthetic loop itr1 -Floor(synthetic loop itr)</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_12"><head>Fig. 8 :</head><label>8</label><figDesc>Fig. 8: Data point rotation circuit.</figDesc><graphic coords="22,124.60,73.70,370.62,186.71" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_13"><head>Fig. 9 :</head><label>9</label><figDesc>Fig. 9: Plot illustrating impact of synthetic data generation on Sample data points of Minority class. (a) data points with no synthetic, (b) 30% synthetic, (c) 40% synthetic, (d) 50% synthetic.</figDesc><graphic coords="23,100.07,212.65,185.31,115.46" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_14"><head>Fig. 10 :</head><label>10</label><figDesc>Fig. 10: Plot illustrating distribution of 3 columns: (a) Tenure, (b) MonthlyCharges, and (c) TotalCharges.</figDesc><graphic coords="23,100.07,432.58,122.30,81.11" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_15"><head>Fig. 11 :Fig. 12 :Fig. 13 :</head><label>111213</label><figDesc>Fig. 11: Plot illustrating distribution of 3 columns with induction of synthetic datapoints with overall 30% minority : (a) Tenure, (b) MonthlyCharges, and (c) TotalCharges.</figDesc><graphic coords="24,124.60,74.49,122.30,81.25" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_16"><head>Fig. 14 :</head><label>14</label><figDesc>Fig. 14: Plot illustrating Model Charts for random forest model with out SMOTE. (a) Confusion Matrix Random Forest Model, (b) Normalised Confusion Matrix Random Forest Model, (c) AUC-ROC Random Foerest Model, (d) Precision Recall Curve Random Forest Model.</figDesc><graphic coords="26,124.60,316.04,185.31,140.31" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_17"><head>Fig. 15 :</head><label>15</label><figDesc>Fig. 15: Plot illustrating Model Charts for logistic regression model without SMOTE. (a) Confusion Matrix Logistic Regression Model, (b) Normalised Confusion Matrix Logistic Regression Model, (c) AUC-ROC Logistic Regression Model, (d) Precision Recall Curve Logistic Regression Model.</figDesc><graphic coords="27,100.07,247.14,185.31,140.50" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_18"><head>Fig. 16 :</head><label>16</label><figDesc>Fig. 16: Plot illustrating Confusion Matrix for random forest model with and without smote for comparison. (a) Confusion Matrix Random Forest Model without smote, (b) Confusion Matrix Random Forest Model with smote and 30% Minority, (c) Confusion Matrix Random Forest Model with smote and 40% Minority, (d) Confusion Matrix Random Forest Model with smote and 50% Minority.</figDesc><graphic coords="28,124.60,244.03,185.30,145.18" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_19"><head>Fig. 17 :</head><label>17</label><figDesc>Fig. 17: Plot illustrating Normalized Confusion Matrix for random forest model with and without smote for comparison. (a) Normalized Confusion Matrix Random Forest Model without smote, (b) Normalized Confusion Matrix Random Forest Model with smote and 30% Minority, (c) Normalized Confusion Matrix Random Forest Model with smote and 40% Minority, (d) Normalized Confusion Matrix Random Forest Model with smote and 50% Minority.</figDesc><graphic coords="29,100.07,244.41,185.30,145.18" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_20"><head>Fig. 18 :</head><label>18</label><figDesc>Fig. 18: Plot illustrating Area Under Receiver Operating Characteristic Curve (AUC-ROC) for random forest model with and without smote for comparison. (a) AUC-ROC Random Forest Model without smote, (b) AUC-ROC Random Forest Model with smote and 30% Minority, (c) AUC-ROC Random Forest Model with smote and 40% Minority, (d) AUC-ROC Random Forest Model with smote and 50% Minority.</figDesc><graphic coords="30,309.90,237.92,185.30,141.53" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_21"><head>Fig. 19 :</head><label>19</label><figDesc>Fig. 19: Plot illustrating Precision-Recall Curve (AUC) for random forest model with and without smote for comparison. (a) Precision-Recall Curve (AUC) Random Forest Model without smote, (b) Precision-Recall Curve (AUC) Random Forest Model with smote and 30% Minority, (c) Precision-Recall Curve (AUC) Random Forest Model with smote and 40% Minority, (d) Precision-Recall Curve (AUC) Random Forest Model with smote and 50% Minority.</figDesc><graphic coords="31,100.07,243.11,185.31,144.83" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_22"><head>Fig. 20 :</head><label>20</label><figDesc>Fig. 20: Plot illustrating Confusion Matrix for Logistic Regression model with and without smote for comparison. (a) Confusion Matrix Logistic Regression Model without smote, (b) Confusion Matrix Logistic Regression Model with smote and 30% Minority, (c) Confusion Matrix Logistic Regression Model with smote and 40% Minority, (d) Confusion Matrix Logistic Regression Model with smote and 50% Minority.</figDesc><graphic coords="32,124.60,247.14,185.31,151.02" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_23"><head>Fig. 21 :</head><label>21</label><figDesc>Fig. 21: Plot illustrating Normalized Confusion Matrix for Logistic Regression model with and without smote for comparison. (a) Normalized Confusion Matrix Logistic Regression Model without smote, (b) Normalized Confusion Matrix Logistic Regression Model with smote and 30% Minority, (c) Normalized Confusion Matrix Logistic Regression Model with smote and 40% Minority, (d) Normalized Confusion Matrix Logistic Regression Model with smote and 50% Minority.</figDesc><graphic coords="33,100.07,245.56,185.31,147.55" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_24"><head>Fig. 22 :</head><label>22</label><figDesc>Fig. 22: Plot illustrating Area Under Receiver Operating Characteristic Curve (AUC-ROC) for Logistic Regression model with and without smote for comparison. (a) AUC-ROC Logistic Regression Model without smote, (b) AUC-ROC Logistic Regression Model with smote and 30% Minority, (c) AUC-ROC Logistic Regression Model with smote and 40% Minority, (d) AUC-ROC Logistic Regression Model with smote and 50% Minority.</figDesc><graphic coords="34,124.60,240.07,185.30,141.53" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_25"><head>Fig. 23 :</head><label>23</label><figDesc>Fig. 23: Plot illustrating Precision-Recall Curve (AUC) for Logistic Regression model with and without smote for comparison. (a) Precision-Recall Curve (AUC) Logistic Regression Model without smote, (b) Precision-Recall Curve (AUC) Logistic Regression Model with smote and 30% Minority, (c) Precision-Recall Curve (AUC) Logistic Regression Model with smote and 40% Minority, (d) Precision-Recall Curve (AUC) Logistic Regression Model with smote and 50% Minority.</figDesc><graphic coords="35,100.07,232.32,185.31,139.52" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_0"><head>5 :</head><label>5</label><figDesc>Output: 6: Generate (N/100) × A artificial samples for the minority class. 7: procedure SMOTE(N, A, m)</figDesc><table><row><cell>8:</cell><cell>if Proportion of class A &lt; 100% then</cell></row><row><cell>9:</cell><cell></cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_2"><head>1 :</head><label>1</label><figDesc>ad : angular distance 2: sf : split f actor 3: function CreateSynData(n, loop ctr, angle increment, ad,sf , data point1, data point2)</figDesc><table><row><cell>4:</cell><cell>data point1 ← NormalizeArray(data point1)</cell></row><row><cell>5:</cell><cell>data point2 ← NormalizeArray(data point2)</cell></row><row><cell>6:</cell><cell>Initialize Quantum Circuit circuit with n qubits</cell></row><row><cell>7:</cell><cell>circuit.Initialize(data point1)</cell></row><row><cell>8: 9:</cell><cell>if ad &gt; π 2 then angle ← π 2 -angular distance /sf</cell></row><row><cell>10:</cell><cell>else if ad &lt; 0 then</cell></row><row><cell>11:</cell><cell>angle ← π 2 -ad × RandomUniform(0.5, 1)/sf</cell></row><row><cell>12:</cell><cell>else</cell></row><row><cell>13:</cell><cell>angle ← RandomUniform(0, ad)/sf</cell></row><row><cell>14:</cell><cell>end if</cell></row><row><cell>15:</cell><cell></cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_3"><head></head><label></label><figDesc>Select centroid temp and minority temp as the entire minority data for cluster clus idx Print "Cluster clus idx has already a high percentage of minority minority percent. Close to target synthetic percent target synthetic percent."</figDesc><table><row><cell>23:</cell><cell>else</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>24:</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>25:</cell><cell>end if</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>26:</cell><cell cols="4">Flatten centroid temp to centroid dp tmp</cell><cell></cell><cell></cell></row><row><cell>27:</cell><cell cols="3">for each row in minority temp do</cell><cell></cell><cell></cell><cell></cell></row><row><cell>28:</cell><cell cols="5">Select minority dp temp as the current row</cell><cell></cell></row><row><cell>29:</cell><cell>Calculate</cell><cell>phi</cell><cell>and</cell><cell>psi</cell><cell>using</cell><cell>prep swap</cell></row><row><cell></cell><cell cols="3">test(minority dp temp, centroid dp tmp)</cell><cell></cell><cell></cell><cell></cell></row><row><cell>30:</cell><cell cols="4">Normalize phi and psi to phi1 and psi1</cell><cell></cell><cell></cell></row><row><cell>31:</cell><cell cols="6">Calculate swap test probability and angular distance using</cell></row><row><cell></cell><cell>swap test v1(psi1, phi1)</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>32:</cell><cell cols="5">n ← LogBase2(length ofminority dp temp)</cell><cell></cell></row><row><cell>33:</cell><cell cols="6">if length of minority dp temp is not divisible by n then</cell></row><row><cell>34:</cell><cell>add ← 1</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>35:</cell><cell>else</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>36:</cell><cell>add ← 0</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>37:</cell><cell>end if</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>38:</cell><cell cols="6">loop ctr ← Round(length ofminority dp temp/n + add)</cell></row><row><cell>39:</cell><cell cols="4">angle increment ← syn loop × 0.0174533</cell><cell></cell><cell></cell></row><row><cell>40:</cell><cell cols="6">syn data ← create syn data(n, loop ctr, angle increment,</cell></row><row><cell></cell><cell cols="4">angular distance, minority dp temp, centroid dp tmp)</cell><cell></cell><cell></cell></row><row><cell>41:</cell><cell cols="5">Create DataFrame syn df temp from syn data</cell><cell></cell></row><row><cell>42:</cell><cell cols="5">Concatenate syn df temp with syn dataf rame</cell><cell></cell></row><row><cell>43:</cell><cell>end for</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>44:</cell><cell>end for</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>45:</cell><cell cols="3">else if synthetic loop itr1 &lt; 0 then</cell><cell></cell><cell></cell><cell></cell></row><row><cell>46:</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>47:</cell><cell>else</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>48:</cell><cell cols="2">Print "Nothing to process..."</cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>49:</cell><cell>end if</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>50:</cell><cell>end for</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>51:</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_4"><head></head><label></label><figDesc>• Effects of Varying Degrees of Synthetic Data Augmentation on Performance 30% Minority with Synthetic Data: Test accuracy and F1 scores started to rise at this augmentation level, signaling the start of performance gains. With no change to the training data, the model achieved a test accuracy of 0.800813 and an F1 score improvement of 0.6343. Both the PR and ROC AUCs increased, reaching 0.757604 and 0.854414, respectively. 40% and 50% Minority with Synthetic Data:The test accuracy (0.822183) and F1 score (0.764202) were significantly improved by 40% Minority using Synthetic Data. PR had an AUC of 0.888143 and ROC had an AUC of 0.905165. The test accuracy increased to 0.846306 and the F1 score to 0.834755 with 50% Minority using Synthetic Data. At their peak, PR and ROC AUC values were 0.940063 and 0.928649, respectively. Both the 40% and 50% SMOTE augmentation levels improved the model more, but the 50% augmentation level was when it really shone. Results showing significant improvements in test accuracy, F1 scores, and AUC scores for PR and ROC show that the model is better at identifying the minority class and can generalize more effectively.</figDesc><table /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_5"><head>Table 1 :</head><label>1</label><figDesc>The Precision-Recall (PR) and Receiver Operating Characteristic(ROC) obtained Area Under the Curve (AUC) scores of 0.60415 and 0.814921, respectively. These scores indicate a reasonable potential to differentiate between classes, while there is potential for improvement in managing unbalanced data.• 30% Minority with Synthetic: By inducing synthetic data to constitute 30% of the minority class, the test accuracy saw a slight decline to 0.759485. This reduction implies that while the synthetic data was intended to balance the distribution of classes, it could have contributed to the complexity of class distribution that somewhat affected the general accuracy of predictions. However, the F1 score saw a small rise to 0.537158, suggesting that the model's capacity to maintain a balance between accuracy and recall improved under somewhat more equitable class settings. The AUC scores for PR (Precision-Recall) and ROC (Receiver Operating Characteristic) saw marginal enhancements to 0.632638 and 0.81238, respectively. These gains indicate a minor boost in the model's ability to differentiate between the classes when synthetic data is employed. • 40% Minority with Synthetic: With the percentage of synthetic data was increased to 40%,the test accuracy decreased to 0.700469. However, the F1 score increased to 0.607626. This implies that while the model's overall prediction accuracy declined, its capacity to detect the minority class improved, as shown by the higher F1 score.The area under the curve (AUC) scores for precision-recall (PR) and receiver operating characteristic (ROC) were 0.673914 and 0.769356, respectively. These values suggest that the model's accuracy and recall balance improved, but there was a minor decline in its overall discriminating power. • 50% Minority with Synthetic: By using synthetic data to achieve a 50% minority representation, the model demonstrated a notable improvement in test accuracy, reaching 0.733763. Yet, the F1 score increased substantially to 0.742446. The substantial rise in the F1 score demonstrates the improved ability of the model to properly detect the minority class due to a more evenly balanced dataset. The area under the curve (AUC) scores for precision-recall (PR) and receiver operating characteristic (ROC) increased to 0.778797 and 0.807275, respectively, indicating the enhanced ability of the model to distinguish between classes in a more balanced setup.The comparison of Logistic Regression and Random Forest models, enhanced with SMOTE, demonstrates the intricate nature of resolving class imbalance in machine learning. The performance enhancements of the Logistic Regression model, particularly in achieving a balanced precision-recall trade-off with the use of SMOTE, are consistent with the research conducted by<ref type="bibr" target="#b3">Chawla et al. (2002)</ref>. In their study, SMOTE was presented as a method to increase classifier performance by mitigating the issue of class imbalance via the generation of synthetic samples. The Random Forest model demonstrates good performance, regardless of SMOTE. This underscores the model's intrinsic abilities in effectively dealing with class imbalances<ref type="bibr" target="#b17">[19]</ref>. The ensemble strategy of the model, which combines predictions from numerous decision trees, inevitably offers a degree of resilience to imbalance, which is Table comparing Accuracy, F1 and AUC score of Random Forest Model for telecom churn dataset without SMOTE, and post SMOTE with minority% as 30%, 40%, and 50%. further strengthened by the use of SMOTE. Fernandez et al. [5] provide evidence supporting the effectiveness of ensemble approaches in handling unbalanced data. They propose that combining techniques such as Random Forest with SMOTE may lead to substantial improvements in model performance. All of the findings described in the assessment of Model performances are summarized in the table 1 and the Confusion Matrix comparison table ??.</figDesc><table><row><cell>4.1.7 Final thoughts on SMOTE Performance</cell></row></table></figure>
+		</body>
+		<back>
+
+			<div type="acknowledgement">
+<div><head>Acknowledgment</head><p>The authors are grateful to the <rs type="institution" subtype="infrastructure">IBM Quantum Experience platform</rs> and their team for developing the Qiskit platform and providing open access to their simulators for running quantum circuits and performing the experiments reported here. The authors also express gratitude towards the <rs type="institution">Center for Quantum Software and Information (CQSI) and Sydney Quantum Academy</rs>.</p></div>
+<div><head n="6">Statements and Declarations</head></div>
+			</div>
+			<listOrg type="infrastructure">
+				<org type="infrastructure">					<orgName type="extracted">IBM Quantum Experience platform</orgName>
+				</org>
+			</listOrg>
+
+			<div type="availability">
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>Availability of data and materials: All the data provided in this manuscript is generated during the simulation and can be provided upon reasonable request.</p></div>
+			</div>
+
+			<div type="annex">
+<div xmlns="http://www.tei-c.org/ns/1.0" />			</div>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<analytic>
+		<title level="a" type="main">Learning from class-imbalanced data: Review of methods and applications</title>
+		<author>
+			<persName><forename type="first">G</forename><surname>Haixiang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Yijing</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Shang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Mingyun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Yuanyue</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Bing</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/j.eswa.2016.12.035</idno>
+		<ptr target="https://doi.org/https://doi.org/10.1016/j.eswa.2016.12.035" />
+	</analytic>
+	<monogr>
+		<title level="j">Expert Systems with Applications</title>
+		<imprint>
+			<biblScope unit="volume">73</biblScope>
+			<biblScope unit="page" from="220" to="239" />
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Haixiang G, Yijing L, Shang J, Mingyun G, Yuanyue H, Bing G. Learning from class-imbalanced data: Review of methods and applications. Expert Systems with Applications. 2017;73:220-239. https://doi.org/https://doi.org/10.1016/j.eswa. 2016.12.035.</note>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<analytic>
+		<title level="a" type="main">Framework for imbalanced data classification</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Blaszczyk</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Jedrzejowicz</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/j.procs.2021.09.121</idno>
+		<ptr target="https://doi.org/https://doi.org/10.1016/j.procs.2021.09.121" />
+	</analytic>
+	<monogr>
+		<title level="j">Procedia Computer Science</title>
+		<imprint>
+			<biblScope unit="volume">192</biblScope>
+			<biblScope unit="page" from="3477" to="3486" />
+			<date type="published" when="2021">2021</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Blaszczyk M, Jedrzejowicz J. Framework for imbalanced data classification. Pro- cedia Computer Science. 2021;192:3477-3486. https://doi.org/https://doi.org/ 10.1016/j.procs.2021.09.121.</note>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<analytic>
+		<title level="a" type="main">Research on expansion and classification of imbalanced data based on SMOTE algorithm</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Dai</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Shen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Xuan</forename><forename type="middle">J</forename></persName>
+		</author>
+		<idno type="DOI">10.1038/s41598-021-03430-5</idno>
+		<ptr target="https://doi.org/10.1038/s41598-021-03430-5" />
+	</analytic>
+	<monogr>
+		<title level="j">Scientific Reports</title>
+		<imprint>
+			<biblScope unit="volume">11</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page">24039</biblScope>
+			<date type="published" when="2021-12">2021 Dec</date>
+			<publisher>Nature Publishing Group</publisher>
+		</imprint>
+	</monogr>
+	<note>1 Publisher</note>
+	<note type="raw_reference">Wang S, Dai Y, Shen J, Xuan J. Research on expansion and classification of imbalanced data based on SMOTE algorithm. Scientific Reports. 2021 Dec;11(1):24039. Number: 1 Publisher: Nature Publishing Group. https://doi. org/10.1038/s41598-021-03430-5.</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<analytic>
+		<title level="a" type="main">SMOTE: Synthetic Minority Over-sampling Technique</title>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">V</forename><surname>Chawla</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">W</forename><surname>Bowyer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><forename type="middle">O</forename><surname>Hall</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><forename type="middle">P</forename><surname>Kegelmeyer</surname></persName>
+		</author>
+		<idno type="DOI">10.1613/jair.953</idno>
+		<ptr target="https://doi.org/10.1613/jair.953" />
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Artificial Intelligence Research</title>
+		<imprint>
+			<biblScope unit="volume">16</biblScope>
+			<biblScope unit="page" from="321" to="357" />
+			<date type="published" when="2002-06">2002 Jun</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Chawla NV, Bowyer KW, Hall LO, Kegelmeyer WP. SMOTE: Synthetic Minor- ity Over-sampling Technique. Journal of Artificial Intelligence Research. 2002 Jun;16:321-357. https://doi.org/10.1613/jair.953.</note>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<analytic>
+		<title level="a" type="main">SMOTE for Learning from Imbalanced Data: Progress and Challenges, Marking the 15-year Anniversary</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Fernandez</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Garcia</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Herrera</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">V</forename><surname>Chawla</surname></persName>
+		</author>
+		<idno type="DOI">10.1613/jair.1.11192</idno>
+		<ptr target="https://doi.org/10.1613/jair.1.11192" />
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Artificial Intelligence Research</title>
+		<imprint>
+			<biblScope unit="volume">61</biblScope>
+			<biblScope unit="page" from="863" to="905" />
+			<date type="published" when="2018-04">2018 Apr</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Fernandez A, Garcia S, Herrera F, Chawla NV. SMOTE for Learning from Imbalanced Data: Progress and Challenges, Marking the 15-year Anniversary. Journal of Artificial Intelligence Research. 2018 Apr;61:863-905. https://doi.org/ 10.1613/jair.1.11192.</note>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<analytic>
+		<title level="a" type="main">SMOTE-ENC: A Novel SMOTE-Based Method to Generate Synthetic Data for Nominal and Continuous Features</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Mukherjee</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Khushi</surname></persName>
+		</author>
+		<idno type="DOI">10.3390/asi4010018</idno>
+		<ptr target="https://doi.org/10.3390/asi4010018" />
+	</analytic>
+	<monogr>
+		<title level="j">Applied System Innovation</title>
+		<imprint>
+			<biblScope unit="volume">4</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<date type="published" when="2021">2021</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Mukherjee M, Khushi M. SMOTE-ENC: A Novel SMOTE-Based Method to Generate Synthetic Data for Nominal and Continuous Features. Applied System Innovation. 2021;4(1). https://doi.org/10.3390/asi4010018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<analytic>
+		<title level="a" type="main">RUSBoost: A Hybrid Approach to Alleviating Class Imbalance</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Seiffert</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><forename type="middle">M</forename><surname>Khoshgoftaar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">V</forename><surname>Hulse</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Napolitano</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Systems, Man, and Cybernetics -Part A: Systems and Humans</title>
+		<imprint>
+			<biblScope unit="volume">40</biblScope>
+			<biblScope unit="page" from="185" to="197" />
+			<date type="published" when="2010">2010</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Seiffert C, Khoshgoftaar TM, Hulse JV, Napolitano A. RUSBoost: A Hybrid Approach to Alleviating Class Imbalance. IEEE Transactions on Systems, Man, and Cybernetics -Part A: Systems and Humans. 2010;40:185-197.</note>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<monogr>
+		<title level="m" type="main">SMOTEBoost: Improving Prediction of the Minority Class in Boosting</title>
+		<author>
+			<persName><forename type="first">N</forename><surname>Chawla</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Lazarevic</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Hall</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Bowyer</surname></persName>
+		</author>
+		<idno type="DOI">10.1007/978-3-540-39804-2_12</idno>
+		<ptr target="https://link.springer.com/chapter/10.1007/978-3-540-39804-212" />
+		<imprint>
+			<date type="published" when="2003">2003</date>
+			<biblScope unit="volume">2838</biblScope>
+			<biblScope unit="page" from="107" to="119" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Chawla N, Lazarevic A, Hall L, Bowyer K. SMOTEBoost: Improving Prediction of the Minority Class in Boosting. vol. 2838; 2003. p. 107-119. Available from: https://link.springer.com/chapter/10.1007/978-3-540-39804-2 12.</note>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">Effective Class-Imbalance Learning Based on SMOTE and Convolutional Neural Networks</title>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">H</forename><surname>Joloudari</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Marefat</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">A</forename><surname>Nematollahi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">S</forename><surname>Oyelere</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Hussain</surname></persName>
+		</author>
+		<idno type="DOI">10.3390/app13064006</idno>
+		<ptr target="https://doi.org/10.3390/app13064006" />
+	</analytic>
+	<monogr>
+		<title level="j">Applied Sciences</title>
+		<imprint>
+			<biblScope unit="volume">13</biblScope>
+			<biblScope unit="issue">6</biblScope>
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Joloudari JH, Marefat A, Nematollahi MA, Oyelere SS, Hussain S. Effective Class-Imbalance Learning Based on SMOTE and Convolutional Neural Networks. Applied Sciences. 2023;13(6). https://doi.org/10.3390/app13064006.</note>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<analytic>
+		<title level="a" type="main">Borderline-SMOTE: A New Over-Sampling Method in Imbalanced Data Sets Learning</title>
+		<author>
+			<persName><forename type="first">H</forename><surname>Han</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><forename type="middle">Y</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><forename type="middle">H</forename><surname>Mao</surname></persName>
+		</author>
+		<idno type="DOI">10.1007/11538059_91</idno>
+		<ptr target="https://link.springer.com/chapter/10.1007/1153805991" />
+	</analytic>
+	<monogr>
+		<title level="m">Advances in Intelligent Computing</title>
+		<title level="s">Lecture Notes in Computer Science</title>
+		<editor>
+			<persName><forename type="first">D</forename><forename type="middle">S</forename><surname>Huang</surname></persName>
+		</editor>
+		<editor>
+			<persName><forename type="first">X</forename><forename type="middle">P</forename><surname>Zhang</surname></persName>
+		</editor>
+		<editor>
+			<persName><forename type="first">G</forename><forename type="middle">B</forename><surname>Huang</surname></persName>
+		</editor>
+		<meeting><address><addrLine>Berlin, Heidelberg</addrLine></address></meeting>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2005">2005</date>
+			<biblScope unit="page" from="878" to="887" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Han H, Wang WY, Mao BH. Borderline-SMOTE: A New Over-Sampling Method in Imbalanced Data Sets Learning. In: Huang DS, Zhang XP, Huang GB, editors. Advances in Intelligent Computing. Lecture Notes in Computer Science. Berlin, Heidelberg: Springer; 2005. p. 878-887. Available from: https://link.springer. com/chapter/10.1007/11538059 91.</note>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<analytic>
+		<title level="a" type="main">ADASYN: Adaptive synthetic sampling approach for imbalanced learning</title>
+		<author>
+			<persName><forename type="first">H</forename><surname>He</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Bai</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><forename type="middle">A</forename><surname>Garcia</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Li</surname></persName>
+		</author>
+		<ptr target="https://ieeexplore.ieee.org/document/4633969" />
+	</analytic>
+	<monogr>
+		<title level="m">IEEE International Joint Conference on Neural Networks (IEEE World Congress on Computational Intelligence)</title>
+		<imprint>
+			<date type="published" when="2008">2008. 2008</date>
+			<biblScope unit="page" from="1322" to="1328" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">He H, Bai Y, Garcia EA, Li S. ADASYN: Adaptive synthetic sampling approach for imbalanced learning. In: 2008 IEEE International Joint Conference on Neural Networks (IEEE World Congress on Computational Intelligence); 2008. p. 1322- 1328. Available from: https://ieeexplore.ieee.org/document/4633969.</note>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<analytic>
+		<title level="a" type="main">A study of the behavior of several methods for balancing machine learning training data</title>
+		<author>
+			<persName><forename type="first">Geapa</forename><surname>Batista</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">C</forename><surname>Prati</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">C</forename><surname>Monard</surname></persName>
+		</author>
+		<idno type="DOI">10.1145/1007730.1007735</idno>
+		<ptr target="https://doi.org/10.1145/1007730.1007735" />
+	</analytic>
+	<monogr>
+		<title level="j">ACM SIGKDD Explorations Newsletter</title>
+		<imprint>
+			<biblScope unit="volume">6</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="20" to="29" />
+			<date type="published" when="2004-06">2004 Jun</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Batista GEAPA, Prati RC, Monard MC. A study of the behavior of several meth- ods for balancing machine learning training data. ACM SIGKDD Explorations Newsletter. 2004 Jun;6(1):20-29. https://doi.org/10.1145/1007730.1007735.</note>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<analytic>
+		<title level="a" type="main">Two Modifications of CNN</title>
+		<idno type="DOI">10.1109/TSMC.1976.4309452</idno>
+		<ptr target="https://doi.org/10.1109/TSMC.1976.4309452" />
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Systems, Man, and Cybernetics</title>
+		<imprint>
+			<biblScope unit="volume">6</biblScope>
+			<biblScope unit="issue">11</biblScope>
+			<biblScope unit="page" from="769" to="772" />
+			<date type="published" when="1976">1976</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Two Modifications of CNN. IEEE Transactions on Systems, Man, and Cybernet- ics. 1976;SMC-6(11):769-772. https://doi.org/10.1109/TSMC.1976.4309452.</note>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<analytic>
+		<title level="a" type="main">SVM classification: Optimization with the SMOTE algorithm for the class imbalance problem</title>
+		<author>
+			<persName><forename type="first">L</forename><surname>Demidova</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">I</forename><surname>Klyueva</surname></persName>
+		</author>
+		<ptr target="https://ieeexplore.ieee.org/document/7977136" />
+	</analytic>
+	<monogr>
+		<title level="m">2017 6th Mediterranean Conference on Embedded Computing (MECO)</title>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+			<biblScope unit="page" from="1" to="4" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Demidova L, Klyueva I. SVM classification: Optimization with the SMOTE algorithm for the class imbalance problem. In: 2017 6th Mediterranean Confer- ence on Embedded Computing (MECO); 2017. p. 1-4. Available from: https: //ieeexplore.ieee.org/document/7977136.</note>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<analytic>
+		<title level="a" type="main">Least squares quantization in PCM</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Lloyd</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/TIT.1982.1056489</idno>
+		<ptr target="https://doi.org/10.1109/TIT.1982.1056489" />
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Information Theory</title>
+		<imprint>
+			<biblScope unit="volume">28</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="129" to="137" />
+			<date type="published" when="1982">1982</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Lloyd S. Least squares quantization in PCM. IEEE Transactions on Information Theory. 1982;28(2):129-137. https://doi.org/10.1109/TIT.1982.1056489.</note>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<monogr>
+		<ptr target="https://medium.com/qiskit/calculate-quantum-euclidean-distance-with-qiskit-df85525ab485" />
+		<title level="m">Calculate Quantum Euclidean Distance with Qiskit. Medium</title>
+		<imprint/>
+	</monogr>
+	<note type="raw_reference">Calculate Quantum Euclidean Distance with Qiskit. Medium. Available from: https://medium.com/qiskit/ calculate-quantum-euclidean-distance-with-qiskit-df85525ab485.</note>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<analytic>
+		<title level="a" type="main">Quantum Block-Matching Algorithm Using Dissimilarity Measure</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Martínez-Felipe</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Montiel-Pérez</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">V</forename><surname>Onofre</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Maldonado-Romo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Young</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Service-Oriented Computing -ICSOC 2023 Workshops</title>
+		<editor>
+			<persName><forename type="first">F</forename><surname>Monti</surname></persName>
+		</editor>
+		<editor>
+			<persName><forename type="first">P</forename><surname>Plebani</surname></persName>
+		</editor>
+		<editor>
+			<persName><forename type="first">N</forename><surname>Moha</surname></persName>
+		</editor>
+		<editor>
+			<persName><forename type="first">Paik</forename><surname>Hy</surname></persName>
+		</editor>
+		<editor>
+			<persName><forename type="first">J</forename><surname>Barzen</surname></persName>
+		</editor>
+		<editor>
+			<persName><forename type="first">G</forename><surname>Ramachandran</surname></persName>
+		</editor>
+		<meeting><address><addrLine>Singapore</addrLine></address></meeting>
+		<imprint>
+			<publisher>Springer Nature Singapore</publisher>
+			<date type="published" when="2024">2024</date>
+			<biblScope unit="page" from="185" to="196" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Martínez-Felipe M, Montiel-Pérez J, Onofre V, Maldonado-Romo A, Young R. Quantum Block-Matching Algorithm Using Dissimilarity Measure. In: Monti F, Plebani P, Moha N, Paik Hy, Barzen J, Ramachandran G, et al., editors. Service- Oriented Computing -ICSOC 2023 Workshops. Singapore: Springer Nature Singapore; 2024. p. 185-196.</note>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<analytic>
+		<title level="a" type="main">Random Forests</title>
+		<author>
+			<persName><forename type="first">L</forename><surname>Breiman</surname></persName>
+		</author>
+		<idno type="DOI">10.1023/A:1010933404324</idno>
+		<ptr target="https://doi.org/10.1023/A:1010933404324" />
+	</analytic>
+	<monogr>
+		<title level="j">Machine Learning</title>
+		<imprint>
+			<biblScope unit="volume">45</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="5" to="32" />
+			<date type="published" when="2001-10">2001 Oct</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Breiman L. Random Forests. Machine Learning. 2001 Oct;45(1):5-32. https: //doi.org/10.1023/A:1010933404324.</note>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<monogr>
+		<author>
+			<persName><forename type="first">Dwh</forename><surname>Jr</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Lemeshow</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">X</forename><surname>Sturdivant</surname></persName>
+		</author>
+		<idno type="DOI">10.1002/9781118548387</idno>
+		<ptr target="https://onlinelibrary.wiley.com/doi/book/10.1002/9781118548387" />
+		<title level="m">Applied Logistic Regression, 3rd Edition</title>
+		<imprint>
+			<publisher>Wiley</publisher>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Jr DWH, Lemeshow S, Sturdivant RX.: Applied Logistic Regression, 3rd Edi- tion | Wiley. Available from: https://onlinelibrary.wiley.com/doi/book/10.1002/ 9781118548387.</note>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<analytic>
+		<title level="a" type="main">Nearest neighbor pattern classification</title>
+		<author>
+			<persName><forename type="first">T</forename><surname>Cover</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Hart</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/TIT.1967.1053964</idno>
+		<ptr target="https://doi.org/10.1109/TIT.1967.1053964" />
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Information Theory</title>
+		<imprint>
+			<biblScope unit="volume">13</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="21" to="27" />
+			<date type="published" when="1967">1967</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Cover T, Hart P. Nearest neighbor pattern classification. IEEE Transactions on Information Theory. 1967;13(1):21-27. https://doi.org/10.1109/TIT.1967. 1053964.</note>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<analytic>
+		<title level="a" type="main">An Introduction to Kernel and Nearest-Neighbor Nonparametric Regression</title>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">S</forename><surname>Altman</surname></persName>
+		</author>
+		<idno type="DOI">10.1080/00031305.1992.10475879</idno>
+		<ptr target="https://doi.org/10.1080/00031305.1992.10475879" />
+	</analytic>
+	<monogr>
+		<title level="j">The American Statistician</title>
+		<imprint>
+			<biblScope unit="volume">46</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="175" to="185" />
+			<date type="published" when="1992">1992</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Altman NS. An Introduction to Kernel and Nearest-Neighbor Nonparametric Regression. The American Statistician. 1992;46(3):175-185. https://doi.org/10. 1080/00031305.1992.10475879.</note>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<analytic>
+		<title level="a" type="main">SMOTE for high-dimensional class-imbalanced data</title>
+		<author>
+			<persName><forename type="first">R</forename><surname>Blagus</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Lusa</forename><forename type="middle">L</forename></persName>
+		</author>
+		<idno type="DOI">10.1186/1471-2105-14-106</idno>
+		<ptr target="https://doi.org/10.1186/1471-2105-14-106" />
+	</analytic>
+	<monogr>
+		<title level="j">BMC Bioinformatics</title>
+		<imprint>
+			<biblScope unit="volume">14</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page">106</biblScope>
+			<date type="published" when="2013-03">2013 Mar</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Blagus R, Lusa L. SMOTE for high-dimensional class-imbalanced data. BMC Bioinformatics. 2013 Mar;14(1):106. https://doi.org/10.1186/1471-2105-14-106.</note>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

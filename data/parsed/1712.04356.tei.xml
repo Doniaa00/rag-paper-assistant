@@ -1,0 +1,656 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">CUSBoost: Cluster-based Under-sampling with Boosting for Imbalanced Classification</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability  status="unknown">
+					<licence/>
+				</availability>
+				<date type="published" when="2017-12-12">12 Dec 2017</date>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><forename type="first">Farshid</forename><surname>Rayhan</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="department">Department of Computer Science &amp; Engineering</orgName>
+								<orgName type="institution">United International University</orgName>
+								<address>
+									<country key="BD">Bangladesh</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Sajid</forename><surname>Ahmed</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="department">Department of Computer Science &amp; Engineering</orgName>
+								<orgName type="institution">United International University</orgName>
+								<address>
+									<country key="BD">Bangladesh</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><roleName>Md. Rafsan</roleName><forename type="first">Asif</forename><surname>Mahbub</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="department">Department of Computer Science &amp; Engineering</orgName>
+								<orgName type="institution">United International University</orgName>
+								<address>
+									<country key="BD">Bangladesh</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Swakkhar</forename><surname>Jani</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="department">Department of Computer Science &amp; Engineering</orgName>
+								<orgName type="institution">United International University</orgName>
+								<address>
+									<country key="BD">Bangladesh</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Dewan</forename><forename type="middle">Md</forename><surname>Shatabda</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="department">Department of Computer Science &amp; Engineering</orgName>
+								<orgName type="institution">United International University</orgName>
+								<address>
+									<country key="BD">Bangladesh</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><surname>Farid</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="department">Department of Computer Science &amp; Engineering</orgName>
+								<orgName type="institution">United International University</orgName>
+								<address>
+									<country key="BD">Bangladesh</country>
+								</address>
+							</affiliation>
+						</author>
+						<title level="a" type="main">CUSBoost: Cluster-based Under-sampling with Boosting for Imbalanced Classification</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date type="published" when="2017-12-12">12 Dec 2017</date>
+						</imprint>
+					</monogr>
+					<idno type="MD5">0DC13F67071FFA49E03AEA762C0DB023</idno>
+					<idno type="arXiv">arXiv:1712.04356v1[cs.LG]</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.2-SNAPSHOT" ident="GROBID" when="2026-08-31T18:09+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<textClass>
+				<keywords>
+					<term>Boosting</term>
+					<term>Class imbalance</term>
+					<term>Clustering</term>
+					<term>Ensemble classifier</term>
+					<term>Sampling</term>
+					<term>RUSBoost</term>
+				</keywords>
+			</textClass>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>Class imbalance classification is a challenging research problem in data mining and machine learning, as most of the real-life datasets are often imbalanced in nature. Existing learning algorithms maximise the classification accuracy by correctly classifying the majority class, but misclassify the minority class. However, the minority class instances are representing the concept with greater interest than the majority class instances in real-life applications. Recently, several techniques based on sampling methods (under-sampling of the majority class and oversampling the minority class), cost-sensitive learning methods, and ensemble learning have been used in the literature for classifying imbalanced datasets. In this paper, we introduce a new clusteringbased under-sampling approach with boosting (AdaBoost) algorithm, called CUSBoost, for effective imbalanced classification. The proposed algorithm provides an alternative to RUSBoost (random under-sampling with AdaBoost) and SMOTEBoost (synthetic minority over-sampling with AdaBoost) algorithms. We evaluated the performance of CUSBoost algorithm with the stateof-the-art methods based on ensemble learning like AdaBoost, RUSBoost, SMOTEBoost on 13 imbalance binary and multi-class datasets with various imbalance ratios. The experimental results show that the CUSBoost is a promising and effective approach for dealing with highly imbalanced datasets.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>I. INTRODUCTION</head><p>In machine learning (ML) for data mining (DM) applications, supervised learning (or classification) is the process of identifying new/ unknown instances employing classifiers (or classification algorithms) based on a group of instances with known class membership (training data) <ref type="bibr" target="#b0">[1]</ref>, <ref type="bibr" target="#b1">[2]</ref>, <ref type="bibr" target="#b2">[3]</ref>, <ref type="bibr" target="#b3">[4]</ref>. Often real-world data sets are multi-class, high-dimensional and class-imbalanced, which fall-off the classification accuracy of many ML algorithms. Therefore, number of ensemble classifiers with sampling techniques have been proposed for classifying binary-class low-dimensional imbalanced data in the last decade <ref type="bibr" target="#b4">[5]</ref>, <ref type="bibr" target="#b5">[6]</ref>, <ref type="bibr" target="#b6">[7]</ref>. Ensemble classifiers use multiple ML algorithms to improve the performance of individual classifiers that combine multiple hypotheses to form an advance hypothesis <ref type="bibr" target="#b2">[3]</ref>. The sampling methods use under-sampling (under-sampling of the majority class instances) and oversampling (over-sampling the minority class instances) techniques to alter the original class distribution of imbalanced data. The under-sampling methods with random sampling of the majority class might suffer from the loss of potentially useful training instances. On the other hand, over-sampling with replacement doesn't significantly improve minority class recognition and increase the likelihood of overfitting <ref type="bibr" target="#b7">[8]</ref>.</p><p>In real-world class imbalance data sets, the minority class instances are outnumbered by the majority class instances. However, the minority class instances are representing the concept with greater interest than the majority class instances <ref type="bibr" target="#b8">[9]</ref>. The traditional ML for DM algorithms, such as decision tree (DT) <ref type="bibr" target="#b0">[1]</ref>, <ref type="bibr" target="#b2">[3]</ref>, naïve Bayes (NB) classifier <ref type="bibr" target="#b1">[2]</ref>, and knearest neighbors (kNN) <ref type="bibr" target="#b0">[1]</ref>, build the classification models that maximise the classification rate, but ignore the minority class. The most approved methods for dealing with the class imbalance problems are sampling techniques, ensemble methods, and cost-sensitive learning methods. The sampling techniques (under-sampling and over-sampling) either remove the majority class instances from the imbalanced data or add the minority class instances into the imbalanced data to get the balanced data. The ensemble methods such as Bagging and Boosting are also widely used for classifying imbalanced data. Basically, the ensemble methods use sampling technique in each iteration. The cost-sensitive learning is also applied for solving the class imbalance problems, which assigns different cost of misclassification errors for different classes. Usually, high cost for the minority class and low cost for the majority class. But, the classification results are not stable in costsensitive learning methods, as it is difficult to get the accurate misclassification cost and different misclassification cost might result in different inductions.</p><p>The methods for dealing with class imbalance problems are divided into two categories: (a) external methods and (b) internal methods. The external methods are also known as data balancing methods, which preprocess the imbalanced data to get the balanced data. The internal methods modify the existing learning algorithms for reducing their sensitiveness to the class imbalance when learning from the imbalanced data. In this paper, we present a new clustering-based undersampling approach with boosting (AdaBoost), called CUS-Boost algorithm. We divide the imbalanced dataset into two part: majority class instances and minority class instances. Then, we cluster the majority class instances into several clusters using k-means clustering algorithm and select the majority class instances from each cluster to form a balanced dataset, where the majority and minority class instances are almost equal. Clustering helps us to group the majority class instances in such a way that instances in the same cluster are more similar to each other than to those in other clusters. So, instead of randomly removing the majority class instances we used clustering technique to select the majority class instances. CUSBoost combines the sampling and boosting methods to form an efficient and effective algorithm for class imbalance learning. We tested the performance of CUSBoost algorithm with AdaBoost, RUSBoost, and SMOTEBoost algorithms on 13 imbalance datasets. Based on the experimental results, we can validate that combining clustering-based under-sampling approach with AdaBoost algorithm is a promising technique for alleviating class imbalance problem.</p><p>The remainder of this paper is organised as follows. Section II presents related works. Section III describes the data balancing methods, and Section 3 presents the CUSBoost algorithm. Section V provides the experimental results. Finally, we conclude in Section VI.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>II. RELATED WORK</head><p>In the last decade, sampling methods, bagging and boosting based ensemble methods, and cost-sensitive learning methods, have been used to deal with the imbalanced binary classification problems <ref type="bibr" target="#b9">[10]</ref>, <ref type="bibr" target="#b10">[11]</ref>. Fig. <ref type="figure">1</ref> shows the process of classifying imbalanced data using sampling with boosting approach.</p><p>Fig. <ref type="figure">1</ref>: Sampling with boosting for classifying imbalanced data. Sun et al. <ref type="bibr" target="#b7">[8]</ref> proposed an ensemble method for addressing binary-class imbalance problems by converting an imbalanced binary learning process into multiple balanced learning processes. In this method, the majority class instances were divided into several groups/ sub-data sets, where each sub-set has the similar number of minority class instances. So, several balanced data sets were generated. Then, each balanced data set was employed to build a binary classifier. Finally, these binary classifiers were combined into an ensemble classifier to classify new data. Chawla et al. <ref type="bibr" target="#b11">[12]</ref> proposed an over-sampling approach called SMOTE (Synthetic Minority Over-sampling TEchnique) algorithm in which the minority class is over-sampled by creating synthetic minority class instances rather than by over-sampling with replacement. SMOTE generated synthetic instances by operating in feature space rather than data space employing k minority class nearest neighbors. Their result showed that the combination of over-sampling with undersampling performed better in Receiver Operating Characteristic (ROC) space. Santos et al. <ref type="bibr" target="#b12">[13]</ref> implemented a clusterbased (k-means) over-sampling approach where SMOTE was adapted to oversample clusters with reduced sizes. This work considered merging the minority class instances from the multiple over-sampled datasets. Blagus and Lusa <ref type="bibr" target="#b13">[14]</ref> investigated the behavior of SMOTE on high-dimensional imbalanced data, where the number of features greatly exceeds the number of training instances. They found that feature selection is necessary for SMOTE with k-nearest neighbors (kNN), as SMOTE strongly biases the classifier towards the minority class.</p><p>Seiffert et al. <ref type="bibr" target="#b14">[15]</ref> presented a new hybrid sampling/boosting algorithm, called RUSBoost, which applied random under-sampling (RUS) with AdaBoost algorithm. RUS randomly removes the majority class instances to form a balanced data. RUSBoost was built based on the SMOTEBoost (synthetic minority over-sampling with AdaBoost) algorithm <ref type="bibr" target="#b15">[16]</ref>. SMOTEBoost was built upon over-sampling approach with AdaBoost algorithm. Galar et al. <ref type="bibr" target="#b16">[17]</ref> presented an ensemble algorithm by evolutionary under-sampling (EUA) approach, called EUSBoost, to classify highly imbalanced datasets. EUS generated several sub-datasets using randomly under-sampling technique and obtained a best under-sampled dataset of the original dataset that cannot be improve further. RUSBoost, SMOTEBoost, and EUSBoost applied data sampling techniques into the AdaBoost.M2 algorithm by considering the minority class instances and the majority class instances. Yen and Lee <ref type="bibr" target="#b17">[18]</ref> presented a cluster-based undersampling approach to cluster all the training instances (majority class instances and minority class instances) into some clusters. This approach selected a suitable number of majority class instances from each cluster by considering the ratio of the number of majority class instances to the number of minority class instances in the cluster.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>III. DATA BALANCING METHODS</head><p>Researchers have previously proposed various ways of dealing with imbalanced datasets. The following section describes a few of those methods.</p><p>A. Sampling Techniques 1) Under-sampling: Under-sampling involves the removal of some majority class instances to result in a balanced distribution of all classes <ref type="bibr" target="#b8">[9]</ref>. However, this can result in the removal of informative instances from the majority class especially if the number of instances of the minority class is very small (for example majority to minority ratio is 100:1). Thus, there will be a huge loss of information from the majority class instances, leading to a non-optimal classification. Fig. <ref type="figure">2</ref> shows the random under-sampling process to select the majority class instances randomly. Fig. <ref type="figure">2</ref>: Random under-sampling (RUS) approach. Here the red dots are selected instances from the majority class, where black and red dots are representing all the majority class instances.</p><p>2) Oversampling: In case of oversampling, we increase the number of minority class instances and this can be done in different ways. The most common of these methods is random oversampling, where minority class instances are duplicated until both class instances are balanced. The issue with this method, however, is that there is a high probability of overfitting due to the same instances occurring multiple times. SMOTE (Synthetic Minority class Oversampling TechniquE) is another oversampling technique which handles this problem by creating synthetic instances of the minority class instead of duplicating the minority class instances <ref type="bibr" target="#b11">[12]</ref>. This is done by by interpolating several minority class instances that lie together. Nevertheless, this problem can be present to some extent because the newly generated samples could be almost identical to the existing minority class instances. Modified synthetic minority oversampling technique (MSMOTE) is a modified version of SMOTE that divides the instances of the minority class into three groups: safe, border, and latent noise instances. This is done by the calculation of the distances among all instances.</p><p>Under-sampling method generally works better than oversampling methods as long as the imbalance ratio of the dataset is not very high <ref type="bibr" target="#b8">[9]</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Cost-sensitive learning</head><p>This method tackles the class imbalance problem by assigning more misclassification cost to minority class instances for the underlying classifier. The misclassification cost can be used in the cost function and the cost function can be optimised by the classifier. The classifier will now treat both majority and minority classes equally due to their underlying costs. But in this case, the greatest challenge is in assigning the costs as they are difficult to be derived from datasets.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>C. Ensemble Learning</head><p>Ensemble learning methods combine multiple base learners which may be the same or different. This usually increases the predictive capability of the individual base classifiers, thus making it adaptive to different datasets. Ensemble methods find their usage in a wide variety of problems.</p><p>1) Bagging: Bagging creates multiple sub-sets of the original dataset through sampling with replacement or without replacement. These sub-sets are used by the base learners while considering each instance with equal weight. The output of the individual base learners are considered as votes to determine the final prediction.</p><p>2) Boosting: Boosting is similar to bagging in that it combines multiple base learners to obtain a result based on voting technique. However, it's differences lie in that boosting assigns weight to instances according to how hard they are to classify, thus setting high weight of instances that are difficult to classify. One base learner contributes to the weight used by the next base learner. Weights are assigned to the base learners as well according to their predictive accuracy and this is taken into consideration when classifying a new test instance. Although boosting was not created specifically for imbalanced dataset problems, it's characteristic of assigning weights to examples that are relatively harder to classify makes it ideal for dealing with class imbalance problems. It can be somewhat referred to as a cost-sensitive method.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>IV. CUSBOOST ALGORITHM</head><p>CUSBoost is based on the combination of cluster-based sampling and Adaboost algorithm. It is similar to RUSBoost and SMOTEBoost with the critical difference occurring in the sampling technique. SMOTEBoost uses SMOTE method to oversample the minority class instances, while RUSBoost uses random under-sampling on the majority class. In comparison, our proposed CUSBoost uses cluster-based sampling from the majority class. CUSBoost separates the majority and minority class instances from the original dataset and clusters the majority class instances into k clusters using k-means clustering algorithm. Here, the parameter k is determined by hyperparameter optimisation. After that, random under-sampling is performed on each of the created clusters by randomly selecting 50% of the instances (but it can be tuned according to the domain problem or dataset) and removing the rest. As clustering is used before sampling, theoretically this algorithm will perform best when the dataset is highly cluster-able. These representative samples are then combined with the minority class instances to obtain balanced datasets. Our algorithm's strength lies in the fact that it considers examples from all subspaces of the majority class, since k-means clustering puts each instance in some cluster. Other similar methods often fail in obtaining proper representatives of the majority class. Fig. <ref type="figure" target="#fig_0">3</ref> shows the proposed cluster-based under-sampling technique to select the majority class instances.</p><p>CUSBoost considers a series of decision trees using C4.5 algorithm and combines the votes of each individual tree to classify new instances. Initially, each instance is initialised with an equal weight, 1  d , where d is the total number of training instances. The weights of instances are adjusted according to how they were classified. If an instance was correctly classified Fig. <ref type="figure" target="#fig_0">3</ref>: Cluster-based under-sampling (CUS) approach. Here the red dots are selected instances from the majority class, where black and red dots are representing all the majority class instances.</p><p>then its weight is decreased, or if misclassified then its weight is increased. The weight of an instance reflects how difficult it is to classify. To compute the error rate of model M i , we sum the weights of misclassified instances in D i that is shown in Eq. 1. If an instance, x i is misclassified, then err(x i ) is one. Otherwise, err(x i ) is zero (when x i is correctly classified).</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>error(M</head><formula xml:id="formula_0">i ) = d i=1 w i * err(x i )<label>(1)</label></formula><p>If an instance, x i in ith iteration is correctly classified, it's weight is multiplied by error ( error(Mi)</p><p>1-error(Mi) ). Then the weights of all instances (including misclassified instances) are normalised. To normalise a weight, we multiply it by the sum of old weights, divided by the sum of new weights. As a result, the weights of misclassified instances are increased and the weights of correctly classified instances are decreased. If the error rate of model M i exceeds 0.5 then we abandon M i and derive a new M i by generating a new sub-data set D i . The CUSBoost algorithm is summarised in Algorithm 1.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>V. EXPERIMENTAL RESULTS</head><p>In this section, we present the experimental analysis to examine the performance of our proposed CUSBoost algorithm. We have used datasets from KEEL-dataset repository <ref type="bibr" target="#b18">[19]</ref> with different imbalance ratio. Table <ref type="table" target="#tab_0">I</ref> show the datasets details .</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. Evaluation Methods</head><p>ROC curves can be thought of as representing the family of best decision boundaries for relative costs of true positive (TP) and false positive (FP). On an ROC curve the X-axis represents and the Y-axis represents.</p><formula xml:id="formula_1">T P = T P T P + F N (2)</formula><p>Algorithm 1 CUSBoost Algorithm Input: Imbalanced data, D, number of iterations, k, and C4.5 decision tree induction algorithm.</p><p>Output: An ensemble model.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Method:</head><p>1: initialize weight, x i ∈ D to 1 d ; 2: for i = 1 to k do  if error(M i ) ≥ 0.5 then for each x i ∈ D i that correctly classified do </p><formula xml:id="formula_2">w i = log 1-error(Mi)</formula><p>error(Mi) ; // weight of the classifier's vote  </p><formula xml:id="formula_3">F P = F P F P + T N<label>(3)</label></formula><p>The ideal point on the ROC curve would be (0,100), that is all positive instances are classified correctly and no negative instances are misclassified as positive. The line y = x represents the scenario of randomly guessing the class. Area Under the ROC Curve (AUC) is a useful metric for classifier performance as it is independent of the decision criterion selected and prior probabilities.The AUC comparison can establish a dominance relationship between classifiers. If the ROC curves are intersecting, the total AUC is an average comparison between models. However, for some specific cost and class distributions, the classifier having maximum AUC may in fact be suboptimal. Hence, we also compute the ROC convex hulls, since the points lying on the ROC convex hull are potentially optimal.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Results</head><p>In this experiment, we have compared the proposed CUS-Boost method with AdaBoost, RUSboost, and SMOTEBoost methods. Each dataset was validated using Area Under the ROC Curve (AUC). As for base learner we used C4.5 decision tree induction in boosting. Keel-dataset repository's implementation was used for the AdaBoost, RUSBoost, and SMOTEBoost algorithms <ref type="bibr" target="#b18">[19]</ref>. Each of these experiments are done 5 times with 10 fold cross validation and their mean scores are shown in Table <ref type="table" target="#tab_1">II</ref>. From the results we can see that the CUSBoost algorithm performs best most of the time when the imbalance ratio is in specific range. As the imbalance ratio gets high CUSBoost starts to outperform all the other methods significantly. This happens because our method does not focus on making the ratio of majority and minority class examples 1 : 1. So for this reason the sub sampled training dataset holds a better representation of the majority class while remaining imbalance itself. RUSBoost shows a performance with high variance especially with highly imbalance datasets, thus it shows a poor performance if the mean results are chosen. But, if the best results are chosen from 10 experiments then RUSBoost outperforms the other methods including the proposed method in many datasets those are shown in Table <ref type="table" target="#tab_2">III</ref>. The best result of proposed method is usually quite close to the average result thus proving low variance in its performance .</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>VI. CONCLUSION</head><p>Existing classification algorithms generally focus on majority class instances and ignore the minority class instances. So, it is a challenging task to construct an effective classifier that can correctly classify the instances of the minority class. This is ever so pertinent as class imbalance problems affect a vast range of domains. Recently, computational intelligence researchers have proposed several hybrid techniques Rather than simply randomly choosing samples from the dataset, CUSBoost first clusters the majority class instances and then performs random under sampling so that the boosting algorithm (Adaboost) can use examples from all regions of the dataset. Thus an advantage it holds over RUSBoost is that the variance of the results are low, which leads to stable performance. Additionally, the performance of this algorithm has been shown to be relatively proportional to the imbalance ratio of the dataset, where higher imbalanced ratio produces greater performance. It has shown to outperform the other algorithms in a certain range of imbalanced ratio. In this paper, we have compared the performance of CUSBooost with RUSBoost, SMOTEBoost and Adaboost. In future work, we intend to perform extensive experiments to continue investigating the performance of CUSBoost with other established sampling methods and ensemble methods.</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head>3 :</head><label>3</label><figDesc>create balanced dataset D i with distribution D using cluster-based under-sampling; 4: derive a tree, M i from D i employing C4.5 algorithm; 5:compute the error rate of M i , error(M i );</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_3"><head>10 :</head><label>10</label><figDesc>multiply weight of x i by ( error(Mi) 1-error(Mi) ); // update weights 11: end for 12: normalise the weight of each instances, x i ; 13: end for To use the ensemble to classify instance, x N ew : 1: initialise weight of each class to 0; 2: for i = 1 to k do 3:</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_4"><head>4 :c</head><label>4</label><figDesc>= M i (x N ew ); // class prediction by M i 5: add w i to weight for class c; 6: end for 7: return the class with largest weight;</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0"><head></head><label></label><figDesc></figDesc><graphic coords="2,48.96,298.47,252.45,306.90" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_0"><head>TABLE I :</head><label>I</label><figDesc>Imbalanced datasets description.</figDesc><table><row><cell cols="2">No. Datasets</cell><cell>Instances</cell><cell cols="2">Features Class</cell><cell>Imbalance</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell>Values</cell><cell>Ratio</cell></row><row><cell>1</cell><cell>pima</cell><cell>768</cell><cell>8</cell><cell>2</cell><cell>1.87</cell></row><row><cell>2</cell><cell>dermatology</cell><cell>366</cell><cell>34</cell><cell>6</cell><cell>5.55</cell></row><row><cell>3</cell><cell>segment0</cell><cell>2308</cell><cell>19</cell><cell>2</cell><cell>6.02</cell></row><row><cell>4</cell><cell>led7digit</cell><cell>443</cell><cell>7</cell><cell>2</cell><cell>10.97</cell></row><row><cell>5</cell><cell>abalone9-18</cell><cell>731</cell><cell>8</cell><cell>2</cell><cell>16.4</cell></row><row><cell>6</cell><cell>yeast</cell><cell>1484</cell><cell>8</cell><cell>10</cell><cell>23.15</cell></row><row><cell>7</cell><cell>poker -9vs 7</cell><cell>244</cell><cell>10</cell><cell>2</cell><cell>29.5</cell></row><row><cell>8</cell><cell>kddcup-guess</cell><cell>1642</cell><cell>41</cell><cell>2</cell><cell>29.98</cell></row><row><cell></cell><cell>passwd vs satan</cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>9</cell><cell>yeast5</cell><cell>1484</cell><cell>8</cell><cell>2</cell><cell>38.73</cell></row><row><cell>10</cell><cell>ecoli</cell><cell>336</cell><cell>7</cell><cell>8</cell><cell>71.5</cell></row><row><cell>11</cell><cell>abalone19</cell><cell>4174</cell><cell>8</cell><cell>2</cell><cell>129.44</cell></row><row><cell>12</cell><cell>Page Blocks</cell><cell>548</cell><cell>10</cell><cell>5</cell><cell>164</cell></row><row><cell>13</cell><cell>Statlog (Shuttle)</cell><cell>2175</cell><cell>9</cell><cell>7</cell><cell>853</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_1"><head>TABLE II :</head><label>II</label><figDesc>Average performance of the AdaBoost, RUSboost, SMOTEBoost, and CUSBoost methods on 13 imbalanced datasets.</figDesc><table><row><cell>Datasets</cell><cell cols="4">AdaBoost RUSBoost SOMTEBoost CUSBoost</cell></row><row><cell>pima</cell><cell>0.6223</cell><cell>0.6376</cell><cell>0.6597</cell><cell>0.6679</cell></row><row><cell>dermatology</cell><cell>0.9342</cell><cell>0.43</cell><cell>0.632</cell><cell>0.54</cell></row><row><cell>segment0</cell><cell>0.996</cell><cell>0.957</cell><cell>0.951</cell><cell>0.943</cell></row><row><cell>led7digit</cell><cell>0.8937</cell><cell>0.8279</cell><cell>0.9373</cell><cell>0.9412</cell></row><row><cell>abalone9-18</cell><cell>0.6934</cell><cell>0.7051</cell><cell>0.7195</cell><cell>0.7243</cell></row><row><cell>yeast</cell><cell>0.7589</cell><cell>0.7382</cell><cell>0.741</cell><cell>0.7603</cell></row><row><cell>poker -9vs 7</cell><cell>0.642</cell><cell>0.589</cell><cell>0.6708</cell><cell>0.967</cell></row><row><cell>kddcup-guess</cell><cell>0.8324</cell><cell>0.8681</cell><cell>0.8513</cell><cell>0.8745</cell></row><row><cell>passwd vs satan</cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>yeast5</cell><cell>0.9231</cell><cell>0.887</cell><cell>0.9253</cell><cell>0.9</cell></row><row><cell>ecoli</cell><cell>0.6354</cell><cell>0.517</cell><cell>0.6597</cell><cell>0.6589</cell></row><row><cell>abalone19</cell><cell>0.5723</cell><cell>0.5923</cell><cell>0.5583</cell><cell>0.609</cell></row><row><cell>Page Blocks</cell><cell>0.7605</cell><cell>0.5975</cell><cell>0.8123</cell><cell>0.8981</cell></row><row><cell>Statlog (Shuttle)</cell><cell>0.8331</cell><cell>0.727</cell><cell>0.8445</cell><cell>0.8847</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_2"><head>TABLE III :</head><label>III</label><figDesc>The best result using AdaBoost, RUSboost, SMOTEBoost, and CUSBoost methods in each dataset is stressed in bold-face. with ensemble classifiers for dealing with class imbalance problems. The purpose of this paper is to present a new algorithm called CUSBoost, or Clusterbased Under-sampling with Boosting, in order to alleviate the problem of class imbalance. We have compared the performance of CUSBoost algorithm with the most effective boosting techniques like AdaBoost, RUSBoost, and SMOTEBoost algorithms. Based on experimental results, we have found that CUSBoost performed favourably when compared to these popular techniques on datasets having high class imbalance ratio.</figDesc><table><row><cell>Datasets</cell><cell cols="2">AdaBoost RUSBoost</cell><cell cols="2">SOMTEBoost CUSBoost</cell></row><row><cell>pima</cell><cell>0.6653</cell><cell>0.6796</cell><cell>0.667</cell><cell>0.6679</cell></row><row><cell>dermatology</cell><cell>0.9</cell><cell>0.6935</cell><cell>0.632</cell><cell>0.54</cell></row><row><cell>segment0</cell><cell>0.998</cell><cell>0.9805</cell><cell>0.9642</cell><cell>0.9523</cell></row><row><cell>led7digit</cell><cell>0.9157</cell><cell>0.886</cell><cell>0.9485</cell><cell>0.9544</cell></row><row><cell>abalone9-18</cell><cell>0.707</cell><cell>0.805</cell><cell>0.7029</cell><cell>0.7434</cell></row><row><cell>yeast</cell><cell>0.7839</cell><cell>0.801</cell><cell>0.7653</cell><cell>0.7895</cell></row><row><cell>poker -9vs 7</cell><cell>0.657</cell><cell>0.7395</cell><cell>0.69</cell><cell>0.9685</cell></row><row><cell>kddcup-guess</cell><cell>0.8578</cell><cell>0.9123</cell><cell>0.8602</cell><cell>0.8849</cell></row><row><cell>passwd vs satan</cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>yeast5</cell><cell>0.9324</cell><cell>0.9515</cell><cell>0.9391</cell><cell>0.9126</cell></row><row><cell>ecoli</cell><cell>0.6455</cell><cell>0.677</cell><cell>0.6753</cell><cell>0.6656</cell></row><row><cell>abalone19</cell><cell>0.5796</cell><cell>0.6498</cell><cell>0.5876</cell><cell>0.6176</cell></row><row><cell>Page Blocks</cell><cell>0.78</cell><cell>0.937</cell><cell>0.8592</cell><cell>0.9007</cell></row><row><cell>Statlog (Shuttle)</cell><cell>0.8567</cell><cell>0.8989</cell><cell>0.8516</cell><cell>0.8967</cell></row><row><cell cols="2">by combining sampling</cell><cell></cell><cell></cell><cell></cell></row></table></figure>
+		</body>
+		<back>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<analytic>
+		<title level="a" type="main">An adaptive rule-based classifier for mining big biological data</title>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">M</forename><surname>Farid</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">A</forename><surname>Al-Mamun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Manderick</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Nowe</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Expert Systems with Applications</title>
+		<imprint>
+			<biblScope unit="volume">64</biblScope>
+			<biblScope unit="page" from="305" to="316" />
+			<date type="published" when="2016-12">December 2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">D. M. Farid, M. A. Al-Mamun, B. Manderick, and A. Nowe, &quot;An adaptive rule-based classifier for mining big biological data,&quot; Expert Systems with Applications, vol. 64, pp. 305-316, December 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<analytic>
+		<title level="a" type="main">Hybrid decision tree and naïve bayes classifiers for multi-class classification tasks</title>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">M</forename><surname>Farid</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">M</forename><surname>Rahman</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Hossain</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Strachan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Expert Systems with Applications</title>
+		<imprint>
+			<biblScope unit="volume">41</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="1937" to="1946" />
+			<date type="published" when="2014-03">March 2014</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">D. M. Farid, L. Zhang, C. M. Rahman, M. Hossain, and R. Strachan, &quot;Hybrid decision tree and naïve bayes classifiers for multi-class clas- sification tasks,&quot; Expert Systems with Applications, vol. 41, no. 4, pp. 1937-1946, March 2014.</note>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<analytic>
+		<title level="a" type="main">An adaptive ensemble classifier for mining concept drifting data streams</title>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">M</forename><surname>Farid</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Hossain</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">M</forename><surname>Rahman</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Strachan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Sexton</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Dahal</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Expert Systems with Applications</title>
+		<imprint>
+			<biblScope unit="volume">40</biblScope>
+			<biblScope unit="issue">15</biblScope>
+			<biblScope unit="page" from="5895" to="5906" />
+			<date type="published" when="2013-11">November 2013</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">D. M. Farid, L. Zhang, A. Hossain, C. M. Rahman, R. Strachan, G. Sex- ton, and K. Dahal, &quot;An adaptive ensemble classifier for mining concept drifting data streams,&quot; Expert Systems with Applications, vol. 40, no. 15, pp. 5895-5906, November 2013.</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<analytic>
+		<title level="a" type="main">Assigning weights to training instances increases classification accuracy</title>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">M</forename><surname>Farid</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">M</forename><surname>Rahman</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Data Mining &amp; Knowledge Management Process</title>
+		<imprint>
+			<biblScope unit="volume">3</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="13" to="25" />
+			<date type="published" when="2013-01">January 2013</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">D. M. Farid and C. M. Rahman, &quot;Assigning weights to training instances increases classification accuracy,&quot; International Journal of Data Mining &amp; Knowledge Management Process, vol. 3, no. 1, pp. 13-25, January 2013.</note>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<analytic>
+		<title level="a" type="main">Learning from imbalanced data</title>
+		<author>
+			<persName><forename type="first">H</forename><surname>He</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><forename type="middle">A</forename><surname>Garcia</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Knowledge and Data Engineering</title>
+		<imprint>
+			<biblScope unit="volume">21</biblScope>
+			<biblScope unit="issue">9</biblScope>
+			<biblScope unit="page" from="1263" to="1284" />
+			<date type="published" when="2009-06">June 2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">H. He and E. A. Garcia, &quot;Learning from imbalanced data,&quot; IEEE Transactions on Knowledge and Data Engineering, vol. 21, no. 9, pp. 1263-1284, June 2009.</note>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<analytic>
+		<title level="a" type="main">Classification of imbalance data: A review</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Sun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">K C</forename><surname>Wong</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">S</forename><surname>Kamel</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Pattern Recognition and Artificial Intelligence</title>
+		<imprint>
+			<biblScope unit="volume">23</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="687" to="719" />
+			<date type="published" when="2009-06">June 2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Y. Sun, A. K. C. Wong, and M. S. Kamel, &quot;Classification of imbalance data: A review,&quot; International Journal of Pattern Recognition and Artificial Intelligence, vol. 23, no. 4, pp. 687-719, June 2009.</note>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<analytic>
+		<title level="a" type="main">Combating the small sample class imbalance problem using feature selection</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Wasikowski</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Wen Chen</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Knowledge and Data Engineering</title>
+		<imprint>
+			<biblScope unit="volume">22</biblScope>
+			<biblScope unit="issue">10</biblScope>
+			<biblScope unit="page" from="1388" to="1400" />
+			<date type="published" when="2009-10">October 2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">M. Wasikowski and X. wen Chen, &quot;Combating the small sample class imbalance problem using feature selection,&quot; IEEE Transactions on Knowledge and Data Engineering, vol. 22, no. 10, pp. 1388-1400, October 2009.</note>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<analytic>
+		<title level="a" type="main">A novel ensemble method for classifying imbalanced data</title>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Sun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Q</forename><surname>Song</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Zhu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Sun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Xu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhou</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Pattern Recognition</title>
+		<imprint>
+			<biblScope unit="volume">48</biblScope>
+			<biblScope unit="issue">5</biblScope>
+			<biblScope unit="page" from="1623" to="1637" />
+			<date type="published" when="2015-05">May 2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Z. Sun, Q. Song, X. Zhu, H. Sun, B. Xu, and Y. Zhou, &quot;A novel ensemble method for classifying imbalanced data,&quot; Pattern Recognition, vol. 48, no. 5, pp. 1623-1637, May 2015.</note>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">A new data balancing method for classifying multi-class imbalanced genomic data</title>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">M</forename><surname>Farid</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Nowé</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Manderick</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">25th Belgian-Dutch Conference on Machine Learning (Benelearn)</title>
+		<imprint>
+			<date type="published" when="2016-09">September 2016</date>
+			<biblScope unit="page" from="12" to="13" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">D. M. Farid, A. Nowé, and B. Manderick, &quot;A new data balancing method for classifying multi-class imbalanced genomic data,&quot; 25th Belgian-Dutch Conference on Machine Learning (Benelearn), pp. 1- 2, 12-13 September 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<analytic>
+		<title level="a" type="main">Classifying imbalanced data sets using similarity based hierarchical decomposition</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Beyan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Fisher</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Pattern Recognition</title>
+		<imprint>
+			<biblScope unit="volume">48</biblScope>
+			<biblScope unit="issue">5</biblScope>
+			<biblScope unit="page" from="1653" to="1672" />
+			<date type="published" when="2015-05">May 2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">C. Beyan and R. Fisher, &quot;Classifying imbalanced data sets using simi- larity based hierarchical decomposition,&quot; Pattern Recognition, vol. 48, no. 5, pp. 1653-1672, May 2015.</note>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<analytic>
+		<title level="a" type="main">When is undersampling effective in unbalanced classification tasks?</title>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">D</forename><surname>Pozzolo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">O</forename><surname>Caelen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Bontempi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Joint European Conference on Machine Learning and Knowledge Discovery in Databases</title>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2015">2015</date>
+			<biblScope unit="page" from="200" to="215" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">A. D. Pozzolo, O. Caelen, and G. Bontempi, &quot;When is undersampling effective in unbalanced classification tasks?&quot; in Joint European Con- ference on Machine Learning and Knowledge Discovery in Databases. Springer, 2015, pp. 200-215.</note>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<analytic>
+		<title level="a" type="main">SMOTE: Synthetic minority over-sampling technique</title>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">V</forename><surname>Chawla</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">W</forename><surname>Bowyer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><forename type="middle">O</forename><surname>Hall</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><forename type="middle">P</forename><surname>Kegelmeyer</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Artificial Intelligence Research</title>
+		<imprint>
+			<biblScope unit="volume">16</biblScope>
+			<biblScope unit="page" from="321" to="357" />
+			<date type="published" when="2002-06">June 2002</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">N. V. Chawla, K. W. Bowyer, L. O. Hall, and W. P. Kegelmeyer, &quot;SMOTE: Synthetic minority over-sampling technique,&quot; Journal of Artificial Intelligence Research, vol. 16, pp. 321-357, June 2002.</note>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<analytic>
+		<title level="a" type="main">A new cluster-based oversampling method for improving survival prediction of hepatocellular carcinoma patients</title>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">S</forename><surname>Santos</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><forename type="middle">H</forename><surname>Abreu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><forename type="middle">J</forename><surname>García-Laencina</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Simão</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Carvalho</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Biomedical Informatics</title>
+		<imprint>
+			<biblScope unit="volume">58</biblScope>
+			<biblScope unit="page" from="49" to="59" />
+			<date type="published" when="2015-09">September 2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">M. S. Santos, P. H. Abreu, P. J. García-Laencina, A. Simão, and A. Carvalho, &quot;A new cluster-based oversampling method for improving survival prediction of hepatocellular carcinoma patients,&quot; Journal of Biomedical Informatics, vol. 58, pp. 49-59, September 2015.</note>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<analytic>
+		<title level="a" type="main">SMOTE for high-dimensional class-imbalanced data</title>
+		<author>
+			<persName><forename type="first">R</forename><surname>Blagus</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Lusa</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">BMC Bioinformatics</title>
+		<imprint>
+			<biblScope unit="volume">14</biblScope>
+			<biblScope unit="issue">106</biblScope>
+			<biblScope unit="page" from="1" to="16" />
+			<date type="published" when="2013-03">March 2013</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">R. Blagus and L. Lusa, &quot;SMOTE for high-dimensional class-imbalanced data,&quot; BMC Bioinformatics, vol. 14, no. 106, pp. 1-16, March 2013.</note>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<analytic>
+		<title level="a" type="main">Rusboost: A hybrid approach to alleviating class imbalance</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Seiffert</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><forename type="middle">M</forename><surname>Khoshgoftaar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">V</forename><surname>Hulse</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Napolitano</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Systems, Man, and Cybernetics -Part A: Systems and Humans</title>
+		<imprint>
+			<biblScope unit="volume">40</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="185" to="197" />
+			<date type="published" when="2010-01">January 2010</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">C. Seiffert, T. M. Khoshgoftaar, J. V. Hulse, and A. Napolitano, &quot;Rusboost: A hybrid approach to alleviating class imbalance,&quot; IEEE Transactions on Systems, Man, and Cybernetics -Part A: Systems and Humans, vol. 40, no. 1, pp. 185-197, January 2010.</note>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<analytic>
+		<title level="a" type="main">Smoteboost: Improving prediction of the minority class in boosting</title>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">V</forename><surname>Chawla</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Lazarevic</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><forename type="middle">O</forename><surname>Hall</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">W</forename><surname>Bowyer</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">7th European Conference on Principles and Practice of Knowledge Discovery in Databases</title>
+		<imprint>
+			<date type="published" when="2003-09">September 2003</date>
+			<biblScope unit="page" from="22" to="26" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">N. V. Chawla, A. Lazarevic, L. O. Hall, and K. W. Bowyer, &quot;Smote- boost: Improving prediction of the minority class in boosting,&quot; 7th Eu- ropean Conference on Principles and Practice of Knowledge Discovery in Databases, pp. 107-109, 22-26 September 2003.</note>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<analytic>
+		<title level="a" type="main">Eusboost: Enhancing ensembles for highly imbalanced data-sets by evolutionary undersampling</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Galar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Fernández</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Barrenechea</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Herrera</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Pattern Recognition</title>
+		<imprint>
+			<biblScope unit="volume">46</biblScope>
+			<biblScope unit="issue">12</biblScope>
+			<biblScope unit="page" from="3460" to="3471" />
+			<date type="published" when="2013-12">December 2013</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">M. Galar, A. Fernández, E. Barrenechea, and F. Herrera, &quot;Eusboost: Enhancing ensembles for highly imbalanced data-sets by evolutionary undersampling,&quot; Pattern Recognition, vol. 46, no. 12, pp. 3460-3471, December 2013.</note>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<analytic>
+		<title level="a" type="main">Cluster-based under-sampling approaches for imbalanced data distributions</title>
+		<author>
+			<persName><forename type="first">S.-J</forename><surname>Yen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y.-S</forename><surname>Lee</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Expert Systems with Applications</title>
+		<imprint>
+			<biblScope unit="volume">36</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="5718" to="5727" />
+			<date type="published" when="2009-04">April 2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S.-J. Yen and Y.-S. Lee, &quot;Cluster-based under-sampling approaches for imbalanced data distributions,&quot; Expert Systems with Applications, vol. 36, no. 3 (Part 1), pp. 5718-5727, April 2009.</note>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<analytic>
+		<title level="a" type="main">Keel data-mining software tool: Data set repository, integration of algorithms and experimental analysis framework</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Alcalá-Fdez</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Fernandez</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Luengo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Derrac</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>García</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Sánchez</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Herrera</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Multiple-Valued Logic and Soft Computing</title>
+		<imprint>
+			<biblScope unit="volume">17</biblScope>
+			<biblScope unit="issue">2-3</biblScope>
+			<biblScope unit="page" from="255" to="287" />
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. Alcalá-Fdez, A. Fernandez, J. Luengo, J. Derrac, S. García, L. Sánchez, and F. Herrera, &quot;Keel data-mining software tool: Data set repository, integration of algorithms and experimental analysis framework,&quot; Journal of Multiple-Valued Logic and Soft Computing, vol. 17, no. 2-3, pp. 255-287, 2011.</note>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

@@ -1,0 +1,764 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">Addressing Class Imbalance with Probabilistic Graphical Models and Variational Inference</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability status="unknown"><licence/></availability>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><forename type="first">I</forename><surname>Yujia</surname></persName>
+						</author>
+						<author>
+							<persName><forename type="first">Jie</forename><surname>Liu</surname></persName>
+						</author>
+						<author>
+							<persName><forename type="first">Yuan</forename><surname>Sheng</surname></persName>
+						</author>
+						<author>
+							<persName><forename type="first">Yaokun</forename><surname>Ren</surname></persName>
+						</author>
+						<author>
+							<persName><forename type="first">Yiwei</forename><surname>Zhang</surname></persName>
+						</author>
+						<author>
+							<persName><forename type="first">Jiawei</forename><surname>Wang</surname></persName>
+						</author>
+						<author>
+							<affiliation key="aff0">
+								<orgName type="institution">University of Rochester</orgName>
+								<address>
+									<settlement>Rochester</settlement>
+									<country key="US">USA</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<affiliation key="aff1">
+								<orgName type="institution">University of Minnesota</orgName>
+								<address>
+									<settlement>Minneapolis</settlement>
+									<country key="US">USA</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<affiliation key="aff2">
+								<orgName type="institution">Northeastern University</orgName>
+								<address>
+									<settlement>Seattle</settlement>
+									<country key="US">USA</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<affiliation key="aff3">
+								<orgName type="institution">Northeastern University</orgName>
+								<address>
+									<settlement>Seattle</settlement>
+									<country key="US">USA</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<affiliation key="aff4">
+								<orgName type="institution">Cornell University</orgName>
+								<address>
+									<settlement>Ithaca</settlement>
+									<country key="US">USA</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<affiliation key="aff5">
+								<orgName type="institution">University of California Los Angeles</orgName>
+								<address>
+									<country key="US">USA</country>
+								</address>
+							</affiliation>
+						</author>
+						<title level="a" type="main">Addressing Class Imbalance with Probabilistic Graphical Models and Variational Inference</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date/>
+						</imprint>
+					</monogr>
+					<idno type="MD5">7A6F7E95E6AE7A2AE54C545088548569</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.2-SNAPSHOT" ident="GROBID" when="2026-08-31T18:11+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<textClass>
+				<keywords>
+					<term>Deep probabilistic graphical models</term>
+					<term>Imbalanced data classification</term>
+					<term>Variational inference</term>
+					<term>Adversarial learning</term>
+				</keywords>
+			</textClass>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>This study proposes a method for imbalanced data classification based on deep probabilistic graphical models (DPGMs) to solve the problem that traditional methods have insufficient learning ability for minority class samples. To address the classification bias caused by class imbalance, we introduce variational inference optimization probability modeling, which enables the model to adaptively adjust the representation ability of minority classes and combines the class-aware weight adjustment strategy to enhance the classifier's sensitivity to minority classes. In addition, we combine the adversarial learning mechanism to generate minority class samples in the latent space so that the model can better characterize the category boundary in the highdimensional feature space. The experiment is evaluated on the Kaggle "Credit Card Fraud Detection" dataset and compared with a variety of advanced imbalanced classification methods (such as GAN-based sampling, BRF, XGBoost-Cost Sensitive, SAAD, HAN). The results show that the method in this study has achieved the best performance in AUC, Precision, Recall and F1-score indicators, effectively improving the recognition rate of minority classes and reducing the false alarm rate. This method can be widely used in imbalanced classification tasks such as financial fraud detection, medical diagnosis, and anomaly detection, providing a new solution for related research.</head></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>INTRODUCTION</head><p>In modern data analysis and machine learning research, the issue of data imbalance has emerged as a critical challenge affecting classifier performance. Many real-world classification tasks exhibit highly skewed class distributions, such as rare disease detection in market risk analysis and prediction <ref type="bibr" target="#b0">[1]</ref>, financial fraud detection <ref type="bibr" target="#b1">[2]</ref><ref type="bibr" target="#b2">[3]</ref><ref type="bibr" target="#b3">[4]</ref>, and cybersecurity anomaly <ref type="bibr" target="#b4">[5]</ref> detection. In these scenarios, the number of minority class samples is significantly lower than that of the majority class. Traditional machine learning models often prioritize optimizing overall classification accuracy, leading to a substantially reduced recognition rate for minority class instances. Existing approaches primarily include data-level resampling strategies, algorithm-level cost-sensitive learning, and adaptive training strategies in deep learning. However, these methods still face several challenges in practical applications, such as potential noise introduction in resampling, the need for precise loss weight tuning in cost-sensitive learning, and the limited generalization ability of deep learning models on imbalanced data <ref type="bibr" target="#b5">[6]</ref>. Consequently, designing more robust and generalizable classification methods to enhance the performance of imbalanced data classification remains a core research problem.</p><p>In recent years, deep probabilistic graphical models (DPGMs) have gained significant attention in machine learning and pattern recognition due to their powerful representation capabilities and uncertainty modeling. Probabilistic graphical models integrate probabilistic statistical theory with graphbased methods, effectively capturing complex dependencies among variables and modeling data uncertainty <ref type="bibr" target="#b6">[7]</ref>. Compared to conventional deep neural networks, probabilistic graphical models offer notable advantages in small-sample learning, data sparsity, and uncertainty reasoning. The emergence of Bayesian deep learning, variational inference, and graph neural networks has further strengthened the applicability of DPGMs in addressing data imbalance challenges <ref type="bibr" target="#b7">[8]</ref>. By incorporating probabilistic priors and posterior distributions, these models can more accurately characterize minority class data while effectively accounting for uncertainty in decision-making <ref type="bibr" target="#b8">[9]</ref>, thereby enhancing the classifier's sensitivity to minority class instances. Given this, exploring how to leverage the strengths of deep probabilistic graphical models to develop a more robust imbalanced data classification framework holds both theoretical significance and practical potential.</p><p>The purpose of this study is to investigate the effectiveness of deep probabilistic graphical models (DPGMs) in imbalanced data classification, introducing a novel strategy that emphasizes improved performance on minority class samples. Unlike heuristic methods, this approach leverages the generative capabilities of DPGMs through adaptive probabilistic modeling and structural learning, capturing richer representations of underrepresented samples. Variational inference and Bayesian optimization further refine model parameters, enhancing classification robustness while expanding theoretical insights into DPGMs. Beyond its methodological contributions, the proposed model has notable practical value. In humancomputer interaction and the financial sector, user intent prediction methods <ref type="bibr" target="#b9">[10]</ref> and time-series risk prediction strategies <ref type="bibr" target="#b10">[11]</ref> further underscore how DPGMs can adapt to diverse data structures and real-time processing requirements. Moreover, the efficient market signal detection approach proposed by Zhou et al. <ref type="bibr" target="#b11">[12]</ref> highlights the role of advanced neural architectures in combination with DPGMs for continuous data streams. These complementary research directions illustrate the wide-ranging applicability and potential extensions of deep probabilistic models in various industries and research fields. By integrating probabilistic inference and deep learning, this work not only addresses the challenges of imbalanced classification but also broadens the application of deep probabilistic approaches, ultimately enriching the machine learning toolkit for various critical domains.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>II. METHOD</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Suppose dataset</head><formula xml:id="formula_0">N i i i y x D 1 )} , {( = =</formula><p>, where</p><formula xml:id="formula_1">d i R x  represents input samples and } 1 , 0 {  i y</formula><p>represents category labels. Assuming that the ratio of positive and negative samples is seriously unbalanced, that is,</p><formula xml:id="formula_2">| } 0 { | | } 1 { | =  = i y yi</formula><p>, traditional deep learning methods tend to favor the majority class when optimizing the loss function. Therefore, we introduce deep probabilistic graphical models (DPGMs). By constructing a joint probability distribution and incorporating variational inference techniques inspired by Wang <ref type="bibr" target="#b12">[13]</ref>, the proposed model adaptively enhances the representation capability for minority class samples, leading to improved classification performance. This approach effectively mitigates the challenges posed by class imbalance, thereby ensuring that minority class samples are accurately and adequately represented within the learned feature space. Additionally, leveraging dynamic distributed scheduling methodologies as discussed by Sun <ref type="bibr" target="#b13">[14]</ref> enables efficient handling of data streams, optimizing both task delays and load balancing. Such strategies significantly contribute to maintaining computational efficiency and enhancing the real-time responsiveness of the system. Furthermore, the synergistic integration of deep learning methods and neural architecture search techniques outlined by Yan et al. <ref type="bibr" target="#b14">[15]</ref> further refines the adaptive representational adjustments, ensuring the robustness, accuracy, and generalization capabilities of the proposed classification framework. The architecture of the probabilistic graphical model is shown in Figure <ref type="figure" target="#fig_0">1</ref>.</p><p>First, we define a hidden variable z to model the potential representation of the input data x, and use the Bayesian generation model to describe the data generation process:</p><formula xml:id="formula_3">) ( ) | ( ) | ( ) , , ( x p x z p z y p z y x p = Among them, ) | ( z y p</formula><p>represents the posterior distribution of the classifier for the latent variable, and )</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>| ( x z p</head><p>represents the prior distribution of the latent variable. Based on this, our goal is to optimize the model parameters by maximizing the marginal log-likelihood: )</p><formula xml:id="formula_4"> = dz x z p z y p x y ) | ( ) | ( log ) | log(</formula><formula xml:id="formula_5">) ( || ) | ( ( )] | ( [log ) | ( log ) | ( z p x z q D z y p E x y p K L x z q -  Among them, ) || (   KL D</formula><p>represents the Kullback-Leibler divergence, which is used to measure the gap between the approximate distribution and the true posterior distribution. In order to further optimize the classification performance of minority classes, we introduce category-aware variational inference and explicitly enhance the weight of minority class samples in the loss function:</p><formula xml:id="formula_6"> = - = N i i KL i x z q i z p x z q D z y p E y w L i 1 ) | ( ))] ( || ) | ( ( )] | ( [log )[ ( Among them, ) ( i y w</formula><p>is the category weight coefficient, and a higher weight is set for minority class samples, for example: </p><formula xml:id="formula_7">I) N(0, ~ , ) ( ) (      + = x x z</formula><p>In this way, the model can learn A and B through the neural network to obtain a more stable gradient. In addition, building on previous adversarial learning frameworks <ref type="bibr" target="#b15">[16]</ref> and generative design concepts <ref type="bibr" target="#b16">[17]</ref>, we introduce an adversarial learning mechanism to optimize the category distribution. This mechanism strengthens the model's ability to differentiate minority class samples by ensuring that generated data more closely matches real distributions. Specifically, a discriminator is constructed to distinguish the distribution of generated minority class samples from authentic instances, ensuring closer alignment with observed data. Furthermore, incorporating few-shot learning strategies <ref type="bibr" target="#b17">[18]</ref> and dynamic adaptation techniques <ref type="bibr" target="#b18">[19]</ref> enhances the model's resilience in limited-data conditions. The optimization goal of the discriminator is as follows:</p><p>)</p><formula xml:id="formula_8">)] ( 1 [log( )] ( [log max min ) | ( ~) ( ~z D E z D E x z data q x x p x D G - +</formula><p>Through this adversarial learning method, the model can capture the characteristics of minority classes more accurately and avoid the overfitting problem of minority class samples.</p><p>In summary, this study combines deep probabilistic graph models, variational reasoning, and adversarial learning methods to optimize imbalanced data classification tasks.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>III. EXPERIMENT</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. Dataset</head><p>This study employs the Kaggle "Credit Card Fraud Detection" dataset, consisting of 284,807 credit card transactions from a European institution. Of these transactions, 492 are labeled as fraudulent, indicating a highly imbalanced class distribution (approximately 1:577). Each record contains 30 features, including 28 anonymized components derived from Principal Component Analysis (PCA), along with transaction time and amount. Personally identifiable information has been removed, leaving only numerical features, which were preprocessed through normalization, outlier detection, and data augmentation.</p><p>Given the severe class imbalance, direct application of conventional classification models often leads to bias toward the majority class, compromising fraud detection. To address this challenge, we employed various sampling strategies, including under-sampling, over-sampling, and the Synthetic Minority Over-sampling Technique (SMOTE), to generate synthetic samples for the minority class and improve representation. We also evaluated the impact of different sampling methods on model stability and performance. The dataset was split into 70% training, 15% validation, and 15% test sets. Evaluation metrics included Precision, Recall, F1score, and the Area Under the Receiver Operating Characteristic Curve (AUC-ROC). Comparative experiments with different data augmentation techniques demonstrated that integrating probabilistic modeling with these strategies substantially enhances fraud detection and reduces false positives, thereby improving the model's reliability in practical applications.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Experiment Result</head><p>This study primarily compares deep probabilistic graphical models (DPGMs) with several advanced imbalanced data classification methods to validate their effectiveness. First, we select the generative adversarial network (GAN)-based methods, such as WGANGP-SMOTE and ADASYN-GAN, which leverage GANs to synthesize minority class samples and mitigate data imbalance. Second, we evaluate classadaptive ensemble learning methods, including Balanced Random Forest (BRF) and XGBoost-Cost Sensitive, which enhance minority class learning by adjusting sampling strategies or modifying loss functions. Additionally, we compare attention-based imbalanced classification methods, such as Self-Attention Anomaly Detection (SAAD) and Hierarchical Attention Networks (HAN), which have demonstrated strong anomaly detection capabilities in credit card fraud detection and similar tasks. Through these comparative experiments, we aim to comprehensively assess the advantages of deep probabilistic graphical models in minority class representation learning, generalization ability, and classification performance. Our proposed deep probabilistic graphical model (DPGM) outperforms all compared methods on every evaluation metric, demonstrating superior generalization in imbalanced classification. With an AUC of 0.941, it clearly surpasses traditional oversampling (e.g., SMOTE, ADASYN) and ensemble methods (e.g., BRF, XGBoost-Cost Sensitive). Importantly, it achieves a Recall of 0.785 while maintaining a Precision of 0.822, reflecting its effectiveness in detecting minority class samples without overly biasing the model. DPGMs model the latent distribution of minority samples more effectively than conventional oversampling, thereby reducing overfitting. Compared to attention-based methods (e.g., SAAD, HAN), our model delivers a higher F1-score (0.803 versus 0.786), illustrating the benefits of uncertaintyaware probabilistic modeling. Overall, these results confirm that combining deep probabilistic modeling with variational inference optimizes class distribution and enhances minority class discrimination, offering a robust solution for imbalanced data classification. Figure <ref type="figure" target="#fig_2">2</ref> presents the corresponding loss function trajectory. This indicates that the model continuously learns features and optimizes parameters to effectively reduce errors. In the initial phase of training (between 5,000 and 25,000 iterations), the loss decreases at the fastest rate, suggesting that the model rapidly learns data representations and significantly improves classification performance. However, as the number of iterations increases, the rate of loss reduction gradually slows down and stabilizes after approximately 125,000 iterations. This trend implies that the model is approaching convergence, where further optimization yields diminishing returns.</p><p>A comparison of the training and test loss curves reveals that the test loss consistently remains lower than the training loss, and both curves follow a similar trajectory. This observation suggests that the model demonstrates good generalization ability without exhibiting significant overfitting. If the training loss were substantially lower than the test loss, it would indicate that the model performs well on training data but struggles to generalize to unseen data. However, the current loss curves do not display such a pattern, implying that the applied regularization strategies and optimization methods effectively mitigate overfitting. Furthermore, the test loss decreases at a rate similar to that of the training loss in the initial stages, further validating the model's stable learning process. Overall, these experimental results confirm that the model successfully optimizes the loss function during training, leading to a substantial reduction in both training and test errors, ultimately reaching a relatively low level. This outcome suggests that the chosen training strategy, hyperparameter configuration, and optimization techniques are effective, allowing the model to learn the data distribution efficiently while maintaining strong generalization performance. Additionally, the stabilization of the loss curves indicates that the training process has effectively converged, suggesting that training can be halted or fine-tuned further to ensure optimal performance on the test set. Finally, this paper also gives the T-SNE results after training, as shown in Figure <ref type="figure" target="#fig_3">3</ref>. Furthermore, the overall data distribution demonstrates that the T-SNE dimensionality reduction retains intra-class compactness while ensuring inter-class separability. The blue and red data points are well-clustered in distinct regions without significant overlap, indicating that the model effectively distinguishes between different categories in the feature space. Even when dealing with an imbalanced dataset, the model successfully learns the distribution patterns of the minority class. However, while the T-SNE results illustrate a clear class separation, further quantitative evaluation is necessary to assess the robustness of the classification boundaries. For instance, if significant distribution shifts occur in certain test data samples, it may indicate that the model is still susceptible to overfitting. Additionally, since T-SNE is a nonlinear dimensionality reduction method, it may exaggerate the separation between classes, meaning that the actual decision boundaries in the high-dimensional space may not be as well-defined as they appear in the visualization. Therefore, a comprehensive evaluation incorporating classification metrics such as Precision, Recall, and AUC is essential to fully validate the model's generalization performance.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>IV. CONCLUSION</head><p>This study proposes an imbalanced data classification method based on deep probabilistic graphical models (DPGMs) and validates its effectiveness through experiments on a credit card fraud detection dataset. The experimental results demonstrate that the proposed method outperforms traditional oversampling techniques, ensemble learning approaches, and attention-based models in key metrics such as AUC and F1score, confirming the effectiveness of probabilistic modeling in handling imbalanced classification tasks. By integrating variational inference, class-weight adjustment, and adversarial learning mechanisms, our model more accurately captures the feature distribution of the minority class, enhancing the classifier's discriminative ability while mitigating the overfitting issues commonly observed in traditional methods.</p><p>Despite the promising performance of our approach in imbalanced data classification, several aspects warrant further improvement. For instance, in cases of extreme imbalance, the minority class samples may still provide insufficient information, potentially limiting the model's generalization capability. Additionally, deep probabilistic graphical models involve high computational complexity, requiring extensive sampling and variational inference steps during training, which may impact deployment efficiency. Therefore, future research could focus on optimizing the computational efficiency of probabilistic modeling to enhance the model's adaptability across different data distributions. Several directions can be explored in future research. More efficient Bayesian optimization methods can be investigated to reduce the computational cost of DPGMs, making them applicable to larger-scale imbalanced datasets. Furthermore, in practical applications, federated learning frameworks can be incorporated to enable cross-institutional model training while preserving data privacy, thereby enhancing the applicability of imbalanced classification methods in real-world scenarios.</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head>Figure 1 .</head><label>1</label><figDesc>Figure 1. The architecture of the probabilistic graphical model However, this integral is difficult to compute directly, so we use variational inference to approximate the solution. Define a variational distribution ) | ( x z q to approximate</figDesc><graphic coords="2,315.00,53.50,252.00,181.50" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head>=</head><label></label><figDesc>B represent the number of samples in the majority class and the minority class, respectively.In the specific implementation, we use variational autoencoder (VAE) as the probability generation model, so that ) And optimize it by reparameterization technique:</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_2"><head>Figure 2 .</head><label>2</label><figDesc>Figure 2. Loss function drop graph From the loss function decline curve, both the training loss (Train) and test loss (Test) exhibit a clear downward trend during training iterations.This indicates that the model continuously learns features and optimizes parameters to effectively reduce errors. In the initial phase of training (between 5,000 and 25,000 iterations), the loss decreases at the fastest rate, suggesting that the model rapidly learns data representations and significantly improves classification performance. However, as the number of iterations increases, the rate of loss reduction gradually slows down and stabilizes after approximately 125,000 iterations. This trend implies that the model is approaching convergence, where further optimization yields diminishing returns.</figDesc><graphic coords="4,44.75,53.25,252.50,167.25" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_3"><head>Figure 3 .</head><label>3</label><figDesc>Figure 3. T-SNE result map after training From the T-SNE results, it is evident that after training, the data points form distinct cluster-like distributions in the two-dimensional space, indicating that the model has successfully learned the feature differences between different classes. As observed in the visualization, the two categories (represented in blue and red) are well separated, suggesting that the model has developed strong discriminative capabilities in the high-dimensional feature space. The presence of a clear boundary between the classes demonstrates that the model effectively extracts distinguishing features without causing sample overlap, thereby validating its effectiveness.</figDesc><graphic coords="4,315.00,53.50,283.25,226.75" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_0"><head>Table 1 .</head><label>1</label><figDesc>Integration Testing 1</figDesc><table><row><cell>Model</cell><cell>AUC</cell><cell>Precision</cell><cell>Recall</cell><cell>F1-Score</cell></row><row><cell>GAN [20]</cell><cell>0.842</cell><cell>0.716</cell><cell>0.654</cell><cell>0.684</cell></row><row><cell>ADASYN [21]</cell><cell>0.856</cell><cell>0.729</cell><cell>0.668</cell><cell>0.697</cell></row><row><cell>SMOTE [22]</cell><cell>0.871</cell><cell>0.742</cell><cell>0.683</cell><cell>0.711</cell></row><row><cell>BRF [23]</cell><cell>0.889</cell><cell>0.764</cell><cell>0.721</cell><cell>0.742</cell></row><row><cell>XGBOOST-Cost</cell><cell>0.903</cell><cell>0.779</cell><cell>0.735</cell><cell>0.757</cell></row><row><cell>[24]</cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>SAAD [25]</cell><cell>0.915</cell><cell>0.793</cell><cell>0.751</cell><cell>0.771</cell></row><row><cell>HAN [26]</cell><cell>0.927</cell><cell>0.806</cell><cell>0.768</cell><cell>0.786</cell></row><row><cell>Ours</cell><cell>0.941</cell><cell>0.822</cell><cell>0.785</cell><cell>0.803</cell></row></table></figure>
+		</body>
+		<back>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<monogr>
+		<title level="m" type="main">A Deep Learning Framework Integrating CNN and BiLSTM for Financial Systemic Risk Analysis and Prediction</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Cheng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Xu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Lin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Liu</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2502.06847</idno>
+		<imprint>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Y. Cheng, Z. Xu, Y. Chen, Y. Wang, Z. Lin and J. Liu, &quot;A Deep Learning Framework Integrating CNN and BiLSTM for Financial Systemic Risk Analysis and Prediction,&quot; arXiv preprint arXiv:2502.06847, 2025.</note>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<analytic>
+		<title level="a" type="main">Multimodal Data-Driven Factor Models for Stock Market Forecasting</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Liu</surname></persName>
+		</author>
+		<idno type="DOI">10.5281/zenodo.14984969</idno>
+		<ptr target="https://doi.org/10.5281/zenodo.14984969" />
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Computer Technology and Software</title>
+		<imprint>
+			<biblScope unit="volume">4</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. Liu, &quot;Multimodal Data-Driven Factor Models for Stock Market Forecasting,&quot; Journal of Computer Technology and Software, vol. 4, no. 2, 2025, https://doi.org/10.5281/zenodo.14984969.</note>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<analytic>
+		<title level="a" type="main">A Hybrid Network Congestion Prediction Method Integrating Association Rules and LSTM for Enhanced Spatiotemporal Forecasting</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Deng</surname></persName>
+		</author>
+		<idno type="DOI">10.5281/zenodo.14912727</idno>
+		<ptr target="https://doi.org/10.5281/zenodo.14912727" />
+	</analytic>
+	<monogr>
+		<title level="j">Transactions on Computational and Scientific Methods</title>
+		<imprint>
+			<biblScope unit="volume">5</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Y. Deng, &quot;A Hybrid Network Congestion Prediction Method Integrating Association Rules and LSTM for Enhanced Spatiotemporal Forecasting,&quot; Transactions on Computational and Scientific Methods, vol. 5, no. 2, 2025, https://doi.org/10.5281/zenodo.14912727.</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<analytic>
+		<title level="a" type="main">Hybrid BiLSTM-Transformer Model for Identifying Fraudulent Transactions in Financial Systems</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Feng</surname></persName>
+		</author>
+		<idno type="DOI">10.5281/zenodo.14985026</idno>
+		<ptr target="https://doi.org/10.5281/zenodo.14985026" />
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Computer Science and Software Applications</title>
+		<imprint>
+			<biblScope unit="volume">5</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">P. Feng, &quot;Hybrid BiLSTM-Transformer Model for Identifying Fraudulent Transactions in Financial Systems,&quot; Journal of Computer Science and Software Applications, vol. 5, no. 3, 2025, https://doi.org/10.5281/zenodo.14985026.</note>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<analytic>
+		<title level="a" type="main">Optimized Convolutional Neural Network for Intelligent Financial Statement Anomaly Detection</title>
+		<author>
+			<persName><forename type="first">X</forename><surname>Du</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Computer Technology and Software</title>
+		<imprint>
+			<biblScope unit="volume">3</biblScope>
+			<biblScope unit="issue">9</biblScope>
+			<biblScope unit="page" from="11" to="15" />
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">X. Du, &quot;Optimized Convolutional Neural Network for Intelligent Financial Statement Anomaly Detection,&quot; Journal of Computer Technology and Software, vol. 3, no. 9, pp. 11-15, 2024.</note>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<analytic>
+		<title level="a" type="main">Advancing Credit Risk Management: Embracing Probabilistic Graphical Models in Banking</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Moolchandani</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Science and Research (IJSR)</title>
+		<imprint>
+			<biblScope unit="volume">13</biblScope>
+			<biblScope unit="issue">6</biblScope>
+			<biblScope unit="page" from="74" to="80" />
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S. Moolchandani, &quot;Advancing Credit Risk Management: Embracing Probabilistic Graphical Models in Banking,&quot; International Journal of Science and Research (IJSR), vol. 13, no. 6, pp. 74-80, 2024.</note>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<analytic>
+		<title level="a" type="main">Learning to Solve the Constrained Most Probable Explanation Task in Probabilistic Graphical Models</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Arya</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Rahman</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">V</forename><surname>Gogate</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 2024 International Conference on Artificial Intelligence and Statistics (AISTATS)</title>
+		<meeting>the 2024 International Conference on Artificial Intelligence and Statistics (AISTATS)</meeting>
+		<imprint>
+			<publisher>PMLR</publisher>
+			<date type="published" when="2024">2024</date>
+			<biblScope unit="page" from="2791" to="2799" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S. Arya, T. Rahman and V. Gogate, &quot;Learning to Solve the Constrained Most Probable Explanation Task in Probabilistic Graphical Models,&quot; Proceedings of the 2024 International Conference on Artificial Intelligence and Statistics (AISTATS), PMLR, pp. 2791-2799, 2024.</note>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<monogr>
+		<title level="m" type="main">Contrastive Learning for Cold Start Recommendation with Adaptive Feature Fusion</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Hu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>An</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Yu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Du</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Luo</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2502.03664</idno>
+		<imprint>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">J. Hu, T. An, Z. Yu, J. Du and Y. Luo, &quot;Contrastive Learning for Cold Start Recommendation with Adaptive Feature Fusion,&quot; arXiv preprint arXiv:2502.03664, 2025.</note>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">Elastic Scheduling of Micro-Modules in Edge Computing Based on LSTM Prediction</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Zhan</surname></persName>
+		</author>
+		<idno type="DOI">10.5281/zenodo.14984949</idno>
+		<ptr target="https://doi.org/10.5281/zenodo.14984949" />
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Computer Technology and Software</title>
+		<imprint>
+			<biblScope unit="volume">4</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. Zhan, &quot;Elastic Scheduling of Micro-Modules in Edge Computing Based on LSTM Prediction,&quot; Journal of Computer Technology and Software, vol. 4, no. 2, 2025, https://doi.org/10.5281/zenodo.14984949.</note>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<analytic>
+		<title level="a" type="main">User Intent Prediction and Response in Human-Computer Interaction via BiLSTM</title>
+		<author>
+			<persName><forename type="first">Q</forename><surname>Sun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Duan</surname></persName>
+		</author>
+		<idno type="DOI">10.5281/zenodo.14985042</idno>
+		<ptr target="https://doi.org/10.5281/zenodo.14985042" />
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Computer Science and Software Applications</title>
+		<imprint>
+			<biblScope unit="volume">5</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Q. Sun and S. Duan, &quot;User Intent Prediction and Response in Human- Computer Interaction via BiLSTM,&quot; Journal of Computer Science and Software Applications, vol. 5, no. 3, 2025, https://doi.org/10.5281/zenodo.14985042.</note>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<analytic>
+		<title level="a" type="main">Time-Series Premium Risk Prediction via Bidirectional Transformer</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Wang</surname></persName>
+		</author>
+		<idno type="DOI">10.5281/zenodo.14955913</idno>
+		<ptr target="https://doi.org/10.5281/zenodo.14955913" />
+	</analytic>
+	<monogr>
+		<title level="j">Transactions on Computational and Scientific Methods</title>
+		<imprint>
+			<biblScope unit="volume">5</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Y. Wang, &quot;Time-Series Premium Risk Prediction via Bidirectional Transformer,&quot; Transactions on Computational and Scientific Methods, vol. 5, no. 2, 2025, https://doi.org/10.5281/zenodo.14955913.</note>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<analytic>
+		<title level="a" type="main">Efficient Market Signal Prediction for Blockchain HFT with Temporal Convolutional Networks</title>
+		<author>
+			<persName><forename type="first">T</forename><surname>Zhou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Xu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Du</surname></persName>
+		</author>
+		<idno type="DOI">10.5281/zenodo.14912719</idno>
+		<ptr target="https://doi.org/10.5281/zenodo.14912719" />
+	</analytic>
+	<monogr>
+		<title level="j">Transactions on Computational and Scientific Methods</title>
+		<imprint>
+			<biblScope unit="volume">5</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">T. Zhou, Z. Xu and J. Du, &quot;Efficient Market Signal Prediction for Blockchain HFT with Temporal Convolutional Networks,&quot; Transactions on Computational and Scientific Methods, vol. 5, no. 2, 2025, https://doi.org/10.5281/zenodo.14912719.</note>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<analytic>
+		<title level="a" type="main">Data Mining Framework Leveraging Stable Diffusion: A Unified Approach for Classification and Anomaly Detection</title>
+		<author>
+			<persName><forename type="first">X</forename><surname>Wang</surname></persName>
+		</author>
+		<idno type="DOI">10.5281/zenodo.14843181</idno>
+		<ptr target="https://doi.org/10.5281/zenodo.14843181" />
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Computer Technology and Software</title>
+		<imprint>
+			<biblScope unit="volume">4</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">X. Wang, &quot;Data Mining Framework Leveraging Stable Diffusion: A Unified Approach for Classification and Anomaly Detection,&quot; Journal of Computer Technology and Software, vol. 4, no. 1, 2025, https://doi.org/10.5281/zenodo.14843181.</note>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<analytic>
+		<title level="a" type="main">Dynamic Distributed Scheduling for Data Stream Computing: Balancing Task Delay and Load Efficiency</title>
+		<author>
+			<persName><forename type="first">X</forename><surname>Sun</surname></persName>
+		</author>
+		<idno type="DOI">10.5281/zenodo.14785261</idno>
+		<ptr target="https://doi.org/10.5281/zenodo.14785261" />
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Computer Technology and Software</title>
+		<imprint>
+			<biblScope unit="volume">4</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">X. Sun, &quot;Dynamic Distributed Scheduling for Data Stream Computing: Balancing Task Delay and Load Efficiency&quot;, Journal of Computer Technology and Software, vol. 4, no. 1, 2025, https://doi.org/10.5281/zenodo.14785261.</note>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<analytic>
+		<title level="a" type="main">The Synergistic Role of Deep Learning and Neural Architecture Search in Advancing Artificial Intelligence</title>
+		<author>
+			<persName><forename type="first">X</forename><surname>Yan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Du</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Liang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Hu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Wang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 2024 International Conference on Electronics and Devices, Computational Science (ICEDCS)</title>
+		<meeting>the 2024 International Conference on Electronics and Devices, Computational Science (ICEDCS)</meeting>
+		<imprint>
+			<date type="published" when="2024-09">Sep. 2024</date>
+			<biblScope unit="page" from="452" to="456" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">X. Yan, J. Du, L. Wang, Y. Liang, J. Hu and B. Wang, &quot;The Synergistic Role of Deep Learning and Neural Architecture Search in Advancing Artificial Intelligence,&quot; Proceedings of the 2024 International Conference on Electronics and Devices, Computational Science (ICEDCS), pp. 452-456, Sep. 2024.</note>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<analytic>
+		<title level="a" type="main">Improved Transformer for Cross-Domain Knowledge Extraction with Feature Alignment</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Li</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Computer Science and Software Applications</title>
+		<imprint>
+			<biblScope unit="volume">5</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">P. Li, &quot;Improved Transformer for Cross-Domain Knowledge Extraction with Feature Alignment,&quot; Journal of Computer Science and Software Applications, vol. 5, no. 2, 2024.</note>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<analytic>
+		<title level="a" type="main">Generative UI Design with Diffusion Models: Exploring Automated Interface Creation and Human-Computer Interaction</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Shi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Transactions on Computational and Scientific Methods</title>
+		<imprint>
+			<biblScope unit="volume">5</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S. Wang, R. Zhang and X. Shi, &quot;Generative UI Design with Diffusion Models: Exploring Automated Interface Creation and Human-Computer Interaction,&quot; Transactions on Computational and Scientific Methods, vol. 5, no. 3, 2025.</note>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<monogr>
+		<title level="m" type="main">A Hybrid Model for Few-Shot Text Classification Using Transfer and Meta-Learning</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Gao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Lyu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Zhu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Zheng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Liao</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2502.09086</idno>
+		<imprint>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">J. Gao, S. Lyu, G. Liu, B. Zhu, H. Zheng and X. Liao, &quot;A Hybrid Model for Few-Shot Text Classification Using Transfer and Meta-Learning,&quot; arXiv preprint arXiv:2502.09086, 2025.</note>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<analytic>
+		<title level="a" type="main">Time-Series Nested Reinforcement Learning for Dynamic Risk Control in Nonlinear Financial Markets</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Yao</surname></persName>
+		</author>
+		<idno type="DOI">10.5281/zenodo.14677117</idno>
+		<ptr target="https://doi.org/10.5281/zenodo.14677117" />
+	</analytic>
+	<monogr>
+		<title level="j">Transactions on Computational and Scientific Methods</title>
+		<imprint>
+			<biblScope unit="volume">5</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Y. Yao, &quot;Time-Series Nested Reinforcement Learning for Dynamic Risk Control in Nonlinear Financial Markets,&quot; Transactions on Computational and Scientific Methods, vol. 5, no. 1, 2025, https://doi.org/10.5281/zenodo.14677117.</note>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<analytic>
+		<title level="a" type="main">Generative Adversarial Nets</title>
+		<author>
+			<persName><forename type="first">I</forename><surname>Goodfellow</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Pouget-Abadie</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Mirza</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Xu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Warde-Farley</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Ozair</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Courville</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Bengio</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 27th Advances in Neural Information Processing Systems (NeurIPS)</title>
+		<meeting>the 27th Advances in Neural Information Processing Systems (NeurIPS)</meeting>
+		<imprint>
+			<date type="published" when="2014">2014</date>
+			<biblScope unit="page" from="1" to="9" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">I. Goodfellow, J. Pouget-Abadie, M. Mirza, B. Xu, D. Warde-Farley, S. Ozair, A. Courville and Y. Bengio, &quot;Generative Adversarial Nets,&quot; Proceedings of the 27th Advances in Neural Information Processing Systems (NeurIPS), pp. 1-9, 2014.</note>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<analytic>
+		<title level="a" type="main">ADASYN: Adaptive Synthetic Sampling Approach for Imbalanced Learning</title>
+		<author>
+			<persName><forename type="first">H</forename><surname>He</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Bai</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the IEEE International Joint Conference on Neural Networks (IEEE World Congress on Computational Intelligence)</title>
+		<meeting>the IEEE International Joint Conference on Neural Networks (IEEE World Congress on Computational Intelligence)</meeting>
+		<imprint>
+			<date type="published" when="2008">2008</date>
+			<biblScope unit="page" from="1322" to="1328" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">H. He and Y. Bai, &quot;ADASYN: Adaptive Synthetic Sampling Approach for Imbalanced Learning,&quot; Proceedings of the IEEE International Joint Conference on Neural Networks (IEEE World Congress on Computational Intelligence), pp. 1322-1328, 2008.</note>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<analytic>
+		<title level="a" type="main">SMOTE: Synthetic Minority Over-Sampling Technique</title>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">V</forename><surname>Chawla</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">W</forename><surname>Bowyer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><forename type="middle">O</forename><surname>Hall</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><forename type="middle">P</forename><surname>Kegelmeyer</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Artificial Intelligence Research</title>
+		<imprint>
+			<biblScope unit="volume">16</biblScope>
+			<biblScope unit="page" from="321" to="357" />
+			<date type="published" when="2002">2002</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">N. V. Chawla, K. W. Bowyer, L. O. Hall and W. P. Kegelmeyer, &quot;SMOTE: Synthetic Minority Over-Sampling Technique,&quot; Journal of Artificial Intelligence Research, vol. 16, pp. 321-357, 2002.</note>
+</biblStruct>
+
+<biblStruct xml:id="b22">
+	<analytic>
+		<title level="a" type="main">Classification and Regression by randomForest</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Liaw</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Wiener</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">R News</title>
+		<imprint>
+			<biblScope unit="volume">2</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="18" to="22" />
+			<date type="published" when="2002">2002</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">A. Liaw and M. Wiener, &quot;Classification and Regression by randomForest,&quot; R News, vol. 2, no. 3, pp. 18-22, 2002.</note>
+</biblStruct>
+
+<biblStruct xml:id="b23">
+	<analytic>
+		<title level="a" type="main">XGBoost: A Scalable Tree Boosting System</title>
+		<author>
+			<persName><forename type="first">T</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Guestrin</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</title>
+		<meeting>the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</meeting>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+			<biblScope unit="page" from="785" to="794" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">T. Chen and C. Guestrin, &quot;XGBoost: A Scalable Tree Boosting System,&quot; Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining, pp. 785-794, 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b24">
+	<analytic>
+		<title level="a" type="main">Self-Attention Anomaly Detection</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">C</forename><surname>Paffenroth</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 25th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</title>
+		<meeting>the 25th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</meeting>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+			<biblScope unit="page" from="2774" to="2782" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Y. Zhou and R. C. Paffenroth, &quot;Self-Attention Anomaly Detection,&quot; Proceedings of the 25th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining, pp. 2774-2782, 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b25">
+	<analytic>
+		<title level="a" type="main">Hierarchical Attention Networks for Document Classification</title>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Yang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Yang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Dyer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>He</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Smola</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Hovy</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 2016 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies</title>
+		<meeting>the 2016 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies</meeting>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+			<biblScope unit="page" from="1480" to="1489" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Z. Yang, D. Yang, C. Dyer, X. He, A. Smola and E. Hovy, &quot;Hierarchical Attention Networks for Document Classification,&quot; Proceedings of the 2016 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, pp. 1480- 1489, 2016.</note>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

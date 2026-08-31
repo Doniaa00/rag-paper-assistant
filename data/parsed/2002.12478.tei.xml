@@ -1,0 +1,2484 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">Time Series Data Augmentation for Deep Learning: A Survey</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability  status="unknown">
+					<licence/>
+				</availability>
+				<date type="published" when="2022-03-31">31 Mar 2022</date>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><forename type="first">Qingsong</forename><surname>Wen</surname></persName>
+							<email>qingsong.wen@alibaba-inc.com</email>
+							<affiliation key="aff0">
+								<orgName type="department">DAMO Academy</orgName>
+								<orgName type="institution">Alibaba Group</orgName>
+								<address>
+									<settlement>Bellevue</settlement>
+									<region>WA</region>
+									<country key="US">USA</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Liang</forename><surname>Sun</surname></persName>
+							<email>liang.sun@alibaba-inc.com</email>
+							<affiliation key="aff0">
+								<orgName type="department">DAMO Academy</orgName>
+								<orgName type="institution">Alibaba Group</orgName>
+								<address>
+									<settlement>Bellevue</settlement>
+									<region>WA</region>
+									<country key="US">USA</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Fan</forename><surname>Yang</surname></persName>
+							<email>fanyang.yf@alibaba-inc.com</email>
+							<affiliation key="aff1">
+								<orgName type="institution">Alibaba Group</orgName>
+								<address>
+									<settlement>Hangzhou</settlement>
+									<country key="CN">China</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Xiaomin</forename><surname>Song</surname></persName>
+							<email>xiaomin.song@alibaba-inc.com</email>
+							<affiliation key="aff0">
+								<orgName type="department">DAMO Academy</orgName>
+								<orgName type="institution">Alibaba Group</orgName>
+								<address>
+									<settlement>Bellevue</settlement>
+									<region>WA</region>
+									<country key="US">USA</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Jingkun</forename><surname>Gao</surname></persName>
+							<email>jingkung@twitter.com</email>
+							<affiliation key="aff2">
+								<orgName type="institution">Twitter</orgName>
+								<address>
+									<settlement>Seattle</settlement>
+									<region>WA</region>
+									<country key="US">USA</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Xue</forename><surname>Wang</surname></persName>
+							<email>xue.w@alibaba-inc.com</email>
+							<affiliation key="aff0">
+								<orgName type="department">DAMO Academy</orgName>
+								<orgName type="institution">Alibaba Group</orgName>
+								<address>
+									<settlement>Bellevue</settlement>
+									<region>WA</region>
+									<country key="US">USA</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Huan</forename><surname>Xu</surname></persName>
+							<email>huan.xu@alibaba-inc.com</email>
+							<affiliation key="aff1">
+								<orgName type="institution">Alibaba Group</orgName>
+								<address>
+									<settlement>Hangzhou</settlement>
+									<country key="CN">China</country>
+								</address>
+							</affiliation>
+						</author>
+						<title level="a" type="main">Time Series Data Augmentation for Deep Learning: A Survey</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date type="published" when="2022-03-31">31 Mar 2022</date>
+						</imprint>
+					</monogr>
+					<idno type="MD5">5000B41C4D7A8401B4A56F8D7264A12F</idno>
+					<idno type="arXiv">arXiv:2002.12478v4[cs.LG]</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.2-SNAPSHOT" ident="GROBID" when="2026-08-31T18:09+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>Deep learning performs remarkably well on many time series analysis tasks recently. The superior performance of deep neural networks relies heavily on a large number of training data to avoid overfitting. However, the labeled data of many realworld time series applications may be limited such as classification in medical time series and anomaly detection in AIOps. As an effective way to enhance the size and quality of the training data, data augmentation is crucial to the successful application of deep learning models on time series data. In this paper, we systematically review different data augmentation methods for time series. We propose a taxonomy for the reviewed methods, and then provide a structured review for these methods by highlighting their strengths and limitations. We also empirically compare different data augmentation methods for different tasks including time series classification, anomaly detection, and forecasting. Finally, we discuss and highlight five future directions to provide useful research guidance.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1">Introduction</head><p>Deep learning has achieved remarkable success in many fields, including computer vision (CV), natural language processing (NLP), and speech processing, etc. Recently, it is increasingly embraced for solving time series related tasks, including time series classification <ref type="bibr" target="#b29">[Fawaz et al., 2019]</ref>, time series forecasting <ref type="bibr" target="#b43">[Han et al., 2019]</ref>, and time series anomaly detection <ref type="bibr" target="#b37">[Gamboa, 2017]</ref>. The success of deep learning relies heavily on a large number of training data to avoid overfitting. Unfortunately, many time series tasks do not have enough labeled data. As an effective tool to enhance the size and quality of the training data, data augmentation is crucial to the successful application of deep learning models. The basic idea of data augmentation is to generate synthetic dataset covering unexplored input space while maintaining correct labels. Data augmentation has shown its effectiveness in many applications, such as AlexNet <ref type="bibr" target="#b61">[Krizhevsky et al., 2012]</ref> for ImageNet classification. However, less attention has been paid to find better data augmentation methods specifically for time series data. Here we highlight some challenges arising from data augmentation methods for time series data. Firstly, the intrinsic properties of time series data are not fully utilized in current data augmentation methods. One unique property of time series data is the so-called temporal dependency. Unlike image data, the time series data can be transformed into the frequency and time-frequency domains and effective data augmentation methods can be designed and implemented in the transformed domain. This becomes more complicated when we model multivariate time series where we need to consider the potentially complex dynamics of these variables across time. Thus, simply applying those data augmentation methods from image and speech processing may not result in valid synthetic data. Secondly, the data augmentation methods are also task dependent. For example, the data augmentation methods applicable for time series classification may not be valid for time series anomaly detection. In addition, data augmentation becomes more crucial in many time series classification problems where class imbalance is often observed. In this case, how to effective generate a large number of synthetic data with labels with less samples remains a challenge.</p><p>Unlike data augmentation for CV <ref type="bibr" target="#b93">[Shorten and Khoshgoftaar, 2019]</ref> or speech <ref type="bibr" target="#b15">[Cui et al., 2015]</ref>, data augmentation for time series has not yet been comprehensively and systematically reviewed to the best of our knowledge. One work closely related to ours is <ref type="bibr" target="#b51">[Iwana and Uchida, 2020]</ref> which presents a survey of existing data augmentation methods for time series classification. However, it does not review the data augmentation methods for other common tasks like time series forecasting <ref type="bibr" target="#b2">[Bandara et al., 2020;</ref><ref type="bibr" target="#b49">Hu et al., 2020;</ref><ref type="bibr" target="#b67">Lee and Kim, 2020]</ref> and anomaly detection <ref type="bibr" target="#b71">[Lim et al., 2018;</ref><ref type="bibr" target="#b115">Zhou et al., 2019;</ref><ref type="bibr" target="#b39">Gao et al., 2020]</ref>. Furthermore, the potential avenues for future research opportunities of time series data augmentations are also missing.</p><p>In this paper, we aim to fill the aforementioned gaps by summarizing existing time series data augmentation methods in common tasks, including time series forecasting, anomaly detection, classification, as well as providing insightful future directions. To this end, we propose a taxonomy of data augmentation methods for time series, as illustrated in Fig. <ref type="figure" target="#fig_0">1</ref>. Based on the taxonomy, we review these data augmentation methods systematically. We start the discussion from the sim- ple transformations in time domain first. And then we discuss more transformations on time series in the transformed frequency and time-frequency domains. Besides the transformations in different domains for time series, we also summarize more advanced methods, including decomposition-based methods, model-based methods, and learning-based methods. For learning-based methods, we further divide them into embedding space, deep generative models (DGMs), and automated data augmentation methods. To demonstrate effectiveness of data augmentation, we conduct preliminary evaluation of augmentation methods in three typical time series tasks, including time series classification, anomaly detection, and forecasting. Finally, we discuss and highlight five future directions: augmentation in time-frequency domain, augmentation for imbalanced class, augmentation selection and combination, augmentation with Gaussian processes, and augmentation with deep generative models.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2">Basic Data Augmentation Methods</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.1">Time Domain</head><p>The transforms in the time domain are the most straightforward data augmentation methods for time series data. Most of them manipulate the original input time series directly, like injecting Gaussian noise or more complicated noise patterns such as spike, step-like trend, and slope-like trend. Besides this straightforward methods, we will also discuss a particular data augmentation method for time series anomaly detection, i.e., label expansion in the time domain.</p><p>Window cropping or slicing has been mentioned in <ref type="bibr" target="#b65">[Le Guennec et al., 2016]</ref>. Introduced in <ref type="bibr" target="#b17">[Cui et al., 2016]</ref>, window cropping is similar to cropping in CV area. It is a subsample method to randomly extract continuous slices from the original time series. The length of the slice is a tunable parameter. For classification problem, the labels of sliced samples are the same as the original time series. During test time, each slice from a test time series is classified using majority voting. For anomaly detection problem, the anomaly label will be sliced along with value series.</p><p>Window warping is a unique augmentation method for time series. Similar to dynamic time warping (DTW), this method selects a random time range, then compresses (down sample) or extends (up sample) it, while keeps other time range unchanged. Window warping would change the total length of the original time series, so it should be conducted along with window cropping for deep learning models. This method contains the normal down sampling which takes down sample through the whole length of the original time series.</p><p>Flipping is another method that generates the new sequence x 1 , • • • , x N by flipping the sign of original time series x 1 , • • • , x N , where x t = -x t . The labels are still the same, for both anomaly detection and classification, assuming that we have symmetry between up and down directions.</p><p>Another interesting perturbation and also ensemble based method is introduced in <ref type="bibr" target="#b27">[Fawaz et al., 2018]</ref>. This method generates new time series with DTW and then ensembles them by a weighted version of the Barycentric Averaging (DBA) algorithm. It shows improvement of classification in some of the UCR datasets.</p><p>Noise injection is a method by injecting small amount of noise/outlier into time series without changing the corresponding labels. This includes injecting Gaussian noise, spike, step-like trend, and slope-like trend, etc. For spike, we can randomly pick index and direction, randomly assign magnitude but bounded by multiples of standard deviation of the original time series. For step-like trend, it is the cumulative summation of the spikes from left index to right index. The slope-like trend is adding a linear trend into the original time series. These schemes are mostly mentioned in <ref type="bibr" target="#b104">[Wen and Keyes, 2019]</ref> In time series anomaly detection, the anomalies generally last long enough during a continuous span so that the start and end points are sometimes "blurry". As a result, a data point close to a labeled anomaly in terms of both time distance and value distance is very likely to be an anomaly. In this case, the label expansion method is proposed to change those data points and their labels as anomalies (by assign it an anomaly score or switch its label), which brings performance improvement for time series anomaly detection as shown in <ref type="bibr" target="#b39">[Gao et al., 2020]</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.2">Frequency Domain</head><p>While most of the existing data augmentation methods focus on time domain, only a few studies investigate data augmentation from frequency domain perspective for time series.</p><p>A recent work in <ref type="bibr" target="#b39">[Gao et al., 2020]</ref> proposes to utilize perturbations in both amplitude spectrum and phase spectrum in frequency domain for data augmentation in time series anomaly detection by convolutional neural network. Specifically, for the input time series x 1 , • • • , x N , its frequency spectrum F (ω k ) through Fourier transform is calculated as:</p><formula xml:id="formula_0">F (ω k ) = 1 N N -1 t=0 x t e -jω k t = A(ω k ) exp[jθ(ω k )] (1)</formula><p>where ω k = 2πk N is the angular frequency, A(ω k ) is the amplitude spectrum, and θ(ω k ) is the phase spectrum. For perturbations in amplitude spectrum A(ω k ), the amplitude values of randomly selected segments are replaced with Gaussian noise by considering the original mean and variance in the amplitude spectrum. While for perturbations in phase spectrum θ(ω k ), the phase values of randomly selected segments are added by an extra zero-mean Gaussian noise in the phase spectrum. The amplitude and phase perturbations (APP) based data augmentation combined with aforementioned time-domain augmentation methods bring significant time series anomaly detection improvements as shown in the experiments of <ref type="bibr" target="#b39">[Gao et al., 2020]</ref>.</p><p>Another recent work in <ref type="bibr" target="#b69">[Lee et al., 2019]</ref> proposes to utilize the surrogate data to improve the classification performance of rehabilitative time series in deep neural network. Two conventional types of surrogate time series are adopted in the work: the amplitude adjusted Fourier transform (AAFT) and the iterated AAFT (IAAFT) <ref type="bibr" target="#b91">[Schreiber and Schmitz, 2000]</ref>. The main idea is to perform random phase shuffle in phase spectrum after Fourier transform and then perform rank-ordering of time series after inverse Fourier transform. The generated time series from AAFT and IAAFT can approximately preserve the temporal correlation, power spectra, and the amplitude distribution of the original time series. In the experiments of <ref type="bibr" target="#b69">[Lee et al., 2019]</ref>, the authors conducted two types of data augmentation by extending the data by 10 then 100 times through AAFT and IAAFT methods, and demonstrated promising classification accuracy improvements compared to the original time series without data augmentation.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.3">Time-Frequency Domain</head><p>Time-frequency analysis is a widely applied technique for time series analysis, which can be utilized as an appropriate input features in deep neural networks. However, similar to data augmentation in frequency domain, only a few studies considered data augmentation from time-frequency domain for time series.</p><p>The authors in <ref type="bibr" target="#b96">[Steven Eyobu and Han, 2018</ref>] adopt short Fourier transform (STFT) to generate time-frequency features for sensor time series, and conduct data augmentation on the time-frequency features for human activity classification by a deep LSTM neural network. Specifically, two augmentation techniques are proposed. One is the local averaging based on a defined criteria with the generated features appended at the tail end of the feature set. Another is the shuffling of feature vectors to create variation in the data. Similarly, in speech time series, recently SpecAugment <ref type="bibr" target="#b75">[Park et al., 2019]</ref> is proposed to make data augmentation in Mel-Frequency (a timefrequency representation based on STFT for speech time series), where the augmentation scheme consists of warping the features, masking blocks of frequency channels, and masking blocks of time steps. They demonstrate that SpecAugment can greatly improve the performance of speech recognition neural networks and obtain state-of-the-art results.</p><p>For illustration, we summarize several typical time series data augmentation methods in time, frequency, and timefrequency domains in Fig. <ref type="figure" target="#fig_1">2</ref>.</p><p>3 Advanced Data Augmentation Methods</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.1">Decomposition-based Methods</head><p>Decomposition-based time series augmentation has also been adopted and shown success in many time series related tasks, such as forecasting and anomaly detection. Common decomposition method like STL <ref type="bibr" target="#b9">[Cleveland et al., 1990]</ref> or Robust-STL <ref type="bibr">[Wen et al., 2019b]</ref> decomposes time series x t as where τ t is the trend signal, s t is the seasonal/periodic signal, and the r t denotes the remainder signal.</p><formula xml:id="formula_1">x t = τ t + s t + r t , t = 1, 2, ...N<label>(2)</label></formula><p>In <ref type="bibr" target="#b55">[Kegel et al., 2018]</ref>, authors discussed the decomposition method to generate new time series. After STL, it recombines new time series with a deterministic component and a stochastic component. The deterministic part is reconstructed by adjusting weights for base, trend, and seasonality. The stochastic part is generated by building a composite statistical model based on residual, such as an auto-regressive model. The summed generated time series is validated by examining whether a feature-based distance to its original signal is within certain range. Meanwhile, authors in <ref type="bibr" target="#b4">[Bergmeir et al., 2016]</ref> proposed to apply bootstrapping on the STL decomposed residuals to generate augmented signals, which are then added back with trend and seasonality to assemble a new time series. An ensemble of the forecasting models on the augmented time series has outperformed the original forecasting model consistently, demonstrating the effectiveness of decomposition-based time series augmentation approaches.</p><p>Recently, in <ref type="bibr" target="#b39">[Gao et al., 2020]</ref>, authors showed that applying time-domain and frequency-domain augmentation on the decomposed residual that is generated using robust decomposition <ref type="bibr" target="#b107">[Wen et al., 2020;</ref><ref type="bibr">Wen et al., 2019a]</ref> can help increase the performance of anomaly detection significantly, compared with the same method without augmentation.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.2">Statistical Generative Models</head><p>Time series augmentation approaches based on statistical generative models typically involve modelling the dynamics of the time series with statistical models. In <ref type="bibr" target="#b6">[Cao et al., 2014]</ref>, authors proposed a parsimonious statistical model, known as mixture of Gaussian trees, for modeling multi-modal minority class time series data to solve the problem of imbalanced classification, which shows advantages compared with existing oversampling approaches that do not exploit time series correlations between neighboring points. Authors in <ref type="bibr" target="#b95">[Smyl and Kuber, 2016]</ref> use samples of parameters and forecast paths calculated by a statistical algorithm called LGT <ref type="bibr">(Local and Global Trend)</ref>. More recently, in <ref type="bibr" target="#b53">[Kang et al., 2020]</ref> researchers use mixture autoregressive (MAR) models to simulate sets of time series and investigate the diversity and cover-age of the generated time series in a time series feature space.</p><p>Essentially, these models describe the conditional distribution of time series by assuming the value at time t depends on previous points. Once the initial value is perturbed, a new time series sequence could be generated following the conditional distribution.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.3">Learning-based Methods</head><p>Time series data augmentation methods should be capable of not only generating diverse samples, but also mimicking the characteristics of real data. In this section, we summarize some recent learning based schemes that have such potentials.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Embedding Space</head><p>In <ref type="bibr" target="#b23">[DeVries and Taylor, 2017]</ref>, the data augmentation is proposed to perform in the learned embedding space (aka., latent space). It assumes that simple transforms applied to encoded inputs rather than the raw inputs would produce more plausible synthetic data due to the manifold unfolding in feature space. Note that the selection of the representation model in this framework is open and depends on the specific task and data type. When the time series data is addressed, a sequence autoencoder is selected in <ref type="bibr" target="#b23">[DeVries and Taylor, 2017]</ref>. Specifically, the interpolation and extrapolation are applied to generate new samples. The first k nearest labels in the transformed space with the same label are identified. Then for each pair of neighboring samples, a new sample is generated which is the linear combination of them. The difference of interpolation and extrapolation lies in the weight selection in sample generation. This technique is particular useful for time series classification as demonstrated in <ref type="bibr">[De-Vries and Taylor, 2017]</ref>. Recently, another data augmentation method in the embedding space named MODALS (Modalityagnostic Automated Data Augmentation in the Latent Space) is proposed in <ref type="bibr" target="#b8">[Cheung and Yeung, 2021]</ref>. Instead of training an autoencoder to learn the latent space and generate additional synthetic data for training, the MODALS method train a classification model jointly with different compositions of latent space augmentations, which demonstrates superior performance for time series classification problems.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Deep Generative Models</head><p>Deep generative models (DGMs) have recently been shown to be able to generate near-realistic high-dimensional data objects such as images and sequences. DGMs developed for sequential data, such as audio and text, often can be extended to model time series data. Among DGMs, generative adversarial networks (GANs) are popular methods to generate synthetic samples and increase the training set effectively. Although the GAN frameworks have received significant attention in many fields, how to generate effective time series data still remains a challenging problem. In this subsection, we briefly review several recent works on GANs for time series data augmentation.</p><p>In <ref type="bibr" target="#b25">[Esteban et al., 2017]</ref>, a Recurrent GAN (RGAN) and Recurrent Conditional GAN (RCGAN) are proposed to produce realistic real-valued multi-dimensional time series data. The RGAN adopts RNN in the generator and discriminator, while the RCGAN adopts both RNNs conditioned on auxiliary information. Besides desirable performance of RGAN and RCGAN for time series data augmentation, differential privacy can be used in training the RCGAN for stricter privacy guarantees like medicine or other sensitive domains. Recently, <ref type="bibr" target="#b111">[Yoon et al., 2019]</ref> proposed TimeGAN, a natural framework for generating realistic time series data in various domains. TimeGAN is a generative time series model, trained adversarially and jointly via a learned embedding space with both supervised and unsupervised losses. Specifically, a stepwise supervised loss is introduced to learn the stepwise conditional distributions in data. It also introduces an embedding network to provide a reversible mapping between features and latent representations to reduce the high-dimensionality of the adversarial learning space. Note that the supervised loss is minimized by jointly training both the embedding and generator networks.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Automated Data Augmentation</head><p>The idea of automated data augmentation is to automatically search for optimal data augmentation policies through reinforcement learning, meta learning, or evolutionary search <ref type="bibr" target="#b83">[Ratner et al., 2017;</ref><ref type="bibr" target="#b11">Cubuk et al., 2019;</ref><ref type="bibr" target="#b113">Zhang et al., 2020;</ref><ref type="bibr" target="#b8">Cheung and Yeung, 2021]</ref>. The TANDA (Transformation Adversarial Networks for Data Augmentations) scheme in <ref type="bibr" target="#b83">[Ratner et al., 2017]</ref> is designed to train a generative sequence model over specified transformation functions using reinforcement learning in a GAN-like framework to generate realistic transformed data points, which yields strong gains over common heuristic data augmentation methods for a range of applications including image recognition and natural language understanding tasks. <ref type="bibr" target="#b11">[Cubuk et al., 2019]</ref> proposes a procedure called AutoAugment to automatically search for improved data augmentation policies in a reinforcement learning framework. It adopts a controller RNN network to predicts an augmentation policy from the search space and another network is trained to achieve convergence accuracy. Then, the accuracy is used as reward to update the RNN controller for better policies in the next iteration. The experimental results show that AutoAugment improves the accuracy of modern image classifiers significantly in a wide range of datasets.</p><p>For time series data augmentation, the MODALS <ref type="bibr" target="#b8">[Cheung and Yeung, 2021]</ref> is designed to find the optimal composition of latent space transformations for data augmentation using evolution search strategy based on population based augmentation (PBA) <ref type="bibr" target="#b45">[Ho et al., 2019]</ref>, which demonstrates superior performance on classification problems in continuous and discrete time series data. Another recent work on automated data augmentation is proposed in <ref type="bibr" target="#b33">[Fons et al., 2021]</ref>, where two sample-adaptive automatic weighting schemes are designed specifically for time series data: one learns to weight the contribution of the augmented samples to the loss, and the other selects a subset of transformations based on the ranking of the predicted training loss. Both adaptive policies demonstrate improvement on classification problems in multiple time series datasets.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.1">Time Series Classification</head><p>In this experiment, we compare the classification performance with and without data augmentation. Specifically, we collect 5000 time series of one-week long and 5-min interval samples with binary class labels (seasonal or non-seasonal) from Alibaba Cloud monitoring system. The data is randomly splitted into training and test sets where training contains 80% of total samples. We train a fully convolutional network <ref type="bibr" target="#b102">[Wang et al., 2017]</ref> to classify each time series in the training set. In our experiment, we inject different types of outliers, including spike, step, and slope, into the test set to evaluate the robustness of the trained classifier. The data augmentations methods applied include cropping, warping, and flipping. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.2">Time Series Anomaly Detection</head><p>Given the challenges of both data scarcity and data imbalance in time series anomaly detection, it is beneficial by adopting data augmentation to generate more labeled data.</p><p>We briefly summarize the results in <ref type="bibr" target="#b39">[Gao et al., 2020]</ref>, where a U-Net based network is designed and evaluated on public Yahoo! dataset <ref type="bibr" target="#b63">[Laptev et al., 2015]</ref> for time series anomaly detection. The performance comparison under different settings are summarized in Table <ref type="table" target="#tab_1">2</ref>, including applying the model on the raw data (U-Net-Raw), on the decomposed residuals (U-Net-DeW), and on the residuals with data augmentation (U-Net-DeWA). The applied data augmentation methods include flipping, cropping, label expansion, and APP based augmentation in frequency domain. It can be observed that the decomposition helps the increase of the F1 score and the data augmentation further boosts the performance. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.3">Time Series Forecasting</head><p>In this subsection we demonstrate the practical effectiveness of data augmentation in two popular deep models DeepAR <ref type="bibr" target="#b89">[Salinas et al., 2019]</ref> and Transformer <ref type="bibr" target="#b100">[Vaswani et al., 2017]</ref>.</p><p>In Table <ref type="table" target="#tab_3">3</ref>, we report the performance improvement on mean absolute scaled error (MASE) on several public datasets: electricity and traffic from UCI Learning Repository 1 and 1 <ref type="url" target="http://archive.ics.uci.edu/ml/datasets.php">http://archive.ics.uci.edu/ml/datasets.php</ref> 3 datasets from the M4 competition<ref type="foot" target="#foot_1">foot_1</ref> . We consider the basic augmentation methods including cropping, warping, flipping, and APP based augmentation in frequency domain. In Table <ref type="table" target="#tab_3">3</ref>, we summarize average MASE without augmentation, with augmentation and average relative improvement (ARI) which is computed as the mean of (MASE w/o aug -MASE w aug )/MASE w aug . We observe that the data augmentation methods bring promising results for all models in average sense. However, the negative results can still be observed for specific data/model pairs. As a future work, it motivates us to search for advanced automated data augmentation policies that stabilize the influence of data augmentation specifically for time series forecasting.   <ref type="bibr">Walden, 2000;</ref><ref type="bibr" target="#b109">Wen et al., 2021]</ref> due to the following advantages: 1) more computationally efficiency compared to CWT; 2) ability to handle any time series length; 3) increased resolution at coarser scales compared with DWT. MODWT based surrogate time series have been proposed in <ref type="bibr">[Keylock, 2006]</ref>, where wavelet iterative amplitude adjusted Fourier transform (WIAAFT) is designed by combining the iterative amplitude adjusted Fourier transform (IAAFT) scheme to each level of MODWT coefficients. In contrast to IAAFT, WIAAFT does not assume sationarity and can roughly maintain the shape of the original data in terms of the temporal evolution. Besides WIAAFT, we can also consider the perturbation of both amplitude spectrum and phase spectrum as <ref type="bibr" target="#b39">[Gao et al., 2020]</ref> at each level of MODWT coefficients as a data augmentation scheme.</p><p>It would be an interesting future direction to investigate how to exploit different wavelet transforms (CWT, DWT, MODWT, etc.) for an effective time-frequency domain based time series data augmentation in deep neural networks.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.2">Augmentation for Imbalanced Class</head><p>In time series classification, class imbalance occurs very frequently.</p><p>One classical approach addressing imbalanced classification problem is to oversample the minority class as the synthetic minority oversampling technique (SMOTE) <ref type="bibr" target="#b31">[Fernández et al., 2018]</ref> to artificially mitigate the imbalance. However, this oversampling strategy may change the distribution of raw data and cause overfitting. Another approach is to design cost-sensitive model by using adjust loss function <ref type="bibr" target="#b41">[Geng and Luo, 2018]</ref>. Furthermore, <ref type="bibr" target="#b39">[Gao et al., 2020]</ref> designed label-based weight and value-based weight in the loss function in convolution neural networks, which considers weight adjustment for class labels and the neighborhood of each sample. Thus, both class imbalance and temporal dependency are explicitly considered.</p><p>Performing data augmentation and weighting for imbalanced class together would be an interesting and effective direction. A recent study investigates this topic in the area of CV and NLP <ref type="bibr" target="#b47">[Hu et al., 2019]</ref>, which significantly improves text and image classification in low data regime and imbalanced class problems. In future, it is interesting to design deep network by jointly considering data augmentation and weighting for imbalanced class in time series data.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.3">Augmentation Selection and Combination</head><p>Given different data augmentation methods summarized in Fig. <ref type="figure" target="#fig_0">1</ref>, one key strategy is how to select and combine various augmentation methods together. The experiments in <ref type="bibr" target="#b98">[Um et al., 2017]</ref> show that the combination of three basic timedomain methods (permutation, rotation, and time warping) is better than that of a single method and achieves the best performance in time series classification. Also, the results in <ref type="bibr" target="#b79">[Rashid and Louis, 2019]</ref> demonstrate substantial performance improvement for a time series classification task when using a deep neural network by combining four data augmentation methods (i.e, jittering, scaling, rotation and timewarping). However, considering various data augmentation methods, directly combining different augmentations may result in a huge amount of data, and may not be efficient and effective for performance improvement. Recently, RandAugment <ref type="bibr" target="#b13">[Cubuk et al., 2020]</ref> is proposed as a practical way for augmentation combination in image classification and object detection. For each random generated dataset, RandAugment is based on only two interpretable hyperparameters N (number of augmentation methods to combine) and M (magnitude for all augmentation methods), where each augmentation is randomly selected from K=14 available augmentation methods. Furthermore, this randomly combined augmentation with simple grid search can be used in the reinforcement learning based data augmentation as <ref type="bibr" target="#b11">[Cubuk et al., 2019]</ref> for efficient space searching.</p><p>An interesting future direction is how to design effective augmentation selection and/or combination strategies suitable for time series data in deep learning. Customized reinforcement learning and meta learning optimized for time series could be potential approaches. Furthermore, algorithm efficiency is another important consideration in practice.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.4">Augmentation with Gaussian Processes</head><p>Gaussian Processes (GPs) <ref type="bibr" target="#b81">[Rasmussen and Williams, 2005]</ref> are well-known Bayesian non-parametric models suitable for time series analysis <ref type="bibr" target="#b85">[Roberts et al., 2013]</ref>. From the functionspace view, GPs induce a distribution over functions, i.e., a stochastic process. Time series can be viewed as functions with time as input and observation as output, and thus can be modeled with GPs. A GP f (t) ∼ GP(m(t), k(t, t )) is characterized by a mean function m(t) and a covariance kernel function k(t, t ). The choice of the kernel allows to place assumptions on some general properties of the modeled functions, such as smoothness, scale, periodicity and noise level. Kernels can be composed through addition and multiplication, resulting in compositional function properties, such as pseudo-periodicity, additive decomposability, and change point. GPs are often applied to interpolation and extrapolation tasks, which correspond to imputation and forecasting in time series analysis. Furthermore, deep Gaussian processes(DGPs) <ref type="bibr" target="#b19">[Damianou and Lawrence, 2013;</ref><ref type="bibr" target="#b87">Salimbeni and Deisenroth, 2017]</ref>, which are richer models with hierarchical composition of GPs and often exceed standard (single-layer) GPs significantly in many cases, have not been well studied for time series. We believe GPs and DGPs are future directions as they allow to sample time series with those properties mentioned above through the design of kernels, and to generate new data instances from existing ones by exploiting their interpolation/extrapolation abilities.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.5">Augmentation with Deep Generative Models</head><p>Current DGMs adopted for time series data augmentation are mainly GANs. However, other DGMs also have great potentials for time series modeling. For example, deep autoregressive networks (DARNs) exhibit a natural fit for time series because they generate data in a sequential manner, obeying the causal direction of physical time series data generating process. DARNs like Wavenet <ref type="bibr" target="#b73">[Oord et al., 2016]</ref> and Transformer <ref type="bibr" target="#b100">[Vaswani et al., 2017]</ref> have demonstrated promising performance in time series forecasting tasks <ref type="bibr" target="#b0">[Alexandrov et al., 2020]</ref>. Another example is normalizing flows (NFs) <ref type="bibr" target="#b59">[Kobyzev et al., 2020]</ref>, which recently have shown success in modeling time series stochastic processes with excellent inter-/extrapolation performance given observed data <ref type="bibr" target="#b21">[Deng et al., 2020]</ref>. Most recently, variational autoencoders (VAEs) based data augmentation <ref type="bibr" target="#b35">[Fu et al., 2020]</ref> are investigated for human activity recognition.</p><p>In summary, besides the common GAN architectures, how to leverage other deep generative models like DARNs, NFs, and VAEs, which are less investigated for time series data augmentation, remain exciting future opportunities.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="6">Conclusion</head><p>As deep learning models are becoming more popular on time series data, the limited labeled data calls for effective data augmentation methods. In this paper, we give a comprehensive survey on time series data augmentation methods in various tasks. We organize the reviewed methods in a taxonomy consisting of basic and advanced approaches, summarize representative methods in each category, compare them empirically in typical tasks, and highlight future research directions.</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head>Figure 1 :</head><label>1</label><figDesc>Figure 1: A taxonomy of time series data augmentation techniques.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head>Figure 2 :</head><label>2</label><figDesc>Figure 2: Illustration of several typical time series data augmentations in time, frequency, and time-frequency domains.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_0"><head>Table 1 :</head><label>1</label><figDesc>Table 1 summarizes the accuracies with and without data augmentation when different types of outliers are injected into the test set. It can be observed that data augmentation leads to 0.1% ∼ 1.9% accuracy improvement. Accuracy improvement from data augmentation under outlier injection in time series classification.</figDesc><table><row><cell cols="2">Outlier injection w/o aug</cell><cell>w/ aug</cell><cell>Improvement</cell></row><row><cell>spike</cell><cell cols="2">96.26% 96.37%</cell><cell>0.11%</cell></row><row><cell>step</cell><cell cols="2">93.70% 95.62%</cell><cell>1.92%</cell></row><row><cell>slope</cell><cell cols="2">95.84% 96.16%</cell><cell>0.32%</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_1"><head>Table 2 :</head><label>2</label><figDesc>Time series anomaly detection improvement from data augmentation based on precision, recall, and F1 score.</figDesc><table><row><cell>Algorithm</cell><cell cols="2">Precision Recall</cell><cell>F1</cell></row><row><cell>U-Net-Raw</cell><cell>0.473</cell><cell cols="2">0.351 0.403</cell></row><row><cell>U-Net-DeW</cell><cell>0.793</cell><cell cols="2">0.569 0.662</cell></row><row><cell>U-Net-DeWA (w/ aug)</cell><cell>0.859</cell><cell cols="2">0.581 0.693</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_3"><head>Table 3 :</head><label>3</label><figDesc>Time seires forecasting improvement from data augmentation based on MASE.</figDesc><table><row><cell>5 Discussion for Future Opportunities</cell></row><row><cell>5.1 Augmentation in Time-Frequency Domain</cell></row><row><cell>As discussed in Section 2.3, so far there are only limited stud-</cell></row><row><cell>ies of time series data augmentation methods based on STFT</cell></row><row><cell>in the time-frequency domain. Besides STFT, wavelet trans-</cell></row><row><cell>form and its variants including continuous wavelet transform</cell></row><row><cell>(CWT) and discrete wavelet transform (DWT), are another</cell></row><row><cell>family of adaptive time-frequency domain analysis meth-</cell></row><row><cell>ods to characterize time-varying properties of time series.</cell></row><row><cell>Compared to STFT, they can handle non-stationary time se-</cell></row><row><cell>ries and non-Gaussian noises more effectively and robustly.</cell></row><row><cell>Among many wavelet transform variants, maximum over-</cell></row><row><cell>lap discrete wavelet transform (MODWT) is especially at-</cell></row><row><cell>tractive for time series analysis [Percival and</cell></row></table></figure>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot" n="4" xml:id="foot_0"><p>Preliminary EvaluationIn this section, we demonstrate preliminary evaluations in three common time series tasks to show the effectiveness of data augmentation for performance improvement.</p></note>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot" n="2" xml:id="foot_1"><p>https://github.com/Mcompetitions/M4-methods/tree/master/ Dataset</p></note>
+		</body>
+		<back>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Alexandrov</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Alexandrov et al., 2020]</note>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<analytic>
+		<title level="a" type="main">Gluonts: Probabilistic and neural time series modeling in python</title>
+		<author>
+			<persName><forename type="first">Alexander</forename><surname>Alexandrov</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Konstantinos</forename><surname>Benidis</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Michael</forename><surname>Bohlke-Schneider</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Valentin</forename><surname>Flunkert</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jan</forename><surname>Gasthaus</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Tim</forename><surname>Januschowski</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Danielle</forename><forename type="middle">C</forename><surname>Maddix</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Syama</forename><surname>Rangapuram</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">David</forename><surname>Salinas</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jasper</forename><surname>Schulz</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Machine Learning Research</title>
+		<imprint>
+			<biblScope unit="volume">21</biblScope>
+			<biblScope unit="issue">116</biblScope>
+			<biblScope unit="page" from="1" to="6" />
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Alexander Alexandrov, Konstantinos Benidis, Michael Bohlke-Schneider, Valentin Flunkert, Jan Gasthaus, Tim Januschowski, Danielle C Maddix, Syama Rangapuram, David Salinas, Jasper Schulz, et al. Gluonts: Probabilistic and neural time series modeling in python. Journal of Machine Learning Research, 21(116):1-6, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Bandara</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Bandara et al., 2020]</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<monogr>
+		<title level="m" type="main">Improving the accuracy of global forecasting models using time series data augmentation</title>
+		<author>
+			<persName><forename type="first">Kasun</forename><surname>Bandara</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Hansika</forename><surname>Hewamalage</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yuan-Hao</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yanfei</forename><surname>Kang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Christoph</forename><surname>Bergmeir</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2008.02663</idno>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Kasun Bandara, Hansika Hewamalage, Yuan-Hao Liu, Yanfei Kang, and Christoph Bergmeir. Improv- ing the accuracy of global forecasting models using time series data augmentation. arXiv preprint arXiv:2008.02663, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Bergmeir</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Bergmeir et al., 2016]</note>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<analytic>
+		<title level="a" type="main">Bagging exponential smoothing methods using STL decomposition and Box-Cox transformation</title>
+		<author>
+			<persName><forename type="first">Christoph</forename><surname>Bergmeir</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Rob</forename><forename type="middle">J</forename><surname>Hyndman</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">José</forename><forename type="middle">M</forename><surname>Benítez</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Forecasting</title>
+		<imprint>
+			<biblScope unit="volume">32</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="303" to="312" />
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Christoph Bergmeir, Rob J. Hyndman, and José M. Benítez. Bagging exponential smoothing methods using STL decomposition and Box-Cox transformation. International Journal of Forecasting, 32(2):303-312, 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Cao</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Cao et al., 2014]</note>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<analytic>
+		<title level="a" type="main">A parsimonious mixture of gaussian trees model for oversampling in imbalanced and multimodal time-series classification</title>
+		<author>
+			<persName><forename type="first">Hong</forename><surname>Cao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">John Zf</forename><surname>Vincent Yf Tan</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Pang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE TNNLS</title>
+		<imprint>
+			<biblScope unit="volume">25</biblScope>
+			<biblScope unit="issue">12</biblScope>
+			<biblScope unit="page" from="2226" to="2239" />
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Hong Cao, Vincent YF Tan, and John ZF Pang. A parsimonious mixture of gaussian trees model for oversampling in imbalanced and multimodal time-series classification. IEEE TNNLS, 25(12):2226-2239, 2014.</note>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">MODALS: Modality-agnostic automated data augmentation in the latent space</title>
+		<author>
+			<persName><forename type="first">Yeung ; Tsz-Him</forename><surname>Cheung</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Dit-Yan</forename><surname>Cheung</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Yeung</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Learning Representations (ICLR)</title>
+		<imprint>
+			<date type="published" when="2021">2021. 2021</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Cheung and Yeung, 2021] Tsz-Him Cheung and Dit-Yan Yeung. MODALS: Modality-agnostic automated data augmentation in the latent space. In International Conference on Learning Repre- sentations (ICLR), 2021.</note>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Cleveland</forename></persName>
+		</author>
+		<imprint>
+			<date type="published" when="1990">1990</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Cleveland et al., 1990]</note>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<analytic>
+		<title level="a" type="main">STL: A seasonal-trend decomposition procedure based on loess</title>
+		<author>
+			<persName><forename type="first">William</forename><forename type="middle">S</forename><surname>Robert B Cleveland</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jean</forename><forename type="middle">E</forename><surname>Cleveland</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Irma</forename><surname>Mcrae</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Terpenning</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Official Statistics</title>
+		<imprint>
+			<biblScope unit="volume">6</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="3" to="73" />
+			<date type="published" when="1990">1990</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Robert B Cleveland, William S Cleveland, Jean E McRae, and Irma Terpenning. STL: A seasonal-trend de- composition procedure based on loess. Journal of Official Statis- tics, 6(1):3-73, 1990.</note>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Cubuk</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Cubuk et al., 2019]</note>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<analytic>
+		<title level="a" type="main">AutoAugment: Learning augmentation strategies from data</title>
+		<author>
+			<persName><forename type="first">D</forename><surname>Ekin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Barret</forename><surname>Cubuk</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Dandelion</forename><surname>Zoph</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Vijay</forename><surname>Mane</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Vasudevan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">V</forename><surname>Quoc</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Le</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">IEEE CVPR</title>
+		<imprint>
+			<date type="published" when="2019-06">2019. June 2019</date>
+			<biblScope unit="page" from="113" to="123" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ekin D. Cubuk, Barret Zoph, Dandelion Mane, Vijay Vasudevan, and Quoc V. Le. AutoAugment: Learning aug- mentation strategies from data. In IEEE CVPR 2019, pages 113- 123, June 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Cubuk</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Cubuk et al., 2020]</note>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<analytic>
+		<title level="a" type="main">RandAugment: Practical automated data augmentation with a reduced search space</title>
+		<author>
+			<persName><forename type="first">Barret</forename><surname>Ekin D Cubuk</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jonathon</forename><surname>Zoph</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Quoc V</forename><surname>Shlens</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Le</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">2020 IEEE/CVF Conference on Computer Vision and Pattern Recognition Workshops</title>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+			<biblScope unit="page" from="3008" to="3017" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ekin D Cubuk, Barret Zoph, Jonathon Shlens, and Quoc V Le. RandAugment: Practical automated data aug- mentation with a reduced search space. In 2020 IEEE/CVF Con- ference on Computer Vision and Pattern Recognition Workshops, pages 3008-3017, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Cui</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Cui et al., 2015]</note>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<analytic>
+		<title level="a" type="main">Data augmentation for deep neural network acoustic modeling</title>
+		<author>
+			<persName><surname>Cui</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Goel</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Kingsbury</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE/ACM TASLP</title>
+		<imprint>
+			<biblScope unit="volume">23</biblScope>
+			<biblScope unit="issue">9</biblScope>
+			<biblScope unit="page" from="1469" to="1477" />
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">X Cui, V Goel, and B Kingsbury. Data augmen- tation for deep neural network acoustic modeling. IEEE/ACM TASLP, 23(9):1469-1477, 2015.</note>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Cui</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Cui et al., 2016]</note>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<monogr>
+		<title level="m" type="main">Multi-scale convolutional neural networks for time series classification</title>
+		<author>
+			<persName><forename type="first">Zhicheng</forename><surname>Cui</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Wenlin</forename><surname>Chen</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1603.06995</idno>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Zhicheng Cui, Wenlin Chen, et al. Multi-scale convolutional neural networks for time series classification. arXiv preprint arXiv:1603.06995, 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Lawrence</forename><surname>Damianou</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2013">2013</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Damianou and Lawrence, 2013]</note>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<analytic>
+		<title level="a" type="main">Deep gaussian processes</title>
+		<author>
+			<persName><forename type="first">Andreas</forename><surname>Damianou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Neil</forename><forename type="middle">D</forename><surname>Lawrence</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Artificial intelligence and statistics</title>
+		<imprint>
+			<publisher>PMLR</publisher>
+			<date type="published" when="2013">2013</date>
+			<biblScope unit="page" from="207" to="215" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Andreas Damianou and Neil D Lawrence. Deep gaussian processes. In Artificial intelligence and statistics, pages 207-215. PMLR, 2013.</note>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Deng</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Deng et al., 2020]</note>
+</biblStruct>
+
+<biblStruct xml:id="b22">
+	<analytic>
+		<title level="a" type="main">Modeling continuous stochastic processes with dynamic normalizing flows</title>
+		<author>
+			<persName><forename type="first">Ruizhi</forename><surname>Deng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Bo</forename><surname>Chang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Marcus</forename><forename type="middle">A</forename><surname>Brubaker</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Greg</forename><surname>Mori</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Andreas</forename><surname>Lehrmann</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">NeurIPS 2020</title>
+		<imprint>
+			<date type="published" when="2020-12">Dec 2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ruizhi Deng, Bo Chang, Marcus A Brubaker, Greg Mori, and Andreas Lehrmann. Modeling continuous stochastic processes with dynamic normalizing flows. In NeurIPS 2020, Dec 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b23">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Taylor</forename><surname>Devries</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">DeVries and Taylor, 2017]</note>
+</biblStruct>
+
+<biblStruct xml:id="b24">
+	<analytic>
+		<title level="a" type="main">Dataset augmentation in feature space</title>
+		<author>
+			<persName><forename type="first">Terrance</forename><surname>Devries</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Graham</forename><forename type="middle">W</forename><surname>Taylor</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">ICLR 2017</title>
+		<meeting><address><addrLine>Toulon</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+			<biblScope unit="page" from="1" to="12" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Terrance DeVries and Graham W. Tay- lor. Dataset augmentation in feature space. In ICLR 2017, pages 1-12, Toulon, 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b25">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Esteban</forename></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Esteban et al., 2017]</note>
+</biblStruct>
+
+<biblStruct xml:id="b26">
+	<monogr>
+		<author>
+			<persName><forename type="first">Cristóbal</forename><surname>Esteban</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Stephanie</forename><forename type="middle">L</forename><surname>Hyland</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Gunnar</forename><surname>Rätsch</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1706.02633</idno>
+		<title level="m">Real-valued (medical) time series generation with recurrent conditional gans</title>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Cristóbal Esteban, Stephanie L Hyland, and Gunnar Rätsch. Real-valued (medical) time series gen- eration with recurrent conditional gans. arXiv preprint arXiv:1706.02633, 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b27">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Fawaz</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Fawaz et al., 2018]</note>
+</biblStruct>
+
+<biblStruct xml:id="b28">
+	<analytic>
+		<title level="a" type="main">Data augmentation using synthetic data for time series classification with deep residual networks</title>
+		<author>
+			<persName><forename type="first">Hassan</forename><surname>Ismail Fawaz</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Germain</forename><surname>Forestier</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jonathan</forename><surname>Weber</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Lhassane</forename><surname>Idoumghar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Pierre-Alain</forename><surname>Muller</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">ECML/PKDD Workshop on AALTD</title>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Hassan Ismail Fawaz, Germain Forestier, Jonathan Weber, Lhassane Idoumghar, and Pierre-Alain Muller. Data augmentation using synthetic data for time series classifica- tion with deep residual networks. In ECML/PKDD Workshop on AALTD, 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b29">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Fawaz</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Fawaz et al., 2019]</note>
+</biblStruct>
+
+<biblStruct xml:id="b30">
+	<analytic>
+		<title level="a" type="main">Deep learning for time series classification: a review</title>
+		<author>
+			<persName><forename type="first">Hassan</forename><surname>Ismail Fawaz</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Germain</forename><surname>Forestier</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jonathan</forename><surname>Weber</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Data Mining and Knowledge Discovery</title>
+		<imprint>
+			<biblScope unit="volume">33</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="917" to="963" />
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Hassan Ismail Fawaz, Germain Forestier, Jonathan Weber, et al. Deep learning for time series classi- fication: a review. Data Mining and Knowledge Discovery, 33(4):917-963, 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b31">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Fernández</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Fernández et al., 2018]</note>
+</biblStruct>
+
+<biblStruct xml:id="b32">
+	<analytic>
+		<title level="a" type="main">SMOTE for learning from imbalanced data: progress and challenges, marking the 15-year anniversary</title>
+		<author>
+			<persName><forename type="first">Alberto</forename><surname>Fernández</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Salvador</forename><surname>Garcia</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Francisco</forename><surname>Herrera</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Nitesh V</forename><surname>Chawla</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Artificial Intelligence Research</title>
+		<imprint>
+			<biblScope unit="volume">61</biblScope>
+			<biblScope unit="page" from="863" to="905" />
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Alberto Fernández, Salvador Garcia, Fran- cisco Herrera, and Nitesh V Chawla. SMOTE for learning from imbalanced data: progress and challenges, marking the 15-year anniversary. Journal of Artificial Intelligence Research, 61:863- 905, 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b33">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Fons</forename></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2021">2021</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Fons et al., 2021]</note>
+</biblStruct>
+
+<biblStruct xml:id="b34">
+	<monogr>
+		<title level="m" type="main">Adaptive weighting scheme for automatic time-series data augmentation</title>
+		<author>
+			<persName><forename type="first">Elizabeth</forename><surname>Fons</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Paula</forename><surname>Dawson</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Xiao-Jun</forename><surname>Zeng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">John</forename><surname>Keane</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Alexandros</forename><surname>Iosifidis</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2102.08310</idno>
+		<imprint>
+			<date type="published" when="2021">2021</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Elizabeth Fons, Paula Dawson, Xiao-jun Zeng, John Keane, and Alexandros Iosifidis. Adaptive weighting scheme for automatic time-series data augmentation. arXiv preprint arXiv:2102.08310, 2021.</note>
+</biblStruct>
+
+<biblStruct xml:id="b35">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Fu</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Fu et al., 2020]</note>
+</biblStruct>
+
+<biblStruct xml:id="b36">
+	<analytic>
+		<title level="a" type="main">Data augmentation for time series: traditional vs generative models on capacitive proximity time series</title>
+		<author>
+			<persName><forename type="first">Biying</forename><surname>Fu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Florian</forename><surname>Kirchbuchner</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Arjan</forename><surname>Kuijper</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">ACM PETRA</title>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+			<biblScope unit="page" from="1" to="10" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Biying Fu, Florian Kirchbuchner, and Arjan Kui- jper. Data augmentation for time series: traditional vs generative models on capacitive proximity time series. In ACM PETRA, pages 1-10, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b37">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Gamboa</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Gamboa, 2017]</note>
+</biblStruct>
+
+<biblStruct xml:id="b38">
+	<monogr>
+		<author>
+			<persName><forename type="first">John</forename><surname>Cristian</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Borges</forename><surname>Gamboa</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1701.01887</idno>
+		<title level="m">Deep learning for time-series analysis</title>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">John Cristian Borges Gamboa. Deep learning for time-series analysis. arXiv preprint arXiv:1701.01887, 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b39">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Gao</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Gao et al., 2020]</note>
+</biblStruct>
+
+<biblStruct xml:id="b40">
+	<analytic>
+		<title level="a" type="main">Robusttad: Robust time series anomaly detection via decomposition and convolutional neural networks</title>
+		<author>
+			<persName><forename type="first">Jingkun</forename><surname>Gao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Xiaomin</forename><surname>Song</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Qingsong</forename><surname>Wen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Pichao</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Liang</forename><surname>Sun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Huan</forename><surname>Xu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">MileTS&apos;20: 6th KDD Workshop on Mining and Learning from Time Series</title>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+			<biblScope unit="page" from="1" to="6" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Jingkun Gao, Xiaomin Song, Qingsong Wen, Pichao Wang, Liang Sun, and Huan Xu. Robusttad: Robust time series anomaly detection via decomposition and convolutional neural networks. MileTS&apos;20: 6th KDD Workshop on Mining and Learning from Time Series, pages 1-6, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b41">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Luo</forename><surname>Geng</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Geng and Luo, 2018]</note>
+</biblStruct>
+
+<biblStruct xml:id="b42">
+	<monogr>
+		<title level="m" type="main">Cost-sensitive convolution based neural networks for imbalanced time-series classification</title>
+		<author>
+			<persName><forename type="first">Yue</forename><surname>Geng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Xinyu</forename><surname>Luo</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1801.04396</idno>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Yue Geng and Xinyu Luo. Cost-sensitive convolution based neural networks for imbalanced time-series classification. arXiv preprint arXiv:1801.04396, 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b43">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Han</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Han et al., 2019]</note>
+</biblStruct>
+
+<biblStruct xml:id="b44">
+	<analytic>
+		<title level="a" type="main">A review of deep learning models for time series prediction</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Han</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Zhao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K F</forename><surname>Leung</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Ma</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Wang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Sensors Journal</title>
+		<imprint>
+			<biblScope unit="volume">1</biblScope>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Z Han, J Zhao, H Leung, K F Ma, and W Wang. A review of deep learning models for time series prediction. IEEE Sensors Journal, page 1, 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b45">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Ho</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ho et al., 2019]</note>
+</biblStruct>
+
+<biblStruct xml:id="b46">
+	<analytic>
+		<title level="a" type="main">Population based augmentation: Efficient learning of augmentation policy schedules</title>
+		<author>
+			<persName><forename type="first">Daniel</forename><surname>Ho</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Eric</forename><surname>Liang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Xi</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ion</forename><surname>Stoica</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Pieter</forename><surname>Abbeel</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning (ICML)</title>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+			<biblScope unit="page" from="2731" to="2741" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Daniel Ho, Eric Liang, Xi Chen, Ion Stoica, and Pieter Abbeel. Population based augmentation: Efficient learning of augmentation policy schedules. In International Conference on Machine Learning (ICML), pages 2731-2741, 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b47">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Hu</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Hu et al., 2019]</note>
+</biblStruct>
+
+<biblStruct xml:id="b48">
+	<analytic>
+		<title level="a" type="main">Learning data manipulation for augmentation and weighting</title>
+		<author>
+			<persName><forename type="first">Zhiting</forename><surname>Hu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Bowen</forename><surname>Tan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Tom</forename><forename type="middle">M</forename><surname>Russ R Salakhutdinov</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Eric</forename><forename type="middle">P</forename><surname>Mitchell</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Xing</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">NeurIPS 2019</title>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+			<biblScope unit="page" from="15764" to="15775" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zhiting Hu, Bowen Tan, Russ R Salakhutdinov, Tom M Mitchell, and Eric P Xing. Learning data manipulation for augmentation and weighting. In NeurIPS 2019, pages 15764- 15775, 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b49">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Hu</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Hu et al., 2020]</note>
+</biblStruct>
+
+<biblStruct xml:id="b50">
+	<analytic>
+		<title level="a" type="main">Datsing: Data augmented time series forecasting with adversarial domain adaptation</title>
+		<author>
+			<persName><forename type="first">Hailin</forename><surname>Hu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mingjian</forename><surname>Tang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Chengcheng</forename><surname>Bai</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 29th ACM International Conference on Information &amp; Knowledge Management</title>
+		<meeting>the 29th ACM International Conference on Information &amp; Knowledge Management</meeting>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+			<biblScope unit="page" from="2061" to="2064" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Hailin Hu, MingJian Tang, and Chengcheng Bai. Datsing: Data augmented time series forecasting with adversar- ial domain adaptation. In Proceedings of the 29th ACM Inter- national Conference on Information &amp; Knowledge Management, pages 2061-2064, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b51">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Uchida</forename><surname>Iwana</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Iwana and Uchida, 2020]</note>
+</biblStruct>
+
+<biblStruct xml:id="b52">
+	<monogr>
+		<title level="m" type="main">An empirical survey of data augmentation for time series classification with neural networks</title>
+		<author>
+			<persName><forename type="first">Brian</forename><surname>Kenji</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Iwana</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Seiichi</forename><surname>Uchida</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2007.15951</idno>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Brian Kenji Iwana and Seiichi Uchida. An empirical survey of data augmentation for time series classi- fication with neural networks. arXiv preprint arXiv:2007.15951, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b53">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Kang</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Kang et al., 2020]</note>
+</biblStruct>
+
+<biblStruct xml:id="b54">
+	<analytic>
+		<title level="a" type="main">GRATIS: Generating time series with diverse and controllable characteristics</title>
+		<author>
+			<persName><forename type="first">Yanfei</forename><surname>Kang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Rob</forename><forename type="middle">J</forename><surname>Hyndman</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Feng</forename><surname>Li</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Statistical Analysis and Data Mining: The ASA Data Science Journal</title>
+		<imprint>
+			<biblScope unit="volume">13</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="354" to="376" />
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Yanfei Kang, Rob J Hyndman, and Feng Li. GRATIS: Generating time series with diverse and controllable characteristics. Statistical Analysis and Data Mining: The ASA Data Science Journal, 13(4):354-376, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b55">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Kegel</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Kegel et al., 2018]</note>
+</biblStruct>
+
+<biblStruct xml:id="b56">
+	<analytic>
+		<title level="a" type="main">Feature-based comparison and generation of time series</title>
+		<author>
+			<persName><forename type="first">Lars</forename><surname>Kegel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Martin</forename><surname>Hahmann</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Wolfgang</forename><surname>Lehner</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">SSDBM 2018</title>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Lars Kegel, Martin Hahmann, and Wolfgang Lehner. Feature-based comparison and generation of time series. In SSDBM 2018, 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b57">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Keylock</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2006">2006</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Keylock, 2006]</note>
+</biblStruct>
+
+<biblStruct xml:id="b58">
+	<analytic>
+		<title level="a" type="main">Constrained surrogate time series with preservation of the mean and variance structure</title>
+		<author>
+			<persName><forename type="first">C J</forename><surname>Keylock</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Phys. Rev. E</title>
+		<imprint>
+			<biblScope unit="volume">73</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page">36707</biblScope>
+			<date type="published" when="2006-03">Mar 2006</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">C J Keylock. Constrained surrogate time series with preservation of the mean and variance structure. Phys. Rev. E, 73(3):36707, Mar 2006.</note>
+</biblStruct>
+
+<biblStruct xml:id="b59">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Kobyzev</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Kobyzev et al., 2020]</note>
+</biblStruct>
+
+<biblStruct xml:id="b60">
+	<analytic>
+		<title level="a" type="main">Normalizing flows: An introduction and review of current methods</title>
+		<author>
+			<persName><forename type="first">Ivan</forename><surname>Kobyzev</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Simon</forename><surname>Prince</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Marcus</forename><surname>Brubaker</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Pattern Analysis and Machine Intelligence</title>
+		<imprint>
+			<biblScope unit="page" from="1" to="17" />
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ivan Kobyzev, Simon Prince, and Marcus Brubaker. Normalizing flows: An introduction and review of current methods. IEEE Transactions on Pattern Analysis and Machine Intelligence, pages 1-17, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b61">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Krizhevsky</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2012">2012</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Krizhevsky et al., 2012]</note>
+</biblStruct>
+
+<biblStruct xml:id="b62">
+	<analytic>
+		<title level="a" type="main">Imagenet classification with deep convolutional neural networks</title>
+		<author>
+			<persName><forename type="first">Alex</forename><surname>Krizhevsky</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ilya</forename><surname>Sutskever</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Geoffrey</forename><forename type="middle">E</forename><surname>Hinton</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">NeurIPS 2012</title>
+		<imprint>
+			<date type="published" when="2012">2012</date>
+			<biblScope unit="page" from="1097" to="1105" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Alex Krizhevsky, Ilya Sutskever, and Ge- offrey E Hinton. Imagenet classification with deep convolutional neural networks. In NeurIPS 2012, pages 1097-1105, 2012.</note>
+</biblStruct>
+
+<biblStruct xml:id="b63">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Laptev</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Laptev et al., 2015]</note>
+</biblStruct>
+
+<biblStruct xml:id="b64">
+	<analytic>
+		<title level="a" type="main">Generic and scalable framework for automated time-series anomaly detection</title>
+		<author>
+			<persName><forename type="first">Nikolay</forename><surname>Laptev</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Saeed</forename><surname>Amizadeh</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">KDD</title>
+		<imprint>
+			<biblScope unit="page" from="1939" to="1947" />
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Nikolay Laptev, Saeed Amizadeh, et al. Generic and scalable framework for automated time-series anomaly detection. KDD, pages 1939-1947, 2015.</note>
+</biblStruct>
+
+<biblStruct xml:id="b65">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Le</forename><surname>Guennec</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Le Guennec et al., 2016]</note>
+</biblStruct>
+
+<biblStruct xml:id="b66">
+	<analytic>
+		<title level="a" type="main">Data augmentation for time series classification using convolutional neural networks</title>
+		<author>
+			<persName><forename type="first">Arthur</forename><surname>Le</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Guennec</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Simon</forename><surname>Malinowski</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Romain</forename><surname>Tavenard</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">ECML/PKDD Workshop on AALTD</title>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Arthur Le Guennec, Simon Malinowski, and Romain Tavenard. Data augmentation for time series clas- sification using convolutional neural networks. In ECML/PKDD Workshop on AALTD, 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b67">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Kim</forename><surname>Lee</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Lee and Kim, 2020]</note>
+</biblStruct>
+
+<biblStruct xml:id="b68">
+	<analytic>
+		<title level="a" type="main">Stock market forecasting with super-high dimensional time-series data using convlstm, trend sampling, and specialized data augmentation</title>
+		<author>
+			<persName><forename type="first">Si</forename><surname>Woon</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Lee</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ha</forename><surname>Young</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Kim</forename></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Expert Systems with Applications</title>
+		<imprint>
+			<biblScope unit="volume">161</biblScope>
+			<biblScope unit="page">113704</biblScope>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Si Woon Lee and Ha Young Kim. Stock mar- ket forecasting with super-high dimensional time-series data us- ing convlstm, trend sampling, and specialized data augmentation. Expert Systems with Applications, 161:113704, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b69">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Lee</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Lee et al., 2019]</note>
+</biblStruct>
+
+<biblStruct xml:id="b70">
+	<analytic>
+		<title level="a" type="main">Surrogate rehabilitative time series data for image-based deep learning</title>
+		<author>
+			<persName><forename type="first">Tracey</forename><surname>Kah-Mein Lee</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Kee-Hao</forename><surname>Kuah</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Saeid</forename><surname>Leo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Effie</forename><surname>Sanei</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ling</forename><surname>Chew</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Zhao</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">EUSIPCO 2019</title>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+			<biblScope unit="page" from="1" to="5" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Tracey Kah-Mein Lee, YL Kuah, Kee-Hao Leo, Saeid Sanei, Effie Chew, and Ling Zhao. Surrogate rehabilitative time series data for image-based deep learning. In EUSIPCO 2019, pages 1-5, 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b71">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Lim</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Lim et al., 2018]</note>
+</biblStruct>
+
+<biblStruct xml:id="b72">
+	<analytic>
+		<title level="a" type="main">DOPING: Generative data augmentation for unsupervised anomaly detection with gan</title>
+		<author>
+			<persName><forename type="first">Swee Kiat</forename><surname>Lim</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yi</forename><surname>Loo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ngoc-Trung</forename><surname>Tran</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ngai-Man</forename><surname>Cheung</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Gemma</forename><surname>Roig</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yuval</forename><surname>Elovici</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">2018 IEEE International Conference on Data Mining (ICDM)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2018">2018</date>
+			<biblScope unit="page" from="1122" to="1127" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Swee Kiat Lim, Yi Loo, Ngoc-Trung Tran, Ngai- Man Cheung, Gemma Roig, and Yuval Elovici. DOPING: Gener- ative data augmentation for unsupervised anomaly detection with gan. In 2018 IEEE International Conference on Data Mining (ICDM), pages 1122-1127. IEEE, 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b73">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Oord</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Oord et al., 2016]</note>
+</biblStruct>
+
+<biblStruct xml:id="b74">
+	<analytic>
+		<title level="a" type="main">Wavenet: A generative model for raw audio</title>
+		<author>
+			<persName><forename type="first">Aaron</forename><surname>Van Den Oord</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Sander</forename><surname>Dieleman</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Heiga</forename><surname>Zen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Karen</forename><surname>Simonyan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Oriol</forename><surname>Vinyals</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Alex</forename><surname>Graves</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Nal</forename><surname>Kalchbrenner</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Andrew</forename><surname>Senior</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Koray</forename><surname>Kavukcuoglu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Learning Representations</title>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Aaron van den Oord, Sander Dieleman, Heiga Zen, Karen Simonyan, Oriol Vinyals, Alex Graves, Nal Kalch- brenner, Andrew Senior, and Koray Kavukcuoglu. Wavenet: A generative model for raw audio. In International Conference on Learning Representations, 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b75">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Park</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Park et al., 2019]</note>
+</biblStruct>
+
+<biblStruct xml:id="b76">
+	<analytic>
+		<title level="a" type="main">SpecAugment: A simple data augmentation method for automatic speech recognition</title>
+		<author>
+			<persName><forename type="first">William</forename><surname>Daniel S Park</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yu</forename><surname>Chan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Chung-Cheng</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Barret</forename><surname>Chiu</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Zoph</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Ekin D Cubuk</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">INTERSPEECH 2019</title>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+			<biblScope unit="page" from="2613" to="2617" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Daniel S Park, William Chan, Yu Zhang, Chung- Cheng Chiu, Barret Zoph, Ekin D Cubuk, et al. SpecAugment: A simple data augmentation method for automatic speech recog- nition. In INTERSPEECH 2019, pages 2613-2617, 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b77">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Percival</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Walden</forename></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2000">2000</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Percival and Walden, 2000]</note>
+</biblStruct>
+
+<biblStruct xml:id="b78">
+	<monogr>
+		<title level="m" type="main">Wavelet methods for time series analysis</title>
+		<author>
+			<persName><forename type="first">B</forename><surname>Donald</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Andrew</forename><forename type="middle">T</forename><surname>Percival</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Walden</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2000">2000</date>
+			<publisher>Cambridge university press</publisher>
+			<biblScope unit="volume">4</biblScope>
+			<pubPlace>New York</pubPlace>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Donald B Percival and Andrew T Walden. Wavelet methods for time series analysis, volume 4. Cambridge university press, New York, 2000.</note>
+</biblStruct>
+
+<biblStruct xml:id="b79">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Louis</forename><surname>Rashid</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Rashid and Louis, 2019]</note>
+</biblStruct>
+
+<biblStruct xml:id="b80">
+	<analytic>
+		<title level="a" type="main">Times-series data augmentation and deep learning for construction equipment activity recognition</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Khandakar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Joseph</forename><surname>Rashid</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Louis</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Advanced Engineering Informatics</title>
+		<imprint>
+			<biblScope unit="volume">42</biblScope>
+			<biblScope unit="page">100944</biblScope>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Khandakar M Rashid and Joseph Louis. Times-series data augmentation and deep learning for construc- tion equipment activity recognition. Advanced Engineering In- formatics, 42:100944, 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b81">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Williams</forename><surname>Rasmussen</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2005">2005</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Rasmussen and Williams, 2005]</note>
+</biblStruct>
+
+<biblStruct xml:id="b82">
+	<monogr>
+		<title level="m" type="main">Gaussian Processes for Machine Learning</title>
+		<author>
+			<persName><forename type="first">Carl</forename><surname>Edward</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Rasmussen</forename><surname>Christopher</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">I</forename><surname>Williams</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2005">2005</date>
+			<publisher>The MIT Press</publisher>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Carl Edward Rasmussen and Christopher KI Williams. Gaussian Processes for Machine Learning. The MIT Press, 2005.</note>
+</biblStruct>
+
+<biblStruct xml:id="b83">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Ratner</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ratner et al., 2017]</note>
+</biblStruct>
+
+<biblStruct xml:id="b84">
+	<analytic>
+		<title level="a" type="main">Learning to compose domain-specific transformations for data augmentation</title>
+		<author>
+			<persName><surname>Alexander J Ratner</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Zeshan</forename><surname>Henry R Ehrenberg</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jared</forename><surname>Hussain</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Christopher</forename><surname>Dunnmon</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Ré</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">NeurIPS</title>
+		<imprint>
+			<biblScope unit="volume">30</biblScope>
+			<biblScope unit="page">3239</biblScope>
+			<date type="published" when="2017">2017. 2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Alexander J Ratner, Henry R Ehrenberg, Ze- shan Hussain, Jared Dunnmon, and Christopher Ré. Learning to compose domain-specific transformations for data augmentation. NeurIPS 2017, 30:3239, 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b85">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Roberts</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2013">2013</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Roberts et al., 2013]</note>
+</biblStruct>
+
+<biblStruct xml:id="b86">
+	<analytic>
+		<title level="a" type="main">Gaussian processes for time-series modelling</title>
+		<author>
+			<persName><forename type="first">Stephen</forename><surname>Roberts</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Michael</forename><surname>Osborne</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mark</forename><surname>Ebden</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Steven</forename><surname>Reece</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Neale</forename><surname>Gibson</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Suzanne</forename><surname>Aigrain</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Philosophical Transactions of the Royal Society A: Mathematical, Physical and Engineering Sciences</title>
+		<imprint>
+			<biblScope unit="volume">371</biblScope>
+			<biblScope unit="page">20110550</biblScope>
+			<date type="published" when="1984">1984. 2013</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Stephen Roberts, Michael Osborne, Mark Ebden, Steven Reece, Neale Gibson, and Suzanne Aigrain. Gaus- sian processes for time-series modelling. Philosophical Transac- tions of the Royal Society A: Mathematical, Physical and Engi- neering Sciences, 371(1984):20110550, 2013.</note>
+</biblStruct>
+
+<biblStruct xml:id="b87">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Deisenroth</forename><surname>Salimbeni</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Salimbeni and Deisenroth, 2017]</note>
+</biblStruct>
+
+<biblStruct xml:id="b88">
+	<analytic>
+		<title level="a" type="main">Doubly stochastic variational inference for deep gaussian processes</title>
+		<author>
+			<persName><forename type="first">Hugh</forename><surname>Salimbeni</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Marc</forename><surname>Peter</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Deisenroth</forename></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">NeurIPS 2017</title>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+			<biblScope unit="page" from="4591" to="4602" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Hugh Salimbeni and Marc Peter Deisenroth. Doubly stochastic variational inference for deep gaussian processes. In NeurIPS 2017, pages 4591-4602, 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b89">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Salinas</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Salinas et al., 2019]</note>
+</biblStruct>
+
+<biblStruct xml:id="b90">
+	<analytic>
+		<title level="a" type="main">DeepAR: Probabilistic forecasting with autoregressive recurrent networks</title>
+		<author>
+			<persName><forename type="first">David</forename><surname>Salinas</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Valentin</forename><surname>Flunkert</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jan</forename><surname>Gasthaus</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Tim</forename><surname>Januschowski</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Forecasting</title>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">David Salinas, Valentin Flunkert, Jan Gasthaus, and Tim Januschowski. DeepAR: Probabilistic fore- casting with autoregressive recurrent networks. International Journal of Forecasting, 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b91">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Schmitz</forename><surname>Schreiber</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2000">2000</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Schreiber and Schmitz, 2000]</note>
+</biblStruct>
+
+<biblStruct xml:id="b92">
+	<analytic>
+		<title level="a" type="main">Surrogate time series</title>
+		<author>
+			<persName><forename type="first">Thomas</forename><surname>Schreiber</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Andreas</forename><surname>Schmitz</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Physica D: Nonlinear Phenomena</title>
+		<imprint>
+			<biblScope unit="volume">142</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="346" to="382" />
+			<date type="published" when="2000">2000</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Thomas Schreiber and Andreas Schmitz. Surrogate time series. Physica D: Nonlinear Phenom- ena, 142(3):346-382, 2000.</note>
+</biblStruct>
+
+<biblStruct xml:id="b93">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Khoshgoftaar</forename><surname>Shorten</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Shorten and Khoshgoftaar, 2019]</note>
+</biblStruct>
+
+<biblStruct xml:id="b94">
+	<analytic>
+		<title level="a" type="main">A survey on image data augmentation for deep learning</title>
+		<author>
+			<persName><forename type="first">Connor</forename><surname>Shorten</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Taghi</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Khoshgoftaar</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Big Data</title>
+		<imprint>
+			<biblScope unit="volume">6</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page">60</biblScope>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Connor Shorten and Taghi M Khoshgoftaar. A survey on image data augmentation for deep learning. Journal of Big Data, 6(1):60, 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b95">
+	<analytic>
+		<title level="a" type="main">Data preprocessing and augmentation for multiple short time series forecasting with recurrent neural networks</title>
+		<author>
+			<persName><forename type="first">Kuber</forename><surname>Smyl</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Slawek</forename><surname>Smyl</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Karthik</forename><surname>Kuber</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">36th International Symposium on Forecasting</title>
+		<imprint>
+			<date type="published" when="2016-06">2016. June 2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Smyl and Kuber, 2016] Slawek Smyl and Karthik Kuber. Data preprocessing and augmentation for multiple short time series forecasting with recurrent neural networks. In 36th International Symposium on Forecasting, June 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b96">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Steven</forename><surname>Eyobu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Han</forename></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Steven Eyobu and Han, 2018]</note>
+</biblStruct>
+
+<biblStruct xml:id="b97">
+	<analytic>
+		<title level="a" type="main">Feature representation and data augmentation for human activity classification based on wearable IMU sensor data using a deep LSTM neural network</title>
+		<author>
+			<persName><forename type="first">Odongo</forename><surname>Steven</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Eyobu</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Dong</forename><surname>Seog</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Han</forename></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Sensors</title>
+		<imprint>
+			<biblScope unit="volume">18</biblScope>
+			<biblScope unit="issue">9</biblScope>
+			<biblScope unit="page">2892</biblScope>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Odongo Steven Eyobu and Dong Seog Han. Feature representation and data augmen- tation for human activity classification based on wearable IMU sensor data using a deep LSTM neural network. Sensors, 18(9):2892, 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b98">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Um</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Um et al., 2017]</note>
+</biblStruct>
+
+<biblStruct xml:id="b99">
+	<analytic>
+		<title level="a" type="main">Data augmentation of wearable sensor data for Parkinson&apos;s disease monitoring using convolutional neural networks</title>
+		<author>
+			<persName><surname>Terry T Um</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M J</forename><surname>Franz</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Daniel</forename><surname>Pfister</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Satoshi</forename><surname>Pichler</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Muriel</forename><surname>Endo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Sandra</forename><surname>Lang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Urban</forename><surname>Hirche</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Dana</forename><surname>Fietzek</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Kulić</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">ACM ICMI 2017</title>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+			<biblScope unit="page" from="216" to="220" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Terry T Um, Franz M J Pfister, Daniel Pichler, Satoshi Endo, Muriel Lang, Sandra Hirche, Urban Fietzek, and Dana Kulić. Data augmentation of wearable sensor data for Parkinson&apos;s disease monitoring using convolutional neural net- works. In ACM ICMI 2017, pages 216-220, 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b100">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Vaswani</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Vaswani et al., 2017]</note>
+</biblStruct>
+
+<biblStruct xml:id="b101">
+	<analytic>
+		<title level="a" type="main">Attention is all you need</title>
+		<author>
+			<persName><forename type="first">Ashish</forename><surname>Vaswani</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Noam</forename><surname>Shazeer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Niki</forename><surname>Parmar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jakob</forename><surname>Uszkoreit</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Llion</forename><surname>Jones</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">NeurIPS 2017</title>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+			<biblScope unit="page" from="5998" to="6008" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ashish Vaswani, Noam Shazeer, Niki Par- mar, Jakob Uszkoreit, Llion Jones, et al. Attention is all you need. In NeurIPS 2017, pages 5998-6008, 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b102">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Wang</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Wang et al., 2017]</note>
+</biblStruct>
+
+<biblStruct xml:id="b103">
+	<analytic>
+		<title level="a" type="main">Time series classification from scratch with deep neural networks: A strong baseline</title>
+		<author>
+			<persName><forename type="first">Zhiguang</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Weizhong</forename><surname>Yan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Tim</forename><surname>Oates</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">IJCNN</title>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+			<biblScope unit="page" from="1578" to="1585" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zhiguang Wang, Weizhong Yan, and Tim Oates. Time series classification from scratch with deep neural networks: A strong baseline. In IJCNN, pages 1578-1585, 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b104">
+	<analytic>
+		<title level="a" type="main">Time series anomaly detection using convolutional neural networks and transfer learning</title>
+		<author>
+			<persName><forename type="first">Wen</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Keyes</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Tailai</forename><surname>Wen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Roy</forename><surname>Keyes</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">IJCAI Workshop on AI4IoT</title>
+		<imprint>
+			<date type="published" when="2019">2019. 2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Wen and Keyes, 2019] Tailai Wen and Roy Keyes. Time se- ries anomaly detection using convolutional neural networks and transfer learning. In IJCAI Workshop on AI4IoT, 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b105">
+	<analytic>
+		<title level="a" type="main">RobustTrend: A Huber loss with a combined first and second order difference regularization for time series trend filtering</title>
+		<author>
+			<persName><forename type="first">Wen</forename></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">IJCAI</title>
+		<imprint>
+			<date type="published" when="2019">2019. 2019</date>
+			<biblScope unit="page" from="3856" to="3862" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Wen et al., 2019a] Qingsong Wen, Jingkun Gao, Xiaomin Song, Liang Sun, and Jian Tan. RobustTrend: A Huber loss with a combined first and second order difference regularization for time series trend filtering. In IJCAI, pages 3856-3862, 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b106">
+	<analytic>
+		<title level="a" type="main">RobustSTL: A robust seasonal-trend decomposition algorithm for long time series</title>
+		<author>
+			<persName><forename type="first">Wen</forename></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">AAAI</title>
+		<imprint>
+			<date type="published" when="2019">2019. 2019</date>
+			<biblScope unit="volume">33</biblScope>
+			<biblScope unit="page" from="5409" to="5416" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Wen et al., 2019b] Qingsong Wen, Jingkun Gao, Xiaomin Song, Liang Sun, Huan Xu, and Shenghuo Zhu. RobustSTL: A robust seasonal-trend decomposition algorithm for long time series. In AAAI, volume 33, pages 5409-5416, 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b107">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Wen</forename></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Wen et al., 2020]</note>
+</biblStruct>
+
+<biblStruct xml:id="b108">
+	<analytic>
+		<title level="a" type="main">Fast RobustSTL: Efficient and robust seasonal-trend decomposition for time series with complex patterns</title>
+		<author>
+			<persName><forename type="first">Qingsong</forename><surname>Wen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Zhe</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yan</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Liang</forename><surname>Sun</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">KDD</title>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+			<biblScope unit="page" from="2203" to="2213" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Qingsong Wen, Zhe Zhang, Yan Li, and Liang Sun. Fast RobustSTL: Efficient and robust seasonal-trend decom- position for time series with complex patterns. In KDD, pages 2203-2213, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b109">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">Wen</forename></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2021">2021</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Wen et al., 2021]</note>
+</biblStruct>
+
+<biblStruct xml:id="b110">
+	<analytic>
+		<title level="a" type="main">RobustPeriod: Time-frequency mining for robust multiple periodicities detection</title>
+		<author>
+			<persName><forename type="first">Qingsong</forename><surname>Wen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Kai</forename><surname>He</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Liang</forename><surname>Sun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yingying</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Min</forename><surname>Ke</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Huan</forename><surname>Xu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Management of Data (SIGMOD)</title>
+		<imprint>
+			<date type="published" when="2021">2021</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Qingsong Wen, Kai He, Liang Sun, Yingying Zhang, Min Ke, and Huan Xu. RobustPeriod: Time-frequency mining for robust multiple periodicities detection. In Interna- tional Conference on Management of Data (SIGMOD), 2021.</note>
+</biblStruct>
+
+<biblStruct xml:id="b111">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Yoon</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Yoon et al., 2019]</note>
+</biblStruct>
+
+<biblStruct xml:id="b112">
+	<analytic>
+		<title level="a" type="main">Time-series generative adversarial networks</title>
+		<author>
+			<persName><forename type="first">Jinsung</forename><surname>Yoon</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Daniel</forename><surname>Jarrett</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mihaela</forename><surname>Van Der Schaar</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">NeurIPS 2019</title>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+			<biblScope unit="page" from="5508" to="5518" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Jinsung Yoon, Daniel Jarrett, and Mihaela van der Schaar. Time-series generative adversarial networks. In NeurIPS 2019, pages 5508-5518, 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b113">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Zhang</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zhang et al., 2020]</note>
+</biblStruct>
+
+<biblStruct xml:id="b114">
+	<analytic>
+		<title level="a" type="main">Adversarial autoaugment</title>
+		<author>
+			<persName><forename type="first">Xinyu</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Qiang</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jian</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Zhao</forename><surname>Zhong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Learning Representations (ICLR)</title>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Xinyu Zhang, Qiang Wang, Jian Zhang, and Zhao Zhong. Adversarial autoaugment. In International Confer- ence on Learning Representations (ICLR), 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b115">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>Zhou</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zhou et al., 2019]</note>
+</biblStruct>
+
+<biblStruct xml:id="b116">
+	<analytic>
+		<title level="a" type="main">Beatgan: Anomalous rhythm detection using adversarially generated time series</title>
+		<author>
+			<persName><forename type="first">Bin</forename><surname>Zhou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Shenghua</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Bryan</forename><surname>Hooi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Xueqi</forename><surname>Cheng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jing</forename><surname>Ye</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">IJCAI</title>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+			<biblScope unit="page" from="4433" to="4439" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Bin Zhou, Shenghua Liu, Bryan Hooi, Xueqi Cheng, and Jing Ye. Beatgan: Anomalous rhythm detection using adversarially generated time series. In IJCAI, pages 4433-4439, 2019.</note>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

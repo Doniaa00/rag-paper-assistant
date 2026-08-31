@@ -1,0 +1,632 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">Deep Learning Methods for Credit Card Fraud Detection</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability status="unknown"><licence/></availability>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><forename type="first">Thanh</forename><forename type="middle">Thi</forename><surname>Nguyen</surname></persName>
+							<email>thanh.nguyen@deakin.edu.au</email>
+							<affiliation key="aff0">
+								<orgName type="department">School of Information Technology</orgName>
+								<orgName type="institution">Deakin University</orgName>
+								<address>
+									<settlement>Victoria</settlement>
+									<country key="AU">Australia</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Hammad</forename><surname>Tahir</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="department">School of Information Technology</orgName>
+								<orgName type="institution">Deakin University</orgName>
+								<address>
+									<settlement>Victoria</settlement>
+									<country key="AU">Australia</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Mohamed</forename><surname>Abdelrazek</surname></persName>
+							<email>mohamed.abdelrazek@deakin.edu.au</email>
+							<affiliation key="aff0">
+								<orgName type="department">School of Information Technology</orgName>
+								<orgName type="institution">Deakin University</orgName>
+								<address>
+									<settlement>Victoria</settlement>
+									<country key="AU">Australia</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Ali</forename><surname>Babar</surname></persName>
+							<email>ali.babar@adelaide.edu.au</email>
+							<affiliation key="aff1">
+								<orgName type="department">School of Computer Science</orgName>
+								<orgName type="institution">The University of Adelaide</orgName>
+								<address>
+									<region>South Australia</region>
+									<country key="AU">Australia</country>
+								</address>
+							</affiliation>
+						</author>
+						<title level="a" type="main">Deep Learning Methods for Credit Card Fraud Detection</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date/>
+						</imprint>
+					</monogr>
+					<idno type="MD5">E00DD499D72932E51578F6D0F8C7FAC0</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.2-SNAPSHOT" ident="GROBID" when="2026-08-31T18:10+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<textClass>
+				<keywords>
+					<term>deep learning</term>
+					<term>machine learning</term>
+					<term>credit card frauds</term>
+					<term>fraud detection</term>
+					<term>cyber security</term>
+					<term>CNN</term>
+					<term>LSTM</term>
+				</keywords>
+			</textClass>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>Credit card frauds are at an ever-increasing rate and have become a major problem in the financial sector. Because of these frauds, card users are hesitant in making purchases and both the merchants and financial institutions bear heavy losses. Some major challenges in credit card frauds involve the availability of public data, high class imbalance in data, changing nature of frauds and the high number of false alarms. Machine learning techniques have been used to detect credit card frauds but no fraud detection systems have been able to offer great efficiency to date. Recent development of deep learning has been applied to solve complex problems in various areas. This paper presents a thorough study of deep learning methods for the credit card fraud detection problem and compare their performance with various machine learning algorithms on three different financial datasets. Experimental results show great performance of the proposed deep learning methods against traditional machine learning models and imply that the proposed approaches can be implemented effectively for real-world credit card fraud detection systems.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>I. INTRODUCTION</head><p>We live in a world today where with the power of a single touch we can achieve massive results. We can book rides, talk to personal virtual assistants, get recommendations, navigate maps and order food to our homes. All of this is possible only because of higher computing capabilities and shared IT infrastructure. Because of this, a large volume of data is created and data generation is expected to reach 44 zettabytes (40 trillion gigabytes) in 2020 from 4.4 zettabytes in 2013 <ref type="bibr" target="#b0">[1]</ref>. The rise of artificial intelligence (AI) and machine learning (ML) in recent years is a consequence of this upsurge of data. Today we rely on countless implementations of ML in our everyday life without even realizing it. One such implementation is credit card fraud detection systems using ML techniques that make our payment methods more robust.</p><p>Credit card fraud is an extension of theft and fraud carried out by obtaining credit card details or using counterfeit cards for illegal monetary transactions. Credit card fraud can be physical where fraudster presents a credit card physically to the merchant or virtual where the transaction is made over the internet. Fraudsters use various techniques for this matter such as site cloning where a duplicate copy a merchant's website is created to obtain credit card information or cloning methods where magnetic stripe reader obtains information on the credit card to make a fake copy of it <ref type="bibr" target="#b1">[2]</ref>.</p><p>ML is a branch of AI in which a computer (machine) is able to perform predictions based on the findings from the previous data trends. Since the astonishing success of Google DeepMind in 2015, AI and ML have expanded to new horizons. Some practical implementations using deep anomaly detection are computer network intrusion detection <ref type="bibr" target="#b2">[3]</ref>; banking, insurance, mobile cellular network, and health care fraud detection; medical and malware anomaly detection and anomaly detection for video surveillance <ref type="bibr" target="#b3">[4]</ref>. Location tracking, Android malware detection, home automation and predicting the occurrence of heart disease are some applications of ML in the Internet of Things domain <ref type="bibr" target="#b4">[5]</ref>. In this paper, we will study in-depth the practical implementation of ML, especially deep learning methods in detecting credit card frauds in the financial sector.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>II. BACKGROUND AND LITERATURE</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. Credit Card Frauds</head><p>In recent years, we have become more dependent on mobile phones and web applications, which have caused an increase in the number of online payment transactions. The card frauds have resulted in millions of revenue loss to financial institutions globally and added stress to credit card users. Approximately, 20.48 billion cards (including credit, debit and all prepaid cards) are in circulation worldwide for the year 2017 <ref type="bibr" target="#b5">[6]</ref>. Fig. <ref type="figure">1</ref>. Card Fraud Worldwide <ref type="bibr" target="#b6">[7]</ref> Fig. <ref type="figure">1</ref> provides the summary of gross card frauds and cents lost per 100 USD till 2027 globally <ref type="bibr" target="#b6">[7]</ref>. It can be seen that credit card fraud reached to almost 30 billion USD in 2019 and is projected to increase each year while cents per 100 USD is expected to decrease. Australian Payments Network in their annual report shows an increase in credit card use from the previous years and a total of 574 million AUD lost to fraud in Australia. An increase to 10% among all credit card frauds was observed whereas the Card Not Present (CNP) fraud resulted in 84.9% of all frauds <ref type="bibr" target="#b7">[8]</ref>. Some fraud limitation steps taken by Australian government include CNP Fraud Mitigation framework in which standards are defined for issuers and merchants, Australian Payment Council's partnership with the Joint Cyber-Security Centre to acquire actionable information in the said matter, regulation of EMV chips, avoiding refunds to alternative cards and implementing fraud detection systems by the financial institutions.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Fraud Detection using Machine Learning</head><p>ML can be implemented for credit card fraud detection where it becomes possible to classify an incoming transaction as legitimate or fraudulent based on the pattern of previous transactions <ref type="bibr" target="#b8">[9]</ref>. ML, nature-inspired learning, and the combination of both these methods to form more robust hybrid models are used for card fraud detection <ref type="bibr" target="#b1">[2]</ref>. Increased volume of card transaction data can be used to find outliers in the data by using methods like auto encoders, long short-term memory networks, and convolutional neural networks <ref type="bibr" target="#b3">[4]</ref>. Decision tree classifier and ANN are also used for fraud detection and their performance is compared with rule-based models <ref type="bibr" target="#b9">[10]</ref>. Decision tree classifiers are straightforward but their performance with complex data is quite low and ANNs perform better with large datasets but require heavy processing power. The rule-based methods are easy to implement but they are not good at classifying the new type of fraud.</p><p>The use of Predictive Analytic Technologies (PAT) to detect credit card frauds was advocated in <ref type="bibr" target="#b10">[11]</ref>. PAT uses ML and statistical models to make future predictions. Five phases of the predictive analytics process are: outlining the business problem, acquiring and preparing data, analyzing data and formulating model, deploying predictive model and testing model performance. The common red flag schemes used by PAT to make predictions are uncommon purchase made by the cardholder, sudden identical purchases on the same credit card, purchases with overnight shipping, purchases with international shipment, multiple card shipments to a single address, multiple transactions on a card in short time, geolocation of transaction compared with cardholders registered location and usage of single IP address for multiple credit cards. Most of the vendor relies on ANNs for predictions but this method is restrained by a high number of false positives. Other challenges associated with PAT are model limitations such as implementation cost and complexity, limited training and learning competence and inability to adapt to fraud tactics, misclassification cost by emphasizing on large amount transactions and ignoring lower amounts commutatively, reluctance in sharing fraud data and compliance with law and regulation.</p><p>A method to detect fraudulent transactions with the least amount of false predictions was introduced in <ref type="bibr" target="#b11">[12]</ref>. To do so, the methodology used is a combination of Hidden Markov Model (HMM), behaviour-based and genetic algorithms. HMM is used to generate transaction logs for a user and then a behaviourbased algorithm classifies each transaction into lower, medium and higher profiles by clustering the data and detects fraud by matching the transactions with the user's spending history. Then the genetic algorithm is used to calculate thresholds and at last fraudulent transaction is detected if the average value of all the three techniques is greater than 40%. Likewise, an experimental study for detecting credit card fraud using ML methods was provided in <ref type="bibr" target="#b12">[13]</ref>. Out of eight classification algorithms tested C5.0 (decision tree algorithm), SVM, and ANN yielded promising results on a labelled dataset. To evaluate the performance combination of accuracy, recall and area under the precision-recall curve (AUC) are used. Accuracy alone is not used for evaluation because of the data imbalance in credit card frauds. The recall is the ratio of correctly identified fraud transactions over the actual number of fraud transactions. This ensures the robustness of the system. The shortlisted algorithms are then tested with imbalanced classification techniques: random over sampling, one-class classification, and costsensitive models.</p><p>A detailed mechanism using K-means clustering and the genetic algorithm to create new data samples for minority clusters to create a balanced dataset and improve classification performance was introduced in <ref type="bibr" target="#b13">[14]</ref>. In that method, unsupervised learning is used to make clusters of similar data points. Then the genetic algorithm which is inspired by natural selection and genetics produced new samples for the minority classes. That method will help generate more balanced training sets for card fraud detection and classification error. In contrast, a study of ensemble learning to detect credit card frauds was reported in <ref type="bibr" target="#b14">[15]</ref>. Ensemble learning is the approach used to combine several ML classifiers to increase prediction performance. ANNs and random forest correctly identify fraud and non-fraud cases. Misclassifying normal or fraudulent transactions are both associated with high financial cost. In efforts to reduce the number of misclassified instances, a combination of 3 feed-forward NNs with different hyperparameters and 2 random forest classifiers with 300 and 400 decision trees are used. The output is then calculated by taking the majority result for the 5 models.</p><p>A comparative study on simple NN, multilayer perception layer (MPL) and Convolutional Neural Network (CNN) was presented in <ref type="bibr" target="#b15">[16]</ref>. The data used for this study is self-generated with 60000 transactions and 12 features. Features selected in generating this data are common attributes acquired from financial institution databases and usual predictors identified for predictive modeling. The dataset is highly imbalanced. The dataset is then balanced using under-sampling. The learning rate is set to 0.001 and the activation function used in this study is 'softmax'. The results showed that MPL performed best with the highest accuracy of 87.88% followed by CNN with an accuracy of 82.86%. Alternatively, results of a real-time deep learning model using auto-encoders for the credit card fraud detection was reported in <ref type="bibr" target="#b16">[17]</ref>. The performance metrics selected for model evaluation are confusion matrix, precision, recall, and accuracy effectively. The non-linear auto regression predicted the most fraudulent transactions however it also misclassified most of the legitimate transactions. Logistic regression misclassified legitimate transactions the least but with low prediction accuracy for fraud cases. Under these circumstances, the deep NN Auto Encoder provides the most stable results with a relatively higher prediction rate and lower misclassification error. Likewise, CNNs were applied to detect credit card frauds in <ref type="bibr" target="#b17">[18]</ref> because of its ability to reduce over-fitting and reveal hidden fraud patterns. That approach used feature engineering to generate aggregated features from the transaction data and introduce a novel feature called trading entropy. Synthetic fraud samples are created from real fraudulent data using cost-based sampling to balance the dataset. The sampled dataset is then transformed into a feature matrix based on different time windows. CNN similar to LeNet has 6 layers with input as a feature matrix. The evaluation parameter selected is the F1 score. The performance of different classifiers is increased when using the trading entropy feature and with comparison to NN, SVM, and RF, CNN produced a much better performance for all the different sample sets tested. Similarly, credit card fraud detection was investigated in <ref type="bibr" target="#b18">[19]</ref> by looking at individual transactions and advocate using time in a sequence of same card transactions to capture the changing nature of fraud. In this regard, adding statistical features obtained from rea features can help improve classification performance. One example is transaction velocity that in a certain point of time will calculate number transactions carried out within a time frame. By adding time series components to the data, the authors compared the performance of SVM and LSTM models. The metrics set for the performance evaluation were AUC and mean squared error. The experimental results showed that LSTM performed far better than SVM in terms of evaluation metrics and also classification rate (transactions/sec).</p><p>A comparison between CNN, Stacked LSTM (SLSTM) and a hybrid model combining CNN and LSTM (CNN-LSTM) was presented in <ref type="bibr" target="#b19">[20]</ref> for credit card fraud detection. CNN is powerful in learning from short term sequences in the data while LSTM is good in capturing long term sequences. The dataset used is from an Indonesian bank and the majority class of nonfraud values is under sampled in 4 different ratios to create 4 datasets for testing. This study represents features with respect to time and PCA is used for dimensionality reduction. The results revealed that increasing the ratio between non-fraud and fraud values increased the accuracy of the classifier. For training accuracy, SLSTM was on top, CNN-LSTM stood second and CNN was last in all 4 datasets. However, due to the imbalanced nature of the datasets, accuracy is not the only measure for performance validation and the AUC values reveal that CNN performed best after CNN-LSTM and then SLSTM, which highlights that the patterns for fraud transactions are subjugated by short-term relation over long-term.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>III. PROPOSED DEEP LEARNING-BASED CLASSIFIERS</head><p>As ML methods rely solely on historical data, due to the sensitive nature of financial data protecting user's privacy, publicly available datasets are not very common, which limits the scope of study in this area. Because of this, every study in this area is limited to just one dataset if used any. In ML, performance of a model can differ widely for different datasets (business cases). How will performance vary for three datasets with a varying number of features and transactions is one research agenda in this study? Furthermore, credit card fraud detection methods face the problem of class imbalance as the number of fraud cases compared to a hundred thousand of normal transactions is very less. Aptly addressing class imbalance is a major challenge and how the behavior is changed by applying various sampling methods to deal with class imbalance is another aim of this study.</p><p>Traditional ML algorithms such as Support Vector Machines (SVM), Decision Tree (DT) and Logistic Regression (LR) have been extensively proposed for credit card fraud detection. These traditional algorithms are not very suitable for large datasets. The use of deep learning methods is still very limited and methods such as CNN and LSTM are encouraged for image classification and Natural Language Processing (NLP) respectively because of their ability to handle massive datasets. How theses deep learning methods perform for credit card fraud classification is the major focus of this study. In addition, data pre-processing is an important stage in the ML process. How the classification performance is affected in response to data preprocessing in credit card fraud detection is another question that needs to be answered.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. One-Dimensional CNN (1DCNN)</head><p>CNN is a deep learning method heavily associated with spatial data such as image processing data. Similar to ANN, CNN has the same hidden layer structure in addition to special convolution layers with a different number of channels in each layer. The word convolution is linked with the idea of moving filters that capture the key information from the data. CNN is widely used in image processing as it automatically performs the feature reduction which makes it less prone to overfitting and thus training CNN does not require heavy data pre-processing. The role of using CNN for image processing is to minimize the processing by reducing the image without losing key features to make predictions <ref type="bibr" target="#b20">[21]</ref>. The key terms in CNN are feature maps, channels, pooling, stride, and padding.</p><p>In comparison to the popular multi-layer perceptron (MLP) network, CNN are not fully connected in layer to layer connection and unlike MLP that has different weights associated with each node, CNN has constant weight parameter for each filter and these two features reduce the number of parameters in a CNN model. Also, the pooling method improves the feature detection process making it more robust to size and position changes of an element in an image.</p><p>CNN models are conventionally used for image and video processing that has two-dimensional data as input and therefore named as 2DCNN. The feature mapping process is used to learn the internal representation from the input data and the same procedure can be used for one-dimensional data as well where the location of features is not relevant. A very popular example of 1DCNN application is in Natural Language Processing which is a sequence classification problem. In 1DCNN, the kernel filter moves top to bottom in a sequence of a data sample instead of moving left to right and top to bottom in 2DCNN. This study uses both 2DCNN and 1DCNN to classify fraud and non-fraud cases. 2DCNN is used for the European Card Dataset in which the number of features is thirty. Each transaction sample is reshaped to a two-dimensional image and passed as input for the 2DCNN model. Tables I and II show the construction parameters of 2DCNN and 1DCNN respectively in this study.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Long Short Term Memory Network</head><p>LSTM is a type of Recurrent Neural Network (RNN). A standard NN cannot keep track of the previous information and every time they have to perform the learning task from scratch. In very simple words, RNN is a neural network with memory. RNN tends to have short term memory because of the vanishing gradient problem. Backpropagation is the backbone of neural networks as it minimizes the loss by adjusting weights of the network that are found using gradients. In RNN, as the gradient moves back in the network it shrinks so the weight update is very small. The earlier layers in the network that are affected by this small update do not learn much and RNN loses the ability to remember early examples in long sequences making it a shortterm memory network.</p><p>LSTMs come to the rescue for this short-term memory problem by having a cell state that is the memory of the network passing through each step and gates in each step that controls the flow of memory by keeping necessary and discarding irrelevant information. The gates used are the forget gate, input gate, and output gate. Forget gate decides what information to keep from the previous step, Input gate decides what information to add from the current step and the output gate decides the hidden state for the next step. The difference between the hidden state and cell state is that while the hidden state keeps the information of the model on previous inputs it still suffers from short term memory and the cell state overcomes that by remembering key information starting from the earliest examples in the sequence. To understand the complete flow of an LSTM cell, consider Fig. <ref type="figure" target="#fig_0">2</ref> below where each dotted box represents a single step <ref type="bibr" target="#b21">[22]</ref>. The first step shown in the red dotted box is the forget gate. Previous hidden state (h t-1 ) and current input (x t ) are passed together to a ''sigmoid' activation function that provides the output between 0 (to forget) and 1 (to keep). The next step shown in the yellow dotted box is the input gate. In this gate, the previous hidden state and current input are passed through 'sigmoid' and 'tanh' activation function and the output of both is then multiplied. The 'tanh' function regulates the model while 'sigmoid' tell which information to keep from the current regulation. The next step shown in the purple dotted box calculates the cell state. Here the previous cell state (C t-1 ) gets pointwise multiplied with the output of the forget gate and then the product is pointwise added with the output of the input gate to get the new cell state (C t ). The last step shown in the blue dotted box is the output gate that calculates the new hidden state (h t ). The new cell state is passed through 'tanh' activation function and is multiplied with the output of 'sigmoid' activation function which has an input of previous hidden state and current input.  </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>IV. EXPERIMENTAL DATASETS</head><p>One main focus of this study is to determine the performance of classifiers for credit card fraud detection on datasets having a varied number of samples and features. For this purpose, three different datasets, i.e. European Card Data (ECD), Small Card Data (SCD) and Tall Card Data (TCD) are used. Like all credit card fraud datasets where fraud instances are very less compared to normal transactions, these datasets are highly imbalanced. All three datasets in this study are labelled datasets with class value '0' representing no fraud and '1' indicating fraud. Further details and class imbalance percentage is given below. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. European Card Data</head><p>This dataset courtesy of Machine Learning Group of Université Libre de Bruxelles is retrieved from Kaggle 1 . It contains two days of transaction data of European cardholders in September 2013. This dataset contains 284,807 samples and 31 features. Out of the given samples, only 492 are fraud cases and account for 0.172% of the dataset. Due to the privacy of customer information and the sensitivity of transactional details, all except 'Time' and 'Amount' features in the dataset are PCA transformed. The 'Time' feature represents the time in seconds passed starting from the first sample in the dataset and the 'Amount' feature shows the total amount of the transaction. This dataset is referred to as 'ECD' in this study.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Small Card Data</head><p>This dataset, also retrieved from Kaggle 2 , is a small dataset containing 3075 samples and 12 features. Half of the features are categorical while another half is numerical. Out of 3075 samples, 448 are fraud cases contributing to 14.6% of all cases. The features used in this dataset are Merchant ID, Transaction date, Average transaction amount per day, the Transaction amount is declined, Number of declines per day, is a foreign transaction, is a high-risk country, Daily chargeback average amount, six-month chargeback average amount, six-month chargeback frequency and is fraudulent. Due to a smaller number of rows and columns, this data set is named as Small Card Data (SCD).</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>C. Tall Card Data</head><p>This dataset is obtained from an online database<ref type="foot" target="#foot_0">foot_0</ref> courtesy of <ref type="bibr" target="#b12">[13]</ref> containing 10 million samples (rows) and 9 features (columns). Having a high number of samples and a low number of features this dataset is named Tall Card Data (TCD) in this study. Only 5.96% of the dataset contains fraud cases. The features comprising the dataset are customer ID, gender, state, number of cards a customer has, balance on the card, number of transactions to date, number of international transactions to date, customer's credit line and fraud risk indicating fraud or nonfraud. Due to limited computing power and higher training times associated with the classifiers we take a small proportion of this data for the study. Out of 10 million samples, we only process 0.5 million samples which are almost double the samples in ECD. The class imbalance is kept the same and out of 500,000 total samples, there are 28,000 fraud cases.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>V. EVALUATION METRICS</head><p>Accuracy is not a suitable metric for model evaluation due to the high class imbalance in the datasets. Selecting the metric for evaluation depends on the nature of the solution and for credit card fraud detection systems capturing all fraud cases and reducing false alarm (legitimate transaction identified as fraud) is the goal. In this study, we use confusion matrix and denote non-fraud (legitimate) instances as Negatives and fraud instances as Positives. True negatives are the non-fraud cases predicted correctly, True positives are the fraud cases predicted correctly, False positives are the non-fraud cases predicted as 1 <ref type="url" target="https://www.kaggle.com/mlg-ulb/creditcardfraud">https://www.kaggle.com/mlg-ulb/creditcardfraud</ref> 2 <ref type="url" target="https://www.kaggle.com/shubhamjoshi2130of/abstract-data-set-for-creditcard-fraud-detection#creditcardcsvpresent.csv">https://www.kaggle.com/shubhamjoshi2130of/abstract-data-set-for-creditcard-fraud-detection#creditcardcsvpresent.csv</ref> fraud and False-negatives are the fraud cases predicted as nonfraud. To further understand the evaluation metrics, consider the equations for Accuracy, Precision, Recall, and the F1 Score given below.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>𝐴𝑐𝑐𝑢𝑟𝑎𝑐𝑦 = 𝑇𝑁 + 𝑇𝑃 𝑇𝑁 + 𝑇𝑃 + 𝐹𝑁 + 𝐹𝑃</head><p>(1)</p><formula xml:id="formula_0">𝑃𝑟𝑒𝑐𝑖𝑠𝑖𝑜𝑛 = 𝑇𝑃 𝑇𝑃 + 𝐹𝑃<label>(2)</label></formula><formula xml:id="formula_1">𝑅𝑒𝑐𝑎𝑙𝑙 = 𝑇𝑃 𝑇𝑃 + 𝐹𝑁 (3) 𝐹1 = 2 * 𝑃𝑟𝑒𝑐𝑖𝑠𝑖𝑜𝑛 * 𝑅𝑒𝑐𝑎𝑙𝑙 𝑃𝑟𝑒𝑐𝑖𝑠𝑖𝑜𝑛 + 𝑅𝑒𝑐𝑎𝑙𝑙<label>(4)</label></formula><p>It can be seen that precision is associated with positive predicted values. Decreasing the number of False positives will increase the precision so for circumstances where the cost of having False positives is high, precision is a suitable metric. Eq. ( <ref type="formula">3</ref>) tells that recall is associated with actual positives. Decreasing the number of False negatives will increase the recall and problems with the high cost of False-negative tend to achieve high recall. For credit card fraud detection, a balance is required between False positives and False negatives. Predicting all the samples as fraud will have high recall but low accuracy, precision, and F1 score while predicting all samples as nonfraud will result in high accuracy but zero recall and undefined precision and F1 score. In this paper, we use all above four metrics for the comparisons.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>VI. ADDRESSING THE CLASS IMBALANCE PROBLEM</head><p>Class imbalance occurs when instances in a labelled dataset are not equally divided and the data is separated into majority and minority class/classes. Credit card transactional data is highly imbalanced because out of millions of transactions each day fraudulent transactions are very less. However, this does not mean that the impact of these fewer fraud cases compared to legitimate cases can be ignored. These fraud transactions heavily affect everyone in the card business, from user to merchant to issuer. Having an imbalanced dataset for problems where the class of interest is the minority class can lead to poor performance by having bias for majority class and misclassifying minority class by treating it as noise <ref type="bibr" target="#b22">[23]</ref>. Data sampling, cost-sensitive learning, one-class learning, and ensemble learning are few methods to improve performance for imbalanced datasets. In this paper, under-sampling and oversampling methods are further explored and performance on sample data for each dataset is evaluated for all the classifiers. The sampling methods used are as follow.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. Random Under Sampling</head><p>Random under sampling (RUS) is the process in which the instances from majority class are reduced by randomly selecting from the data. This is an under-sampling method where the class imbalance is reduced by reducing majority class. To perform random under sampling in python RandomUnderSampler class form imbalanced-learn library is used. The sampling ratio is selected by the 'sampling_strategy' parameter which is the ratio of required majority class over minority class.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Near Miss Sampling</head><p>Randomly selecting instances in RUS can remove key information from the dataset and for this matter Near Miss (NM) sampling uses distance to select to sampling instances. Near miss has variants version 1, 2 and 3, and after evaluating performance of all three variants (results provided in section below), version 1 was selected in this study that selects the majority sampling instance that has the smallest average distance to the closest three instances of the minority class. In python the NearMiss class of imbalanced-learn library is used to perform this under sampling.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>C. Synthetic Minority Over Sampling Technique (SMOTE)</head><p>SMOTE is an over-sampling method that increases the number of instances in minority class by generating new synthetic samples. These new synthetic sample are generated by identifying nearest neighbors of the minority class sample and then generating a sample anywhere between the line of nearest neighbors. In this study SMOTE class of imbalanced-learn library is used to perform the over-sampling and the sampling ratio is the number of minority class instances after resampling over number of majority class instances.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>VII. EXPERIMENTS AND DISCUSIONS</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. Data Pre-Processing</head><p>The first step in the experimentation is data pre-processing. In this step, all three data sets are explored in detail by enquiring the dataset manually and applying statistical operations. The purpose of data pre-processing is to provide a refined input to the classifiers to achieve best possible output. Missing values, categorical features, variable scale and high dimensionality can all affect the performance of the classifier. The two preprocessing methods involved in this study are data exploration, data scaling and test-train split.</p><p>Table <ref type="table" target="#tab_3">IV</ref> down below provides key information on the data exploration process in this study. For ECD all the features were numeric, no missing value was found, and no feature was dropped to clean the data. All the categorical features in SCD were changed to numeric and 'Transaction Date' feature was dropped from the dataset as it was all of missing values. Both ECD and SCD datasets were used as whole while with TCD a smaller fraction of the actual dataset was used. For TCD all the values were numeric and 'custID' feature was dropped as it had all the unique values and added no information to the dataset.</p><p>Next in data exploration, correlation is distinguished between the features for each data set. Correlation is a statistical method and helps to establish the dependency of variables. It is a number between -1 to 1 where 0 means no relation at all, negative correlation means inversely proportional and positive correlation means directly proportional. Finding correlation can help eliminate the features that have the similar behaviour in the data reducing the dimesnions of the data. Lower dimensional data help improve training times and classification performance. Fig. <ref type="figure">3</ref> shows correlation between features in the SCD dataset. It can be observed that there is no negative correlation between the features and there is no uniform correlation throughout the SCD dataset. Higher average amount of transactions per day are associated with higher transaction amounts. Daily chargeback amount, six month chargeback amount and six month chargeback frequency are also highly associated with each other. Finally the high risk country feature is most significant in determining the fraud class. As this dataset is already very small no dimensionality reduction is performed on the data. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Data Scaling and Standardization</head><p>Normally the features in datasets are in different scale. Like the features 'Amount' and 'V1' in ECD dataset has mean 94826.6 and 0.000639 respectively. Deep learning algorithms does not perform very well if the input features are not on a fairly similar scale. Scaling and standardization methods bring the features together to almost same scale to make the input more comprehendible for the classifier. In this study, StandardScaler class from sklearn pre-processing library in python is used. The standard scaler transforms each feature in the dataset such that the mean is 0 and the standard deviation is 1. After applying the standard scaler on the dataset the mean for the same two features discussed above changed to 0.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>C. Test, Train and Validation Split</head><p>All three datasets are further divided into Test, Training and Validation data. Test Data is a small chunk of data obtained randomly from the dataset, which occupies 3.5% of each dataset. Training Data is the 80% of the remaining data used for training the models. Validation Data is the 20% of the remaining data used for validating the classifier. The classifiers used this validation data to avoid overfitting and improve model performance.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Results and Discussions</head><p>Fig. <ref type="figure" target="#fig_2">4</ref> provides the comparison between different class imbalance ratios of the ECD dataset and the performance is evaluated using Test Dataset. It can be seen that initially the Recall is maximum, and all other metrics are minimum and as the class imbalance is increased, recall begins to decrease and accuracy, precision and f1-score starts to increase. When there is no class imbalance at ratio 1, the model is predicting all the fraud cases correctly but misclassifying most of the non-fraud cases resulting in low precision. Low accuracy is achieved as the proportion of nonfraud cases is much larger than fraud cases in Test data. When the class imbalance starts to increase a significant rise in accuracy is observed meaning increase in correct predictions over total predictions. F1 score and Precision rise with increase in class imbalance. This is because with increase in class imbalance the model gets more training instances and is able to generalize well. Fig. <ref type="figure" target="#fig_3">5</ref> shows performance comparison between the three datasets. The performance is calculated using both Validation and Test data and the performance measure selected here is F1-Score. It can be observed that in general validation performance is decreased as the dataset size is increased. SCD gives the best prediction performance on the examples that the system has already seen but drops down on the new unseen examples. TCD has the lowest validation and test performance amongst all dataset maybe due to the smaller number of features and little correlation between the features. The performance on ECD is stable with little variation between validation and test performance. The missing values of 2DCNN for SCD and TCD are because of the smaller number of features in the dataset as it was not possible to create feature matrix. Missing values of RF (i.e. random forest) and SVM in TCD are due to the higher training times associated with these classifiers. The comparison of sampling methods discussed earlier tested on Validation Data is presented in Fig. <ref type="figure">6</ref>. It can be observed that overall performance is increased with sampling. SMOTE method provides the best results whereas Near Miss performs slightly better than Random Under Sampler. Finding the best sampling method leads to the next experiment.  Fig. <ref type="figure" target="#fig_4">7</ref> demonstrates the comparison of SMOTE with no sampling using the Test Data. As expected, the Recall is increased however Precision and F1-score are decreased drastically with SMOTE meaning the model is predicting fraud cases very accurately but misclassifying majority of the nonfraud cases. This may be because of the fact that SMOTE creates new synthetic fraud instances overlapping the non-fraud instances thus changing the decision boundary.</p><p>One of the main objectives of this study was to find the best performing algorithm. From Fig. <ref type="figure" target="#fig_3">5</ref>, it can be observed that although deep learning methods performed side to side with the traditional algorithms, LSTM has a slightly better performance amongst all tested algorithms. Some other observations made during the experimentation process are as follows: 1) With the support of GPU computing, deep learning methods implemented based on the tensorflow library require less training time compared to traditional algorithms, i.e. SVM and RF, on large datasets; 2) Increasing the number of epochs increased the misclassification; 3) All the variants of Near Miss Algorithm provided the similar results.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>VIII. CONCLUSIONS AND FUTURE WORK</head><p>Credit card frauds are an increasing threat to the financial institutions. Fraudsters tend to come up with new fraud methods every now and then. A robust classifier is one that can cope with the changing nature of the frauds. Accurately predicting the fraud cases and reducing the number of false positives is the foremost priority of a fraud detection systems. The performance of machine learning methods varies for each business case. Type of input data is a dominant factor driving the machine learning model. For credit card detection, number of features, number of transactions and correlation between the features is an important factor in determining model performance. Deep learning methods such as CNN and LSTM are associated with image processing and NLP respectively. Using these methods for credit card fraud detection yielded better performance than traditional algorithms. While all the algorithms performed side to side, LSTM with 50 blocks was the one on top with F1-Score of 84.85%. In this study, sampling methods have been used to deal with the class imbalance problem. Using various sampling methods increased the performance on existing examples but decreased it significantly on the newly unseen data. The performance on unseen data was increased as the class imbalance was increased. Future work associated with this study is to explore hyperparameters used to construct deep learning methods to improve model performance.</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head>Fig. 2 .</head><label>2</label><figDesc>Fig. 2. An LSTM Cell</figDesc><graphic coords="4,322.44,117.90,235.68,113.76" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_2"><head>Fig. 4 .</head><label>4</label><figDesc>Fig. 4. Class Imbalance Comparison (Test Data ECD)</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_3"><head>Fig. 5 .</head><label>5</label><figDesc>Fig. 5. F1 Score -SCD vs ECD vs TCD</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_4"><head>Fig. 7 .</head><label>7</label><figDesc>Fig. 7. SMOTE vs Normal Distribution (Test Data ECD)</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0"><head></head><label></label><figDesc></figDesc><graphic coords="6,315.48,419.70,259.20,264.96" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_0"><head>TABLE I .</head><label>I</label><figDesc>2DCNN STRUCTURE    </figDesc><table><row><cell>Layer 3</cell><cell>CONV2D</cell></row><row><cell>Number of channels</cell><cell>32</cell></row><row><cell>Kernel Size</cell><cell>3x3</cell></row><row><cell>Activation Function</cell><cell>ReLU</cell></row><row><cell>Layer 4</cell><cell>Flatten</cell></row><row><cell>Number of Nodes</cell><cell>64</cell></row><row><cell>Layer 5</cell><cell>Output</cell></row><row><cell>Number of Nodes</cell><cell>1</cell></row><row><cell>Activation Function</cell><cell>Sigmoid</cell></row><row><cell cols="2">TABLE II. 1DCNN STRUCTURE</cell></row><row><cell>Layer 1</cell><cell>Input</cell></row><row><cell>Input Shape</cell><cell>(Row sample ,1, Number of Features)</cell></row><row><cell>Layer 2</cell><cell>CONV1D Layer</cell></row><row><cell>Number of channels</cell><cell>64</cell></row><row><cell>Kernel Size</cell><cell>1</cell></row><row><cell>Activation Function</cell><cell>ReLU</cell></row><row><cell>Layer 3</cell><cell>CONV1D Layer</cell></row><row><cell>Number of channels</cell><cell>64</cell></row><row><cell>Kernel Size</cell><cell>1</cell></row><row><cell>Activation Function</cell><cell>ReLU</cell></row><row><cell>Layer 4</cell><cell>Dropout</cell></row><row><cell>Threshold</cell><cell>0.5</cell></row><row><cell>Layer 5</cell><cell>MaxPooling1D</cell></row><row><cell>Pool size</cell><cell>1</cell></row><row><cell>Layer 6</cell><cell>Flatten</cell></row><row><cell>Number of Nodes</cell><cell>64</cell></row><row><cell>Layer 7</cell><cell>Dense</cell></row><row><cell>Number of Nodes</cell><cell>100</cell></row><row><cell>Activation Function</cell><cell>ReLU</cell></row><row><cell>Layer 8</cell><cell>Output</cell></row><row><cell>Number of Nodes</cell><cell>1</cell></row><row><cell>Activation Function</cell><cell>Sigmoid</cell></row><row><cell></cell><cell>Layer 1</cell><cell>Input</cell></row><row><cell></cell><cell>Input Shape</cell><cell>(Row sample, 5, 6, 1)</cell></row><row><cell></cell><cell>Layer 2</cell><cell>CONV2D</cell></row><row><cell></cell><cell>Number of channels</cell><cell>64</cell></row><row><cell></cell><cell>Kernel Size</cell><cell>3x3</cell></row><row><cell></cell><cell>Activation Function</cell><cell>ReLU</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_1"><head></head><label></label><figDesc>Table III below shows the hyperparameters of LSTM network used in this study.</figDesc><table /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_2"><head>TABLE III .</head><label>III</label><figDesc>LSTM STRUCTURE</figDesc><table><row><cell>Layer 1</cell><cell>Input</cell></row><row><cell>Input Shape</cell><cell>(1, Number of Features)</cell></row><row><cell>Layer 2</cell><cell>Dense</cell></row><row><cell>Number of LSTM Blocks</cell><cell>50</cell></row><row><cell>Activation Function</cell><cell>ReLU</cell></row><row><cell>Layer 3</cell><cell>Output</cell></row><row><cell>Number of Nodes</cell><cell>1</cell></row><row><cell>Activation Function</cell><cell>Sigmoid</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_3"><head>TABLE IV</head><label>IV</label><figDesc></figDesc><table><row><cell></cell><cell>. DATA EXPLORATION</cell></row><row><cell></cell><cell>ECD</cell></row><row><cell>Number of Rows</cell><cell>284807</cell></row><row><cell>Number of Columns</cell><cell>31</cell></row><row><cell>Feature Type</cell><cell>Numeric</cell></row><row><cell>Missing Values</cell><cell>None</cell></row><row><cell>Dropped Features</cell><cell>None</cell></row><row><cell>Categorical to Numeric</cell><cell>None</cell></row><row><cell>Smaller Sample Used</cell><cell>No</cell></row><row><cell></cell><cell>SCD</cell></row><row><cell>Number of Rows</cell><cell>3075</cell></row><row><cell>Number of Columns</cell><cell>12</cell></row><row><cell>Feature Type</cell><cell>Numeric + Categorical</cell></row><row><cell>Missing Values</cell><cell>3075</cell></row><row><cell>Dropped Features</cell><cell>'Transaction date'</cell></row><row><cell>Categorical to Numeric</cell><cell>'Merchant_id', 'Is declined',</cell></row><row><cell></cell><cell>'isForeignTransaction', 'isHighRiskCountry',</cell></row><row><cell></cell><cell>'isFradulent'</cell></row><row><cell>Smaller Sample Used</cell><cell>No</cell></row><row><cell></cell><cell>TCD</cell></row><row><cell>Number of Rows</cell><cell>10000000</cell></row><row><cell>Number of Columns</cell><cell>9</cell></row><row><cell>Feature Type</cell><cell>Numeric</cell></row><row><cell>Missing Values</cell><cell>None</cell></row><row><cell>Dropped Features</cell><cell>'custID'</cell></row><row><cell>Categorical to Numeric</cell><cell>None</cell></row><row><cell>Smaller Sample Used</cell><cell>Yes</cell></row><row><cell cols="2">Fig. 3. Correlation Heatmap of the SCD dataset</cell></row></table></figure>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot" n="3" xml:id="foot_0"><p>http://packages.revolutionanalytics.com/datasets/</p></note>
+		</body>
+		<back>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<analytic>
+		<title level="a" type="main">How much data is generated each day?</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Desjardins</surname></persName>
+		</author>
+		<ptr target="https://www.weforum.org/agenda/2019/04/how-much-data-is-generated-each-day-cf4bddf29f/" />
+	</analytic>
+	<monogr>
+		<title level="j">World Economic Forum</title>
+		<imprint>
+			<date type="published" when="2019-04-17">April 17, 2019. Nov. 18, 2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. Desjardins, How much data is generated each day?, World Economic Forum, April 17, 2019. Accessed on: Nov. 18, 2020. [Online]. Available: https://www.weforum.org/agenda/2019/04/how-much-data-is-generated- each-day-cf4bddf29f/</note>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<analytic>
+		<title level="a" type="main">A survey of machine-learning and nature-inspired based credit card fraud detection techniques</title>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">O</forename><surname>Adewumi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">A</forename><surname>Akinyelu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of System Assurance Engineering and Management</title>
+		<imprint>
+			<biblScope unit="volume">8</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="937" to="953" />
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">A. O. Adewumi and A. A. Akinyelu, &quot;A survey of machine-learning and nature-inspired based credit card fraud detection techniques.&quot; International Journal of System Assurance Engineering and Management 8, no. 2 (2017): 937-953.</note>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<monogr>
+		<title level="m" type="main">Deep reinforcement learning for cyber security</title>
+		<author>
+			<persName><forename type="first">T</forename><forename type="middle">T</forename><surname>Nguyen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">V</forename><forename type="middle">J</forename><surname>Reddi</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1906.05799</idno>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">T. T. Nguyen and V. J. Reddi, &quot;Deep reinforcement learning for cyber security,&quot; arXiv preprint arXiv:1906.05799 (2019).</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<monogr>
+		<title level="m" type="main">Deep learning for anomaly detection: a survey</title>
+		<author>
+			<persName><forename type="first">R</forename><surname>Chalapathy</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Chawla</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1901.03407</idno>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">R. Chalapathy and S. Chawla, &quot;Deep learning for anomaly detection: a survey,&quot; arXiv preprint arXiv:1901.03407 (2019).</note>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<analytic>
+		<title level="a" type="main">A literature study on machine learning fusion with IoT</title>
+		<author>
+			<persName><forename type="first">K</forename><surname>Sharma</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">2019 3rd International Conference on Trends in Electronics and Informatics (ICOEI)</title>
+		<meeting><address><addrLine>Tirunelveli, India</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+			<biblScope unit="page" from="1440" to="1445" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">K. Sharma and R. Nandal, &quot;A literature study on machine learning fusion with IoT,&quot; 2019 3rd International Conference on Trends in Electronics and Informatics (ICOEI), Tirunelveli, India, 2019, pp. 1440-1445.</note>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<monogr>
+		<title level="m" type="main">Payment cards projected worldwide</title>
+		<ptr target="https://nilsonreport.com/upload/issues/1140_0321.pdf" />
+		<imprint>
+			<date type="published" when="2018-10">Oct. 2018. Nov. 12, 2020</date>
+		</imprint>
+	</monogr>
+	<note>The Nilson Report Issue 1140</note>
+	<note type="raw_reference">Payment cards projected worldwide, The Nilson Report Issue 1140, Oct. 2018. Accessed on: Nov. 12, 2020. [Online]. Available: https://nilsonreport.com/upload/issues/1140_0321.pdf</note>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<analytic>
+		<title/>
+		<ptr target="https://nilsonreport.com/publication_chart_of_the_month.php?1=1&amp;issue=1164" />
+	</analytic>
+	<monogr>
+		<title level="j">The Nilson Report</title>
+		<imprint>
+			<biblScope unit="page">1164</biblScope>
+			<date type="published" when="2019-11">Nov. 2019. Nov. 12, 2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Issue 1164, The Nilson Report, Nov. 2019. Accessed on: Nov. 12, 2020. [Online].https://nilsonreport.com/publication_chart_of_the_month.php? 1=1&amp;issue=1164</note>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<monogr>
+		<title level="m" type="main">Australian Payment Card Fraud</title>
+		<ptr target="https://www.auspaynet.com.au/sites/default/files/2019-08/AustralianPaymentCardFraud2019_0.pdf" />
+		<imprint>
+			<date type="published" when="2019-11-26">2019. 2019. Nov. 26, 2020</date>
+		</imprint>
+	</monogr>
+	<note>Australian Payments Network</note>
+	<note type="raw_reference">Australian Payment Card Fraud 2019, Australian Payments Network, 2019. Accessed on: Nov. 26, 2020. [Online]. Available: https://www.auspaynet.com.au/sites/default/files/2019- 08/AustralianPaymentCardFraud2019_0.pdf</note>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">Payment card fraud: Challenges and solutions</title>
+		<author>
+			<persName><forename type="first">I</forename><surname>Sakharova</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">IEEE International Conference on Intelligence and Security Informatics</title>
+		<meeting><address><addrLine>Arlington, VA</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2012">2012. 2012</date>
+			<biblScope unit="page" from="227" to="234" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">I. Sakharova, &quot;Payment card fraud: Challenges and solutions,&quot; 2012 IEEE International Conference on Intelligence and Security Informatics, Arlington, VA, 2012, pp. 227-234.</note>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<analytic>
+		<title level="a" type="main">Review on fraud detection methods in credit card transactions</title>
+		<author>
+			<persName><forename type="first">K</forename><surname>Modi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Dayma</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Intelligent Computing and Control (I2C2)</title>
+		<meeting><address><addrLine>Coimbatore</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2017">2017. 2017</date>
+			<biblScope unit="page" from="1" to="5" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">K. Modi and R. Dayma, &quot;Review on fraud detection methods in credit card transactions,&quot; 2017 International Conference on Intelligent Computing and Control (I2C2), Coimbatore, 2017, pp. 1-5.</note>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<analytic>
+		<title level="a" type="main">The use of predictive analytics technology to detect credit card fraud in Canada</title>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">T</forename><surname>Hafiz</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Aghili</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Zavarsky</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">2016 11th Iberian Conference on Information Systems and Technologies (CISTI)</title>
+		<meeting><address><addrLine>Las Palmas</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+			<biblScope unit="page" from="1" to="6" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">K. T. Hafiz, S. Aghili and P. Zavarsky, &quot;The use of predictive analytics technology to detect credit card fraud in Canada,&quot; 2016 11th Iberian Conference on Information Systems and Technologies (CISTI), Las Palmas, 2016, pp. 1-6.</note>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<analytic>
+		<title level="a" type="main">Credit card fraud detection: a case study</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Agrawal</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Kumar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">K</forename><surname>Mishra</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">2nd International Conference on Computing for Sustainable Global Development</title>
+		<meeting><address><addrLine>New Delhi</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2015">2015</date>
+			<biblScope unit="page" from="5" to="7" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">A. Agrawal, S. Kumar and A. K. Mishra, &quot;Credit card fraud detection: a case study,&quot; 2nd International Conference on Computing for Sustainable Global Development, New Delhi, 2015, pp. 5-7.</note>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<analytic>
+		<title level="a" type="main">An experimental study with imbalanced classification approaches for credit card fraud detection</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Makki</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Assaghir</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Taher</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Haque</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Hacid</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Zeineddine</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Access</title>
+		<imprint>
+			<biblScope unit="volume">7</biblScope>
+			<biblScope unit="page" from="93010" to="93022" />
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S. Makki, Z. Assaghir, Y. Taher, R. Haque, M. Hacid and H. Zeineddine, &quot;An experimental study with imbalanced classification approaches for credit card fraud detection,&quot; in IEEE Access, vol. 7, pp. 93010-93022, 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<analytic>
+		<title level="a" type="main">Using genetic algorithm to improve classification of imbalanced datasets for credit card fraud detection</title>
+		<author>
+			<persName><forename type="first">I</forename><surname>Benchaji</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Douzi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><forename type="middle">E</forename><surname>Ouahidi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Advanced Information Technology, Services and Systems</title>
+		<meeting><address><addrLine>Cham</addrLine></address></meeting>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2018">2018</date>
+			<biblScope unit="page" from="220" to="229" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">I. Benchaji, S. Douzi and B. E. Ouahidi, &quot;Using genetic algorithm to improve classification of imbalanced datasets for credit card fraud detection,&quot; In International Conference on Advanced Information Technology, Services and Systems, pp. 220-229. Springer, Cham, 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<analytic>
+		<title level="a" type="main">Ensemble learning for credit card fraud detection</title>
+		<author>
+			<persName><forename type="first">I</forename><surname>Sohony</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Pratap</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">U</forename><surname>Nambiar</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">ACM India Joint International Conference on Data Science and Management of Data</title>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+			<biblScope unit="page" from="289" to="294" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">I .Sohony, R. Pratap and U. Nambiar, &quot;Ensemble learning for credit card fraud detection,&quot; In ACM India Joint International Conference on Data Science and Management of Data, pp. 289-294. 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<analytic>
+		<title level="a" type="main">Fraud detection in credit card transaction using neural networks</title>
+		<author>
+			<persName><forename type="first">I</forename><surname>Sadgali</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><surname>Sael</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Benabbou</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 4th International Conference on Smart City Applications</title>
+		<meeting>the 4th International Conference on Smart City Applications</meeting>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+			<biblScope unit="page" from="1" to="4" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">I. Sadgali, N. Sael and F. Benabbou, &quot;Fraud detection in credit card transaction using neural networks,&quot; In Proceedings of the 4th International Conference on Smart City Applications, pp. 1-4. 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<analytic>
+		<title level="a" type="main">An efficient real time model for credit card fraud detection based on deep learning</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Abakarim</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Lahby</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Attioui</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 12th International Conference on Intelligent Systems: Theories and Applications</title>
+		<meeting>the 12th International Conference on Intelligent Systems: Theories and Applications</meeting>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+			<biblScope unit="page" from="1" to="7" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Y. Abakarim, M. Lahby and A. Attioui, &quot;An efficient real time model for credit card fraud detection based on deep learning,&quot; In Proceedings of the 12th International Conference on Intelligent Systems: Theories and Applications, pp. 1-7. 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<analytic>
+		<title level="a" type="main">Credit card fraud detection using convolutional neural networks</title>
+		<author>
+			<persName><forename type="first">K</forename><surname>Fu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Cheng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Tu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Zhang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Neural Information Processing</title>
+		<meeting><address><addrLine>Cham</addrLine></address></meeting>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2016">2016</date>
+			<biblScope unit="page" from="483" to="490" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">K. Fu, D. Cheng,Y. Tu and L. Zhang, &quot;Credit card fraud detection using convolutional neural networks,&quot; In International Conference on Neural Information Processing, pp. 483-490. Springer, Cham, 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<analytic>
+		<title level="a" type="main">Credit card transactions, fraud detection, and machine learning: Modelling time with LSTM recurrent neural networks</title>
+		<author>
+			<persName><forename type="first">B</forename><surname>Wiese</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Omlin</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Innovations in neural information paradigms and applications</title>
+		<meeting><address><addrLine>Berlin, Heidelberg</addrLine></address></meeting>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2009">2009</date>
+			<biblScope unit="page" from="231" to="268" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">B. Wiese and C. Omlin, &quot;Credit card transactions, fraud detection, and machine learning: Modelling time with LSTM recurrent neural networks,&quot; In Innovations in neural information paradigms and applications, pp. 231-268. Springer, Berlin, Heidelberg, 2009.</note>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<analytic>
+		<title level="a" type="main">Learning temporal representation of transaction amount for fraudulent transaction recognition using CNN, Stacked LSTM, and CNN-LSTM</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Heryadi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><forename type="middle">L H S</forename><surname>Warnars</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">IEEE International Conference on Cybernetics and Computational Intelligence (CyberneticsCom)</title>
+		<meeting><address><addrLine>Phuket</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2017">2017. 2017</date>
+			<biblScope unit="page" from="84" to="89" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Y. Heryadi and H. L. H. S. Warnars, &quot;Learning temporal representation of transaction amount for fraudulent transaction recognition using CNN, Stacked LSTM, and CNN-LSTM,&quot; 2017 IEEE International Conference on Cybernetics and Computational Intelligence (CyberneticsCom), Phuket, 2017, pp. 84-89.</note>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<monogr>
+		<title level="m" type="main">Deep learning for deepfakes creation and detection: a survey</title>
+		<author>
+			<persName><forename type="first">T</forename><forename type="middle">T</forename><surname>Nguyen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">M</forename><surname>Nguyen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">T</forename><surname>Nguyen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">T</forename><surname>Nguyen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Nahavandi</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1909.11573</idno>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">T. T. Nguyen, C. M. Nguyen, D. T. Nguyen, D. T. Nguyen and S. Nahavandi, &quot;Deep learning for deepfakes creation and detection: a survey,&quot; arXiv preprint arXiv:1909.11573 (2019).</note>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<analytic>
+		<title level="a" type="main">Illustrated Guide to LSTM&apos;s and GRU&apos;s: A step by step explanation</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Phi</surname></persName>
+		</author>
+		<ptr target="https://towardsdatascience.com/illustrated-guide-to-lstms-and-gru-s-a-step-by-step-explanation-44e9eb85bf21" />
+	</analytic>
+	<monogr>
+		<title level="j">Towards Data Science</title>
+		<imprint>
+			<date type="published" when="2018-11-23">2018. Nov. 23, 2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">M. Phi, Illustrated Guide to LSTM&apos;s and GRU&apos;s: A step by step explanation, Towards Data Science, 2018. Accessed on: Nov. 23, 2020. [Online]. Available at: https://towardsdatascience.com/illustrated-guide- to-lstms-and-gru-s-a-step-by-step-explanation-44e9eb85bf21</note>
+</biblStruct>
+
+<biblStruct xml:id="b22">
+	<analytic>
+		<title level="a" type="main">A review of class imbalance problem</title>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">M A</forename><surname>Elrahman</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Abraham</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Network and Innovative Computing</title>
+		<imprint>
+			<biblScope unit="volume">1</biblScope>
+			<biblScope unit="page" from="332" to="340" />
+			<date type="published" when="2013">2013. 2013</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S. M. A. Elrahman and A. Abraham, &quot;A review of class imbalance problem,&quot; Journal of Network and Innovative Computing 1, no. 2013 (2013): 332-340.</note>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

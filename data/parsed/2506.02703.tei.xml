@@ -1,0 +1,1223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">DATA LEAKAGE AND DECEPTIVE PERFORMANCE: A CRITICAL EXAMINATION OF CREDIT CARD FRAUD DETECTION METHODOLOGIES A PREPRINT</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability  status="unknown">
+					<licence/>
+				</availability>
+				<date type="published" when="2025-11-11">November 11, 2025</date>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><forename type="first">Khizar</forename><surname>Hayat</surname></persName>
+							<email>khizar.hayat@unizwa.edu.om</email>
+						</author>
+						<author>
+							<persName><forename type="first">Baptiste</forename><surname>Magnier</surname></persName>
+							<email>baptiste.magnier@mines-ales.fr</email>
+							<affiliation key="aff1">
+								<orgName type="department">Euromov Digital Health in Motion</orgName>
+								<orgName type="institution" key="instit1">Univ Montpellier</orgName>
+								<orgName type="institution" key="instit2">IMT Mines Ales</orgName>
+								<address>
+									<settlement>Ales</settlement>
+									<country key="FR">France</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<affiliation key="aff0">
+								<orgName type="institution">University of Nizwa</orgName>
+								<address>
+									<country>Sultanate of Oman</country>
+								</address>
+							</affiliation>
+						</author>
+						<title level="a" type="main">DATA LEAKAGE AND DECEPTIVE PERFORMANCE: A CRITICAL EXAMINATION OF CREDIT CARD FRAUD DETECTION METHODOLOGIES A PREPRINT</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date type="published" when="2025-11-11">November 11, 2025</date>
+						</imprint>
+					</monogr>
+					<idno type="MD5">06669E47BE8CCE5D279709D3B80F0018</idno>
+					<idno type="arXiv">arXiv:2506.02703v3[cs.LG]</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.2-SNAPSHOT" ident="GROBID" when="2026-08-31T18:11+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<textClass>
+				<keywords>
+					<term>Credit Card Fraud</term>
+					<term>Data Leakage</term>
+					<term>Preprocessing Flaws</term>
+					<term>Methodological Rigor</term>
+					<term>Model Performance</term>
+				</keywords>
+			</textClass>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>This study critically examines the methodological rigor in credit card fraud detection research, revealing how fundamental evaluation flaws can overshadow algorithmic sophistication. Through deliberate experimentation with improper evaluation protocols, we demonstrate that even simple models can achieve deceptively impressive results when basic methodological principles are violated. Our analysis identifies four critical issues plaguing current approaches: (1) pervasive data leakage from improper preprocessing sequences, (2) intentional vagueness in methodological reporting, (3) inadequate temporal validation for transaction data, and (4) metric manipulation through recall optimization at precision's expense. We present a case study showing how a minimal neural network architecture with data leakage outperforms many sophisticated methods reported in literature, achieving 99.9% recall despite fundamental evaluation flaws. These findings underscore that proper evaluation methodology matters more than model complexity in fraud detection research. The study serves as a cautionary example of how methodological rigor must precede architectural sophistication, with implications for improving research practices across machine learning applications.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1">INTRODUCTION</head><p>The rise of deep learning has profoundly transformed how we approach complex classification and regression problems. Given its data-hungry nature, the prevailing emphasis has been on acquiring large volumes of training data to boost model performance. Meanwhile, the implementation of deep learning models has become increasingly trivialized, thanks to the proliferation of high-level APIs and libraries-especially in Python-that abstract much of the underlying complexity. Today, even large language models (LLMs) and sophisticated neural architectures can be deployed with relatively little specialized knowledge, lowering the barrier to entry for applying advanced machine learning techniques. However, this convenience comes at a cost. The focus has shifted so heavily toward automation and performance metrics that critical aspects of the modeling pipeline are often overlooked or poorly documented. Researchers frequently delegate key steps to automated tools, sometimes without fully understanding or reporting them. In doing so, we risk putting the cart before the horse-prioritizing model tuning over foundational concerns such as data quality and preparation.</p><p>The initial steps that precede model training are often loosely grouped under the term "preprocessing," yet they receive scant attention in many studies. It is not uncommon for papers to devote pages to re-explaining ubiquitous evaluation metrics like accuracy, precision, recall, or confusion matrices, while providing vague or incomplete details on more foundational questions such as:</p><p>• How were categorical, ordinal, or fuzzy variables handled?</p><p>• What strategy was used for data splitting (e.g., random, stratified, time-based)?</p><p>• When and how was normalization or standardization applied; and to which subsets?</p><p>• Were oversampling or undersampling techniques limited to the training set, or did they inadvertently affect the test data?</p><p>• Was feature selection or dimensionality reduction performed before or after data splitting?</p><p>This vagueness often extends to the methodological core. Sleek pipeline diagrams are commonly included but tend to omit essential details. For instance, one might encounter the use of 2D Convolutional Neural Networks (CNNs) applied to tabular data without any justification. Was there a compelling reason for employing a spatial model on non-spatial input? If so, how was the data reshaped to accommodate this architecture? Such decisions are non-trivial and require clear, transparent reporting.</p><p>These questions are far from minor. They directly affect the reproducibility, interpretability, and trustworthiness of machine learning models. When unaddressed, they may introduce silent data leakage, bias, or misleading performance metrics; ultimately undermining the credibility of the research. Thorough documentation and transparency in preprocessing are not optional; they are essential to rigorous, responsible data science.</p><p>In this work, we undertake a critical review of existing literature in light of the concerns previously discussed, using credit card fraud detection as a case study-specifically focusing on a widely referenced benchmark dataset <ref type="bibr" target="#b0">[1]</ref>. This domain poses distinctive challenges, with extreme class imbalance being a primary issue. In such contexts, seemingly high accuracy scores are not uncommon, yet they can be misleading. Methodological oversights or missteps, whether inadvertent or otherwise, can easily lead to inflated performance metrics and a skewed perception of model efficacy.</p><p>One recurring issue we have observed is the mishandling of resampling techniques -particularly when oversampling or undersampling is performed before the train-test split -leading to data leakage. To underscore this point, we intentionally apply a simple yet flawed MLP-based approach. Despite its simplicity, the model yields impressively high metrics, thereby demonstrating how superficial performance gains can mask deeper methodological flaws.</p><p>The rest of this paper is organized as follows: Section ?? provides background on credit card fraud detection and dataset characteristics. Section 3 reviews the literature on deep learning-based fraud detection. Section 4 describes our methodology, followed by experimental results in Section ??. Finally, Section 5 concludes the paper.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2">Credit Card Fraud Detection</head><p>The widespread use of credit and debit cards has greatly enhanced financial convenience, but it has also led to increased fraudulent activity. Payment card fraud typically involves unauthorized transactions intended to obtain goods, services, or cash. While fraud represents a tiny fraction of all transactions, the absolute financial impact is substantial <ref type="bibr" target="#b1">[2]</ref>, making it a significant area of concern for financial institutions.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.1">Dataset Description</head><p>We use the popular European credit card fraud dataset <ref type="bibr" target="#b0">[1]</ref> for benchmarking. It contains 284,807 transactions made by European cardholders over two days in September 2013, out of which only 492 are fraudulent, just 0.17%, highlighting extreme class imbalance.</p><p>The dataset comprises 30 features: 28 anonymized principal components (V1 -V28) derived via PCA, along with Time and Amount. The target variable Class is binary, with 1 indicating fraud and 0 denoting legitimate transactions. Due to privacy concerns, the original feature labels and semantics were withheld.</p><p>Figure <ref type="figure">1</ref>: Snapshot of the first five rows of the dataset.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.2">Handling Imbalanced Data</head><p>In fraud detection, the misclassification of minority class instances (fraudulent cases) carries significant consequences, as failing to detect fraud can lead to financial losses and security risks. Traditional classifiers often bias toward the majority class due to the skewed distribution of data, leading to poor performance on the minority class. Resampling techniques address this issue by adjusting the class distribution, either by oversampling the minority class, undersampling the majority class, or combining both approaches to improve model performance.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.2.1">Oversampling Methods</head><p>Oversampling techniques aim to increase the representation of the minority class by either duplicating existing samples or generating synthetic samples. These methods help the model learn patterns from the minority class more effectively.</p><p>• Random Oversampling: Duplicates minority samples without introducing new information. This method is simple but can lead to overfitting due to repeated samples.</p><p>• SMOTE (Synthetic Minority Oversampling Technique) <ref type="bibr" target="#b2">[3]</ref>: Generates synthetic samples between nearest neighbors of minority instances. This method helps to create a more balanced dataset and can improve model performance.</p><p>• ADASYN (Adaptive Synthetic Sampling) <ref type="bibr" target="#b3">[4]</ref>: Focuses on generating synthetic samples for harder-to-classify minority samples through adaptive weighting. This method is particularly useful for improving the classification of difficult minority instances.</p><p>• Borderline-SMOTE <ref type="bibr" target="#b4">[5]</ref>: Creates synthetic samples near class boundaries for better discrimination. This method helps to improve the classification of minority instances near the decision boundary.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.2.2">Undersampling Methods</head><p>Undersampling techniques aim to reduce the number of majority class samples to balance the class distribution. These methods help to reduce the computational complexity and improve the model's focus on the minority class.</p><p>• Random Undersampling (RUS): Randomly removes majority class samples. This method is simple but can lead to loss of important information.</p><p>• NearMiss <ref type="bibr" target="#b5">[6]</ref>: Selects majority samples based on proximity to minority instances. This method helps to retain informative majority samples.</p><p>• Tomek Links <ref type="bibr" target="#b6">[7]</ref>: Removes borderline samples to clarify decision boundaries. This method helps to improve the classification of minority instances by removing ambiguous majority samples.</p><p>• Cluster Centroids <ref type="bibr" target="#b7">[8]</ref>: Applies K-means clustering to condense the majority class. This method helps to reduce the number of majority samples while retaining the overall distribution.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.2.3">Hybrid Methods</head><p>Hybrid methods combine oversampling and undersampling techniques to balance the class distribution and improve model performance. These methods aim to leverage the strengths of both approaches.</p><p>• SMOTE-Tomek, SMOTE-ENN <ref type="bibr" target="#b8">[9]</ref>: Combine oversampling with data cleaning for improved balance. These methods help to generate synthetic minority samples and remove ambiguous majority samples.</p><p>• SMOTEBoost <ref type="bibr" target="#b9">[10]</ref>: Integrates SMOTE with boosting to enhance weak classifiers. This method helps to improve the performance of weak classifiers by generating synthetic minority samples.</p><p>• SMOTE-SVM <ref type="bibr" target="#b10">[11]</ref>: Uses SVM to guide synthetic sample generation. This method helps to generate synthetic minority samples based on the decision boundary of an SVM classifier.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.3">Privacy Constraints and Feature Engineering</head><p>Due to privacy-preserving transformations like PCA, meaningful original features are not available. While PCA protects sensitive data, it also results in components with uneven explanatory power, where only the top few capture substantial variance. Applying deep learning models to such transformed, sparse information may be excessive.</p><p>The literature often favors deep or complex models (CNNs, RNNs, GANs), yet we argue that focus should instead be on feature (re)engineering. By leveraging PCA components, their polynomial and pairwise combinations, and applying SMOTE for balancing, even simple models such as shallow MLPs can achieve competitive performance.</p><p>In fraud detection, minimizing false negatives (missed fraud cases) is vital. Hence, recall is a more appropriate metric than accuracy. SMOTE remains a strong choice for mitigating imbalance, and its integration with meaningful features ensures that even basic models can remain effective and interpretable.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.4">Performance Metrics</head><p>In evaluating classification models, the confusion matrix provides essential metrics such as accuracy, precision, recall (sensitivity), specificity, and the F1-score. There are four key terms one can get from a confusion matrix and keeping the use case of a credit card fraud detection in perspective, these are defined as:</p><p>• True Positives (TP): Correctly predicted positive instances (e.g., fraudulent transactions correctly identified as fraud).</p><p>• True Negatives (TN): Correctly predicted negative instances (e.g., legitimate transactions correctly identified as legitimate).</p><p>• False Positives (FP): Incorrectly predicted positive instances (e.g., legitimate transactions flagged as fraud; Type I error).</p><p>• False Negatives (FN): Incorrectly predicted negative instances (e.g., fraudulent transactions missed by the model; Type II error).</p><p>The key metrics and their definitions are as follows:</p><formula xml:id="formula_0">Accuracy = TP + TN TP+TN+FP+FN Precision = TP TP+FP Recall or Sensitivity = TP TP+FN Specificity = TN TN+FP F 1 Score = 2 × Precision × Recall Precision + Recall</formula><p>In credit card fraud detection <ref type="bibr" target="#b11">[12]</ref>, where the cost of missing fraudulent transactions (FN) is significantly higher than false alarms (FP), recall is particularly critical to minimize undetected fraud. However, precision must also be balanced to avoid overwhelming analysts with false positives. The F1-score, which harmonizes precision and recall, is thus a key metric for assessing model performance in such imbalanced scenarios.</p><p>The Precision-Recall Curve (PRC) is a crucial tool for evaluating the performance of classification models, especially in imbalanced datasets where fraudulent transactions are rare. Unlike the ROC curve, which can be overly optimistic in imbalanced scenarios, the PRC provides a clearer view of the trade-off between precision and recall -two metrics that are directly relevant to fraud detection. The PRC helps in selecting an optimal threshold for the model, balancing the need to catch as many fraudulent transactions as possible (high recall) while keeping false positives manageable (high precision). This balance is critical in fraud detection, where the cost of missing fraud (false negatives) is significantly higher than the cost of false alarms (false positives).</p><p>While specificity is important for maintaining customer trust and operational efficiency, it is often secondary to recall and the F 1 score due to the high cost of missing fraudulent transactions. High specificity ensures that legitimate transactions are not unnecessarily flagged as fraudulent, but the primary focus remains on balancing recall and precision to minimize undetected fraud.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3">LITERATURE REVIEW</head><p>Credit card fraud detection has been extensively studied using both traditional and modern machine learning approaches, with comprehensive reviews available in recent works such as <ref type="bibr" target="#b12">[13,</ref><ref type="bibr" target="#b13">14,</ref><ref type="bibr" target="#b14">15]</ref>. While this task might appear straightforward in theory, the field has seen an overapplication of complex methods that may be unnecessarily heavy for payment card fraud detection. This trend has even led to questions about the effectiveness of certain approaches, particularly Multilayer Perceptrons (MLPs), in capturing the temporal dependencies and sequential patterns that are crucial for identifying fraudulent activities <ref type="bibr" target="#b15">[16]</ref>. In our view, the focus should shift from immediately applying sophisticated techniques to ensuring the correctness and efficiency of fundamental preprocessing tasks. To this end, we critically examine existing literature, identifying and analyzing potential methodological flaws in a substantial sample of previous works. The study in <ref type="bibr" target="#b35">[36]</ref> evaluates four classifiers (LR, LDA, NB, and XGBoost) using their default configurations on SMOTEbalanced data. While the authors report exceptional performance for XGBoost (accuracy: 99.969%, precision: 99.938%, recall: 100%, F1: 99.969%, AUC: 99.969%), these results appear compromised by methodological flaws. Specifically, the preprocessing pipeline suffers from data leakage as both feature scaling/normalization and SMOTE application were performed before the train-test split. Additionally, the study's normalization approach is questionable, as it only scales the 'Time' feature without addressing the temporal nature of transaction data.</p><p>The ANN described in <ref type="bibr" target="#b16">[17]</ref> has 4 hidden layers which is still fairly deep for the dataset in question. The data was balanced by applying SMOTE before doing the train/valid/test split and feeding it to the ANN, yet they got 93% precision and 88% recall albeit a leaky approach. The results are not consistent with those claimed in the conclusion section, later.</p><p>Another set of methods described in <ref type="bibr" target="#b17">[18]</ref> relies on swarm intelligence for feature selection, attention mechanism for classifying relevant data items, UMAP for dimensionality reduction, SMOTE for addressing data imbalance and LSTM for modeling long-term dependencies in transaction sequences. The claimed results, are again circumspect because the authors have used SMOTE on the dataset before splitting it.</p><p>The authors in <ref type="bibr" target="#b18">[19]</ref> propose an ID Dilated Convolutional Neural Network (DCNN) for credit card fraud detection, combining SMOTE with Random Under-Sampling (RUS) and Near Miss (NM) under-sampling, though the specific order of these techniques is not explicitly stated. While their model achieves a reported accuracy of 97.27% on the European credit card fraud dataset, this high accuracy is misleading given the dataset's extreme class imbalance (fraud prevalence of 0.172%), where a trivial "no fraud" classifier would already achieve 99.8% accuracy. Additionally, the paper's description of 1D CNNs with 3 × 3 kernels and batch normalization over "feature maps" suggests a potential misapplication of 2D CNN architectures on flattened or PCA-reduced features.</p><p>Another approach <ref type="bibr" target="#b19">[20]</ref> balances the data by combining SMOTE with edited nearest neighbor (SMOTE-ENN) and then employs a strong deep learning ensemble using the long short-term memory (LSTM) neural network as the adaptive boosting (AdaBoost) technique's base learner. The authors claim to have achieved 0.996 recall rate and a specificity of 0.998. While everything else is described in detail, the key parts are vague, e.g. balancing before/after the dataset, normalization etc. However the data balancing algorithm outlined in the article points to the balancing of the whole dataset.</p><p>Another RNN based method <ref type="bibr" target="#b20">[21]</ref> uses the SMOTE-Tomek technique to address the data imbalance and, after splitting the data, employs a Bidirectional Gated Recurrent Unit (Bi-GRU) for classification. The approach is naive, not only for applying SMOTE-Tomek before the train/test split but also for using BN before the activation function, inside the RNN module. The article also has redability issues. The reported metrics (Accuracy = 97.16% Precision = 95.98%, Recall = 97.82%) seem inconsistent with the reported AUC of 99.66% (unbelievably high;should be lower).</p><p>The study in <ref type="bibr" target="#b21">[22]</ref> exhibits methodological flaws, particularly in data balancing and train/validation/test splits. The authors oversample the majority class but extract the validation set before oversampling, then draw test cases from the oversampled majority class, likely inflating performance metrics. Additionally, their terminology is inconsistent: one model is correctly labeled as an MLP (32-16-8 neurons), while another is misleadingly called an ANN (50 neurons per hidden layer, unspecified depth). Their top-performing model -a computationally heavy LSTMâ ȂŤ relies on borderline SMOTE, casting doubt on the robustness of their results.</p><p>A three step deep learning technique <ref type="bibr" target="#b36">[37]</ref> balances the data with borderline SMOTE and then uses a stacked autoencoder to extract key information for SoftMax based classification. They demonstarate a commendable AUC score but the method is still complex.</p><p>The authors of <ref type="bibr" target="#b22">[23]</ref> combine SMOTE and Tomek Links to preprocess data before training a Back Propagation Neural Network (BPNN) with 3â Ȃ Ş6 hidden layers (each containing 28 neurons) and dropout regularization, particularly after the second hidden layer. However, the study suffers from ambiguitiesâ ȂŤ such as the number of samples post-balancing and the test set fraction (25% or 30%) -as well as inconsistencies in reported metrics. Additionally, the approach risks data leakage due to balancing the entire dataset before splitting.</p><p>The study in <ref type="bibr" target="#b23">[24]</ref>  The CNN-based approach in <ref type="bibr" target="#b26">[27]</ref> appears methodologically flawed due to its naive architecture, which includes an unnecessary flatten layer following Conv1D layers and excessive dropout layers. This overly complex model with redundant components demonstrates inferior performance (≈ 93% precision/recall/accuracy) compared to their other methods evaluated (with RF achieving 0.99 F1-score and accuracy). The study also lacks clarity regarding the oversampling process and fails to specify how the dataset was reduced to 984 samples,and how many were the fraud cases.</p><p>In <ref type="bibr" target="#b27">[28]</ref>, without bothering about balancing the dataset, the authors use a CNN with two ReLU based conv2D layers (kernel sizes 32 × 2 and 64 × 2, respectively), with dropout layers and eventually a flatten layer (64 × 1). Probably, the use of filters with size k × 2 maybe an attempt to capture relationships between adjacent PCA features, but this should not be that useful since PCA transformation disrupts natural feature order. The use of CNNs here seems forced at best rather than necessary. The reported results (Accuracy: 97.15%, Precision: 99.1%, Recall: 90.24%) boasts higher performance as compared to DT, logistic regression, kNN, RF and especially XGBoost. The recall is still on the lower side, though.</p><p>The study in <ref type="bibr" target="#b28">[29]</ref> evaluates three deep learning approaches combined with SMOTE: ANN, CNN, and LSTM RNN.</p><p>While the results suggest that CNN and ANN outperform LSTM (with reported accuracy/precision/recall &gt;99.9% for ANN/CNN and 97.3% for LSTM), the methodology suffers from several critical flaws. The application of CNN to PCA-transformed data is fundamentally invalid due to the lack of spatial structure in such data. Moreover, the use of 2D kernels on 1D tabular data represents a misapplication of convolutional techniques. The study lacks transparency in evaluation methodology and presents highly questionable results with weak scientific justification for the core methods employed.</p><p>The study in <ref type="bibr" target="#b29">[30]</ref> evaluates three deep learning architectures (CNN, MLP, and LSTM) independently, though the authors misleadingly refer to this as "federated learning." The models are trained on data balanced using various undersampling and oversampling techniques. The CNN architecture consists of a Conv1D(32, 2) layer with 20% dropout and batch normalization, followed by a Conv1D(64, 2) layer with batch normalization, a flatten layer, 20% dropout, a 64-unit dense layer with 40% dropout, and a final output layer. The MLP features two dense hidden layers (65 units each) with 50% dropout, while the LSTM comprises one LSTM layer (50 units) with 50% dropout followed by a 65-unit dense layer with 50% dropout before the output. As expected, the models achieve high accuracy without balancing, but other metrics suffer. Performance improves with balancing: LSTM and CNN benefit most from random oversampling, while MLP performs better with SMOTE.</p><p>The study in <ref type="bibr" target="#b30">[31]</ref> implements a deep recurrent neural network with 4 stacked LSTM layers (each containing 50 hidden units), achieving high accuracy (99.6%) and precision (99.6%) but suffering from low recall (80%). The methodology exhibits several flaws: normalization before train-test splitting (risking data leakage), misconceptions about PCA re-application, lack of class balancing, and inclusion of unnecessary implementation details that obscure the core methodology. While the model demonstrates strong precision, its poor recall indicates a significant bias toward the majority class, likely due to the imbalanced dataset and absence of resampling techniques.</p><p>The obsession with using RNN can be observed in <ref type="bibr" target="#b37">[38]</ref> in the form of what the authors call an "ensemble" of LSTM/GRU as RNNs. The latter are employed for classification followed by aggregation via a feed forward neural network (FFNN) as the voting mechanism. Their results on the European Cardholders Dataset (ECD) maybe good but yet it's too much complex. Same is the case with <ref type="bibr" target="#b38">[39]</ref> that employs AE for preprocessing, DL for classification, and a Bayesian algorithm to optimize the hyperparameters. Such overuse of deep learning methods can be found in about 11 different techniques reported in <ref type="bibr" target="#b39">[40]</ref> and strangely attributed to the adversarial approach <ref type="bibr" target="#b40">[41]</ref>, which maybe a misreporting and seems far fetched. Similarly a CNN method is wrongly attributed to <ref type="bibr" target="#b41">[42]</ref> which in fact has an unspecified MLP as one of the methods and that too perform very poorly on our dataset of interest with 61.4% precision, 38.5% sensitivity and 47.3% F1 score; albeit a better specificity of 93.2%.</p><p>The study in <ref type="bibr" target="#b31">[32]</ref> proposes a time-aware attention mechanism for RNNs, designed to capture users' current transactional behavior in relation to their historical patterns. While the approach aims to model behavioral periodicity effectively, it forgoes data balancing, resulting in poor precision (50.07%) despite high recall (99.6%). Performance improves with increased memory size (units unspecified), suggesting memory-intensive requirements. The evaluation relies on AUC rather than balanced metrics, which may obscure class imbalance issues.</p><p>The work presented in <ref type="bibr" target="#b32">[33]</ref> examines six classification algorithms (SVM, LR, RF, XGBoost, DT, and ET) both in their standard form and with AdaBoost enhancement, employing SMOTE to address class imbalance. The approach shows substantial performance gains when using AdaBoost, most notably in recall metrics (with DT recall improving from 75.57% to 99%), and achieves 99.95% accuracy with RF-AdaBoost. However, the study presents several methodological limitations, 1) data leakage risk: applying SMOTE before the train-test split may contaminate the test set with synthetic samples and 2) preprocessing ambiguity: unclear specification of when normalization occurs relative to the data splitting process</p><p>The comparative analysis presented in <ref type="bibr" target="#b33">[34]</ref> exhibits fundamental methodological flaws, most notably an overemphasis on the SMOTE + Logistic Regression results while neglecting to investigate the abnormally low precision (&lt;10%) observed in other methods. The study's credibility is further compromised by the publisher's expression of concern over the language and readability.</p><p>The study in <ref type="bibr" target="#b34">[35]</ref> evaluates three sampling techniques (under-sampling, SMOTE, and SMOTE-Tomek) combined with four classifiers (KNN, Logistic Regression, Random Forest, and SVM), though the methodology raises several concerns. First, there's ambiguity regarding the order of resampling and train/test splitting, which likely occurs in the wrong sequence. More critically, both SMOTE and SMOTE-Tomek produce identical sample counts (227,845 per class), an unusual outcome suggesting either Tomek link misconfiguration or ineffectiveness due to PCA-transformed features.</p><p>Additionally, the aggressive under-sampling to just 492 samples per class risks underfitting despite appearing to yield good metrics. Finally, the evaluation's focus on recall over precision may lead to high false positive rates, as evidenced by Logistic Regression's 0.52 precision despite 0.92 recall when using SMOTE. While Random Forest achieves the highest F1-scores (0.94 with under-sampling, 0.92 with SMOTE, and 0.93 with SMOTE-Tomek), these methodological concerns undermine the reliability of the reported performance improvements.</p><p>Based on our comprehensive review of credit card fraud detection methodologies, we have identified several persistent flaws that significantly undermine the reliability and practical applicability of many studies:</p><p>• Data Leakage in Preprocessing: Numerous studies perform critical preprocessing steps (normalization, SMOTE etc.) before train-test splitting, artificially inflating performance metrics through information leakage. • Intentional Vagueness in Methodology: Many works deliberately omit crucial implementation details, making replication difficult and raising questions about result validity. This includes unspecified parameter settings, ambiguous preprocessing sequences, silence about stratified sampling, and unexplained architectural choices. • Inadequate Temporal Validation: Most approaches fail to account for the time-dependent nature of transaction data, neglecting temporal splitting which is essential for real-world deployment. • Unjustified Method Complexity: There's a tendency to apply unnecessarily sophisticated techniques without first ensuring proper data preparation and validation, often obscuring fundamental methodological flaws. • Overemphasis on Recall: Many works prioritize recall metrics at the expense of precision, leading to models with high false positive rates that would be impractical in production environments.</p><p>These persistent issues -particularly the concerning trend of intentional vagueness -highlight the urgent need for more rigorous evaluation protocols and complete methodological transparency in fraud detection research. Addressing these common pitfalls, especially the lack of full disclosure in implementation details, would significantly improve both the validity and practical utility of future studies in this domain.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4">Our Flawed Methodology</head><p>The findings of the last section suggest that methodological rigor matters more than algorithmic sophistication. To demonstrate this, we will present a deliberately flawed MLP implementation with SMOTE applied before train-test splitting -a clear violation of proper evaluation protocol. Despite this fundamental flaw, we anticipate this method will outperform many existing approaches, underscoring how data leakage can overshadow algorithmic advantages. This serves as a cautionary example that sophisticated techniques cannot compensate for basic methodological failures in fraud detection research.</p><p>The flawed methodology used in this investigation, to differentiate deceptive transactions from genuine ones, focuses on the most prevalent vice from the literature; balancing the data before splitting it into train/val/test partitions. It consists of the integration of two modules central to the detection of the fraudulent card transactions, viz. a SMOTE module and a multilayer perceptron (MLP) network.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.1">Synthetic Minority Over-sampling Technique (SMOTE)</head><p>To address the unbalanced data, we employ oversampling using the SMOTE, which is particularly effective in mitigating class imbalance issues in classification tasks. SMOTE generates synthetic samples of the minority class to balance the class distribution <ref type="bibr" target="#b2">[3]</ref>.</p><p>The synthetic sample is generated using the following rule:</p><formula xml:id="formula_1">x new = x i + δ × (x k -x i ),<label>(1)</label></formula><p>where:</p><p>x new is the new synthetic data point, x i is the original minority class data point, x k is one of the k nearest neighbors of x i , and δ is a arbitrary value between zero and one.</p><p>As far as the python implementation is concerned, the SMOTE related module is imported from the imblearn (imbalanced-learn) library<ref type="foot" target="#foot_0">foot_0</ref> . The imblearn package includes techniques for handling unbalanced datasets and is built on scikit-learn, an open-source Python library that provides simple and efficient tools for data mining and data analysis. This approach helps in creating a more balanced dataset, thereby improving the performance of classification models.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.2">The Multilayer Perceptron (MLP) module</head><p>An Artificial Neural Network (ANN) is a computational model inspired by the structure and function of biological neural networks, designed to process inputs and learn patterns akin to human cognition. A typical MLP, a type of ANN (as illustrated in Fig. <ref type="figure" target="#fig_0">2</ref>), consists of interconnected layers of nodes (neurons), where each connection is associated with a weight that is adjusted during training. Due to their ability to model complex, non-linear relationships, ANNs are widely employed in tasks such as pattern recognition, regression, and classification. The fundamental building blocks of an ANN are neurons, which process inputs by applying an activation function to the weighted sum of their inputs and producing an output. This output is then propagated to subsequent neurons, facilitating the network's ability to learn and adapt <ref type="bibr" target="#b42">[43]</ref>.  To emphasize on our argument, we are using a very simple MLP architecture. The core argument is that, with a casual leaky approach, there is no need of sophistication. Our MLP module consists of only one hidden layer with an arbitrary number of neurons (N ), utilizing the rectified linear unit (ReLU) activation function. The input layer has 16 (arbitrary) neurons, while the output layer has a single neuron with a sigmoid activation function, suitable for binary classification. Assuming that the data is subjected to SMOTE and then split to the training and testing parts, with TensorFlow environment, the model would have the code given in Figure <ref type="figure" target="#fig_2">3</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.3">Results and Analysis</head><p>To further demonstrate our argument about the disproportionate impact of methodological flaws versus algorithmic sophistication, we conducted an extreme simplification test: eliminating the hidden layer entirely (N = 0) while  simplification, Table <ref type="table" target="#tab_2">2</ref> shows we achieved remarkably high performance metrics: 94% recall and 97.6% precision. This demonstrates that:</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>No. N Accuracy Precision</head><p>• A single output neuron with data leakage can outperform many sophisticated models • The data leakage from improper SMOTE application provides more benefit than architectural complexity • Such results are artificially inflated and would not generalize to real-world scenarios</p><p>We then systematically increased the complexity by introducing a hidden layer and varying the number of neurons (N = 1 to N = 16). As shown in Table <ref type="table" target="#tab_2">2</ref>, performance metrics improved incrementally with more neurons, reaching near-perfect scores (99.9% recall) at N = 16. Figure <ref type="figure" target="#fig_5">5</ref> illustrates the PRC and ROC curves for selected configurations.</p><p>Following are the important points to note:</p><p>• These results demonstrate how data leakage can overshadow architectural improvements.</p><p>• Performance gains from adding neurons are marginal compared to the initial boost from data leakage.</p><p>• The near-perfect metrics at N = 16 (even beyond N = 8) are statistically implausible for real-world fraud detection.</p><p>• This experiment underscores that proper evaluation methodology matters more than model complexity.</p><p>This case study vividly illustrates how fundamental methodological flaws can produce deceptively impressive results that would fail in real-world deployment. The key takeaway is that the evaluation of rigor must precede architectural sophistication in fraud detection research.  </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5">Conclusion</head><p>Our analysis reveals that methodological rigor is far more critical than algorithmic sophistication in fraud detection research. Through deliberate experimentation with flawed evaluation protocols, we demonstrated how even simple models can achieve deceptively impressive results when fundamental methodological principles are violated. The extreme case of a single-neuron model outperforming sophisticated architectures -solely due to data leakage from improper SMOTE application -serves as a stark illustration of how evaluation flaws can overshadow algorithmic advantages.</p><p>Beyond these technical considerations, our findings must be contextualized within the broader academic ecosystem. The peer review system faces significant challenges including reviewer fatigue, time constraints, and overwhelming submission volumes. These issues are exacerbated by publication pressures, financial incentives tied to rapid dissemination, and citation practices that may inadvertently inflate impact metrics. The current academic reward structure, which heavily weights publication quantity and citation counts for career advancement, can sometimes incentivize quantity over quality. While understandable given institutional pressures, this emphasis may occasionally compromise research rigor and originality.</p><p>These systemic factors contribute to a growing disconnect between academic research and industrial practice. As researchers, we often find ourselves playing catch-up to industry innovation, with many academic publications essentially formalizing concepts that have already gained practical traction. The review process itself may sometimes prioritize presentation quality over substantive contribution, allowing incremental or ambiguous work to pass through.</p><p>It is crucial to emphasize that this critique is general in nature and not directed at any specific work cited in this study. All references were selected based on their relevance and alignment with our discussion, and should not be construed as examples of the concerns raised. Rather, our analysis aims to highlight systemic issues that affect the field as a whole, with the goal of fostering more rigorous and impactful research practices.</p><p>Moving forward, we advocate for:</p><p>Stricter evaluation protocols that prioritize methodological soundness over novel architectures Enhanced transparency in reporting preprocessing pipelines and evaluation methodologies Better alignment between academic research and industrial needs Reform of incentive structures to reward quality and impact over publication quantity By addressing these challenges, we can bridge the gap between academic research and practical applications, ultimately advancing the field of fraud detection in more meaningful ways.</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head>Figure 2 :</head><label>2</label><figDesc>Figure 2: A generic MLP architecture</figDesc><graphic coords="14,162.00,105.94,288.01,186.22" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head>#</head><label></label><figDesc>SMOTE already applied to the whole dataset # Followed by stratified train / test split # the MLP model = Sequential ( [ # N : The number of neurons in the only hidden layer Dense (N , activation = ' relu ') , Dense (1 , activation = ' sigmoid ') ] ) model . compile ( optimizer = ' adam ' , loss = ' binary_crossentropy ' , metrics = [ ' accuracy '] )</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_2"><head>Figure 3 :</head><label>3</label><figDesc>Figure 3: The Flawed MLP Model</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_3"><head>Figure 4 :</head><label>4</label><figDesc>Figure 4: Test results after applying the MLP with no hidden layer (N = 0).</figDesc><graphic coords="15,102.59,265.69,198.43,179.33" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_4"><head>(a) N = 1 (b) N = 8 (c) N = 12 (</head><label>1812</label><figDesc>d) N = 16</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_5"><head>Figure 5 :</head><label>5</label><figDesc>Figure 5: Pairwise PRC(left) and ROC (right) test results of the MLP method with N neurons in a single hidden layer. 16</figDesc><graphic coords="16,145.11,569.35,155.91,141.00" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0"><head></head><label></label><figDesc></figDesc><graphic coords="3,72.00,72.00,504.01,160.50" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_0"><head>Table 1 :</head><label>1</label><figDesc>Machine Learning Methods</figDesc><table><row><cell cols="2">No. Method/Approach</cell><cell>Flaw Identified</cell><cell cols="2">Reported Performance</cell><cell></cell></row><row><cell></cell><cell></cell><cell cols="3">Accuracy Precision Recall</cell><cell>F1-Score</cell></row><row><cell>1</cell><cell>SMOTE + ANN [17]</cell><cell>0.99</cell><cell>0.93</cell><cell>0.88</cell><cell>0.91</cell></row><row><cell></cell><cell></cell><cell>• suspected Data leak;</cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell></cell><cell>dataset balancing before</cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell></cell><cell>the split</cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell></cell><cell>• Inconsistent results within</cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell></cell><cell>the article</cell><cell></cell><cell></cell><cell></cell></row><row><cell>2</cell><cell>UMAP + SMOTE + LSTM</cell><cell>0.967</cell><cell>0.988</cell><cell>0.919</cell><cell>0.952</cell></row><row><cell></cell><cell>(other dimensionality reduc-</cell><cell>• SMOTE on the dataset be-</cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell>tion (UMAP etc) [18]</cell><cell>fore splitting</cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell></cell><cell>• Dimensionality reduction</cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell></cell><cell>on a data that is already</cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell></cell><cell>PCA transformed</cell><cell></cell><cell></cell><cell></cell></row><row><cell>3</cell><cell>RUS + NMS + SMOTE +</cell><cell>0.972</cell><cell>0.368</cell><cell>0.392</cell><cell>0.378</cell></row><row><cell></cell><cell>DCNN [19]</cell><cell>• Vague on the specific or-</cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell></cell><cell>der of under-and oversam-</cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell></cell><cell>pling and total samples in</cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell></cell><cell>the end.</cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell></cell><cell>• Precision and recall are</cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell></cell><cell>well below 40% -worse</cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell></cell><cell>than a random classifier in</cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell></cell><cell>some cases.</cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell></cell><cell>• No explanation of using 1D</cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell></cell><cell>CNNs with 3 × 3 kernels</cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell></cell><cell>continued . . .</cell><cell></cell><cell></cell><cell></cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_1"><head></head><label></label><figDesc>compares PCA and Convolutional Autoencoder (CAE) for feature extraction, followed by SMOTE and a Random Forest classifier, recommending CAE+SMOTE with an F1-score of 90.5%. However, their claim that inverse_transform can reconstruct original transactions from PCA components alone is incorrect, as it requires the original data and PCA model. Additionally, their evaluation strategy lacks a holdout test set, risks data leakage from improper SMOTE application, and may inflate performance due to repeated testing on the same holdout set.</figDesc><table /><note><p><p><p><p><p><p>The work in</p><ref type="bibr" target="#b24">[25]</ref> </p>employs a denoising autoencoder (DAE) for data cleaning and SMOTE-based balancing, followed by a deep fully connected neural network (4 hidden layers: 22+15+10+5) with a 2-neuron output layer for classification. Two variants are tested: (1) without SMOTE/autoencoder (AE) and (2) with SMOTE+AE. The baseline model (w/o SMOTE/AE) achieves 97.9% accuracy but near-zero recall, suggesting it fails to detect fraud cases. The SMOTE+AE model improves recall to 90.5% (at the expense of accuracy) but exhibits poor probability calibration (sharp recall drop at high thresholds) and overfitting risks from synthetic data.</p>The work presented in</p><ref type="bibr" target="#b25">[26]</ref> </p>utilizes SMOTE prior to applying various machine learning techniques, with the best results achieved by a Random Forest classifier followed by an MLP containing four hidden layers (50+30+30+50 neurons). While the Random Forest model attains an F1-score of 0.964, the MLP's performance is notably inferior (F1=0.792), potentially indicating overfitting or inadequate training. The methodology exhibits significant weaknesses: potential data leakage from performing the train-test split after SMOTE application, unjustified exclusion of 5% of features which might have enhanced the MLP's performance, and inconsistent results where the performance gap between RF and MLP could indicate either insufficient MLP training or feature mismatch.</p></note></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_2"><head>Table 2 :</head><label>2</label><figDesc>Our MLP with various number of neurons (N) in its hidden layer maintaining the data leakage from SMOTE application before train-test splitting.</figDesc><table><row><cell>Recall</cell><cell>F1</cell></row></table></figure>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot" n="2" xml:id="foot_0"><p>https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.SMOTE.html</p></note>
+		</body>
+		<back>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<analytic>
+		<title level="a" type="main">Calibrating probability with undersampling for unbalanced classification</title>
+		<author>
+			<persName><forename type="first">Andrea</forename><surname>Dal Pozzolo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Olivier</forename><surname>Caelen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Reid</forename><forename type="middle">A</forename><surname>Johnson</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Gianluca</forename><surname>Bontempi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Symposium on Computational Intelligence and Data Mining (CIDM)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Andrea Dal Pozzolo, Olivier Caelen, Reid A. Johnson, and Gianluca Bontempi. Calibrating probability with undersampling for unbalanced classification. In Symposium on Computational Intelligence and Data Mining (CIDM), IEEE, 2015.</note>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<monogr>
+		<title level="m" type="main">Deep learning methods for credit card fraud detection</title>
+		<author>
+			<persName><forename type="first">Thanh</forename><surname>Thi Nguyen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Hammad</forename><surname>Tahir</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mohamed</forename><surname>Abdelrazek</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ali</forename><surname>Babar</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2012.03754</idno>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Thanh Thi Nguyen, Hammad Tahir, Mohamed Abdelrazek, and Ali Babar. Deep learning methods for credit card fraud detection. arXiv preprint arXiv:2012.03754, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<analytic>
+		<title level="a" type="main">Smote: synthetic minority over-sampling technique</title>
+		<author>
+			<persName><forename type="first">Kevin</forename><forename type="middle">W</forename><surname>Nitesh V Chawla</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Lawrence</forename><forename type="middle">O</forename><surname>Bowyer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Philip</forename><surname>Hall</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Kegelmeyer</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of artificial intelligence research</title>
+		<imprint>
+			<biblScope unit="volume">16</biblScope>
+			<biblScope unit="page" from="321" to="357" />
+			<date type="published" when="2002">2002</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Nitesh V Chawla, Kevin W Bowyer, Lawrence O Hall, and W Philip Kegelmeyer. Smote: synthetic minority over-sampling technique. Journal of artificial intelligence research, 16:321-357, 2002.</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<analytic>
+		<title level="a" type="main">Adasyn: Adaptive synthetic sampling approach for imbalanced learning</title>
+		<author>
+			<persName><forename type="first">Haibo</forename><surname>He</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yang</forename><surname>Bai</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Edwardo</forename><forename type="middle">A</forename><surname>Garcia</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Shutao</forename><surname>Li</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">IEEE international joint conference on neural networks (IEEE world congress on computational intelligence)</title>
+		<imprint>
+			<publisher>Ieee</publisher>
+			<date type="published" when="2008">2008. 2008</date>
+			<biblScope unit="page" from="1322" to="1328" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Haibo He, Yang Bai, Edwardo A Garcia, and Shutao Li. Adasyn: Adaptive synthetic sampling approach for imbalanced learning. In 2008 IEEE international joint conference on neural networks (IEEE world congress on computational intelligence), pages 1322-1328. Ieee, 2008.</note>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<analytic>
+		<title level="a" type="main">Borderline-smote: a new over-sampling method in imbalanced data sets learning</title>
+		<author>
+			<persName><forename type="first">Hui</forename><surname>Han</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Wen-Yuan</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Bing-Huan</forename><surname>Mao</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International conference on intelligent computing</title>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2005">2005</date>
+			<biblScope unit="page" from="878" to="887" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Hui Han, Wen-Yuan Wang, and Bing-Huan Mao. Borderline-smote: a new over-sampling method in imbalanced data sets learning. In International conference on intelligent computing, pages 878-887. Springer, 2005.</note>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<analytic>
+		<title level="a" type="main">knn approach to unbalanced data distributions: a case study involving information extraction</title>
+		<author>
+			<persName><forename type="first">Inderjeet</forename><surname>Mani</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Zhang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of workshop on learning from imbalanced datasets</title>
+		<meeting>workshop on learning from imbalanced datasets</meeting>
+		<imprint>
+			<publisher>ICML</publisher>
+			<date type="published" when="2003">2003</date>
+			<biblScope unit="volume">126</biblScope>
+			<biblScope unit="page" from="1" to="7" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Inderjeet Mani and I Zhang. knn approach to unbalanced data distributions: a case study involving information extraction. In Proceedings of workshop on learning from imbalanced datasets, volume 126, pages 1-7. ICML, 2003.</note>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<monogr>
+		<title level="m" type="main">An experiment with the edited nearest-nieghbor rule</title>
+		<author>
+			<persName><forename type="first">Ivan</forename><surname>Tomek</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="1976">1976</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ivan Tomek. An experiment with the edited nearest-nieghbor rule. 1976.</note>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<monogr>
+		<author>
+			<persName><surname>Megha-Natarajan</surname></persName>
+		</author>
+		<ptr target="https://medium.com/@megha.natarajan/understanding-the-intuition-behind-cluster-centroids-smote-and-smoteen-techniques-for-dealing-058f322023" />
+		<title level="m">cluster centroid</title>
+		<imprint>
+			<date type="published" when="2024-04-23">April 23,2024</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Megha-Natarajan. cluster centroid. https://medium.com/@megha.natarajan/ understanding-the-intuition-behind-cluster-centroids-smote-and-smoteen-techniques-for-dealing-058f32 2023. Accessed April 23,2024.</note>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">A study of the behavior of several methods for balancing machine learning training data</title>
+		<author>
+			<persName><forename type="first">Gustavo</forename><forename type="middle">Eapa</forename><surname>Batista</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ronaldo</forename><forename type="middle">C</forename><surname>Prati</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Maria</forename><forename type="middle">Carolina</forename><surname>Monard</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">ACM SIGKDD explorations newsletter</title>
+		<imprint>
+			<biblScope unit="volume">6</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="20" to="29" />
+			<date type="published" when="2004">2004</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Gustavo EAPA Batista, Ronaldo C Prati, and Maria Carolina Monard. A study of the behavior of several methods for balancing machine learning training data. ACM SIGKDD explorations newsletter, 6(1):20-29, 2004.</note>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<analytic>
+		<title level="a" type="main">Smoteboost: Improving prediction of the minority class in boosting</title>
+		<author>
+			<persName><forename type="first">Aleksandar</forename><surname>Nitesh V Chawla</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Lawrence</forename><forename type="middle">O</forename><surname>Lazarevic</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Kevin</forename><forename type="middle">W</forename><surname>Hall</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Bowyer</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Knowledge Discovery in Databases: PKDD 2003: 7th European Conference on Principles and Practice of Knowledge Discovery in Databases</title>
+		<meeting><address><addrLine>Cavtat-Dubrovnik, Croatia</addrLine></address></meeting>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2003">September 22-26, 2003. 2003</date>
+			<biblScope unit="volume">7</biblScope>
+			<biblScope unit="page" from="107" to="119" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Nitesh V Chawla, Aleksandar Lazarevic, Lawrence O Hall, and Kevin W Bowyer. Smoteboost: Improving prediction of the minority class in boosting. In Knowledge Discovery in Databases: PKDD 2003: 7th European Conference on Principles and Practice of Knowledge Discovery in Databases, Cavtat-Dubrovnik, Croatia, September 22-26, 2003. Proceedings 7, pages 107-119. Springer, 2003.</note>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<analytic>
+		<title level="a" type="main">Borderline over-sampling for imbalanced data classification</title>
+		<author>
+			<persName><forename type="first">Eric</forename><forename type="middle">W</forename><surname>Hien M Nguyen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Katsuari</forename><surname>Cooper</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Kamei</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Knowledge Engineering and Soft Data Paradigms</title>
+		<imprint>
+			<biblScope unit="volume">3</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="4" to="21" />
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Hien M Nguyen, Eric W Cooper, and Katsuari Kamei. Borderline over-sampling for imbalanced data classification. International Journal of Knowledge Engineering and Soft Data Paradigms, 3(1):4-21, 2011.</note>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<monogr>
+		<author>
+			<persName><forename type="first">Aditya-Mishra</forename></persName>
+		</author>
+		<ptr target="https://towardsdatascience.com/metrics-to-evaluate-your-machine-learning-algorith2018" />
+		<title level="m">Metrics</title>
+		<imprint>
+			<date type="published" when="2024-09-10">september 10,2024</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Aditya-Mishra. Metrics. https://towardsdatascience.com/metrics-to-evaluate-your-machine-learning-algorith 2018. Accessed september 10,2024.</note>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<analytic>
+		<title level="a" type="main">Credit card fraud detection in the era of disruptive technologies: A systematic review</title>
+		<author>
+			<persName><forename type="first">Asma</forename><surname>Cherif</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Arwa</forename><surname>Badhib</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Heyfa</forename><surname>Ammar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Suhair</forename><surname>Alshehri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Manal</forename><surname>Kalkatawi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Abdessamad</forename><surname>Imine</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/j.jksuci.2022.11.008</idno>
+		<ptr target="https://www.sciencedirect.com/science/article/pii/S1319157822004062" />
+	</analytic>
+	<monogr>
+		<title level="j">Journal of King Saud University -Computer and Information Sciences</title>
+		<idno type="ISSN">1319-1578</idno>
+		<imprint>
+			<biblScope unit="volume">35</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="145" to="174" />
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Asma Cherif, Arwa Badhib, Heyfa Ammar, Suhair Alshehri, Manal Kalkatawi, and Abdessamad Imine. Credit card fraud detection in the era of disruptive technologies: A systematic review. Journal of King Saud University -Computer and Information Sciences, 35(1):145-174, 2023. ISSN 1319-1578. doi: https://doi.org/10.1016/j.jksuci.2022.11.008. URL https://www.sciencedirect.com/science/article/pii/S1319157822004062.</note>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<analytic>
+		<title level="a" type="main">A systematic review of ai-enhanced techniques in credit card fraud detection</title>
+		<author>
+			<persName><forename type="first">Ibrahim</forename><forename type="middle">Y</forename><surname>Hafez</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ahmed</forename><forename type="middle">Y</forename><surname>Hafez</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ahmed</forename><surname>Saleh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Amr A Abd</forename><surname>El-Mageed</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Amr</forename><forename type="middle">A</forename><surname>Abohany</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Big Data</title>
+		<imprint>
+			<biblScope unit="volume">12</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page">6</biblScope>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ibrahim Y Hafez, Ahmed Y Hafez, Ahmed Saleh, Amr A Abd El-Mageed, and Amr A Abohany. A systematic review of ai-enhanced techniques in credit card fraud detection. Journal of Big Data, 12(1):6, 2025.</note>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<monogr>
+		<title level="m" type="main">A review of credit card fraud detection using machine learning algorithms</title>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">G</forename><surname>Gbadebo-Ogunmefun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Oketola</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Gbadebo-Ogunmefun</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Agbeja</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S Gbadebo-Ogunmefun, AG Oketola, T Gbadebo-Ogunmefun, and A Agbeja. A review of credit card fraud detection using machine learning algorithms, 2023.</note>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<analytic>
+		<title level="a" type="main">Deep learning for credit card fraud detection: A review of algorithms, challenges, and solutions</title>
+		<author>
+			<persName><forename type="first">Ibomoiye</forename><surname>Domor</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mienye</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Nobert</forename><surname>Jere</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/ACCESS.2024.3426955</idno>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Access</title>
+		<imprint>
+			<biblScope unit="volume">12</biblScope>
+			<biblScope unit="page" from="96893" to="96910" />
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ibomoiye Domor Mienye and Nobert Jere. Deep learning for credit card fraud detection: A review of algorithms, challenges, and solutions. IEEE Access, 12:96893-96910, 2024. doi: 10.1109/ACCESS.2024.3426955.</note>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<analytic>
+		<title level="a" type="main">Machine learning model for credit card fraud detection-a comparative analysis</title>
+		<author>
+			<persName><forename type="first">Pratyush</forename><surname>Sharma</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Souradeep</forename><surname>Banerjee</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Devyanshi</forename><surname>Tiwari</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jagdish</forename><surname>Chandra</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Patni</forename></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Int. Arab J. Inf. Technol</title>
+		<imprint>
+			<biblScope unit="volume">18</biblScope>
+			<biblScope unit="issue">6</biblScope>
+			<biblScope unit="page" from="789" to="796" />
+			<date type="published" when="2021">2021</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Pratyush Sharma, Souradeep Banerjee, Devyanshi Tiwari, and Jagdish Chandra Patni. Machine learning model for credit card fraud detection-a comparative analysis. Int. Arab J. Inf. Technol., 18(6):789-796, 2021.</note>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<analytic>
+		<title level="a" type="main">Enhanced credit card fraud detection based on attention mechanism and LSTM deep model</title>
+		<author>
+			<persName><forename type="first">Ibtissam</forename><surname>Benchaji</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Samira</forename><surname>Douzi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Bouabid</forename><forename type="middle">El</forename><surname>Ouahidi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jaafar</forename><surname>Jaafari</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Big Data</title>
+		<imprint>
+			<biblScope unit="volume">8</biblScope>
+			<biblScope unit="page" from="1" to="21" />
+			<date type="published" when="2021">2021</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ibtissam Benchaji, Samira Douzi, Bouabid El Ouahidi, and Jaafar Jaafari. Enhanced credit card fraud detection based on attention mechanism and LSTM deep model. Journal of Big Data, 8:1-21, 2021.</note>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<analytic>
+		<title level="a" type="main">Smart credit card fraud detection system based on dilated convolutional neural network with sampling technique</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Karthika</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Senthilselvi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Multimedia Tools and Applications</title>
+		<imprint>
+			<biblScope unit="volume">82</biblScope>
+			<biblScope unit="issue">20</biblScope>
+			<biblScope unit="page" from="31691" to="31708" />
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J Karthika and A Senthilselvi. Smart credit card fraud detection system based on dilated convolutional neural network with sampling technique. Multimedia Tools and Applications, 82(20):31691-31708, 2023.</note>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<analytic>
+		<title level="a" type="main">A neural network ensemble with feature engineering for improved credit card fraud detection</title>
+		<author>
+			<persName><forename type="first">Ebenezer</forename><surname>Esenogho</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ibomoiye</forename><surname>Domor Mienye</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Theo</forename><forename type="middle">G</forename><surname>Swart</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Kehinde</forename><surname>Aruleba</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">George</forename><surname>Obaido</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Access</title>
+		<imprint>
+			<biblScope unit="volume">10</biblScope>
+			<biblScope unit="page" from="16400" to="16407" />
+			<date type="published" when="2022">2022</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ebenezer Esenogho, Ibomoiye Domor Mienye, Theo G Swart, Kehinde Aruleba, and George Obaido. A neural network ensemble with feature engineering for improved credit card fraud detection. IEEE Access, 10:16400-16407, 2022.</note>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<analytic>
+		<title level="a" type="main">Bidirectional gated recurrent unit for improving classification in credit card fraud detection</title>
+		<author>
+			<persName><forename type="first">Imane</forename><surname>Sadgali</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Nawal</forename><surname>Sael</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Faouzia</forename><surname>Benabbou</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Indonesian Journal of Electrical Engineering and Computer Science (IJEECS)</title>
+		<imprint>
+			<biblScope unit="volume">21</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="1704" to="1712" />
+			<date type="published" when="2021">2021</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Imane Sadgali, Nawal Sael, and Faouzia Benabbou. Bidirectional gated recurrent unit for improving classification in credit card fraud detection. Indonesian Journal of Electrical Engineering and Computer Science (IJEECS), 21(3): 1704-1712, 2021.</note>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<analytic>
+		<title level="a" type="main">Comparative data oversampling techniques with deep learning algorithms for credit card fraud detection</title>
+		<author>
+			<persName><forename type="first">Zainab</forename><surname>Saad Rubaidi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Boulbaba</forename><surname>Ben Ammar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mohamed</forename><surname>Ben</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Aouicha</forename></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Intelligent Systems Design and Applications</title>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2022">2022</date>
+			<biblScope unit="page" from="286" to="296" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zainab Saad Rubaidi, Boulbaba Ben Ammar, and Mohamed Ben Aouicha. Comparative data oversampling techniques with deep learning algorithms for credit card fraud detection. In International Conference on Intelligent Systems Design and Applications, pages 286-296. Springer, 2022.</note>
+</biblStruct>
+
+<biblStruct xml:id="b22">
+	<analytic>
+		<title level="a" type="main">An efficient deep learning classification model for predicting credit card fraud on skewed data</title>
+		<author>
+			<persName><forename type="first">Naoufal</forename><surname>Rtayli</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Information Security and Cybercrimes Research</title>
+		<imprint>
+			<biblScope unit="volume">5</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="61" to="75" />
+			<date type="published" when="2022">2022</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Naoufal Rtayli. An efficient deep learning classification model for predicting credit card fraud on skewed data. Journal of Information Security and Cybercrimes Research, 5(1):61-75, 2022.</note>
+</biblStruct>
+
+<biblStruct xml:id="b23">
+	<analytic>
+		<title level="a" type="main">Feature extraction for class imbalance using a convolutional autoencoder and data sampling</title>
+		<author>
+			<persName><forename type="first">Zahra</forename><surname>Salekshahrezaee</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Joffrey</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Taghi</forename><forename type="middle">M</forename><surname>Leevy</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Khoshgoftaar</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">IEEE 33rd International Conference on Tools with Artificial Intelligence (ICTAI)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2021">2021. 2021</date>
+			<biblScope unit="page" from="217" to="223" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zahra Salekshahrezaee, Joffrey L Leevy, and Taghi M Khoshgoftaar. Feature extraction for class imbalance using a convolutional autoencoder and data sampling. In 2021 IEEE 33rd International Conference on Tools with Artificial Intelligence (ICTAI), pages 217-223. IEEE, 2021.</note>
+</biblStruct>
+
+<biblStruct xml:id="b24">
+	<monogr>
+		<title level="m" type="main">Credit card fraud detection using autoencoder neural network</title>
+		<author>
+			<persName><forename type="first">Junyi</forename><surname>Zou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jinliang</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Pin</forename><surname>Jiang</surname></persName>
+		</author>
+		<idno>ArXiv, abs/1908.11553</idno>
+		<ptr target="https://api.semanticscholar.org/CorpusID:201698402" />
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Junyi Zou, Jinliang Zhang, and Pin Jiang. Credit card fraud detection using autoencoder neural network. ArXiv, abs/1908.11553, 2019. URL https://api.semanticscholar.org/CorpusID:201698402.</note>
+</biblStruct>
+
+<biblStruct xml:id="b25">
+	<analytic>
+		<title level="a" type="main">Credit card fraud detection -machine learning methods</title>
+		<author>
+			<persName><forename type="first">Dejan</forename><surname>Varmedja</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mirjana</forename><surname>Karanovic</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Srdjan</forename><surname>Sladojevic</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Marko</forename><surname>Arsenovic</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Andras</forename><surname>Anderla</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/INFOTEH.2019.8717766</idno>
+	</analytic>
+	<monogr>
+		<title level="m">2019 18th International Symposium INFOTEH-JAHORINA (INFOTEH)</title>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+			<biblScope unit="page" from="1" to="5" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Dejan Varmedja, Mirjana Karanovic, Srdjan Sladojevic, Marko Arsenovic, and Andras Anderla. Credit card fraud detection -machine learning methods. In 2019 18th International Symposium INFOTEH-JAHORINA (INFOTEH), pages 1-5, 2019. doi: 10.1109/INFOTEH.2019.8717766.</note>
+</biblStruct>
+
+<biblStruct xml:id="b26">
+	<analytic>
+		<title level="a" type="main">Deep cnn approach for unbalanced credit card fraud detection data</title>
+		<author>
+			<persName><forename type="first">Mohammad</forename><surname>Ziad</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mizher</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ali</forename><surname>Bou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Nassif</forename></persName>
+		</author>
+		<idno type="DOI">10.1109/ASET56582.2023.10180615</idno>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in Science and Engineering Technology International Conferences (ASET)</title>
+		<imprint>
+			<date type="published" when="2023">2023. 2023</date>
+			<biblScope unit="page" from="1" to="7" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Mohammad Ziad Mizher and Ali Bou Nassif. Deep cnn approach for unbalanced credit card fraud detection data. In 2023 Advances in Science and Engineering Technology International Conferences (ASET), pages 1-7, 2023. doi: 10.1109/ASET56582.2023.10180615.</note>
+</biblStruct>
+
+<biblStruct xml:id="b27">
+	<analytic>
+		<title level="a" type="main">A comparative analysis of credit card fraud detection with machine learning algorithms and convolutional neural network</title>
+		<author>
+			<persName><forename type="first">E</forename><surname>Ajitha</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Sneha</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Shanmitha</forename><surname>Makesh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Jaspin</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/ACCAI58221.2023.10200905</idno>
+	</analytic>
+	<monogr>
+		<title level="m">2023 International Conference on Advances in Computing, Communication and Applied Informatics (ACCAI)</title>
+		<imprint>
+			<date type="published" when="2023">2023</date>
+			<biblScope unit="page" from="1" to="8" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">E. Ajitha, S. Sneha, Shanmitha Makesh, and K. Jaspin. A comparative analysis of credit card fraud detection with machine learning algorithms and convolutional neural network. In 2023 International Conference on Advances in Computing, Communication and Applied Informatics (ACCAI), pages 1-8, 2023. doi: 10.1109/ACCAI58221.2023. 10200905.</note>
+</biblStruct>
+
+<biblStruct xml:id="b28">
+	<analytic>
+		<title level="a" type="main">Smote based credit card fraud detection using convolutional neural network</title>
+		<author>
+			<persName><forename type="middle">Nawab</forename><surname>Md</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Taniya</forename><surname>Yousuf Ali</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Kabir</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Laila</forename><surname>Noushin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Sanzida</forename><surname>Raka</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Md</forename><forename type="middle">Lizur</forename><surname>Siddikha Toma</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jannatul</forename><surname>Rahman</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Ferdaus</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/ICCIT57492.2022.10054727</idno>
+	</analytic>
+	<monogr>
+		<title level="m">2022 25th International Conference on Computer and Information Technology (ICCIT)</title>
+		<imprint>
+			<date type="published" when="2022">2022</date>
+			<biblScope unit="page" from="55" to="60" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Md. Nawab Yousuf Ali, Taniya Kabir, Noushin Laila Raka, Sanzida Siddikha Toma, Md. Lizur Rahman, and Jannatul Ferdaus. Smote based credit card fraud detection using convolutional neural network. In 2022 25th International Conference on Computer and Information Technology (ICCIT), pages 55-60, 2022. doi: 10.1109/ ICCIT57492.2022.10054727.</note>
+</biblStruct>
+
+<biblStruct xml:id="b29">
+	<analytic>
+		<title level="a" type="main">Federated Learning-Based Credit Card Fraud Detection: Performance Analysis with Sampling Methods and Deep Learning Algorithms</title>
+		<author>
+			<persName><forename type="first">Nahid</forename><surname>Ferdous Aurna</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Md</forename><surname>Delwar Hossain</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yuzo</forename><surname>Taenaka</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Youki</forename><surname>Kadobayashi</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/CSR57506.2023.10224978</idno>
+	</analytic>
+	<monogr>
+		<title level="m">2023 IEEE International Conference on Cyber Security and Resilience (CSR)</title>
+		<imprint>
+			<date type="published" when="2023">2023</date>
+			<biblScope unit="page" from="180" to="186" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Nahid Ferdous Aurna, Md Delwar Hossain, Yuzo Taenaka, and Youki Kadobayashi. Federated Learning-Based Credit Card Fraud Detection: Performance Analysis with Sampling Methods and Deep Learning Algorithms. In 2023 IEEE International Conference on Cyber Security and Resilience (CSR), pages 180-186, 2023. doi: 10.1109/CSR57506.2023.10224978.</note>
+</biblStruct>
+
+<biblStruct xml:id="b30">
+	<monogr>
+		<title level="m" type="main">A Long Short Term Memory Model for Credit Card Fraud Detection</title>
+		<author>
+			<persName><forename type="first">Otasowie</forename><surname>Owolafe</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Oluwaseun</forename><surname>Bosede Ogunrinde</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Aderonke Favour-Bethy</forename><surname>Thompson</surname></persName>
+		</author>
+		<idno type="DOI">10.1007/978-3-030-72236-4_15</idno>
+		<ptr target="https://doi.org/10.1007/978-3-030-72236-4_15" />
+		<imprint>
+			<date type="published" when="2021">2021</date>
+			<publisher>Springer International Publishing</publisher>
+			<biblScope unit="page" from="369" to="391" />
+			<pubPlace>Cham</pubPlace>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Otasowie Owolafe, Oluwaseun Bosede Ogunrinde, and Aderonke Favour-Bethy Thompson. A Long Short Term Memory Model for Credit Card Fraud Detection, pages 369-391. Springer International Publishing, Cham, 2021. ISBN 978-3-030-72236-4. doi: 10.1007/978-3-030-72236-4_15. URL https://doi.org/10.1007/ 978-3-030-72236-4_15.</note>
+</biblStruct>
+
+<biblStruct xml:id="b31">
+	<analytic>
+		<title level="a" type="main">Time-aware attention-based gated network for credit card fraud detection by extracting transactional behaviors</title>
+		<author>
+			<persName><forename type="first">Yu</forename><surname>Xie</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Guanjun</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Chungang</forename><surname>Yan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Changjun</forename><surname>Jiang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mengchu</forename><surname>Zhou</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/TCSS.2022.3158318</idno>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Computational Social Systems</title>
+		<imprint>
+			<biblScope unit="volume">10</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="1004" to="1016" />
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Yu Xie, Guanjun Liu, Chungang Yan, Changjun Jiang, and MengChu Zhou. Time-aware attention-based gated network for credit card fraud detection by extracting transactional behaviors. IEEE Transactions on Computational Social Systems, 10(3):1004-1016, 2023. doi: 10.1109/TCSS.2022.3158318.</note>
+</biblStruct>
+
+<biblStruct xml:id="b32">
+	<analytic>
+		<title level="a" type="main">Performance evaluation of machine learning methods for credit card fraud detection using smote and adaboost</title>
+		<author>
+			<persName><forename type="first">Emmanuel</forename><surname>Ileberi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yanxia</forename><surname>Sun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Zenghui</forename><surname>Wang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Access</title>
+		<imprint>
+			<biblScope unit="volume">9</biblScope>
+			<biblScope unit="page" from="165286" to="165294" />
+			<date type="published" when="2021">2021</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Emmanuel Ileberi, Yanxia Sun, and Zenghui Wang. Performance evaluation of machine learning methods for credit card fraud detection using smote and adaboost. IEEE Access, 9:165286-165294, 2021.</note>
+</biblStruct>
+
+<biblStruct xml:id="b33">
+	<analytic>
+		<title level="a" type="main">Credit card fraud detection using various classification and sampling techniques: a comparative study</title>
+		<author>
+			<persName><forename type="first">Ram</forename><surname>Jvv Sriram Sasank</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Sahith</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Meena</forename><surname>Abhinav</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Belwal</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">2019 international conference on communication and electronics systems (ICCES)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2019">2019</date>
+			<biblScope unit="page" from="1713" to="1718" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">JVV Sriram Sasank, G Ram Sahith, K Abhinav, and Meena Belwal. Credit card fraud detection using various classification and sampling techniques: a comparative study. In 2019 international conference on communication and electronics systems (ICCES), pages 1713-1718. IEEE, 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b34">
+	<analytic>
+		<title level="a" type="main">Detection of fraudulent credit card transactions: A comparative analysis of data sampling and classification techniques</title>
+		<author>
+			<persName><forename type="first">Mahesh</forename><surname>Konduri Praveen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Shaik</forename><surname>Ashar Afrouz</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Anu</forename><surname>Shaju</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Areeckal</forename></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Physics: Conference Series</title>
+		<imprint>
+			<biblScope unit="volume">2161</biblScope>
+			<biblScope unit="page">12072</biblScope>
+			<date type="published" when="2022">2022</date>
+			<publisher>IOP Publishing</publisher>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Konduri Praveen Mahesh, Shaik Ashar Afrouz, and Anu Shaju Areeckal. Detection of fraudulent credit card transactions: A comparative analysis of data sampling and classification techniques. In Journal of Physics: Conference Series, volume 2161, page 012072. IOP Publishing, 2022.</note>
+</biblStruct>
+
+<biblStruct xml:id="b35">
+	<analytic>
+		<title level="a" type="main">Credit card fraud detection using xgboost algorithm</title>
+		<author>
+			<persName><forename type="first">Ahmed</forename><surname>Qasim</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Abdulghani</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Osman</forename><surname>Nuri Uçan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Khattab M Ali</forename><surname>Alheeti</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">2021 14th International Conference on Developments in eSystems Engineering (DeSE)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2021">2021</date>
+			<biblScope unit="page" from="487" to="492" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ahmed Qasim Abdulghani, Osman Nuri Uçan, and Khattab M Ali Alheeti. Credit card fraud detection using xgboost algorithm. In 2021 14th International Conference on Developments in eSystems Engineering (DeSE), pages 487-492. IEEE, 2021.</note>
+</biblStruct>
+
+<biblStruct xml:id="b36">
+	<analytic>
+		<title level="a" type="main">Bankruptcy prediction using deep learning approach based on borderline smote</title>
+		<author>
+			<persName><forename type="first">Salima</forename><surname>Smiti</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Makram</forename><surname>Soui</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Information Systems Frontiers</title>
+		<imprint>
+			<biblScope unit="volume">22</biblScope>
+			<biblScope unit="issue">5</biblScope>
+			<biblScope unit="page" from="1067" to="1083" />
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Salima Smiti and Makram Soui. Bankruptcy prediction using deep learning approach based on borderline smote. Information Systems Frontiers, 22(5):1067-1083, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b37">
+	<analytic>
+		<title level="a" type="main">Ensemble of deep sequential models for credit card fraud detection</title>
+		<author>
+			<persName><forename type="first">Javad</forename><surname>Forough</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Saeedeh</forename><surname>Momtazi</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/j.asoc.2020.106883</idno>
+		<ptr target="https://www.sciencedirect.com/science/article/pii/S1568494620308218" />
+	</analytic>
+	<monogr>
+		<title level="j">Applied Soft Computing</title>
+		<idno type="ISSN">1568-4946</idno>
+		<imprint>
+			<biblScope unit="volume">99</biblScope>
+			<biblScope unit="page">106883</biblScope>
+			<date type="published" when="2021">2021</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Javad Forough and Saeedeh Momtazi. Ensemble of deep sequential models for credit card fraud detection. Applied Soft Computing, 99:106883, 2021. ISSN 1568-4946. doi: https://doi.org/10.1016/j.asoc.2020.106883. URL https://www.sciencedirect.com/science/article/pii/S1568494620308218.</note>
+</biblStruct>
+
+<biblStruct xml:id="b38">
+	<analytic>
+		<title level="a" type="main">A novel combined approach based on deep autoencoder and deep classifiers for credit card fraud detection</title>
+		<author>
+			<persName><forename type="first">Hosein</forename><surname>Fanai</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Hossein</forename><surname>Abbasimehr</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/j.eswa.2023.119562</idno>
+		<ptr target="https://www.sciencedirect.com/science/article/pii/S0957417423000635" />
+	</analytic>
+	<monogr>
+		<title level="j">Expert Systems with Applications</title>
+		<idno type="ISSN">0957-4174</idno>
+		<imprint>
+			<biblScope unit="volume">217</biblScope>
+			<biblScope unit="page">119562</biblScope>
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Hosein Fanai and Hossein Abbasimehr. A novel combined approach based on deep autoencoder and deep classifiers for credit card fraud detection. Expert Systems with Applications, 217:119562, 2023. ISSN 0957-4174. doi: https://doi.org/10.1016/j.eswa.2023.119562. URL https://www.sciencedirect.com/science/article/ pii/S0957417423000635.</note>
+</biblStruct>
+
+<biblStruct xml:id="b39">
+	<analytic>
+		<title level="a" type="main">Credit card fraud detection using state-of-the-art machine learning and deep learning algorithms</title>
+		<author>
+			<persName><forename type="first">Fawaz</forename><surname>Khaled Alarfaj</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Iqra</forename><surname>Malik</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Hikmat</forename><surname>Ullah Khan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Naif</forename><surname>Almusallam</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Muhammad</forename><surname>Ramzan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Muzamil</forename><surname>Ahmed</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/ACCESS.2022.3166891</idno>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Access</title>
+		<imprint>
+			<biblScope unit="volume">10</biblScope>
+			<biblScope unit="page" from="39700" to="39715" />
+			<date type="published" when="2022">2022</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Fawaz Khaled Alarfaj, Iqra Malik, Hikmat Ullah Khan, Naif Almusallam, Muhammad Ramzan, and Muzamil Ahmed. Credit card fraud detection using state-of-the-art machine learning and deep learning algorithms. IEEE Access, 10:39700-39715, 2022. doi: 10.1109/ACCESS.2022.3166891.</note>
+</biblStruct>
+
+<biblStruct xml:id="b40">
+	<monogr>
+		<author>
+			<persName><forename type="first">Francesco</forename><surname>Cartella</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Orlando</forename><surname>Anunciacao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yuki</forename><surname>Funabiki</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Daisuke</forename><surname>Yamaguchi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Toru</forename><surname>Akishita</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Olivier</forename><surname>Elshocht</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2101.08030</idno>
+		<title level="m">Adversarial attacks for tabular data: Application to fraud detection and imbalanced data</title>
+		<imprint>
+			<date type="published" when="2021">2021</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Francesco Cartella, Orlando Anunciacao, Yuki Funabiki, Daisuke Yamaguchi, Toru Akishita, and Olivier Elshocht. Adversarial attacks for tabular data: Application to fraud detection and imbalanced data. arXiv preprint arXiv:2101.08030, 2021.</note>
+</biblStruct>
+
+<biblStruct xml:id="b41">
+	<analytic>
+		<title level="a" type="main">Facilitating user authorization from imbalanced data logs of credit cards using artificial intelligence</title>
+		<author>
+			<persName><forename type="first">Vinay</forename><surname>Arora</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Rohan</forename><surname>Singh Leekha</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Kyungroul</forename><surname>Lee</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Aman</forename><surname>Kataria</surname></persName>
+		</author>
+		<idno type="DOI">10.1155/2020/8885269</idno>
+		<ptr target="https://onlinelibrary.wiley.com/doi/abs/10.1155/2020/8885269" />
+	</analytic>
+	<monogr>
+		<title level="j">Mobile Information Systems</title>
+		<imprint>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page">8885269</biblScope>
+			<date type="published" when="2020">2020. 2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Vinay Arora, Rohan Singh Leekha, Kyungroul Lee, and Aman Kataria. Facilitating user authorization from imbalanced data logs of credit cards using artificial intelligence. Mobile Information Systems, 2020(1):8885269, 2020. doi: https://doi.org/10.1155/2020/8885269. URL https://onlinelibrary.wiley.com/doi/abs/10. 1155/2020/8885269.</note>
+</biblStruct>
+
+<biblStruct xml:id="b42">
+	<monogr>
+		<author>
+			<persName><surname>Amir-Al</surname></persName>
+		</author>
+		<ptr target="https://medium.com/machine-learning-researcher/artificial-neural-network-ann-4481fa33d85a" />
+		<title level="m">Artificial neural network (ann) with practical implementation</title>
+		<imprint>
+			<date type="published" when="2019-09-18">, 2019. september 18,2024</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Amir-Al. Artificial neural network (ann) with practical implementation. https://medium.com/ machine-learning-researcher/artificial-neural-network-ann-4481fa33d85a, 2019. Accessed september 18,2024.</note>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

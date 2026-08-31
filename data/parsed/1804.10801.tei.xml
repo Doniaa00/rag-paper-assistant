@@ -1,0 +1,1908 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">A Cost-Sensitive Deep Belief Network for Imbalanced Classification</title>
+				<funder ref="#_dB9fMQQ">
+					<orgName type="full">A*STAR, Singapore</orgName>
+				</funder>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability  status="unknown">
+					<licence/>
+				</availability>
+				<date type="published" when="2018-05-05">5 May 2018</date>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><forename type="first">Chong</forename><surname>Zhang</surname></persName>
+							<email>zhangchong@u.nus.edu</email>
+						</author>
+						<author>
+							<persName><roleName>Fellow, IEEE</roleName><forename type="first">Kay</forename><forename type="middle">Chen</forename><surname>Tan</surname></persName>
+							<email>kay-tan@cityu.edu.hk</email>
+						</author>
+						<author>
+							<persName><roleName>Fellow, IEEE</roleName><forename type="first">Haizhou</forename><surname>Li</surname></persName>
+							<email>haizhou.li@nus.edu.sg</email>
+						</author>
+						<author>
+							<persName><forename type="first">Geok</forename><forename type="middle">Soon</forename><surname>Hong</surname></persName>
+						</author>
+						<author>
+							<affiliation key="aff0">
+								<orgName type="department" key="dep1">Department of Electrical and Computer En- gineering</orgName>
+								<orgName type="department" key="dep2">Department of Mechanical Engineering</orgName>
+								<orgName type="institution" key="instit1">G. S. Hong</orgName>
+								<orgName type="institution" key="instit2">Na- tional University of Singapore</orgName>
+								<address>
+									<addrLine>4 Engineering Drive 3</addrLine>
+									<postCode>117583</postCode>
+									<country key="SG">Singapore</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<affiliation key="aff1">
+								<orgName type="department">Department of Computer Science</orgName>
+								<orgName type="institution">City University of Hong Kong</orgName>
+								<address>
+									<addrLine>83 Tat Chee Avenue</addrLine>
+									<settlement>Kowloon</settlement>
+									<country key="HK">Hong Kong</country>
+								</address>
+							</affiliation>
+						</author>
+						<title level="a" type="main">A Cost-Sensitive Deep Belief Network for Imbalanced Classification</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date type="published" when="2018-05-05">5 May 2018</date>
+						</imprint>
+					</monogr>
+					<idno type="MD5">99BF3AF7976461D3360956936F0B509D</idno>
+					<idno type="arXiv">arXiv:1804.10801v2[cs.LG]</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.2-SNAPSHOT" ident="GROBID" when="2026-08-31T18:09+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<textClass>
+				<keywords>
+					<term>Cost-sensitive</term>
+					<term>Deep Belief Network</term>
+					<term>Evolutionary Algorithm (EA)</term>
+					<term>Imbalanced Classification. I</term>
+				</keywords>
+			</textClass>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>Imbalanced data with a skewed class distribution are common in many real-world applications. Deep Belief Network (DBN) is a machine learning technique that is effective in classification tasks. However, conventional DBN does not work well for imbalanced data classification because it assumes equal costs for each class. To deal with this problem, cost-sensitive approaches assign different misclassification costs for different classes without disrupting the true data sample distributions. However, due to lack of prior knowledge, the misclassification costs are usually unknown and hard to choose in practice. Moreover, it has not been well studied as to how cost-sensitive learning could improve DBN performance on imbalanced data problems. This paper proposes an evolutionary cost-sensitive deep belief network (ECS-DBN) for imbalanced classification. ECS-DBN uses adaptive differential evolution to optimize the misclassification costs based on training data, that presents an effective approach to incorporating the evaluation measure (i.e. G-mean) into the objective function. We first optimize the misclassification costs, then apply them to deep belief network. Adaptive differential evolution optimization is implemented as the optimization algorithm that automatically updates its corresponding parameters without the need of prior domain knowledge. The experiments have shown that the proposed approach consistently outperforms the stateof-the-art on both benchmark datasets and real-world dataset for fault diagnosis in tool condition monitoring.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>approaches, namely data level approaches and algorithm level approaches <ref type="bibr" target="#b10">[11]</ref>. The typical data level approaches are based on resampling approaches <ref type="bibr" target="#b11">[12]</ref>, <ref type="bibr" target="#b12">[13]</ref>, <ref type="bibr" target="#b13">[14]</ref>, <ref type="bibr" target="#b14">[15]</ref>, <ref type="bibr" target="#b15">[16]</ref>, <ref type="bibr" target="#b16">[17]</ref>. Some well-known resampling based approaches include synthetic minority over-sampling technique (SMOTE) <ref type="bibr" target="#b11">[12]</ref> and adaptive synthetic sampling approach (ADASYN) <ref type="bibr" target="#b12">[13]</ref>, etc. SMOTE <ref type="bibr" target="#b11">[12]</ref> is an oversampling technique that generates synthetic samples of minority class. ADASYN <ref type="bibr" target="#b12">[13]</ref> uses a weighted distribution for different minority class according to their level of difficulty in learning and more synthetic data for minority class. A typical algorithm level approach is called cost-sensitive learning <ref type="bibr" target="#b17">[18]</ref>, <ref type="bibr" target="#b18">[19]</ref>, <ref type="bibr" target="#b19">[20]</ref>, <ref type="bibr" target="#b20">[21]</ref>, <ref type="bibr" target="#b21">[22]</ref>. We focus the study of algorithm level approach in this paper.</p><p>Resampling approaches attempt to manually rebalance dataset by oversampling minority samples and/or undersampling majority samples. Unfortunately, such approaches may, on one hand miss out potentially useful data, on the other hand add the computational burden with the redundant samples. Essentially, resampling-based approaches would alter the original distribution of classes. In practice, the assumption that all misclassification errors have equal costs is not true in real-world applications. There could be large differences in terms of costs between different misclassification errors. For instance, in fault diagnosis of tool condition, if we are detecting the healthy state versus failure state of a machine, we know that missing the detection of a failure state may cause a catastrophic accident which costs much higher than the others.</p><p>Many conventional approaches presume equal costs for all the classification errors and this assumption usually does not hold in practice. Some real-world problems have drastically various costs for different classes, for example, between failure state and healthy state of a machine. Costsensitive learnings are popular methods that deal with imbalanced classification problems with unknown and unidentical costs on algorithmic level. The intuition of cost-sensitive learning is to assign misclassification costs for each class appropriately. We have seen studies in cost-sensitive neural networks <ref type="bibr" target="#b17">[18]</ref>, cost-sensitive decision trees <ref type="bibr" target="#b22">[23]</ref>, cost-sensitive extreme learning machine <ref type="bibr" target="#b19">[20]</ref>, etc. However, there are few studies on cost-sensitive deep belief networks. Deep belief network (DBN) <ref type="bibr" target="#b23">[24]</ref>, <ref type="bibr" target="#b24">[25]</ref>, a generative model stacked with several Restricted Boltzmann Machines (RBMs), has drawn tremendous attention recently. It has shown promising results in classification tasks such as, image identification, speech recognition <ref type="bibr" target="#b25">[26]</ref>, and natural language processing <ref type="bibr" target="#b26">[27]</ref>. DBN is known for its extraordinary end-to-end feature learning and classification characteristics. However, it has not been investigated as to how cost-sensitive learning could enhance DBN to deal with imbalanced data problems.</p><p>A key issue in cost-sensitive learning is to estimate the costs associated with data classes in different problems. The generic population-based evolutionary algorithms, that successfully deal with multi-model optimization problems <ref type="bibr" target="#b27">[28]</ref>, <ref type="bibr" target="#b28">[29]</ref>, <ref type="bibr" target="#b29">[30]</ref>, <ref type="bibr" target="#b30">[31]</ref>, offers a solution to addressing the issue. Differential evolution (DE) is a popular variant of EAs. DE optimizes an optimization problem by iteratively searching for a solution given an evaluation metric. Basically, DE moves the candidate solutions around the search space by using simple mathematical formulae to combine the positions of existing solutions. In this way, if a new position gives improvement, an old position is replaced, otherwise, the new position is discarded. It solves non-separable multi-model (i.e. has many local optima) problems and avoids local optima. In comparison with other variants of EAs, DE has better exploration capability with fewer parameters. It is also easy to implement. However, the exploration and exploitation capabilities of DE are mainly controlled by two key parameters, i.e. the mutation factor and crossover probability. Traditional DEs use fixed parameters which are not suitable for different problems and hard to tune. Adaptive DE <ref type="bibr" target="#b29">[30]</ref> automatically updates the parameters according to the probability matching, that can be easily implemented. Therefore, it becomes a logical choice in solving practical problems.</p><p>The above observations have promoted us to study an Evolutionary Cost-Sensitive Deep Belief Network (ECS-DBN) to deal with the imbalanced data problems, where we find ways to assign differential misclassification costs to the classes, that we also call class-dependent misclassification costs. The misclassification costs are optimized by adaptive differential evolution (DE) algorithm <ref type="bibr" target="#b29">[30]</ref>. We consider that such a study could help to identify methods to heuristically optimize misclassification costs. In the rest of the paper, we presume positive label for the minority class and negative label for the majority class.</p><p>The contributions of this paper are summarized as follows.</p><p>1) We formulate a novel learning algorithm for classification prediction of DBN that handles imbalanced data classification; 2) We show how ECS-DBN works by assigning appropriate misclassification costs and incorporating cost-sensitive learning with deep learning. 3) We show that ECS-DBN allows us to determine the unknown misclassification costs without prior domain knowledge. 4) We show that ECS-DBN offers an effective solution of good performance to imbalanced classification problems. The proposed approach can automatically work for both binary and multiclass classification problems. The rest of the paper is organized as follows. Section II reviews current related literature. Section III and Section IV introduce cost-sensitive deep belief network and present the proposed ECS-DBN, respectively. Section V compares the proposed approach and other state-of-the-art methods on 58 benchmark datasets. Section VI reports the experiments on a real-world dataset of fault diagnosis in tool condition mon-itoring on gun drilling. Finally, Section VII concludes the discussion and highlights some potential research directions.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>II. LITERATURE REVIEWS A. Cost-sensitive Learning</head><p>Cost-sensitive learning method <ref type="bibr" target="#b31">[32]</ref> is a learning paradigm that assigns differential misclassification costs to the classes involved in a classification task.</p><p>Datta et al. <ref type="bibr" target="#b18">[19]</ref> investigated Near-Bayesian Support Vector Machines (NBSVM) for imbalanced classification with equal or unequal misclassification costs for multi-class scenario. Zong et al. <ref type="bibr" target="#b19">[20]</ref> proposed a weighted extreme learning machine (WELM) for imbalance learning. The approach benefits from the idea of original extreme learning machine (ELM) which is simple and convenient to implement. It can be applied directly into multiclass classification tasks. The WELM is capable of dealing with imbalanced class distribution. The weights are assigned for each example according to users' needs. Krempl et al. <ref type="bibr" target="#b21">[22]</ref> proposed OPAL which is a fast, non-myopic and cost-sensitive probabilistic active learning approach. However, such approaches cannot determine the optimal misclassification loss without the need of prior domain knowledge. Castro et al. <ref type="bibr" target="#b20">[21]</ref> proposed a cost-sensitive algorithm (CSMLP) using a single cost parameter to differentiate misclassification errors to improve the performances of MLPs on binary imbalanced class distributions. ABMODLEM <ref type="bibr" target="#b32">[33]</ref> addressed imbalanced data with argument based rule learning. By using the expert knowledge, CSMLP and ABMODLEM improve learning rules from imbalanced data. With argument based rule induction, such approaches is convenient for domain experts to describe reasons for specific classes.</p><p>There are many studies related to neural networks over imbalanced learning. Zheng <ref type="bibr" target="#b33">[34]</ref> proposed cost-sensitive boosting neural networks which incorporate the weight updating rule of boosting procedure to associate samples with misclassification costs. Bertoni et al. <ref type="bibr" target="#b34">[35]</ref> proposed a cost-sensitive neural network for semi-supervised learning in graphs. Cost-sensitive SVM (CS-SVM) <ref type="bibr" target="#b35">[36]</ref> was discussed with model selection via global minimum cross validation error. Tan et al. <ref type="bibr" target="#b36">[37]</ref> proposed an evolutionary fuzzy ARTMAP (FAM) neural network using adaptive incremental learning method to overcome the stability-plasticity dilemma on stream imbalanced data. A cost-sensitive convolutional neural network <ref type="bibr" target="#b37">[38]</ref> was proposed for imbalanced image classification. Despite many studies on imbalanced learning, the potential benefits through DBN with imbalanced learning have not been fully explored yet.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Evolutionary Algorithm (EA)</head><p>We note that it is possible to decide misclassification costs either by trial and error <ref type="bibr" target="#b38">[39]</ref>, <ref type="bibr" target="#b17">[18]</ref> or EAs <ref type="bibr" target="#b36">[37]</ref>, <ref type="bibr" target="#b39">[40]</ref>, <ref type="bibr" target="#b40">[41]</ref>. Inspired by the biological evolution process, EA is a metaheuristic optimization method, which attracts significant attention when learning from imbalanced data. EA based studies on optimizing imbalanced classification can be broadly grouped into two categories.</p><p>In the first category, one can implement EA to optimize the dataset for training classifiers. Early studies are focused on using EA to drive the sampling process of the training dataset. Such approaches <ref type="bibr" target="#b14">[15]</ref>, <ref type="bibr" target="#b41">[42]</ref>, <ref type="bibr" target="#b42">[43]</ref> represent data by expressing the chromosome with binary representation. However, these approaches have poor scaling ability for large datasets as the chromosome expands proportionally with the size of the dataset, resulting in a cumbersome and time consuming evolutionary process. Recent methods (e.g. <ref type="bibr" target="#b15">[16]</ref>) attempt to circumvent this problem by employing EA to sample smaller subsets of data to represent the imbalanced dataset. Another idea <ref type="bibr" target="#b43">[44]</ref> is to use EA to carry out random under-sampling by determining the optimal regions in the sample space. Recent trends incorporating EA into sample space are limited to repetitive sampling-based solutions. ECO-ensemble <ref type="bibr" target="#b16">[17]</ref> incorporates synthetic data generation within an ensemble framework optimized by EA simultaneously. Although this approach integrates EA into the whole framework from sample space to model space, the computational complexity also increases accordingly. These data-level approaches are dreadfully sensitive to the quality of imbalanced data (i.e. outliers, sparse data and small disjuncts). The use of synthetic data may change the true distribution of the original dataset therefore do more harm than good to the classifier.</p><p>In the second category, one can implement EA by optimizing classifiers for imbalanced classification at algorithmic level. Such approaches <ref type="bibr" target="#b44">[45]</ref> optimize the classifier in the model space by using EA. Some studies <ref type="bibr" target="#b45">[46]</ref>, <ref type="bibr" target="#b46">[47]</ref>, <ref type="bibr" target="#b47">[48]</ref> implement EAs to enhance rule-based classifiers. Genetic programming has been utilized to acquire sets of optimized classifiers such as negative correlated learning <ref type="bibr" target="#b48">[49]</ref>, <ref type="bibr" target="#b49">[50]</ref>, <ref type="bibr" target="#b50">[51]</ref>. Perez et al. <ref type="bibr" target="#b51">[52]</ref> integrates an evolutionary cooperative-competitive algorithm to obtain a set of simple and accurate radial basis function networks. Due to lack of sufficient domain knowledge, the costs of misclassification in cost-sensitive methods are usually hard to determine. In the literature, we note that the present studies are focused very much on traditional simple network models <ref type="bibr" target="#b17">[18]</ref>, <ref type="bibr" target="#b39">[40]</ref>, <ref type="bibr" target="#b36">[37]</ref>. To our best knowledge, there is no reported work on the study of EA in cost sensitive deep learning. In this paper, we study how to estimate the misclassification costs automatically to improve the performance of cost-sensitive deep belief network.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>III. TECHNICAL DETAILS OF DEEP BELIEF NETWORK WITH COST-SENSITIVE LEARNING A. Deep Belief Network</head><p>Deep Belief Network (DBN) is a probabilistic generative model stacked with several Restricted Boltzmann Machines (RBMs). DBN is trained by greedy unsupervised layer-wise pre-training and discriminative supervised fine-tuning. The weight connections in DBN are between contiguous layers, there is no connections between the hidden neurons within the same layer.</p><p>The fundamental building block of DBN is an RBM which consists of one visible layer and one hidden layer. To construct a DBN, the hidden layer of previous RBM is regarded as the visible layer of its subsequent RBM in the deep structure. To train a DBN, typically each RBM is pre-trained initially from the bottom to the top in a layer-wise manner and subsequently the whole network is fine-tuned with supervised learning methods. Ultimately, the hypothesized prediction is obtained in the output layer based on the posterior probability distribution obtained from the penultimate layer.</p><p>DBN is usually trained by progressively untying the weights in each layer from the weights in higher layers <ref type="bibr" target="#b52">[53]</ref>. The pretraining is carried out by alternating Gibbs sampling from the true posterior distribution over all the hidden layers between a data sample on the visible variables and the transposed weight matrices to infer the factorial distributions over each hidden layer. All the variables in one layer are updated in parallel via Markov chain until they reach their stationary equilibrium distribution. The log posterior probability of the data is maximized by this training procedure. While the posterior distribution is created by the likelihood term coming from the data <ref type="bibr" target="#b23">[24]</ref>. Factorial approximations is used in DBN to replace the intractable true posterior distribution. By implementing a complementary prior, the true posterior is exactly factorial.</p><p>The posterior in each layer is approximated by a factorial distribution of independent variables within a layer given the values of the variables in the previous layer. Based on wakesleep algorithm proposed in Hinton et al. <ref type="bibr" target="#b53">[54]</ref>, the weights on the undirected connections at the top level are learned by fitting the top-level RBM to the posterior distribution of the penultimate layer. The fine-tuning starts with a state of the top-level output layer and uses the top-down generative connections to stochastically activate each lower layer in turn. So a DBN can be viewed as an RBM that defines a prior over the top layer of hidden variables in a directed belief net, combined with a set of recognition weights to perform fast approximate inference.</p><p>The architecture of DBN makes it possible to abstract higher level features through layer conformation <ref type="bibr" target="#b24">[25]</ref>. Each layer of hidden variables learns to represent features that capture higher order correlations in the original input data. Applying DBNs to a classification problem, feature vectors from data samples are used to set the states of the visible variables of the lower layer of the DBN. The DBN is then trained to produce a probability distribution over the possible labels of the data based on posterior probability distribution of the data samples.</p><p>Suppose a dataset S = {{x 1 , y 1 }, {x 2 , y 2 }, • • • , {x N , y N }} contains a total number of N data sample pairs {x n , y n }, where x n is the nth data sample, y n is the corresponding nth target label. Assume a DBN consists of H hidden layer and the parameters of each layer i ∈ {1, • • • , H} by</p><formula xml:id="formula_0">θ i = {W i , b i }.</formula><p>Given an input data sample x from the dataset, the DBN with H hidden layer(s) presents a complex feature mapping function. After feature transformation, softmax layer serves as the output layer of DBN to perform classification predictions as parameterized by θ s = {W s , b s }. Suppose there are K neurons in the softmax layer, where the j-th neuron is responsible for estimating the prediction probability of class j given input of x H which is the output of the previous layer and associated with weights W  where x H is the output of the previous layer. Based on the probability estimation, the trained DBN classifier provides a prediction as</p><formula xml:id="formula_1">(j) s + x H T W (j) s ) K k=1 exp(b (k) s + x H T W (k) s ) ,<label>(1)</label></formula><formula xml:id="formula_2">f (x) = arg max 1≤j≤K P (y = j|x).<label>(2)</label></formula><p>In practice, the parameters {θ 1 , θ 2 , • • • , θ H , θ s } of DBN are massively optimized by statistic gradient descent with respect to the negative log-likelihood loss over the training set S t .</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Cost-sensitive Deep Belief Network</head><p>The concept of cost-sensitive learning is to minimize the overall cost (e.g. Bayes conditional risk <ref type="bibr" target="#b54">[55]</ref>) on the training data set.</p><p>Assume the total number of classes is K, given a sample data x, C i,j ∈ [0, 1] denotes the cost of misclassifying x as class j when x actually belongs to class i. In addition, C i,j = 0, when i = j, which indicates the cost for correct classification is 0.</p><p>Given the misclassification costs C i,j , a data sample should be classified into the class that has the minimum expected cost. Based on decision theory <ref type="bibr" target="#b55">[56]</ref>, the decision rule minimizing the expectation cost R(i|x) of classifying an input vector x into class i can be expressed as:</p><formula xml:id="formula_3">R(i|x) = K j=1,j =i P (j|x)C i,j ,<label>(3)</label></formula><p>where P (j|x) is the posterior probability estimation of classifying a data sample into class j. Given the prior probability P (x n ), the general decision rule indicates which action to take for each data sample x n , thus the overall risk R is</p><formula xml:id="formula_4">R = N n=1 K i=1 R(i|x n )P (x n )<label>(4)</label></formula><p>According to the Bayes decision theory, an ideal classifier will give a decision by computing the expectation risk of classifying an input to each class and predicts the label that reaches the minimum overall expectation risk. Misclassification costs represent penalties for classification errors. In costsensitive learning, all misclassification costs are essentially non-negative.</p><p>Mathematically, the probability that a sample data x ∈ S belongs to a class j, a value of a stochastic variable y, can be expressed as :</p><formula xml:id="formula_5">P (y = j|x) = sof tmax j (b + Wx) = exp(bj +Wj x) i exp(bi+Wix) ,<label>(5)</label></formula><p>The misclassification threshold values are introduced to turn posterior probabilities into class labels such that the misclassification costs are minimized. Implementing the misclassification threshold value 1 -C i,j on the obtained posterior probability P (y = j|x), one can obtain the new probability P ξ :</p><formula xml:id="formula_6">P ξ (y = j|x) = P (y = j|x) • (1 -C i,j ).<label>(6)</label></formula><p>Generally, the misclassification threshold values for minority classes are larger than those of majority classes. The hypothesized prediction f (x) of the sample x is the member of the maximum probability among classes, can be obtained by using the following equation:</p><formula xml:id="formula_7">F (x) = arg max j P ξ (y = j|x).<label>(7)</label></formula><p>The proposed cost-sensitive learning method only concerns the output layer of a DBN. In this paper, we follow the same pre-training and fine-tuning procedures as in <ref type="bibr" target="#b23">[24]</ref>.</p><p>For imbalanced classification problems, the prior probability distribution of different classes is essentially imbalanced or non-uniform. To reflect class imbalance, there is a need to introduce the misclassification cost at the output layer to reflect the imbalanced class distributions. In addition, traditional training algorithms generally assume uniform class distribution with equal misclassification costs, i.e. ∀i, j ∈</p><formula xml:id="formula_8">[1, 2, • • • , K], if i = j, C i,j = 0, if i = j, C i,j = 1,</formula><p>which is not true in many real-world applications.</p><p>In many real-world applications, the misclassification costs are essentially unknown and they vary across various classes. The current studies <ref type="bibr" target="#b54">[55]</ref> usually attempt to determine misclassification costs by trial and error which generally does not lead to an optimal solution. Some studies <ref type="bibr" target="#b38">[39]</ref> have devised mechanisms to update misclassification costs based on the number of samples in different classes. However, such methods may not be suitable for the cases where the classes are important but rare, such as some rare fatal diseases. To avoid hand tuning of misclassification costs, adaptive differential evolution algorithm <ref type="bibr" target="#b29">[30]</ref> is implemented in this paper. Adaptive differential evolution algorithm is a simple effective and efficient evolutionary algorithm which could obtain optimal solution by evolving and updating a population of individuals during several generations. It attempts to adaptively self-update the control parameters without the need of prior knowledge.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>IV. EVOLUTIONARY COST-SENSITIVE DEEP BELIEF NETWORK (ECS-DBN)</head><p>As discussed in Section II-B, evolutionary algorithm (EA) is a widely used optimization algorithm which is motivated by the biological evolution process. The EA algorithm can be designed to optimize the misclassification costs that are unknown in practice. In this paper, we propose an Evolutionary Cost-Sensitive Deep Belief Network (ECS-DBN) by incorporating cost-sensitive function directly into its classification paradigm with the misclassification costs being optimized through adaptive differential evolution <ref type="bibr" target="#b29">[30]</ref>, <ref type="bibr" target="#b56">[57]</ref>. The main idea of this cost-sensitive learning technique is to assign classdependent costs. Fig. <ref type="figure" target="#fig_1">1</ref> shows the schematic diagram of a costsensitive deep belief network.</p><p>The procedure of training the proposed ECS-DBN can be summarized in Table <ref type="table" target="#tab_0">I</ref>. Firstly, a population of misclassification costs are randomly initialized. We then train a DBN with the training dataset. After applying misclassification costs on the outputs of the DBN, we evaluate the training error based on the performance of the corresponding costsensitive hypothesized prediction. According to the evaluation performance on training dataset, proper misclassification costs are selected to generate the population of next generation. In the next generation, mutation and crossover operators are employed to evolve a new population of misclassification costs. Adaptive differential evolution (DE) algorithm will proceed to next generation and continuously iterate between mutation and selection to reach the maximum number of generations. Eventually, the best found misclassification costs are obtained and applied to the output layer of DBN to form ECS-DBN as shown in Fig. <ref type="figure" target="#fig_1">1</ref>. At run-time, we test the resulting ECS-DBN with test dataset to report the performance. The practical steps of ECS-DBN is summarized in Algorithm 1, and discussed next.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. Chromosome Encoding</head><p>Chromosome encoding is an important step in evolutionary algorithms which aims at effectively representing important variables for better performance. In many real-world applications, misclassification costs in cost-sensitive deep belief network are usually unknown. In order to obtain appropriate costs, in our proposed approach each chromosome represents misclassification costs for different classes, and the final evolved best chromosome is chosen as the misclassification costs for ECS-DBN. The chromosome encoding here directly encodes the misclassification costs as values in the chromosome with numerical type and value range of [0, 1]. Set µCr = 0.5, µF = 0.5, A = ∅, β = 0.5.</p><p>Step 1) Initialization: Generate an initial population {c 1 0 , . . . , c N 0 } via uniformly random sampling in solution space. The initial value of ith individual is generated as c i 0 = cmin +rand(0, 1)•(cmaxcmin). And evaluate each candidate solution c i 0 (i = 1, • • • , N ) in the initial population via its corresponding trained DBN (x ∈ St, y|c) to obtain a vector representing the fitness functions F (c i 0 ) which is G-mean of training dataset in this paper.</p><p>Step 2) Evolution:</p><formula xml:id="formula_9">for g = 1, • • • , G do</formula><p>Set the set of all successful mutation factor Fi at each generation SF = ∅; Set the set of all successful crossover probabilities Cri at each generation SCr = ∅;</p><formula xml:id="formula_10">for i = 1, • • • , Np do Generate Cri = randn(µCr, 0.1), Fi = randci(µF , 0.1).</formula><p>Step 2.1) Mutation: Randomly select two indices j and k from population, then generate a new candidate solution c i g illustrates of chromosome encoding and evolution process in ECS-DBN.</p><formula xml:id="formula_11">from c i g , c j g and c k g by c i g =c i g + Fi • (c j g -c k g ), which is a DE operator. Generate i rand = randint(1, D) Step 2.2) Crossover: if i = i rand or rand(0, 1) &lt; Cri then u i g = c i g else u i g = c i g end if Step 2.3) Selection: if F (c i g ) ≥ F (u i g ) then c i g+1 = c i g else c i g+1 = u i g , c i g → A, Cri → SCr, Fi → SF end if Randomly remove solutions from A so that |A| ≤ N Step 2.4) Parameter Adaptation: µCr = (1 -β) • µCr + β • mean(SCR) µF = (1 -β) • µF + β • mean(SF )</formula></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Population Initialization</head><p>The initial population is obtained via uniformly random sampling in feasible solution space for each variable within the specified range of the corresponding variable. The population is to hold possible misclassification costs and forms the unit of evolution. The evolution of the misclassification costs is an </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>D. Fitness Evaluation</head><p>Fitness evaluation allows us to choose the appropriate misclassification costs. In the proposed method, each individual chromosome is introduced into individual DBN as misclassification costs. We generate suitable misclassification costs for DBN using the training set. G-mean of training set is chosen as the objective function for the optimization.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>E. Termination Condition</head><p>Evolutionary algorithms are designed to evolve the population generation by generation and maintain the convergence as well as diversity characteristics within the population. A maximum number of generations is set to be a termination condition of the algorithm. In this implementation, we consider the solutions converged when the best fitness value remains unchanged over the past 30 generations <ref type="bibr" target="#b16">[17]</ref>. The algorithm terminates either when it reaches the maximum number of generations or when it meets the convergence condition.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>F. ECS-DBN Creation</head><p>Eventually, the optimization process ends with the best individual which is used as misclassification costs to form an ECS-DBN. The best individual is obtained from the last generation.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>V. EVALUATION ON BENCHMARK DATASETS</head><p>In this section, the proposed ECS-DBN approach is evaluated on 58 popular KEEL benchmark datasets.</p><p>A. Nomenclature ADASYN, SMOTE and its various resampling methods are applied with DBN to generate synthetic minority data on the imbalanced datasets. The nomenclature convention used in labeling the imbalance learning methods are as follows: the prefix letters "ADASYN", "SMOTE", "SMOTE-SVM", "SMOTE-borderline1", and "SMOTE-borderline2" respectively, represent the adaptive synthetic sampling approach <ref type="bibr" target="#b12">[13]</ref>, Synthetic Minority Over-sampling Technique <ref type="bibr" target="#b11">[12]</ref>, Support Vectors SMOTE <ref type="bibr" target="#b57">[58]</ref>, and Borderline SMOTE of types 1 and 2 <ref type="bibr" target="#b13">[14]</ref>. The suffix "-DBN" represents deep belief network.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Benchmark Datasets</head><p>In this paper, benchmark datasets are selected from KEEL (Knowledge Extraction based on Evolutionary Learning) dataset repository <ref type="bibr" target="#b58">[59]</ref>. The details specification of 58 binaryclass imbalanced datasets are shown in Table <ref type="table" target="#tab_1">II</ref>. All datasets are downloaded from KEEL website<ref type="foot" target="#foot_0">foot_0</ref> . They are known to have a high imbalance ratio between the majority and minority classes.</p><p>The imbalance ratio (IR) is the number of data samples in majority class divided by that in minority class which is described by <ref type="bibr" target="#b7">(8)</ref>.</p><formula xml:id="formula_12">IR = # majority # minority<label>(8)</label></formula></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>C. Implementation Details</head><p>The learning rates of both pre-training and fine-tuning are 0.01. The number of pre-training and fine-tuning iterations are 100 and 300 respectively. The range of hidden neuron number is <ref type="bibr" target="#b4">[5,</ref><ref type="bibr" target="#b49">50]</ref>. The hidden neuron number of the networks are randomly selected from the range of hidden neuron number. Generally speaking, there are two key parameters that affect We set the parameters empir-ically <ref type="bibr" target="#b29">[30]</ref> to ensure that DE generally converges. All the codes of resampling methods for comparison in this paper are from <ref type="bibr" target="#b59">[60]</ref> in Python and their corresponding parameters are set as default. All the simulation results are obtained with 5-fold cross validation over 10 trials. All of the simulations are done on an Intel Core i5 3.20GHz machine with 16 GB RAM and NVIDIA GeForce GTX 980.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>D. Evaluation Metrics</head><p>As in <ref type="bibr" target="#b31">[32]</ref>, <ref type="bibr" target="#b16">[17]</ref>, <ref type="bibr" target="#b12">[13]</ref>, <ref type="bibr" target="#b11">[12]</ref>, <ref type="bibr" target="#b13">[14]</ref>, <ref type="bibr" target="#b43">[44]</ref>, <ref type="bibr" target="#b57">[58]</ref>, accuracy, G-mean, F1-score, recall, precision are the most commonly used evaluation metrics. Considering an imbalance binaryclass classification problem, let TP, FP, FN, TN represent true positive, false positive, false negative and true negative, respectively. To evaluate the performance of a classifier, it is common to use the overall accuracy that is formulated in <ref type="bibr" target="#b8">(9)</ref>.</p><formula xml:id="formula_13">Accuracy = T P + T N T P + T N + F P + F N<label>(9)</label></formula><p>In this section, both accuracy and G-mean are used. We use G-mean <ref type="bibr" target="#b9">(10)</ref> because it evaluates the degree of inductive bias which considers both positive and negative accuracy. The higher G-mean values represent the classifier could achieve better performance on both minority and majority classes. Gmean is less sensitive to data distributions that is given as follows,</p><formula xml:id="formula_14">G-mean = T P T P + F N × T N T N + F P<label>(10)</label></formula></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>E. Results of ECS-DBN</head><p>In this section, we investigate the performance of DBN in different settings that include ECS-DBN, DBN, ADASYN-DBN, SMOTE-DBN, SMOTE-borderline1-DBN, SMOTE-borderline2-DBN and SMOTE-SVM-DBN. We report the results over a total of runs on 58 KEEL benchmark datasets in terms of test accuracy and test G-mean, respectively. A detailed summary can be found at Tables AI and AII in Annex, with the best results being highlighted in boldface. To visualize, Fig. <ref type="figure" target="#fig_5">3</ref> illustrates the overall performances of the 7 variations of DBN algorithms on 58 benchmark datasets. It is clear that ECS-DBN stands out from the rest.</p><p>From the simulation results, the proposed ECS-DBN exhibits superior overall performance, especially in terms of Gmean. From Table <ref type="table" target="#tab_9">AII</ref>, we observe that ECS-DBN excels in 34 out of 58 benchmark datasets in terms of accuracy. As there are many more samples in majority class than minority class, a classifier can bias to the majority class yet achieve a high accuracy. We also report results in G-mean, that G-mean takes both performance of majority class and minority class into account. If some methods give a highly biased performance, their G-mean values will be close to 0. It is worth noting that ECS-DBN outperforms on 52 out of 58 benchmark datasets in terms of G-mean as shown in Table <ref type="table" target="#tab_9">AII</ref>. We may attribute this to the fact that ECS-DBN has been optimized using evolutionary algorithm with maximized G-mean objective. Therefore, the proposed ECS-DBN can provide better performances on minority class as well as those on majority class.  </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>F. Computational Time Analysis</head><p>The computing of ECS-DBN at run-time is closely related to the DBN network complexity. The larger and deeper network size of DBN, the more computing is required. Table <ref type="table" target="#tab_2">III</ref> reports the average computational time of ECS-DBN with 5-fold cross validation over 10 trials on the overall 58 benchmark datasets. In order to make a fair and clear comparison between different imbalance learning methods, the average computational time at run-time testing is summarized in Table <ref type="table" target="#tab_2">III</ref>. ECS-DBN shows a higher computational cost that is mainly due to the evolutionary algorithm. We note that the resampling methods are a little bit faster than ECS-DBN due to the small data size of KEEL benchmark datasets.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>G. Statistical Tests for Evaluating Imbalance Learning</head><p>Statistical tests provide evidence to ascertain the claim that the ECS-DBN outperforms other competitive methods. It is noted that three common statistical tests <ref type="bibr" target="#b15">[16]</ref>, <ref type="bibr" target="#b60">[61]</ref>, <ref type="bibr" target="#b61">[62]</ref>, <ref type="bibr" target="#b20">[21]</ref>, <ref type="bibr" target="#b62">[63]</ref>, <ref type="bibr" target="#b16">[17]</ref>, can serve our purpose. Wilcoxon paired signed-rank test is adopted for pairwise comparisons between algorithms. Alternatively for comparison between ξ multiple algorithms, a Holm post-hoc test can be utilized to conduct a 1 × ξ posteriori tests between the control algorithm and the rest subgroups of algorithms. Average rank is also implemented for fair comparison.</p><p>1) Wilcoxon Paired Signed-Rank Test: In order to substantiate whether the results of ECS-DBN and other kinds of imbalance learning methods differ in a statistically significant way, a nonparametric statistical test known as Wilcoxon paired signed-rank test is conducted at the 5% significance level. The Wilcoxon paired signed-rank test is employed separately between pairs of algorithms for each dataset. The entries which are significantly better than all the counterparts are marked with † in Tables <ref type="table" target="#tab_0">AI</ref> and<ref type="table" target="#tab_9">AII</ref>. The total number of win-lose-draw between the proposed method and its counterparts are then reckoned. The pairwise comparisons of the proposed ECS-DBN method against other kinds of methods in terms of accuracy and G-mean are shown in Tables AI and AII, respectively. In most cases, the proposed ECS-DBN method outperforms other state-of-the-art resampling methods, i.e. ADASYN, SMOTE, SMOTE-borderline1, SMOTE-borderline2 and SMOTE-SVM.</p><p>2) Holm post-hoc Test: For multiple comparisons, different algorithms are compared using the Holm post-hoc test to detect statistical differences among them. The proposed ECS-DBN is chosen as the control algorithm for comparison. Then Holm post-hoc test is implemented on the results of the method for all datasets in terms of accuracy and G-mean as shown in Tables AI and AII, respectively. The p-values from Holm post-hoc test shown in Tables AI and AII indicates that the proposed ECS-DBN method statistically outperforms other methods with significant statistical differences based on the results of all 58 datasets. In Holm post-hoc test, ECS-DBN outperforms others.</p><p>3) Average Rank: Average rank is the mean of the ranks of individual method on all the datasets. Average ranks provide a fair comparison in terms of accuracy and G-mean of different methods as shown in Tables AI and AII. Based on the average ranks in terms of both accuracy and G-mean on all datasets, the proposed ECS-DBN ranked first in the majority of the datasets. The results indicate that ECS-DBN outperforms other competing methods and excels especially in terms of Gmean. For a better illustration, the average rank of different algorithms in terms of G-mean and accuracy is shown in Fig. <ref type="figure" target="#fig_6">4</ref>. It is apparent that ECS-DBN outranks others in terms of G-mean and accuracy.</p><p>In sum, the results show that ECS-DBN method significantly outperforms other competing methods. First of all, according to the Wilcoxon paired signed-rank test, ECS-DBN outperforms other methods in most cases. Secondly, the pvalues from the Holm post-hoc test suggest that ECS-DBN achieves a statistically significant improvement over other competing methods. Thirdly, average ranks show that ECS-DBN is ranked first across most of the benchmark datasets. The fact that ECS-DBN outperforms DBN validates the need for cost-sensitive learning. Finally, the significant improvement of ECS-DBN over some other methods manifests the effectiveness of optimization. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>VI. EVALUATION ON A REAL-WORLD DATASET A. Overview of the Imbalanced Gun Drilling Dataset</head><p>We report the experiment results on gun drilling dataset collected from a UNISIG USK25-2000 gun drilling machine in Advanced Manufacturing Lab at the National University of Singapore, Singapore, in collaboration with SIMTech-NUS joint lab.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Experimental Setup</head><p>In the experiments, an Inconel 718 workpiece with the size of 1000mm * 100mm * 100mm is machined using gun drills. The tool diameter of gun drills is 8mm. The detailed tool geometry of the tools are shown in Table <ref type="table" target="#tab_5">VI</ref>. Four vibration sensors (Kistler Type 8762A50) are mounted on the workpiece in order to measure the vibration signals in three directions (i.e. x, y and z) during the gun drilling process. The details about sensor types and measurements are shown in Table <ref type="table" target="#tab_3">IV</ref>. The sensor signals are acquired via a NI cDAQ-9178 data acquisition device and logged on a laptop.</p><p>In data acquisition, 14 channels of raw signals belonging to three types are logged. The measured signals include force signal, torque signal, and 12 vibration signals (i.e. acquired by 4 accelerometers in x, y, z directions). The tool wears have been measured using Keyence VHX-5000 digital microscope. In this paper, the maximum flank wear which is most widely used in literature <ref type="bibr" target="#b63">[64]</ref>, <ref type="bibr" target="#b4">[5]</ref>, <ref type="bibr" target="#b64">[65]</ref>, <ref type="bibr" target="#b65">[66]</ref>, <ref type="bibr" target="#b66">[67]</ref>, <ref type="bibr" target="#b5">[6]</ref> has been used as the health indicator of the tool. In this dataset, it is found 3 out of 20 tools are broken, 6 out of 20 tools have chipping at final state and 11 out of 20 tools are worn after gun drilling operations.</p><p>The machining operation is carried out with the detailed hole index, drill depth, tool geometry, tool diameter, feed rates, spindle speeds, machining times and tool final states are shown in Table <ref type="table" target="#tab_5">VI</ref>. The drilling depth is 50 mm in z-axis direction. The tool wear is captured and measured by Keyence digital microscope. The tool wear is measured after each drill during gun drilling operations.  Table V lists the details of the imbalanced gun drilling dataset. The imbalanced gun drilling dataset is selected from the raw experimental data by discarding lousy noise data samples. The total number of data samples in the imbalanced gun drilling dataset is 19,712,414. The number of training data samples and test data samples are 13,798,690 and 5,913,724 respectively. The data has been labeled into healthy (i.e. maximum flank wear of the tool &lt; 300µm) and faulty (i.e. maximum flank wear of the tool ≥ 300µm) two classes. The imbalance ratio (IR) of this dataset is 10. The data preprocessing and time window process are the same with <ref type="bibr" target="#b4">[5]</ref>.</p><p>The details of the gun drilling cycle are as follows. 1) Machine startup.</p><p>2) Feed internal coolant through coolant hole of gun drill.</p><p>3) Start to drill through the workpiece. 4) Finish drilling and pull the tool back. 5) Machine shutdown. The internally-fed coolant will exhaust the heat generated during gun drilling process and give high accuracy and precision performance.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>C. Evaluation Metrics</head><p>In this section, despite the evaluation metrics used in Section V-D, AUC, precision and F1-Score are introduced to evaluate the methods. The formulation of those metrics are listed below:</p><p>P recision = T P T P + F P (11)</p><formula xml:id="formula_15">Recall = T P T P + F N<label>(12)</label></formula><formula xml:id="formula_16">F 1-score = 2 • precision × recall precision + recall<label>(13)</label></formula><p>Precision ( <ref type="formula">11</ref>) is a measure of a classifiers exactness. For this real-world application, exactness of classifier is an important indicator. F1-score ( <ref type="formula" target="#formula_16">13</ref>) is a weighted average of precision and recall. The reason for choosing F1-score in this real-world  application is that F1-score is used to evaluate the performance of the minority class (i.e. faulty) which is very important in this application. G-mean and F1-score incorporate both to express their tradeoff <ref type="bibr" target="#b31">[32]</ref> and indicate the overall performance. AUC is used to evaluate the overall performance of the method on both classes. Recall is also known as the true positive rate, which signifies a measure of completeness.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>D. Experiment Results</head><p>In this section, all the parameters of DBN and adaptive DE are the same with those in Section V. All conventional machine learning algorithms for comparison purpose in this paper are from <ref type="bibr" target="#b67">[68]</ref> and their corresponding parameters are set as default. The resampling methods for comparison in this section are the same with Section V. Since there is only one real-world dataset, only Wilcoxon paired signed-rank test has been implemented in this section. The simulation results of imbalanced gun drilling dataset with DBN, multi-layer neural network (MLP), support vector machine (SVM), K-nearest neighbors (KNN), linear classifier with stochastic gradient descent (SGD) training, logistic regression (LR), gradient boosting (GB), AdaBoost classifier, Lasso are shown in Table VII in terms of classification accuracy, G-means, Precision and F1-score on test data. For better illustration, Fig. <ref type="figure" target="#fig_7">5</ref> presents the errorbar plot of the performance between different algorithms evaluated with different metrics. All the simulation results include the average performances and the corresponding standard deviation values. The simulation results are obtained on test data. Based on the simulation results, it is obvious that DBN outperforms other 9 conventional machine learning algorithms. This could contribute to the strong feature learning ability of DBN. Therefore, with its automatically hierarchical feature learning ability, DBN is chosen as the base classifier for this real-world application.</p><p>Table <ref type="table" target="#tab_7">VIII</ref> presents the comparison between ECS-DBN, CSDBN, weighted extreme learning machine (WELM), ECO-ensemble and various resampling methods including ADASYN, SMOTE, SMOTE-borderline1, SMOTE-borderline2 and SMOTE-SVM in terms of accuracy, G-mean, Precision, F1-score. For clear illustration, Fig. <ref type="figure">6</ref> shows the errorbar plot comparison of the performance between ECS-DBN and different resampling methods with different evaluation  0.9925 ± 0.0042 † † indicates that the difference between marked algorithm and the proposed algorithm is statistically significant using Wilcoxon rank sum test at the 5% significance level. metrics. WELM <ref type="bibr" target="#b19">[20]</ref> is a state-of-the-art cost-sensitive extreme learning machine. ECO-ensemble <ref type="bibr" target="#b16">[17]</ref> incorporates synthetic data generation within an ensemble framework optimized by EA simultaneously. The experiment results show that ECS-DBN outperforms WELM and ECO-ensemble. By comparing with other resampling methods, ECS-DBN outperforms on G-mean and precision metrics. Especially on G-mean, ECS-DBN generates a significant performance improvement over the others.</p><p>As an example, we illustrate the G-mean and precision between ECS-DBN and the grid search of misclassification costs of DBN in Fig. <ref type="figure" target="#fig_9">8</ref>. It is clear that the proposed ECS-DBN benefits from the well optimized misclassification costs to achieve better performance. In terms of accuracy and F1score, ECS-DBN can also provide comparable performance. The performance improvement of ECS-DBN over DBN and CSDBN with randomly generated cost values on many performance metrics further illustrates the need for cost-sensitive learning and the effectiveness of optimization. Therefore, ECS-DBN could generate comparable performance not only on benchmark dataset but also on real-world application.</p><p>We further examine the effect of the proposed ECS-DBN over majority verse minority classes. Fig. <ref type="figure" target="#fig_10">9</ref> shows that ECS-DBN benefits from more suitable misclassification costs and improves the accuracy of minority class. Fig. <ref type="figure" target="#fig_9">8</ref> and Fig. <ref type="figure" target="#fig_10">9</ref> validate the ability of ECS-DBN of finding suitable misclassification costs via evolutionary algorithm that improves the accuracy of minority class, thus the overall performance. How ECS-DBN may impact on the majority class depends on the way we define the objective functions. While ECS-DBN improves the overall performance, it also provides a mechanism to trade off the performance between the majority class and the minority class.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>E. Computational Cost</head><p>Average computational time of ECS-DBN, DBN, ADASYN-DBN, SMOTE-DBN, SMOTE-borderline1-DBN, SMOTE-borderline2-DBN and SMOTE-SVM-DBN on the gun drilling imbalanced dataset are presented in Table <ref type="table" target="#tab_8">IX</ref>. It is obvious that ECS-DBN consumes less average computational time than other competing methods. In comparison with the KEEL benchmark datasets, the gun  drilling imbalanced dataset has a much larger size of data samples which increases the computational complexity for resampling methods. Hence, the proposed ECS-DBN is more efficient than some resampling methods to large dataset. If we compare the computational time required between the evolutionary algorithm to estimate the misclassification cost, and the DBN training, the former is very small and negligible. In short, the proposed ECS-DBN approach is both efficient and effective.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>VII. CONCLUSION</head><p>In this paper, an evolutionary cost-sensitive deep belief network (ECS-DBN) is proposed for imbalanced classification problem. We have shown that ECS-DBN significantly outperforms other competing techniques on 58 benchmark datasets and a real-world dataset. The proposed ECS-DBN improves DBN by applying cost-sensitive learning strategy. To tackle with unknown misclassification costs in practice, adaptive differential evolution algorithm has been utilized to find the misclassification costs. Since many real-world data are naturally imbalanced, therefore, the misclassification costs of different classes are usually unknown, ECS-DBN offers an effective solution. ECS-DBN is also computationally more efficient than some popular resampling methods on large scale datasets. It can also be easily implemented on multiclass scenarios. In this paper, we only incorporate the costsensitive learning technique on algorithmic level. However, the imbalanced distribution in feature space may also impact the performance of learning models. In the future, we consider that cost-sensitive methods could also be applied to high dimensional data and dynamic data. Furthermore, online learning usually suffers from concept drift with different imbalance ratio over time. ECS-DBN can be further extended for online imbalanced classification problems with some online learning strategies. The proposed approach can also be applied to other deep learning models such as convolutional neural network, etc. </p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head>s</head><label></label><figDesc>and bias b (j) s P (y = j|x) = exp(b</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head>Fig. 1 :</head><label>1</label><figDesc>Fig. 1: Schematic diagram of a cost-sensitive deep belief network (CSDBN) with misclassification costs for different classes in the output layer.</figDesc><graphic coords="4,66.49,56.07,216.00,184.10" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_2"><head>Fig. 2 Algorithm 1</head><label>21</label><figDesc>Procedure of ECS-DBN Input: X: Imbalanced data samples Y : Class labels N : Population size G: Maximum number of generations (i.e. stopping criterion) F : Mutation factor Cr: Crossover probability D: Dimension of solution space range = (cmin, cmax): Range of values for chromosome.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_3"><head></head><label></label><figDesc>end for end for Step 3) ECS-DBN Creation: Generate an ECS-DBN with the best individual c best obtained from the training dataset St as the misclassification cost. Step 4) Run-time Evaluation: Evaluate ECS-DBN on test dataset Stest.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_4"><head>Fig. 2 :</head><label>2</label><figDesc>Fig. 2: Illustration of chromosome encoding and evolution process in ECS-DBN. The chromosome is encoded with the misclassification costs of different classes in numerical type. The evolution process mainly includes mutation, crossover, evaluation and selection. The population is iteratively evolved via evolution process in each generation.</figDesc><graphic coords="6,48.96,56.07,251.97,144.28" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_5"><head>Fig. 3 :</head><label>3</label><figDesc>Fig. 3: Comparison of the overall G-mean and accuracy across 7 algorithms, i.e. ECS-DBN, DBN, ADASYN-DBN, SMOTE-DBN, SMOTE-borderline1-DBN, SMOTE-borderline2-DBN and SMOTE-SVM-DBN, on 58 benchmark datasets. ECS-DBN has higher average values and lower variance for both G-mean and accuracy than other competing methods.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_6"><head>Fig. 4 :</head><label>4</label><figDesc>Fig. 4: The average rank of 7 different algorithms, i.e. ECS-DBN, DBN, ADASYN-DBN, SMOTE-DBN, SMOTE-borderline1-DBN, SMOTE-borderline2-DBN and SMOTE-SVM-DBN, in terms of G-mean and accuracy on 58 KEEL benchmark datasets. ECS-DBN ranks first over other competing methods.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_7"><head>Fig. 5 :</head><label>5</label><figDesc>Fig.5: Illustration of the performance between different machine learning algorithms, i.e. DBN and SVM, MLP, KNN, GB, LR, AdaBoost, Lasso, and SGD, on gun drilling imbalanced dataset in terms of accuracy, G-Mean, AUC, precision, F1-score. DBN provides higher average values on all evaluation metrics than other methods.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_8"><head>Fig. 6 :Fig. 7 :</head><label>67</label><figDesc>Fig. 6: Illustration the performance of between different imbalance learning methods, i.e. ECS-DBN, CSDBN, SMOTE-SVM-DBN, ADASYN-DBN, SMOTE-borderline1-DBN, SMOTE-borderline2-DBN, SMOTE-DBN and baseline DBN, on gun drilling imbalanced dataset in terms of accuracy, G-Mean, AUC, precision, F1-score. ECS-DBN shows better performance than other resampling methods in terms of Gmean, AUC and precision.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_9"><head>Fig. 8 :</head><label>8</label><figDesc>Fig. 8: Illustration of the comparison between the performance the proposed ECS-DBN and grid search of misclassification costs on DBN in terms of G-mean and Precision. Note that the solid yellow circle represents the performance of ECS-DBN. This example indicates the proposed ECS-DBN can obtain better performance by finding suitable misclassification costs.</figDesc><graphic coords="11,312.85,394.29,134.88,82.84" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_10"><head>Fig. 9 :</head><label>9</label><figDesc>Fig. 9: Illustration of the comparison between the accuracy of majority class and minority class respectively with the proposed ECS-DBN and grid search of misclassification costs on DBN. Note that the solid yellow circle denotes the performance of ECS-DBN.</figDesc><graphic coords="12,173.68,54.68,134.88,82.84" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_0"><head>TABLE I :</head><label>I</label><figDesc>The training process of an Evolutionary Cost-Sensitive Deep Belief Network (ECS-DBN). -Training Phase: 1. Let St be the training set. 2. Pre-train DBN using greedy layer-wise training algorithm with St. Fine-Tuning Phase: 1. Randomly initialize a population of misclassification costs. 2. Generate a new population of misclassification costs via mutation and crossover based on differential operator. 3. Multiply the corresponding misclassification costs on training output and evaluate the error on training data. 4. According to evaluation performance, select appropriate misclassification costs and discard inappropriate ones in order to evolve next generation. 5. Continuously iterate between mutation and selection to reach the maximum number of generations.</figDesc><table><row><cell>Pre</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_1"><head>TABLE II :</head><label>II</label><figDesc>A summary of the KEEL binary-class imbalanced benchmark datasets. The details of each dataset includes its imbalance ratio, number of attributes, number of training data and number of test data. A total of 58 datasets used in this paper are listed below.</figDesc><table><row><cell>Datasets</cell><cell>Imbalance Ratio(IR)</cell><cell>Attributes</cell><cell>TrainData</cell><cell>TestData</cell></row><row><cell>abalone9-18</cell><cell>16.40</cell><cell>8</cell><cell>585</cell><cell>146</cell></row><row><cell>cleveland-0-vs-4</cell><cell>12.62</cell><cell>13</cell><cell>142</cell><cell>35</cell></row><row><cell>ecoli-0-1-3-7-vs-2-6</cell><cell>39.14</cell><cell>7</cell><cell>225</cell><cell>56</cell></row><row><cell>ecoli-0-1-4-6-vs-5</cell><cell>13.00</cell><cell>6</cell><cell>224</cell><cell>56</cell></row><row><cell>ecoli-0-1-4-7-vs-2-3-5-6</cell><cell>10.59</cell><cell>7</cell><cell>269</cell><cell>67</cell></row><row><cell>ecoli-0-1-4-7-vs-5-6</cell><cell>12.28</cell><cell>6</cell><cell>266</cell><cell>66</cell></row><row><cell>ecoli-0-1-vs-2-3-5</cell><cell>9.17</cell><cell>7</cell><cell>195</cell><cell>49</cell></row><row><cell>ecoli-0-1-vs-5</cell><cell>11.00</cell><cell>6</cell><cell>192</cell><cell>48</cell></row><row><cell>ecoli-0-2-3-4-vs-5</cell><cell>9.10</cell><cell>7</cell><cell>162</cell><cell>40</cell></row><row><cell>ecoli-0-2-6-7-vs-3-5</cell><cell>9.18</cell><cell>7</cell><cell>179</cell><cell>45</cell></row><row><cell>ecoli-0-3-4-6-vs-5</cell><cell>9.25</cell><cell>7</cell><cell>164</cell><cell>41</cell></row><row><cell>ecoli-0-3-4-7-vs-5-6</cell><cell>9.28</cell><cell>7</cell><cell>206</cell><cell>51</cell></row><row><cell>ecoli-0-3-4-vs-5</cell><cell>9.00</cell><cell>7</cell><cell>160</cell><cell>40</cell></row><row><cell>ecoli-0-4-6-vs-5</cell><cell>9.15</cell><cell>6</cell><cell>162</cell><cell>41</cell></row><row><cell>ecoli-0-6-7-vs-3-5</cell><cell>9.09</cell><cell>7</cell><cell>178</cell><cell>44</cell></row><row><cell>ecoli-0-6-7-vs-5</cell><cell>10.00</cell><cell>6</cell><cell>176</cell><cell>44</cell></row><row><cell>ecoli3</cell><cell>8.6</cell><cell>7</cell><cell>269</cell><cell>67</cell></row><row><cell>glass-0-1-2-3-vs-4-5-6</cell><cell>3.2</cell><cell>9</cell><cell>171</cell><cell>43</cell></row><row><cell>glass-0-1-4-6-vs-2</cell><cell>11.06</cell><cell>9</cell><cell>164</cell><cell>41</cell></row><row><cell>glass-0-1-5-vs-2</cell><cell>9.12</cell><cell>9</cell><cell>138</cell><cell>34</cell></row><row><cell>glass-0-1-6-vs-2</cell><cell>10.29</cell><cell>9</cell><cell>153</cell><cell>39</cell></row><row><cell>glass-0-1-6-vs-5</cell><cell>19.44</cell><cell>9</cell><cell>147</cell><cell>37</cell></row><row><cell>glass-0-4-vs-5</cell><cell>9.22</cell><cell>9</cell><cell>74</cell><cell>18</cell></row><row><cell>glass-0-6-vs-5</cell><cell>11.00</cell><cell>9</cell><cell>86</cell><cell>22</cell></row><row><cell>glass0</cell><cell>2.06</cell><cell>9</cell><cell>171</cell><cell>43</cell></row><row><cell>glass1</cell><cell>1.82</cell><cell>9</cell><cell>171</cell><cell>43</cell></row><row><cell>glass2</cell><cell>11.59</cell><cell>9</cell><cell>171</cell><cell>43</cell></row><row><cell>glass4</cell><cell>15.47</cell><cell>9</cell><cell>171</cell><cell>43</cell></row><row><cell>glass5</cell><cell>22.78</cell><cell>9</cell><cell>171</cell><cell>43</cell></row><row><cell>glass6</cell><cell>6.38</cell><cell>9</cell><cell>171</cell><cell>43</cell></row><row><cell>haberman</cell><cell>2.78</cell><cell>3</cell><cell>245</cell><cell>61</cell></row><row><cell>iris0</cell><cell>2</cell><cell>4</cell><cell>120</cell><cell>30</cell></row><row><cell>led7digit-0-2-4-5-6-7 -8-9-vs-1</cell><cell>10.97</cell><cell>7</cell><cell>354</cell><cell>89</cell></row><row><cell>new-thyroid1</cell><cell>5.14</cell><cell>5</cell><cell>172</cell><cell>43</cell></row><row><cell>newthyroid2</cell><cell>5.14</cell><cell>5</cell><cell>172</cell><cell>43</cell></row><row><cell>page-blocks-1-3-vs-4</cell><cell>15.86</cell><cell>10</cell><cell>378</cell><cell>94</cell></row><row><cell>page-blocks0</cell><cell>8.79</cell><cell>10</cell><cell>4378</cell><cell>1094</cell></row><row><cell>pima</cell><cell>1.87</cell><cell>8</cell><cell>614</cell><cell>154</cell></row><row><cell>segment0</cell><cell>6.02</cell><cell>19</cell><cell>1846</cell><cell>462</cell></row><row><cell>shuttle-c0-vs-c4</cell><cell>13.87</cell><cell>9</cell><cell>1463</cell><cell>366</cell></row><row><cell>shuttle-c2-vs-c4</cell><cell>20.50</cell><cell>9</cell><cell>103</cell><cell>26</cell></row><row><cell>vehicle0</cell><cell>3.25</cell><cell>18</cell><cell>677</cell><cell>169</cell></row><row><cell>vowel0</cell><cell>9.98</cell><cell>13</cell><cell>790</cell><cell>198</cell></row><row><cell>wisconsin</cell><cell>1.86</cell><cell>9</cell><cell>546</cell><cell>137</cell></row><row><cell>yeast-0-2-5-6-vs-3-7-8-9</cell><cell>9.14</cell><cell>8</cell><cell>803</cell><cell>201</cell></row><row><cell>yeast-0-2-5-7-9-vs-3-6-8</cell><cell>9.14</cell><cell>8</cell><cell>803</cell><cell>201</cell></row><row><cell>yeast-0-3-5-9-vs-7-8</cell><cell>9.12</cell><cell>8</cell><cell>405</cell><cell>101</cell></row><row><cell>yeast-0-5-6-7-9-vs-4</cell><cell>9.35</cell><cell>8</cell><cell>422</cell><cell>106</cell></row><row><cell>yeast-1-2-8-9-vs-7</cell><cell>30.57</cell><cell>8</cell><cell>757</cell><cell>188</cell></row><row><cell>yeast-1-4-5-8-vs-7</cell><cell>22.1</cell><cell>8</cell><cell>554</cell><cell>139</cell></row><row><cell>yeast-1-vs-7</cell><cell>14.30</cell><cell>7</cell><cell>367</cell><cell>92</cell></row><row><cell>yeast-2-vs-4</cell><cell>9.08</cell><cell>8</cell><cell>411</cell><cell>103</cell></row><row><cell>yeast-2-vs-8</cell><cell>23.10</cell><cell>8</cell><cell>385</cell><cell>97</cell></row><row><cell>yeast1</cell><cell>2.46</cell><cell>8</cell><cell>1187</cell><cell>297</cell></row><row><cell>yeast3</cell><cell>8.1</cell><cell>8</cell><cell>1187</cell><cell>297</cell></row><row><cell>yeast4</cell><cell>28.10</cell><cell>8</cell><cell>1187</cell><cell>297</cell></row><row><cell>yeast5</cell><cell>32.73</cell><cell>8</cell><cell>1187</cell><cell>297</cell></row><row><cell>yeast6</cell><cell>41.40</cell><cell>8</cell><cell>1187</cell><cell>297</cell></row><row><cell cols="5">DE process namely mutation factor F and crossover probabil-</cell></row><row><cell cols="5">ity Cr. A larger F enables DE of better exploration ability.</cell></row></table><note><p>A smaller F allows DE to have better exploitation ability. DE with better exploitation ability leads to better convergence. DE with better exploration ability avoids local optima better, but it may result in slower convergence. Crossover probability affects the diversity of populations. A larger Cr enables DE of better exploitation ability while a smaller Cr enables DE of better exploration ability.</p></note></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_2"><head>TABLE III</head><label>III</label><figDesc></figDesc><table><row><cell cols="3">: Comparison of the average computational time</cell></row><row><cell cols="3">across 7 algorithms (i.e. ECS-DBN, DBN, ADASYN-</cell></row><row><cell cols="3">DBN, SMOTE-DBN, SMOTE-borderline1-DBN, SMOTE-</cell></row><row><cell cols="3">borderline2-DBN and SMOTE-SVM-DBN) with 5-fold cross</cell></row><row><cell cols="3">validation on the overall 58 benchmark datasets over 10 trials.</cell></row><row><cell></cell><cell>Average</cell><cell>Average Computational</cell></row><row><cell>Model Name</cell><cell>Computational</cell><cell>Time without</cell></row><row><cell></cell><cell>Time(s)</cell><cell>DBN training time(s)</cell></row><row><cell>ECS-DBN</cell><cell>26.64 ± 1.50</cell><cell>18.23</cell></row><row><cell>ADASYN-DBN</cell><cell>22.97 ± 3.95</cell><cell>14.56</cell></row><row><cell>SMOTE-SVM-DBN</cell><cell>24.03 ± 2.33</cell><cell>15.62</cell></row><row><cell>SMOTE-borderline2-DBN</cell><cell>24.53 ± 2.14</cell><cell>16.12</cell></row><row><cell>SMOTE-borderline1-DBN</cell><cell>25.52 ± 2.59</cell><cell>17.11</cell></row><row><cell>SMOTE-DBN</cell><cell>25.81 ± 3.10</cell><cell>17.40</cell></row><row><cell>DBN</cell><cell>8.41 ± 1.28</cell><cell>-</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_3"><head>TABLE IV :</head><label>IV</label><figDesc>A summary of the 3 different types of sensors (i.e. accelerometer, dynamometer and microscope) used in the gun drilling experiments and the obtained measurements including vibration, force, torque and tool wear.</figDesc><table><row><cell>Sensor type</cell><cell>Vibration Sensor</cell><cell>Force Torque Sensor</cell><cell>Microscope</cell></row><row><cell>Description</cell><cell>Kistler 50g 3-axis accelerometer Type 8762A50</cell><cell>Dynamometer embedded in USK25-2000 machine</cell><cell>Keyence VHX-5000 Digital Microscope</cell></row><row><cell># Sensors</cell><cell>4</cell><cell>1</cell><cell>-</cell></row><row><cell># Channels per sensors</cell><cell>3</cell><cell>2</cell><cell>-</cell></row><row><cell>Total number of channels</cell><cell>12</cell><cell>2</cell><cell>-</cell></row><row><cell>Measurements</cell><cell>Vibration X,Y,Z</cell><cell>Thrust force, torque</cell><cell>Tool wear</cell></row><row><cell>Sampling frequency (Hz)</cell><cell>20,000</cell><cell>100</cell><cell>-</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_4"><head>TABLE V :</head><label>V</label><figDesc>Detailed number of data samples and imbalance ratio of the imbalanced gun drilling dataset.</figDesc><table><row><cell>Number of Signal Channels</cell><cell>14</cell></row><row><cell cols="2">Total Number of Data Samples 19,712,414</cell></row><row><cell>Number of Training Samples</cell><cell>13,798,690</cell></row><row><cell>Number of Testing Samples</cell><cell>5,913,724</cell></row><row><cell>Imbalance Ratio</cell><cell>10</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_5"><head>TABLE VI :</head><label>VI</label><figDesc>Detailed real-world high aspect ratio deep hole gun drilling experimental conditions include tool diameter, spindle speed, feed rate and machining time for 20 drilling inserts with 6 different tool geometries.</figDesc><table><row><cell>Hole Index</cell><cell>Drill Depth (mm)</cell><cell>Tool Geometry</cell><cell>Tool Diameter (mm)</cell><cell>Spindle Speed (rpm)</cell><cell>Feed Rate (µm/rev)</cell><cell>Machining Time(s)</cell></row><row><cell>H1 01 H1 02</cell><cell>50 50</cell><cell>1450mm N4 R9</cell><cell>8.05 8.05</cell><cell>1200 1200</cell><cell>20 20</cell><cell>125.00 125.00</cell></row><row><cell>H2 01</cell><cell>50</cell><cell>1450mm N4 R1</cell><cell>8.05</cell><cell>800</cell><cell>20</cell><cell>187.50</cell></row><row><cell>H2 02</cell><cell>50</cell><cell>1450mm N4 R1</cell><cell>8.05</cell><cell>800</cell><cell>20</cell><cell>187.50</cell></row><row><cell>H2 03</cell><cell>50</cell><cell>1650mm N8 R1</cell><cell>8.02</cell><cell>1650</cell><cell>16</cell><cell>113.64</cell></row><row><cell>H3 01</cell><cell>50</cell><cell></cell><cell>8.05</cell><cell>1650</cell><cell>16</cell><cell>113.64</cell></row><row><cell>H3 02</cell><cell>50</cell><cell>1450mm N8 R9</cell><cell>8.05</cell><cell>1650</cell><cell>16</cell><cell>113.64</cell></row><row><cell>H3 03</cell><cell>50</cell><cell></cell><cell>8.05</cell><cell>1650</cell><cell>16</cell><cell>113.64</cell></row><row><cell>H3 04 H3 05</cell><cell>50 50</cell><cell>1450mm N8 R9</cell><cell>8.05 8.05</cell><cell>1650 1650</cell><cell>16 16</cell><cell>113.64 113.64</cell></row><row><cell>H3 06 H3 07</cell><cell>50 50</cell><cell>1650mm N8 R9</cell><cell>8.02 8.02</cell><cell>1650 1650</cell><cell>16 16</cell><cell>113.64 113.64</cell></row><row><cell>H3 08 H3 09</cell><cell>50 50</cell><cell>1650mm N8 R9</cell><cell>8.02 8.02</cell><cell>1650 1650</cell><cell>16 16</cell><cell>113.64 113.64</cell></row><row><cell>H3 10</cell><cell>50</cell><cell>1650mm N8 R1</cell><cell>8.02</cell><cell>1650</cell><cell>16</cell><cell>113.64</cell></row><row><cell>H4 01</cell><cell>50</cell><cell></cell><cell>8.08</cell><cell>1650</cell><cell>16</cell><cell>113.64</cell></row><row><cell>H4 02</cell><cell>50</cell><cell>1219mm N8 R9</cell><cell>8.08</cell><cell>1650</cell><cell>16</cell><cell>113.64</cell></row><row><cell>H4 03</cell><cell>50</cell><cell></cell><cell>8.08</cell><cell>1650</cell><cell>16</cell><cell>113.64</cell></row><row><cell>H5 01</cell><cell>50</cell><cell>1450mm N8 R9</cell><cell>8.045</cell><cell>1650</cell><cell>16</cell><cell>113.64</cell></row><row><cell>H5 02</cell><cell>50</cell><cell>1450mm N8 R9</cell><cell>8.045</cell><cell>1650</cell><cell>16</cell><cell>113.64</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_6"><head>TABLE VII :</head><label>VII</label><figDesc>Comparing the performance of between Deep Belief Network (DBN) and Support Vector Machine (SVM), Multilayer Perceptron (MLP), K-Nearest Neighbor Classifier (KNN), Gradient Boosting (GB), Logistic Regression (LR), AdaBoost classifier, Lasso, and SGD different machine learning algorithms on gun drilling imbalanced dataset in terms of accuracy, G-Mean, AUC, precision, F1-score. DBN outperforms other competing methods in terms of all evaluation metrics. † indicates that the difference between marked algorithm and the proposed algorithm is statistically significant using Wilcoxon rank sum test at the 5% significance level.</figDesc><table><row><cell>Model Name</cell><cell>Accuracy</cell><cell>G-mean</cell><cell>AUC</cell><cell>Precision</cell><cell>F1-score</cell></row><row><cell>DBN</cell><cell>0.9954 ± 0.0006</cell><cell>0.9830 ± 0.0027</cell><cell>0.9831 ± 0.0027</cell><cell>0.9968 ± 0.0005</cell><cell>0.9975 ± 0.0003</cell></row><row><cell>SVM</cell><cell>0.9894 ± 0.0103  †</cell><cell>0.8943 ± 0.3143</cell><cell>0.9443 ± 0.1562</cell><cell>0.9898 ± 0.0284</cell><cell>0.9944 ± 0.0148</cell></row><row><cell>MLP</cell><cell>0.9683 ± 0.0064</cell><cell>0.8492 ± 0.0350  †</cell><cell>0.8601 ± 0.0296  †</cell><cell>0.9733 ± 0.0056</cell><cell>0.9827 ± 0.0035</cell></row><row><cell>KNN</cell><cell>0.9733 ± 0.0026</cell><cell>0.8460 ± 0.0214  †</cell><cell>0.8579 ± 0.0181  †</cell><cell>0.9725 ± 0.0035</cell><cell>0.9855 ± 0.0014  †</cell></row><row><cell>GB</cell><cell>0.9821 ± 0.0353</cell><cell>0.8088 ± 0.3910  †</cell><cell>0.9025 ± 0.1947  †</cell><cell>0.9822 ± 0.0354</cell><cell>0.9906 ± 0.0185  †</cell></row><row><cell>LR</cell><cell>0.9412 ± 0.0096</cell><cell>0.5903 ± 0.1058  †</cell><cell>0.6791 ± 0.0545  †</cell><cell>0.9398 ± 0.0095</cell><cell>0.9687 ± 0.0049  †</cell></row><row><cell>AdaBoost</cell><cell>0.9361 ± 0.0126</cell><cell>0.5362 ± 0.1246  †</cell><cell>0.6510 ± 0.0719  †</cell><cell>0.9349 ± 0.0127</cell><cell>0.9661 ± 0.0065</cell></row><row><cell>Lasso</cell><cell>0.9523 ± 0.0414</cell><cell>0.5065 ± 0.4817  †</cell><cell>0.7401 ± 0.2303  †</cell><cell>0.9524 ± 0.0416</cell><cell>0.9749 ± 0.0216  †</cell></row><row><cell>SGD</cell><cell>0.9258 ± 0.0169  †</cell><cell>0.3860 ± 0.2692  †</cell><cell>0.6098 ± 0.0894  †</cell><cell>0.9281 ± 0.0162</cell><cell>0.9606 ± 0.0095  †</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_7"><head>TABLE VIII :</head><label>VIII</label><figDesc>Comparing the performance of ECS-DBN, CSDBN, SMOTE-SVM-DBN, ADASYN-DBN, SMOTE-borderline1-DBN, SMOTE-borderline2-DBN, SMOTE-DBN, DBN, weighted extreme learning machine (WELM) and ECO-ensemble on gun drilling imbalanced dataset in terms of accuracy, G-mean, AUC, precision, F1-score. ECS-DBN shows better performance in terms of G-mean, AUC and precision.</figDesc><table><row><cell>Model Name</cell><cell>Accuracy</cell><cell>G-mean</cell><cell>AUC</cell><cell>Precision</cell><cell>F1-score</cell></row><row><cell>ECS-DBN</cell><cell>0.9960 ± 0.0002</cell><cell>0.9946 ± 0.0011</cell><cell>0.9946 ± 0.0011</cell><cell>0.9996 ± 0.0002</cell><cell>0.9978 ± 0.0001</cell></row><row><cell>CSDBN</cell><cell>0.9957 ± 0.0012</cell><cell>0.9916 ± 0.0026</cell><cell>0.9916 ± 0.0025</cell><cell>0.9987 ± 0.0007</cell><cell>0.9977 ± 0.0006</cell></row><row><cell>SMOTE-SVM-DBN</cell><cell>0.9961 ± 0.0003</cell><cell>0.9858 ± 0.0011</cell><cell>0.9859 ± 0.0011</cell><cell>0.9974 ± 0.0002  †</cell><cell>0.9978 ± 0.0002</cell></row><row><cell>ADASYN-DBN</cell><cell>0.9964 ± 0.0004</cell><cell>0.9857 ± 0.0016</cell><cell>0.9858 ± 0.0016  †</cell><cell>0.9973 ± 0.0003</cell><cell>0.9980 ± 0.0002</cell></row><row><cell>SMOTE-borderline2-DBN</cell><cell>0.9962 ± 0.0001</cell><cell>0.9852 ± 0.0010  †</cell><cell>0.9853 ± 0.0010</cell><cell>0.9972 ± 0.0002</cell><cell>0.9979 ± 0.0001</cell></row><row><cell>SMOTE-borderline1-DBN</cell><cell>0.9958 ± 0.0003</cell><cell>0.9837 ± 0.0021</cell><cell>0.9838 ± 0.0020</cell><cell>0.9969 ± 0.0004</cell><cell>0.9977 ± 0.0002</cell></row><row><cell>SMOTE-DBN</cell><cell>0.9959 ± 0.0001</cell><cell>0.9837 ± 0.0010  †</cell><cell>0.9838 ± 0.0010</cell><cell>0.9969 ± 0.0002  †</cell><cell>0.9978 ± 0.0001  †</cell></row><row><cell>DBN</cell><cell>0.9954 ± 0.0006</cell><cell>0.9830 ± 0.0027</cell><cell>0.9831 ± 0.0027  †</cell><cell>0.9968 ± 0.0005</cell><cell>0.9963 ± 0.0003  †</cell></row><row><cell>WELM</cell><cell>0.7397 ± 0.0177  †</cell><cell>0.7532 ± 0.0170  †</cell><cell>0.7841 ± 0.0159  †</cell><cell>0.6274 ± 0.0202  †</cell><cell>0.7261 ± 0.0148  †</cell></row><row><cell>ECO-ensemble</cell><cell>0.9895 ± 0.0014  †</cell><cell>0.9713 ± 0.0133  †</cell><cell>0.9694 ± 0.0185  †</cell><cell>0.9836 ± 0.0105  †</cell><cell></cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_8"><head>TABLE IX :</head><label>IX</label><figDesc>Comparison of the average computational time across 7 algorithms (i.e. ECS-DBN, DBN, ADASYN-DBN, SMOTE-DBN, SMOTE-borderline1-DBN, SMOTE-borderline2-DBN and SMOTE-SVM-DBN) with 5-fold cross validation on the gun drilling imbalanced dataset over 10 trials.</figDesc><table><row><cell></cell><cell>Average</cell><cell>Average Computational</cell></row><row><cell>Model Name</cell><cell>Computational</cell><cell>Time without</cell></row><row><cell></cell><cell>Time(s)</cell><cell>DBN training time(s)</cell></row><row><cell>ECS-DBN</cell><cell>9977.39 ± 148.55</cell><cell>1280.28</cell></row><row><cell>ADASYN-DBN</cell><cell>12697.79 ± 1287.39</cell><cell>4000.68</cell></row><row><cell>SMOTE-DBN</cell><cell>13992.46 ± 1772.37</cell><cell>5295.35</cell></row><row><cell>SMOTE-borderline1-DBN</cell><cell>14031.35 ± 1135.55</cell><cell>5334.24</cell></row><row><cell>SMOTE-borderline2-DBN</cell><cell>14310.19 ± 764.11</cell><cell>5613.08</cell></row><row><cell>SMOTE-SVM-DBN</cell><cell>20942.94 ± 6609.65</cell><cell>12245.83</cell></row><row><cell>DBN</cell><cell>8697.11 ± 8308.22</cell><cell>-</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_9"><head>TABLE AII :</head><label>AII</label><figDesc>Summary of test G-mean results across 7 different algorithms, i.e. ECS-DBN, DBN and a group of resampling methods including ADASYN-DBN, SMOTE-DBN, SMOTE-borderline1-DBN, SMOTE-borderline2-DBN, SMOTE-SVM-DBN, on 58 KEEL benchmark datasets. ECS-DBN outperforms DBN and a group of resampling methods on 51 out of 58 benchmark datasets. indicates that the difference between the proposed algorithm and all other compared algorithm is statistically significant using pair-wised Wilcoxon rank sum test at the 5% significance level.</figDesc><table><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>Resampling Methods</cell><cell></cell><cell></cell></row><row><cell>Datasets</cell><cell>ECS-DBN</cell><cell>DBN</cell><cell>ADASYN-DBN</cell><cell>SMOTE-DBN</cell><cell>SMOTE -borderline1 -DBN</cell><cell>SMOTE-borderline2 -DBN</cell><cell>SMOTE-SVM -DBN</cell></row><row><cell>abalone9-18</cell><cell>0.7236±0.0064</cell><cell>0.0066±0.0066</cell><cell>0.1422±0.1365</cell><cell>0.6387±0.0508</cell><cell>0.6638±0.2352</cell><cell>0.6266±0.2518</cell><cell>0.5989±0.0441</cell></row><row><cell>cleveland-0 vs 4</cell><cell>0.8596±0.0180</cell><cell>0.0222±0.0222</cell><cell>0.2681±0.2321</cell><cell>0.6411±0.2960</cell><cell>0.7689±0.1476</cell><cell>0.6946±0.3008</cell><cell>0.6620±0.3285</cell></row><row><cell>ecoli-0-1-3-7 vs 2-6</cell><cell>0.9927±0.0072</cell><cell>0.0149±0.0149</cell><cell>0.6970±0.2810</cell><cell>0.7474±0.1940</cell><cell>0.7419±0.2213</cell><cell>0.5795±0.3997</cell><cell>0.6626±0.3273</cell></row><row><cell>ecoli-0-1-4-6 vs 5</cell><cell>0.8944±0.0113</cell><cell>0.0084±0.0084</cell><cell>0.0000±0.0000</cell><cell>0.7910±0.1817</cell><cell>0.3182±0.3014</cell><cell>0.6245±0.3428</cell><cell>0.8010±0.1923</cell></row><row><cell>ecoli-0-1-4-7 vs 2-3-5-6</cell><cell>0.8604±0.0176</cell><cell>0.0189±0.0189</cell><cell>0.0639±0.0220</cell><cell>0.6336±0.3174</cell><cell>0.8902±0.1021</cell><cell>0.6303±0.3097</cell><cell>0.5635±0.4223</cell></row><row><cell>ecoli-0-1-4-7 vs 5-6</cell><cell>0.9076±0.0157</cell><cell>0.0183±0.0183</cell><cell>0.2073±0.2045</cell><cell>0.6931±0.2285</cell><cell>0.6988±0.3010</cell><cell>0.8686±0.0800</cell><cell>0.7035±0.2792</cell></row><row><cell>ecoli-0-1 vs 2-3-5</cell><cell>0.9129±0.0177  †</cell><cell>0.0169±0.0169</cell><cell>0.1240±0.1215</cell><cell>0.3940±0.3252</cell><cell>0.5898±0.3323</cell><cell>0.4235±0.3268</cell><cell>0.4553±0.4246</cell></row><row><cell>ecoli-0-1 vs 5</cell><cell>0.8516±0.0153</cell><cell>0.0145±0.0145</cell><cell>0.0000±0.0000</cell><cell>0.8232±0.1246</cell><cell>0.7070±0.2753</cell><cell>0.6193±0.2982</cell><cell>0.8439±0.1487</cell></row><row><cell>ecoli-0-2-3-4 vs 5</cell><cell>0.8374±0.0126</cell><cell>0.0159±0.0159</cell><cell>0.0000±0.0000</cell><cell>0.5807±0.4091</cell><cell>0.2328±0.1821</cell><cell>0.3059±0.3039</cell><cell>0.6557±0.2635</cell></row><row><cell>ecoli-0-2-6-7 vs 3-5</cell><cell>0.9192±0.0170  †</cell><cell>0.0186±0.0186</cell><cell>0.0000±0.0000</cell><cell>0.3060±0.3011</cell><cell>0.0534±0.0527</cell><cell>0.0333±0.0254</cell><cell>0.3763±0.3055</cell></row><row><cell>ecoli-0-3-4-6 vs 5</cell><cell>0.9324±0.0146  †</cell><cell>0.0156±0.0156</cell><cell>0.0000±0.0000</cell><cell>0.5209±0.4542</cell><cell>0.5688±0.3637</cell><cell>0.2062±0.2060</cell><cell>0.5159±0.4543</cell></row><row><cell>ecoli-0-3-4-7 vs 5-6</cell><cell>0.9065±0.0117  †</cell><cell>0.0138±0.0138</cell><cell>0.0801±0.0032</cell><cell>0.4437±0.3603</cell><cell>0.5069±0.4458</cell><cell>0.4702±0.3572</cell><cell>0.5618±0.4039</cell></row><row><cell>ecoli-0-3-4 vs 5</cell><cell>0.9133±0.0134</cell><cell>0.9098±0.0578</cell><cell>0.0000±0.0000</cell><cell>0.6126±0.3645</cell><cell>0.6592±0.2724</cell><cell>0.2383±0.1595</cell><cell>0.7176±0.2333</cell></row><row><cell>ecoli-0-4-6 vs 5</cell><cell>0.9746±0.0157  †</cell><cell>0.0156±0.0156</cell><cell>0.0000±0.0000</cell><cell>0.4899±0.3660</cell><cell>0.4509±0.3661</cell><cell>0.2919±0.2219</cell><cell>0.6553±0.3237</cell></row><row><cell>ecoli-0-6-7 vs 3-5</cell><cell>0.9243±0.0165  †</cell><cell>0.0169±0.0169</cell><cell>0.2106±0.2024</cell><cell>0.4873±0.3854</cell><cell>0.2074±0.1146</cell><cell>0.1794±0.1752</cell><cell>0.6440±0.3504</cell></row><row><cell>ecoli-0-6-7 vs 5</cell><cell>0.8926±0.0147  †</cell><cell>0.0139±0.0139</cell><cell>0.0000±0.0000</cell><cell>0.3887±0.3800</cell><cell>0.2565±0.2451</cell><cell>0.2106±0.2069</cell><cell>0.3378±0.2949</cell></row><row><cell>ecoli3</cell><cell>0.7112±0.0142</cell><cell>0.0099±0.0099</cell><cell>0.0000±0.0000</cell><cell>0.5506±0.4043</cell><cell>0.5991±0.3587</cell><cell>0.5730±0.3270</cell><cell>0.7712±0.2038</cell></row><row><cell>glass-0-1-2-3 vs 4-5-6</cell><cell>0.9877±0.0084  †</cell><cell>0.0879±0.0879</cell><cell>0.1851±0.1240</cell><cell>0.5906±0.4080</cell><cell>0.1368±0.0992</cell><cell>0.0928±0.0857</cell><cell>0.6528±0.3060</cell></row><row><cell>glass-0-1-4-6 vs 2</cell><cell>0.9266±0.0041  †</cell><cell>0.0000±0.0000</cell><cell>0.0000±0.0000</cell><cell>0.0919±0.0904</cell><cell>0.1256±0.1057</cell><cell>0.0416±0.0316</cell><cell>0.0000±0.0000</cell></row><row><cell>glass-0-1-5 vs 2</cell><cell>0.9837±0.0044  †</cell><cell>0.0000±0.0000</cell><cell>0.0000±0.0000</cell><cell>0.1440±0.1413</cell><cell>0.1048±0.1025</cell><cell>0.0224±0.0107</cell><cell>0.0000±0.0000</cell></row><row><cell>glass-0-1-6 vs 2</cell><cell>0.7030±0.0186  †</cell><cell>0.0000±0.0000</cell><cell>0.0000±0.0000</cell><cell>0.0814±0.0734</cell><cell>0.2035±0.1158</cell><cell>0.1666±0.1261</cell><cell>0.0000±0.0000</cell></row><row><cell>glass-0-1-6 vs 5</cell><cell>0.6785±0.0058</cell><cell>0.0066±0.0066</cell><cell>0.1201±0.0535</cell><cell>0.4598±0.4051</cell><cell>0.3747±0.2317</cell><cell>0.5874±0.3625</cell><cell>0.0000±0.0000</cell></row><row><cell>glass-0-4 vs 5</cell><cell>0.9837±0.0083</cell><cell>0.8943±0.0860</cell><cell>0.1336±0.0977</cell><cell>0.1665±0.1558</cell><cell>0.0930±0.0841</cell><cell>0.0310±0.0280</cell><cell>0.2641±0.2267</cell></row><row><cell>glass-0-6 vs 5</cell><cell>0.9486±0.0174  †</cell><cell>0.0187±0.0187</cell><cell>0.0599±0.0396</cell><cell>0.0000±0.0000</cell><cell>0.2694±0.2583</cell><cell>0.2103±0.1474</cell><cell>0.4218±0.3341</cell></row><row><cell>glass0</cell><cell>0.6785±0.0362  †</cell><cell>0.0327±0.0327</cell><cell>0.0000±0.0000</cell><cell>0.3342±0.2762</cell><cell>0.1932±0.0576</cell><cell>0.0160±0.0106</cell><cell>0.2918±0.2125</cell></row><row><cell>glass1</cell><cell>0.7641±0.0139  †</cell><cell>0.0151±0.0151</cell><cell>0.0000±0.0000</cell><cell>0.1163±0.1053</cell><cell>0.1322±0.1170</cell><cell>0.1103±0.0289</cell><cell>0.1810±0.1367</cell></row><row><cell>glass2</cell><cell>0.5105±0.0636  †</cell><cell>0.0000±0.0000</cell><cell>0.0000±0.0000</cell><cell>0.0967±0.0908</cell><cell>0.1625±0.0684</cell><cell>0.0804±0.0705</cell><cell>0.0000±0.0000</cell></row><row><cell>glass4</cell><cell>0.9486±0.0261</cell><cell>0.0237±0.0237</cell><cell>0.0594±0.0252</cell><cell>0.5909±0.4081</cell><cell>0.5393±0.4115</cell><cell>0.5503±0.3909</cell><cell>0.1234±0.0606</cell></row><row><cell>glass5</cell><cell>0.9951±0.0019  †</cell><cell>0.0017±0.0017</cell><cell>0.0000±0.0000</cell><cell>0.3332±0.3302</cell><cell>0.4054±0.3934</cell><cell>0.4876±0.3948</cell><cell>0.0000±0.0000</cell></row><row><cell>glass6</cell><cell>0.9354±0.0644</cell><cell>0.0624±0.0624</cell><cell>0.1188±0.0641</cell><cell>0.6041±0.3170</cell><cell>0.5225±0.4514</cell><cell>0.6703±0.2490</cell><cell>0.6130±0.3232</cell></row><row><cell>haberman</cell><cell>0.5105±0.0224</cell><cell>0.0248±0.0248</cell><cell>0.0000±0.0000</cell><cell>0.1400±0.1295</cell><cell>0.0746±0.0449</cell><cell>0.2895±0.2601</cell><cell>0.0959±0.0022</cell></row><row><cell>iris0</cell><cell>0.9450±0.0118</cell><cell>0.2006±0.2006</cell><cell>0.0000±0.0000</cell><cell>0.8882±0.1043</cell><cell>0.1000±0.0162</cell><cell>0.1957±0.1128</cell><cell>0.1975±0.1163</cell></row><row><cell>led7digit-0-2-4-5-6-7 -8-9 vs 1</cell><cell>0.9951±0.0043</cell><cell>0.9731±0.0238</cell><cell>0.7109±0.0184</cell><cell>0.8248±0.0062</cell><cell>0.8713±0.1263</cell><cell>0.8218±0.1001</cell><cell>0.8980±0.0048</cell></row><row><cell>new-thyroid1</cell><cell>0.7379±0.0787  †</cell><cell>0.0784±0.0784</cell><cell>0.0000±0.0000</cell><cell>0.3671±0.3113</cell><cell>0.1188±0.1187</cell><cell>0.0202±0.0139</cell><cell>0.1721±0.1591</cell></row><row><cell>newthyroid2</cell><cell>0.8992±0.0841  †</cell><cell>0.0812±0.0812</cell><cell>0.0000±0.0000</cell><cell>0.2428±0.1940</cell><cell>0.1434±0.0648</cell><cell>0.0000±0.0000</cell><cell>0.1773±0.1409</cell></row><row><cell>page-blocks-1-3 vs 4</cell><cell>0.9837±0.0159</cell><cell>0.0242±0.0242</cell><cell>0.6504±0.2320</cell><cell>0.5591±0.3259</cell><cell>0.8324±0.0776</cell><cell>0.7323±0.2629</cell><cell>0.7211±0.0211</cell></row><row><cell>page-blocks0</cell><cell>0.8649±0.0944</cell><cell>0.8595±0.0123</cell><cell>0.8013±0.0174</cell><cell>0.8593±0.0150</cell><cell>0.8044±0.0156</cell><cell>0.6339±0.2395</cell><cell>0.8495±0.0294</cell></row><row><cell>pima</cell><cell>0.9735±0.0204  †</cell><cell>0.0413±0.0413</cell><cell>0.2468±0.1941</cell><cell>0.5283±0.2088</cell><cell>0.3099±0.2907</cell><cell>0.2580±0.2328</cell><cell>0.2581±0.2282</cell></row><row><cell>segment0</cell><cell>0.8678±0.0494</cell><cell>0.0503±0.0503</cell><cell>0.9261±0.0164</cell><cell>0.6752±0.3240</cell><cell>0.8240±0.1758</cell><cell>0.7582±0.2410</cell><cell>0.9358±0.0141</cell></row><row><cell>shuttle-c0-vs-c4</cell><cell>0.9864±0.0132</cell><cell>0.9837±0.0000</cell><cell>0.0000±0.0000</cell><cell>0.8000±0.1216</cell><cell>0.0189±0.0098</cell><cell>0.0378±0.0297</cell><cell>0.6984±0.2819</cell></row><row><cell>shuttle-c2-vs-c4</cell><cell>0.7584±0.0045  †</cell><cell>0.0040±0.0040</cell><cell>0.0775±0.0449</cell><cell>0.4249±0.3756</cell><cell>0.2677±0.2328</cell><cell>0.4859±0.2866</cell><cell>0.0000±0.0000</cell></row><row><cell>vehicle0</cell><cell>0.9735±0.0196  †</cell><cell>0.0669±0.0669</cell><cell>0.6686±0.2367</cell><cell>0.6940±0.2683</cell><cell>0.6598±0.3107</cell><cell>0.5708±0.2897</cell><cell>0.6381±0.3452</cell></row><row><cell>vowel0</cell><cell>0.5136±0.0231</cell><cell>0.0224±0.0224</cell><cell>0.8880±0.0780</cell><cell>0.9052±0.0207</cell><cell>0.7299±0.2572</cell><cell>0.8465±0.0189</cell><cell>0.8968±0.0448</cell></row><row><cell>wisconsin</cell><cell>0.9864±0.0114</cell><cell>0.1327±0.1327</cell><cell>0.9694±0.0035</cell><cell>0.8716±0.1063</cell><cell>0.8761±0.1084</cell><cell>0.8702±0.1058</cell><cell>0.9748±0.0150</cell></row><row><cell>yeast-0-2-5-6 vs 3-7-8-9</cell><cell>0.7584±0.0301</cell><cell>0.0341±0.0341</cell><cell>0.3035±0.2881</cell><cell>0.6602±0.3277</cell><cell>0.6855±0.2461</cell><cell>0.7766±0.0069</cell><cell>0.8042±0.1383</cell></row><row><cell>yeast-0-2-5-7-9 vs 3-6-8</cell><cell>0.9545±0.0436</cell><cell>0.0489±0.0489</cell><cell>0.5075±0.2968</cell><cell>0.6991±0.2477</cell><cell>0.5131±0.3533</cell><cell>0.5067±0.3512</cell><cell>0.8030±0.1911</cell></row><row><cell>yeast-0-3-5-9 vs 7-8</cell><cell>0.8822±0.0164  †</cell><cell>0.0180±0.0180</cell><cell>0.0000±0.0000</cell><cell>0.4785±0.1819</cell><cell>0.3552±0.2588</cell><cell>0.2772±0.2208</cell><cell>0.5127±0.1803</cell></row><row><cell>yeast-0-5-6-7-9 vs 4</cell><cell>0.8944±0.0144</cell><cell>0.0161±0.0161</cell><cell>0.0552±0.0254</cell><cell>0.8093±0.0301</cell><cell>0.8197±0.0608</cell><cell>0.6566±0.2634</cell><cell>0.7896±0.1792</cell></row><row><cell>yeast-1-2-8-9 vs 7</cell><cell>0.6975±0.0003</cell><cell>0.0004±0.0004</cell><cell>0.0000±0.0000</cell><cell>0.5120±0.3539</cell><cell>0.6440±0.2282</cell><cell>0.4730±0.2764</cell><cell>0.0000±0.0000</cell></row><row><cell>yeast-1-4-5-8 vs 7</cell><cell>0.8101±0.0031  †</cell><cell>0.0000±0.0000</cell><cell>0.0000±0.0000</cell><cell>0.2794±0.2122</cell><cell>0.5847±0.2132</cell><cell>0.3642±0.2674</cell><cell>0.0000±0.0000</cell></row><row><cell>yeast-1 vs 7</cell><cell>0.6323±0.0081</cell><cell>0.0086±0.0086</cell><cell>0.0000±0.0000</cell><cell>0.6678±0.0673</cell><cell>0.6861±0.0943</cell><cell>0.5891±0.2111</cell><cell>0.7442±0.2518</cell></row><row><cell>yeast-2 vs 4</cell><cell>0.8822±0.0279</cell><cell>0.8818±0.0180</cell><cell>0.0225±0.0213</cell><cell>0.8668±0.0308</cell><cell>0.4358±0.3818</cell><cell>0.4821±0.2760</cell><cell>0.7102±0.2744</cell></row><row><cell>yeast-2 vs 8</cell><cell>0.8944±0.0301  †</cell><cell>0.0303±0.0303</cell><cell>0.0519±0.0341</cell><cell>0.5792±0.3053</cell><cell>0.2663±0.2344</cell><cell>0.2160±0.2065</cell><cell>0.5753±0.2132</cell></row><row><cell>yeast1</cell><cell>0.6975±0.0074  †</cell><cell>0.0331±0.0331</cell><cell>0.0454±0.0049</cell><cell>0.2532±0.2297</cell><cell>0.2979±0.2633</cell><cell>0.2359±0.2170</cell><cell>0.5126±0.2635</cell></row><row><cell>yeast3</cell><cell>0.8101±0.0174</cell><cell>0.7992±0.0238</cell><cell>0.0000±0.0000</cell><cell>0.6761±0.2563</cell><cell>0.5040±0.4158</cell><cell>0.4681±0.3152</cell><cell>0.3880±0.3335</cell></row><row><cell>yeast4</cell><cell>0.6323±0.0369</cell><cell>0.5062±0.1069</cell><cell>0.5666±0.4055</cell><cell>0.7744±0.1721</cell><cell>0.8295±0.1703</cell><cell>0.8982±0.0024</cell><cell>0.9289±0.0032</cell></row><row><cell>yeast5</cell><cell>0.8537±0.0201</cell><cell>0.0099±0.0099</cell><cell>0.9654±0.0007</cell><cell>0.7719±0.2068</cell><cell>0.7815±0.1819</cell><cell>0.9269±0.0014</cell><cell>0.8734±0.1169</cell></row><row><cell>yeast6</cell><cell>0.7188±0.0360</cell><cell>0.0083±0.0083</cell><cell>0.5551±0.3778</cell><cell>0.7979±0.1804</cell><cell>0.8425±0.1560</cell><cell>0.7316±0.2478</cell><cell>0.9530±0.0020</cell></row><row><cell>Average Rank</cell><cell>1.4310</cell><cell>5.8103</cell><cell>5.8534</cell><cell>3.4483</cell><cell>3.6207</cell><cell>4.3879</cell><cell>3.4483</cell></row><row><cell>Win-lose-draw</cell><cell>-</cell><cell>51-0-7</cell><cell>52-0-6</cell><cell>43-3-12</cell><cell>45-2-11</cell><cell>44-4-10</cell><cell>44-2-12</cell></row><row><cell>Holm-Post hoc Test</cell><cell>-</cell><cell>1.75303E-11</cell><cell>4.45971E-11</cell><cell>3.65941E-10</cell><cell>2.72630E-10</cell><cell>2.59525E-10</cell><cell>4.10284E-09</cell></row><row><cell>†</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row></table></figure>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot" n="1" xml:id="foot_0"><p>http://sci2s.ugr.es/keel/imbalanced.php</p></note>
+		</body>
+		<back>
+
+			<div type="acknowledgement">
+<div><p><rs type="person">ACKNOWLEDGMENT Chong Zhang</rs> and <rs type="person">Haizhou Li</rs> were supported by <rs type="programName">Neuromorphic Computing Program</rs>, <rs type="grantNumber">RIE2020</rs> <rs type="grantName">AME Programmatic Grant</rs>, <rs type="funder">A*STAR, Singapore</rs>.</p></div>
+			</div>
+			<listOrg type="funding">
+				<org type="funding" xml:id="_dB9fMQQ">
+					<idno type="grant-number">RIE2020</idno>
+					<orgName type="grant-name">AME Programmatic Grant</orgName>
+					<orgName type="program" subtype="full">Neuromorphic Computing Program</orgName>
+				</org>
+			</listOrg>
+			<div type="annex">
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>nay, "Scikit-learn: Machine learning in Python," J. Mach. Learn. Res., vol. 12, pp. 2825-2830, 2011.</p><p>Chong Zhang received the B.Eng. degree in Engineering from Harbin Institute of Technology, China, and the M.Sc. degree from National University of Singapore in 2011 and 2012, respectively. She is currently a Ph.D. student as well as a research engineer in Department of Electrical and Computer Engineering at National University of Singapore.</p><p>Her research interests include computational intelligence, machine learning/deep learning, data science and their applications in big data analytics, diagnostics, prognostics, health condition monitoring, voice conversion, etc.  </p></div>			</div>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<analytic>
+		<title level="a" type="main">Deep belief networks ensemble with multi-objective optimization for failure diagnosis</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">H</forename><surname>Sun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">C</forename><surname>Tan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">IEEE Int. Conf. Syst. Man Cyb. (SMC)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2015-10">2015. Oct 2015</date>
+			<biblScope unit="page" from="32" to="37" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">C. Zhang, J. H. Sun, and K. C. Tan, &quot;Deep belief networks ensemble with multi-objective optimization for failure diagnosis,&quot; in IEEE Int. Conf. Syst. Man Cyb. (SMC), 2015. IEEE, Oct 2015, pp. 32-37.</note>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<analytic>
+		<title level="a" type="main">Adaptive fraud detection</title>
+		<author>
+			<persName><forename type="first">T</forename><surname>Fawcett</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Provost</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Data Min. Knowl. Disc</title>
+		<imprint>
+			<biblScope unit="volume">1</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="291" to="316" />
+			<date type="published" when="1997">1997</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">T. Fawcett and F. Provost, &quot;Adaptive fraud detection,&quot; Data Min. Knowl. Disc., vol. 1, no. 3, pp. 291-316, 1997.</note>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<analytic>
+		<title level="a" type="main">Learning goal oriented bayesian networks for telecommunications risk management</title>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">J</forename><surname>Ezawa</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Singh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">W</forename><surname>Norton</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">ICML</title>
+		<imprint>
+			<date type="published" when="1996">1996</date>
+			<biblScope unit="page" from="139" to="147" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">K. J. Ezawa, M. Singh, and S. W. Norton, &quot;Learning goal oriented bayesian networks for telecommunications risk management,&quot; in ICML, 1996, pp. 139-147.</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<analytic>
+		<title level="a" type="main">Multiclassification of tool wear with support vector machine by manufacturing loss consideration</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Sun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Rahman</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Wong</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Hong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Inter. J. Machine Tools Manuf</title>
+		<imprint>
+			<biblScope unit="volume">44</biblScope>
+			<biblScope unit="issue">11</biblScope>
+			<biblScope unit="page" from="1179" to="1187" />
+			<date type="published" when="2004">2004</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. Sun, M. Rahman, Y. Wong, and G. Hong, &quot;Multiclassification of tool wear with support vector machine by manufacturing loss consideration,&quot; Inter. J. Machine Tools Manuf., vol. 44, no. 11, pp. 1179-1187, 2004.</note>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<analytic>
+		<title level="a" type="main">A data-driven prognostics framework for tool remaining useful life estimation in tool condition monitoring</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><forename type="middle">S</forename><surname>Hong</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Xu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">C</forename><surname>Tan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">H</forename><surname>Zhou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><forename type="middle">L</forename><surname>Chan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Li</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">IEEE Int. Conf. Emerg. (ETFA)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2017-09">2017. Sept 2017</date>
+			<biblScope unit="page" from="1" to="8" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">C. Zhang, G. S. Hong, H. Xu, K. C. Tan, J. H. Zhou, H. L. Chan, and H. Li, &quot;A data-driven prognostics framework for tool remaining useful life estimation in tool condition monitoring,&quot; in IEEE Int. Conf. Emerg. (ETFA), 2017. IEEE, Sept 2017, pp. 1-8.</note>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<analytic>
+		<title level="a" type="main">Gated recurrent units based neural network for tool condition monitoring</title>
+		<author>
+			<persName><forename type="first">H</forename><surname>Xu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><forename type="middle">S</forename><surname>Hong</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">H</forename><surname>Zhou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Hong</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">S</forename><surname>Woon</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">IEEE Int. Joint Conf. Neural Netw. (IJCNN)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2018-07">2018. July 2018</date>
+		</imprint>
+	</monogr>
+	<note>accepted</note>
+	<note type="raw_reference">H. Xu, C. Zhang, G. S. Hong, J. H. Zhou, J. Hong, and K. S. Woon, &quot;Gated recurrent units based neural network for tool condition monitoring,&quot; in IEEE Int. Joint Conf. Neural Netw. (IJCNN), 2018, accepted. IEEE, July 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<analytic>
+		<title level="a" type="main">Class-dependant resampling for medical applications</title>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">M</forename><surname>Valdovinos</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">S</forename><surname>Sanchez</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Int. Conf. Mach. Learn. Appl</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2005">2005. 2005</date>
+			<biblScope unit="page">6</biblScope>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">R. M. Valdovinos and J. S. Sanchez, &quot;Class-dependant resampling for medical applications,&quot; in Int. Conf. Mach. Learn. Appl., 2005. IEEE, 2005, pp. 6-pp.</note>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<analytic>
+		<title level="a" type="main">Artifact removal from eeg using a multi-objective independent component analysis model</title>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">K</forename><surname>Goh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><forename type="middle">A</forename><surname>Abbass</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">C</forename><surname>Tan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Al Mamun</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Int. Conf. Neur. Inform. Process. Springer</title>
+		<imprint>
+			<date type="published" when="2014">2014</date>
+			<biblScope unit="page" from="570" to="577" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S. K. Goh, H. A. Abbass, K. C. Tan, and A. Al Mamun, &quot;Artifact re- moval from eeg using a multi-objective independent component analysis model,&quot; in Int. Conf. Neur. Inform. Process. Springer, 2014, pp. 570- 577.</note>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">Multiway analysis of eeg artifacts based on block term decomposition</title>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">K</forename><surname>Goh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><forename type="middle">A</forename><surname>Abbass</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">C</forename><surname>Tan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Al-Mamun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Guan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">C</forename><surname>Wang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Int. Joint Conf. Neur. Netw. (IJCNN)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2016">2016. 2016</date>
+			<biblScope unit="page" from="913" to="920" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S. K. Goh, H. A. Abbass, K. C. Tan, A. Al-Mamun, C. Guan, and C. C. Wang, &quot;Multiway analysis of eeg artifacts based on block term decomposition,&quot; in Int. Joint Conf. Neur. Netw. (IJCNN), 2016. IEEE, 2016, pp. 913-920.</note>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<analytic>
+		<title level="a" type="main">Histogram equalization and specification for high-dimensional data visualization using radviz</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y.-C</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Q</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Lin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C.-K</forename><surname>Goh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H.-S</forename><surname>Seah</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proc. 34th Ann. Conf. Comput. Graphics Int. ACM</title>
+		<meeting>34th Ann. Conf. Comput. Graphics Int. ACM</meeting>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Y. Wang, Y.-C. Wang, Q. Zhang, F. Lin, C.-K. Goh, X. Wang, and H.- S. Seah, &quot;Histogram equalization and specification for high-dimensional data visualization using radviz,&quot; in Proc. 34th Ann. Conf. Comput. Graphics Int. ACM, 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<monogr>
+		<title level="m" type="main">Imbalanced learning: foundations, algorithms, and applications</title>
+		<author>
+			<persName><forename type="first">H</forename><surname>He</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Ma</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2013">2013</date>
+			<publisher>John Wiley &amp; Sons</publisher>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">H. He and Y. Ma, Imbalanced learning: foundations, algorithms, and applications. John Wiley &amp; Sons, 2013.</note>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<analytic>
+		<title level="a" type="main">Smote: synthetic minority over-sampling technique</title>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">V</forename><surname>Chawla</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">W</forename><surname>Bowyer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><forename type="middle">O</forename><surname>Hall</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><forename type="middle">P</forename><surname>Kegelmeyer</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">J. Artif. Intell. Res</title>
+		<imprint>
+			<biblScope unit="volume">16</biblScope>
+			<biblScope unit="page" from="321" to="357" />
+			<date type="published" when="2002">2002</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">N. V. Chawla, K. W. Bowyer, L. O. Hall, and W. P. Kegelmeyer, &quot;Smote: synthetic minority over-sampling technique,&quot; J. Artif. Intell. Res., vol. 16, pp. 321-357, 2002.</note>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<analytic>
+		<title level="a" type="main">Adasyn: Adaptive synthetic sampling approach for imbalanced learning</title>
+		<author>
+			<persName><forename type="first">H</forename><surname>He</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Bai</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><forename type="middle">A</forename><surname>Garcia</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Li</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">IJCNN 2008.(IEEE World Congress on Computational Intelligence). IEEE International Joint Conference on</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2008">2008. 2008</date>
+			<biblScope unit="page" from="1322" to="1328" />
+		</imprint>
+	</monogr>
+	<note>Neural Networks</note>
+	<note type="raw_reference">H. He, Y. Bai, E. A. Garcia, and S. Li, &quot;Adasyn: Adaptive synthetic sampling approach for imbalanced learning,&quot; in Neural Networks, 2008. IJCNN 2008.(IEEE World Congress on Computational Intelligence). IEEE International Joint Conference on. IEEE, 2008, pp. 1322-1328.</note>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<analytic>
+		<title level="a" type="main">Borderline-smote: a new oversampling method in imbalanced data sets learning</title>
+		<author>
+			<persName><forename type="first">H</forename><surname>Han</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W.-Y</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B.-H</forename><surname>Mao</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Adv. Intell. Comput</title>
+		<imprint>
+			<biblScope unit="page" from="878" to="887" />
+			<date type="published" when="2005">2005</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">H. Han, W.-Y. Wang, and B.-H. Mao, &quot;Borderline-smote: a new over- sampling method in imbalanced data sets learning,&quot; Adv. Intell. Comput., pp. 878-887, 2005.</note>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<analytic>
+		<title level="a" type="main">Evolutionary undersampling for classification with imbalanced datasets: Proposals and taxonomy</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>García</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Herrera</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Evol. Comput</title>
+		<imprint>
+			<biblScope unit="volume">17</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="275" to="306" />
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S. García and F. Herrera, &quot;Evolutionary undersampling for classification with imbalanced datasets: Proposals and taxonomy,&quot; Evol. Comput., vol. 17, no. 3, pp. 275-306, 2009.</note>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<analytic>
+		<title level="a" type="main">Evolutionarybased selection of generalized instances for imbalanced classification</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Garcı</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">I</forename><surname>Triguero</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">J</forename><surname>Carmona</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Herrera</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Knowl-based Syst</title>
+		<imprint>
+			<biblScope unit="volume">25</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="3" to="12" />
+			<date type="published" when="2012">2012</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S. Garcı, I. Triguero, C. J. Carmona, F. Herrera et al., &quot;Evolutionary- based selection of generalized instances for imbalanced classification,&quot; Knowl-based Syst., vol. 25, no. 1, pp. 3-12, 2012.</note>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<analytic>
+		<title level="a" type="main">Evolutionary cluster-based synthetic oversampling ensemble (eco-ensemble) for imbalance learning</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Lim</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">K</forename><surname>Goh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">C</forename><surname>Tan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE T. Cybernetics</title>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">P. Lim, C. K. Goh, and K. C. Tan, &quot;Evolutionary cluster-based synthetic oversampling ensemble (eco-ensemble) for imbalance learning,&quot; IEEE T. Cybernetics, 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<analytic>
+		<title level="a" type="main">Training cost-sensitive neural networks with methods addressing the class imbalance problem</title>
+		<author>
+			<persName><forename type="first">Z.-H</forename><surname>Zhou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X.-Y</forename><surname>Liu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE T. Knowl. Data En</title>
+		<imprint>
+			<biblScope unit="volume">18</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="63" to="77" />
+			<date type="published" when="2006">2006</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Z.-H. Zhou and X.-Y. Liu, &quot;Training cost-sensitive neural networks with methods addressing the class imbalance problem,&quot; IEEE T. Knowl. Data En., vol. 18, no. 1, pp. 63-77, 2006.</note>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<analytic>
+		<title level="a" type="main">Near-bayesian support vector machines for imbalanced data classification with equal or unequal misclassification costs</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Datta</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Das</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Neural Networks</title>
+		<imprint>
+			<biblScope unit="volume">70</biblScope>
+			<biblScope unit="page" from="39" to="52" />
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S. Datta and S. Das, &quot;Near-bayesian support vector machines for imbalanced data classification with equal or unequal misclassification costs,&quot; Neural Networks, vol. 70, pp. 39 -52, 2015.</note>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<analytic>
+		<title level="a" type="main">Weighted extreme learning machine for imbalance learning</title>
+		<author>
+			<persName><forename type="first">W</forename><surname>Zong</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G.-B</forename><surname>Huang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Chen</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Neurocomputing</title>
+		<imprint>
+			<biblScope unit="volume">101</biblScope>
+			<biblScope unit="page" from="229" to="242" />
+			<date type="published" when="2013">2013</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">W. Zong, G.-B. Huang, and Y. Chen, &quot;Weighted extreme learning machine for imbalance learning,&quot; Neurocomputing, vol. 101, pp. 229 -242, 2013.</note>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<analytic>
+		<title level="a" type="main">Novel cost-sensitive approach to improve the multilayer perceptron performance on imbalanced data</title>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">L</forename><surname>Castro</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">P</forename><surname>Braga</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE T. Neur. Net. Lear</title>
+		<imprint>
+			<biblScope unit="volume">24</biblScope>
+			<biblScope unit="issue">6</biblScope>
+			<biblScope unit="page" from="888" to="899" />
+			<date type="published" when="2013">2013</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">C. L. Castro and A. P. Braga, &quot;Novel cost-sensitive approach to improve the multilayer perceptron performance on imbalanced data,&quot; IEEE T. Neur. Net. Lear., vol. 24, no. 6, pp. 888-899, 2013.</note>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<analytic>
+		<title level="a" type="main">Optimised probabilistic active learning (opal)</title>
+		<author>
+			<persName><forename type="first">G</forename><surname>Krempl</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Kottke</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">V</forename><surname>Lemaire</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Mach. Learn</title>
+		<imprint>
+			<biblScope unit="volume">100</biblScope>
+			<biblScope unit="issue">2-3</biblScope>
+			<biblScope unit="page" from="449" to="476" />
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">G. Krempl, D. Kottke, and V. Lemaire, &quot;Optimised probabilistic active learning (opal),&quot; Mach. Learn., vol. 100, no. 2-3, pp. 449-476, 2015.</note>
+</biblStruct>
+
+<biblStruct xml:id="b22">
+	<analytic>
+		<title level="a" type="main">C4. 5, class imbalance, and cost sensitivity: why under-sampling beats over-sampling</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Drummond</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">C</forename><surname>Holte</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Workshop on learning from imbalanced datasets II</title>
+		<imprint>
+			<publisher>Citeseer</publisher>
+			<date type="published" when="2003">2003</date>
+			<biblScope unit="volume">11</biblScope>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">C. Drummond, R. C. Holte et al., &quot;C4. 5, class imbalance, and cost sensitivity: why under-sampling beats over-sampling,&quot; in Workshop on learning from imbalanced datasets II, vol. 11. Citeseer, 2003.</note>
+</biblStruct>
+
+<biblStruct xml:id="b23">
+	<analytic>
+		<title level="a" type="main">A fast learning algorithm for deep belief nets</title>
+		<author>
+			<persName><forename type="first">G</forename><surname>Hinton</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Osindero</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y.-W</forename><surname>Teh</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Neural Comput</title>
+		<imprint>
+			<biblScope unit="volume">18</biblScope>
+			<biblScope unit="issue">7</biblScope>
+			<biblScope unit="page" from="1527" to="1554" />
+			<date type="published" when="2006">2006</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">G. Hinton, S. Osindero, and Y.-W. Teh, &quot;A fast learning algorithm for deep belief nets,&quot; Neural Comput., vol. 18, no. 7, pp. 1527-1554, 2006.</note>
+</biblStruct>
+
+<biblStruct xml:id="b24">
+	<analytic>
+		<title level="a" type="main">A practical guide to training restricted boltzmann machines</title>
+		<author>
+			<persName><forename type="first">G</forename><surname>Hinton</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Momentum</title>
+		<imprint>
+			<biblScope unit="volume">9</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page">926</biblScope>
+			<date type="published" when="2010">2010</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">G. Hinton, &quot;A practical guide to training restricted boltzmann machines,&quot; Momentum, vol. 9, no. 1, p. 926, 2010.</note>
+</biblStruct>
+
+<biblStruct xml:id="b25">
+	<analytic>
+		<title level="a" type="main">Acoustic modeling using deep belief networks</title>
+		<author>
+			<persName><forename type="first">G</forename><forename type="middle">E</forename><surname>A.-R. Mohamed</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Dahl</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Hinton</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE T. Audio Speech</title>
+		<imprint>
+			<biblScope unit="volume">20</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="14" to="22" />
+			<date type="published" when="2012">2012</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">A.-r. Mohamed, G. E. Dahl, and G. Hinton, &quot;Acoustic modeling using deep belief networks,&quot; IEEE T. Audio Speech, vol. 20, no. 1, pp. 14-22, 2012.</note>
+</biblStruct>
+
+<biblStruct xml:id="b26">
+	<analytic>
+		<title level="a" type="main">Deep belief networks using discriminative features for phone recognition</title>
+		<author>
+			<persName><forename type="first">T</forename><forename type="middle">N</forename><surname>A.-R. Mohamed</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Sainath</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Dahl</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><forename type="middle">E</forename><surname>Ramabhadran</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">A</forename><surname>Hinton</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Picheny</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proc. IEEE Int. Conf. Acoustics, Speech and Signal Process. (ICASSP)</title>
+		<meeting>IEEE Int. Conf. Acoustics, Speech and Signal ess. (ICASSP)</meeting>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2011">2011</date>
+			<biblScope unit="page" from="5060" to="5063" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">A.-r. Mohamed, T. N. Sainath, G. Dahl, B. Ramabhadran, G. E. Hinton, and M. A. Picheny, &quot;Deep belief networks using discriminative features for phone recognition,&quot; in Proc. IEEE Int. Conf. Acoustics, Speech and Signal Process. (ICASSP). IEEE, 2011, pp. 5060-5063.</note>
+</biblStruct>
+
+<biblStruct xml:id="b27">
+	<analytic>
+		<title level="a" type="main">Differential evolution with neighborhood mutation for multimodal optimization</title>
+		<author>
+			<persName><forename type="first">B.-Y</forename><surname>Qu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><forename type="middle">N</forename><surname>Suganthan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J.-J</forename><surname>Liang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE T. Evolut. Comput</title>
+		<imprint>
+			<biblScope unit="volume">16</biblScope>
+			<biblScope unit="issue">5</biblScope>
+			<biblScope unit="page" from="601" to="614" />
+			<date type="published" when="2012">2012</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">B.-Y. Qu, P. N. Suganthan, and J.-J. Liang, &quot;Differential evolution with neighborhood mutation for multimodal optimization,&quot; IEEE T. Evolut. Comput., vol. 16, no. 5, pp. 601-614, 2012.</note>
+</biblStruct>
+
+<biblStruct xml:id="b28">
+	<analytic>
+		<title level="a" type="main">Firefly algorithms for multimodal optimization</title>
+		<author>
+			<persName><forename type="first">X.-S</forename><surname>Yang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">ternational symposium on stochastic algorithms</title>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2009">2009</date>
+			<biblScope unit="page" from="169" to="178" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">X.-S. Yang, &quot;Firefly algorithms for multimodal optimization,&quot; in In- ternational symposium on stochastic algorithms. Springer, 2009, pp. 169-178.</note>
+</biblStruct>
+
+<biblStruct xml:id="b29">
+	<analytic>
+		<title level="a" type="main">Jade: adaptive differential evolution with optional external archive</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">C</forename><surname>Sanderson</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE T. Evolut. Comput</title>
+		<imprint>
+			<biblScope unit="volume">13</biblScope>
+			<biblScope unit="issue">5</biblScope>
+			<biblScope unit="page" from="945" to="958" />
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. Zhang and A. C. Sanderson, &quot;Jade: adaptive differential evolution with optional external archive,&quot; IEEE T. Evolut. Comput., vol. 13, no. 5, pp. 945-958, 2009.</note>
+</biblStruct>
+
+<biblStruct xml:id="b30">
+	<analytic>
+		<title level="a" type="main">Multiobjective deep belief networks ensemble for remaining useful life estimation in prognostics</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Lim</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">K</forename><surname>Qin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">C</forename><surname>Tan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE T. Neur. Net. Lear</title>
+		<imprint>
+			<biblScope unit="volume">28</biblScope>
+			<biblScope unit="issue">10</biblScope>
+			<biblScope unit="page" from="2306" to="2318" />
+			<date type="published" when="2017-10">Oct 2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">C. Zhang, P. Lim, A. K. Qin, and K. C. Tan, &quot;Multiobjective deep belief networks ensemble for remaining useful life estimation in prognostics,&quot; IEEE T. Neur. Net. Lear., vol. 28, no. 10, pp. 2306-2318, Oct 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b31">
+	<analytic>
+		<title level="a" type="main">Learning from imbalanced data</title>
+		<author>
+			<persName><forename type="first">H</forename><surname>He</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Garcia</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE T. Knowl. Data En</title>
+		<imprint>
+			<biblScope unit="volume">21</biblScope>
+			<biblScope unit="issue">9</biblScope>
+			<biblScope unit="page" from="1263" to="1284" />
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">H. He, E. Garcia et al., &quot;Learning from imbalanced data,&quot; IEEE T. Knowl. Data En., vol. 21, no. 9, pp. 1263-1284, 2009.</note>
+</biblStruct>
+
+<biblStruct xml:id="b32">
+	<analytic>
+		<title level="a" type="main">Addressing imbalanced data with argument based rule learning</title>
+		<author>
+			<persName><forename type="first">K</forename><surname>Napieraa</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Stefanowski</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Expert Syst. Appl</title>
+		<imprint>
+			<biblScope unit="volume">42</biblScope>
+			<biblScope unit="issue">24</biblScope>
+			<biblScope unit="page" from="9468" to="9481" />
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">K. Napieraa and J. Stefanowski, &quot;Addressing imbalanced data with argument based rule learning,&quot; Expert Syst. Appl., vol. 42, no. 24, pp. 9468 -9481, 2015.</note>
+</biblStruct>
+
+<biblStruct xml:id="b33">
+	<analytic>
+		<title level="a" type="main">Cost-sensitive boosting neural networks for software defect prediction</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Zheng</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Expert Syst. Appl</title>
+		<imprint>
+			<biblScope unit="volume">37</biblScope>
+			<biblScope unit="issue">6</biblScope>
+			<biblScope unit="page" from="4537" to="4543" />
+			<date type="published" when="2010">2010</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. Zheng, &quot;Cost-sensitive boosting neural networks for software defect prediction,&quot; Expert Syst. Appl., vol. 37, no. 6, pp. 4537-4543, 2010.</note>
+</biblStruct>
+
+<biblStruct xml:id="b34">
+	<analytic>
+		<title level="a" type="main">Cosnet: a cost sensitive neural network for semi-supervised learning in graphs</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Bertoni</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Frasca</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Valentini</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Mach. Learn. Knowl. Discov. Databases</title>
+		<imprint>
+			<biblScope unit="page" from="219" to="234" />
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">A. Bertoni, M. Frasca, and G. Valentini, &quot;Cosnet: a cost sensitive neural network for semi-supervised learning in graphs,&quot; Mach. Learn. Knowl. Discov. Databases, pp. 219-234, 2011.</note>
+</biblStruct>
+
+<biblStruct xml:id="b35">
+	<analytic>
+		<title level="a" type="main">Cross validation through two-dimensional solution surface for cost-sensitive svm</title>
+		<author>
+			<persName><forename type="first">B</forename><surname>Gu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">V</forename><forename type="middle">S</forename><surname>Sheng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">Y</forename><surname>Tay</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><surname>Romano</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Li</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE T. Pattern Anal</title>
+		<imprint>
+			<biblScope unit="volume">39</biblScope>
+			<biblScope unit="issue">6</biblScope>
+			<biblScope unit="page" from="1103" to="1121" />
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">B. Gu, V. S. Sheng, K. Y. Tay, W. Romano, and S. Li, &quot;Cross validation through two-dimensional solution surface for cost-sensitive svm,&quot; IEEE T. Pattern Anal., vol. 39, no. 6, pp. 1103-1121, 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b36">
+	<analytic>
+		<title level="a" type="main">Evolutionary fuzzy artmap neural networks for classification of semiconductor defects</title>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">C</forename><surname>Tan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Watada</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Ibrahim</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Khalid</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE T. Neur. Net. Lear</title>
+		<imprint>
+			<biblScope unit="volume">26</biblScope>
+			<biblScope unit="issue">5</biblScope>
+			<biblScope unit="page" from="933" to="950" />
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S. C. Tan, J. Watada, Z. Ibrahim, and M. Khalid, &quot;Evolutionary fuzzy artmap neural networks for classification of semiconductor defects,&quot; IEEE T. Neur. Net. Lear., vol. 26, no. 5, pp. 933-950, 2015.</note>
+</biblStruct>
+
+<biblStruct xml:id="b37">
+	<analytic>
+		<title level="a" type="main">Cost-sensitive learning of deep feature representations from imbalanced data</title>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">H</forename><surname>Khan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Hayat</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Bennamoun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><forename type="middle">A</forename><surname>Sohel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Togneri</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE T. Neur. Net. Lear</title>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S. H. Khan, M. Hayat, M. Bennamoun, F. A. Sohel, and R. Togneri, &quot;Cost-sensitive learning of deep feature representations from imbalanced data,&quot; IEEE T. Neur. Net. Lear., 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b38">
+	<analytic>
+		<title level="a" type="main">Cost-sensitive learning with neural networks</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Kukar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">I</forename><surname>Kononenko</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">ECAI. Citeseer</title>
+		<imprint>
+			<date type="published" when="1998">1998</date>
+			<biblScope unit="page" from="445" to="449" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">M. Kukar, I. Kononenko et al., &quot;Cost-sensitive learning with neural networks.&quot; in ECAI. Citeseer, 1998, pp. 445-449.</note>
+</biblStruct>
+
+<biblStruct xml:id="b39">
+	<analytic>
+		<title level="a" type="main">Evolutionary cost-sensitive extreme learning machine</title>
+		<author>
+			<persName><forename type="first">L</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Zhang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE T. Neur. Net. Lear</title>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">L. Zhang and D. Zhang, &quot;Evolutionary cost-sensitive extreme learning machine,&quot; IEEE T. Neur. Net. Lear., 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b40">
+	<analytic>
+		<title level="a" type="main">Cost-sensitive classification with genetic programming</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Yao</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Congr. Evolut. Comput</title>
+		<imprint>
+			<biblScope unit="volume">3</biblScope>
+			<biblScope unit="page" from="2114" to="2121" />
+			<date type="published" when="2005">2005. 2005</date>
+			<publisher>IEEE</publisher>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. Li, X. Li, and X. Yao, &quot;Cost-sensitive classification with genetic programming,&quot; in IEEE Congr. Evolut. Comput. 2005., vol. 3. IEEE, 2005, pp. 2114-2121.</note>
+</biblStruct>
+
+<biblStruct xml:id="b41">
+	<analytic>
+		<title level="a" type="main">Using evolutionary sampling to mine imbalanced data</title>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">J</forename><surname>Drown</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><forename type="middle">M</forename><surname>Khoshgoftaar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Narayanan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Sixth Int. Conf. Mach. Learn. Appl. ICMLA 2007</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2007">2007</date>
+			<biblScope unit="page" from="363" to="368" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">D. J. Drown, T. M. Khoshgoftaar, and R. Narayanan, &quot;Using evolutionary sampling to mine imbalanced data,&quot; in Sixth Int. Conf. Mach. Learn. Appl. ICMLA 2007. IEEE, 2007, pp. 363-368.</note>
+</biblStruct>
+
+<biblStruct xml:id="b42">
+	<analytic>
+		<title level="a" type="main">Svm learning from imbalanced data by ga sampling for protein domain prediction</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Zou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Huang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Zhou</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">The 9th Int. Conf. Young Comput. Scientists</title>
+		<meeting><address><addrLine>ICYCS</addrLine></address></meeting>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2008">2008. 2008</date>
+			<biblScope unit="page" from="982" to="987" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S. Zou, Y. Huang, Y. Wang, J. Wang, and C. Zhou, &quot;Svm learning from imbalanced data by ga sampling for protein domain prediction,&quot; in The 9th Int. Conf. Young Comput. Scientists, ICYCS 2008. IEEE, 2008, pp. 982-987.</note>
+</biblStruct>
+
+<biblStruct xml:id="b43">
+	<analytic>
+		<title level="a" type="main">Class imbalance handling using wrapper-based random oversampling</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Ghazikhani</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><forename type="middle">S</forename><surname>Yazdi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Monsefi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">20th Iranian Conf. Electr. Eng. (ICEE)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2012">2012. 2012</date>
+			<biblScope unit="page" from="611" to="616" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">A. Ghazikhani, H. S. Yazdi, and R. Monsefi, &quot;Class imbalance handling using wrapper-based random oversampling,&quot; in 20th Iranian Conf. Electr. Eng. (ICEE), 2012. IEEE, 2012, pp. 611-616.</note>
+</biblStruct>
+
+<biblStruct xml:id="b44">
+	<analytic>
+		<title level="a" type="main">Automated feature design for numeric sequence classification by genetic programming</title>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">Y</forename><surname>Harvey</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">D</forename><surname>Todd</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE T. Evolut. Comput</title>
+		<imprint>
+			<biblScope unit="volume">19</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="474" to="489" />
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">D. Y. Harvey and M. D. Todd, &quot;Automated feature design for numeric sequence classification by genetic programming,&quot; IEEE T. Evolut. Com- put., vol. 19, no. 4, pp. 474-489, 2015.</note>
+</biblStruct>
+
+<biblStruct xml:id="b45">
+	<analytic>
+		<title level="a" type="main">Evolutionary rule-based systems for imbalanced data sets</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Orriols-Puig</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Bernadó-Mansilla</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Soft Comput. A Fusion of Found. Method. Appl</title>
+		<imprint>
+			<biblScope unit="volume">13</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="213" to="225" />
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">A. Orriols-Puig and E. Bernadó-Mansilla, &quot;Evolutionary rule-based systems for imbalanced data sets,&quot; Soft Comput. A Fusion of Found. Method. Appl., vol. 13, no. 3, pp. 213-225, 2009.</note>
+</biblStruct>
+
+<biblStruct xml:id="b46">
+	<analytic>
+		<title level="a" type="main">Multi-objective genetic fuzzy classifiers for imbalanced and cost-sensitive datasets</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Ducange</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Lazzerini</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Marcelloni</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Soft Comput</title>
+		<imprint>
+			<biblScope unit="volume">14</biblScope>
+			<biblScope unit="issue">7</biblScope>
+			<biblScope unit="page" from="713" to="728" />
+			<date type="published" when="2010">2010</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">P. Ducange, B. Lazzerini, and F. Marcelloni, &quot;Multi-objective genetic fuzzy classifiers for imbalanced and cost-sensitive datasets,&quot; Soft Com- put., vol. 14, no. 7, pp. 713-728, 2010.</note>
+</biblStruct>
+
+<biblStruct xml:id="b47">
+	<analytic>
+		<title level="a" type="main">A sparse spectral clustering framework via multiobjective evolutionary algorithm</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Luo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Jiao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">A</forename><surname>Lozano</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE T. Evolut. Comput</title>
+		<imprint>
+			<biblScope unit="volume">20</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="418" to="433" />
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. Luo, L. Jiao, and J. A. Lozano, &quot;A sparse spectral clustering framework via multiobjective evolutionary algorithm,&quot; IEEE T. Evolut. Comput., vol. 20, no. 3, pp. 418-433, 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b48">
+	<analytic>
+		<title level="a" type="main">Evolving diverse ensembles using genetic programming for classification with unbalanced data</title>
+		<author>
+			<persName><forename type="first">U</forename><surname>Bhowan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Johnston</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Yao</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE T. Evolut. Comput</title>
+		<imprint>
+			<biblScope unit="volume">17</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="368" to="386" />
+			<date type="published" when="2013">2013</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">U. Bhowan, M. Johnston, M. Zhang, and X. Yao, &quot;Evolving diverse ensembles using genetic programming for classification with unbalanced data,&quot; IEEE T. Evolut. Comput., vol. 17, no. 3, pp. 368-386, 2013.</note>
+</biblStruct>
+
+<biblStruct xml:id="b49">
+	<analytic>
+		<title level="a" type="main">Reusing genetic programming for ensemble selection in classification of unbalanced data</title>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE T. Evolut. Comput</title>
+		<imprint>
+			<biblScope unit="volume">18</biblScope>
+			<biblScope unit="issue">6</biblScope>
+			<biblScope unit="page" from="893" to="908" />
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">--, &quot;Reusing genetic programming for ensemble selection in classification of unbalanced data,&quot; IEEE T. Evolut. Comput., vol. 18, no. 6, pp. 893-908, 2014.</note>
+</biblStruct>
+
+<biblStruct xml:id="b50">
+	<analytic>
+		<title level="a" type="main">Convex hull-based multiobjective genetic programming for maximizing receiver operating characteristic performance</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Emmerich</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Tang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Bäck</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Yao</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE T. Evolut. Comput</title>
+		<imprint>
+			<biblScope unit="volume">19</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="188" to="200" />
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">P. Wang, M. Emmerich, R. Li, K. Tang, T. Bäck, and X. Yao, &quot;Convex hull-based multiobjective genetic programming for maximizing receiver operating characteristic performance,&quot; IEEE T. Evolut. Comput., vol. 19, no. 2, pp. 188-200, 2015.</note>
+</biblStruct>
+
+<biblStruct xml:id="b51">
+	<analytic>
+		<title level="a" type="main">Analysis of an evolutionary rbfn design algorithm, co 2 rbfn, for imbalanced data sets</title>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">D</forename><surname>Pérez-Godoy</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Fernández</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">J</forename><surname>Rivera</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">J</forename><surname>Del</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jesus</forename></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Patt. Recog. Lett</title>
+		<imprint>
+			<biblScope unit="volume">31</biblScope>
+			<biblScope unit="issue">15</biblScope>
+			<biblScope unit="page" from="2375" to="2388" />
+			<date type="published" when="2010">2010</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">M. D. Pérez-Godoy, A. Fernández, A. J. Rivera, and M. J. del Jesus, &quot;Analysis of an evolutionary rbfn design algorithm, co 2 rbfn, for imbalanced data sets,&quot; Patt. Recog. Lett., vol. 31, no. 15, pp. 2375- 2388, 2010.</note>
+</biblStruct>
+
+<biblStruct xml:id="b52">
+	<analytic>
+		<title level="a" type="main">The&quot; wakesleep&quot; algorithm for unsupervised neural networks</title>
+		<author>
+			<persName><forename type="first">G</forename><forename type="middle">E</forename><surname>Hinton</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Dayan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><forename type="middle">J</forename><surname>Frey</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">M</forename><surname>Neal</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Science</title>
+		<imprint>
+			<biblScope unit="volume">268</biblScope>
+			<biblScope unit="issue">5214</biblScope>
+			<biblScope unit="page">1158</biblScope>
+			<date type="published" when="1995">1995</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">G. E. Hinton, P. Dayan, B. J. Frey, and R. M. Neal, &quot;The&quot; wake- sleep&quot; algorithm for unsupervised neural networks,&quot; Science, vol. 268, no. 5214, p. 1158, 1995.</note>
+</biblStruct>
+
+<biblStruct xml:id="b53">
+	<analytic>
+		<title level="a" type="main">Reducing the dimensionality of data with neural networks</title>
+		<author>
+			<persName><forename type="first">G</forename><forename type="middle">E</forename><surname>Hinton</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">R</forename><surname>Salakhutdinov</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Science</title>
+		<imprint>
+			<biblScope unit="volume">313</biblScope>
+			<biblScope unit="issue">5786</biblScope>
+			<biblScope unit="page" from="504" to="507" />
+			<date type="published" when="2006">2006</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">G. E. Hinton and R. R. Salakhutdinov, &quot;Reducing the dimensionality of data with neural networks,&quot; Science, vol. 313, no. 5786, pp. 504-507, 2006.</note>
+</biblStruct>
+
+<biblStruct xml:id="b54">
+	<analytic>
+		<title level="a" type="main">The foundations of cost-sensitive learning</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Elkan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Int. Joint Conf. Artif. Intell</title>
+		<imprint>
+			<publisher>Citeseer</publisher>
+			<date type="published" when="2001">2001</date>
+			<biblScope unit="volume">17</biblScope>
+			<biblScope unit="page" from="973" to="978" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">C. Elkan, &quot;The foundations of cost-sensitive learning,&quot; in Int. Joint Conf. Artif. Intell., vol. 17, no. 1. Citeseer, 2001, pp. 973-978.</note>
+</biblStruct>
+
+<biblStruct xml:id="b55">
+	<monogr>
+		<title level="m" type="main">Statistical decision theory and Bayesian analysis</title>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">O</forename><surname>Berger</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2013">2013</date>
+			<publisher>Springer Science &amp; Business Media</publisher>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. O. Berger, Statistical decision theory and Bayesian analysis. Springer Science &amp; Business Media, 2013.</note>
+</biblStruct>
+
+<biblStruct xml:id="b56">
+	<analytic>
+		<title level="a" type="main">Self-adaptive differential evolution algorithm for numerical optimization</title>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">K</forename><surname>Qin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><forename type="middle">N</forename><surname>Suganthan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">The 2005 IEEE Congress on</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2005">2005. 2005</date>
+			<biblScope unit="volume">2</biblScope>
+			<biblScope unit="page" from="1785" to="1791" />
+		</imprint>
+	</monogr>
+	<note>Evolutionary Computation</note>
+	<note type="raw_reference">A. K. Qin and P. N. Suganthan, &quot;Self-adaptive differential evolution algorithm for numerical optimization,&quot; in Evolutionary Computation, 2005. The 2005 IEEE Congress on, vol. 2. IEEE, 2005, pp. 1785- 1791.</note>
+</biblStruct>
+
+<biblStruct xml:id="b57">
+	<analytic>
+		<title level="a" type="main">Borderline over-sampling for imbalanced data classification</title>
+		<author>
+			<persName><forename type="first">H</forename><forename type="middle">M</forename><surname>Nguyen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><forename type="middle">W</forename><surname>Cooper</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Kamei</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Int. J. Knowl. Eng. Soft Data Paradigms</title>
+		<imprint>
+			<biblScope unit="volume">3</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="4" to="21" />
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">H. M. Nguyen, E. W. Cooper, and K. Kamei, &quot;Borderline over-sampling for imbalanced data classification,&quot; Int. J. Knowl. Eng. Soft Data Paradigms, vol. 3, no. 1, pp. 4-21, 2011.</note>
+</biblStruct>
+
+<biblStruct xml:id="b58">
+	<analytic>
+		<title level="a" type="main">Keel: a software tool to assess evolutionary algorithms for data mining problems</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Alcala-Fdez</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Sanchez</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Garcia</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">J</forename><surname>Del Jesus</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Ventura</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Garrell</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Otero</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Romero</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Bacardit</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">V</forename><forename type="middle">M</forename><surname>Rivas</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Soft Comput</title>
+		<imprint>
+			<biblScope unit="volume">13</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="307" to="318" />
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. Alcala-Fdez, L. Sanchez, S. Garcia, M. J. del Jesus, S. Ventura, J. Garrell, J. Otero, C. Romero, J. Bacardit, V. M. Rivas et al., &quot;Keel: a software tool to assess evolutionary algorithms for data mining problems,&quot; Soft Comput., vol. 13, no. 3, pp. 307-318, 2009.</note>
+</biblStruct>
+
+<biblStruct xml:id="b59">
+	<analytic>
+		<title level="a" type="main">Imbalanced-learn: A python toolbox to tackle the curse of imbalanced datasets in machine learning</title>
+		<author>
+			<persName><forename type="first">G</forename><surname>Lemaître</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Nogueira</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">K</forename><surname>Aridas</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">J. Mach. Learn. Res</title>
+		<imprint>
+			<biblScope unit="volume">18</biblScope>
+			<biblScope unit="issue">17</biblScope>
+			<biblScope unit="page" from="1" to="5" />
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">G. Lemaître, F. Nogueira, and C. K. Aridas, &quot;Imbalanced-learn: A python toolbox to tackle the curse of imbalanced datasets in machine learning,&quot; J. Mach. Learn. Res., vol. 18, no. 17, pp. 1-5, 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b60">
+	<analytic>
+		<title level="a" type="main">A review on ensembles for the class imbalance problem: bagging-, boosting-, and hybrid-based approaches</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Galar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Fernandez</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Barrenechea</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Bustince</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Herrera</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE T. Syst. Man Cy. C</title>
+		<imprint>
+			<biblScope unit="volume">42</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="463" to="484" />
+			<date type="published" when="2012">2012</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">M. Galar, A. Fernandez, E. Barrenechea, H. Bustince, and F. Herrera, &quot;A review on ensembles for the class imbalance problem: bagging-, boosting-, and hybrid-based approaches,&quot; IEEE T. Syst. Man Cy. C, vol. 42, no. 4, pp. 463-484, 2012.</note>
+</biblStruct>
+
+<biblStruct xml:id="b61">
+	<analytic>
+		<title level="a" type="main">Dynamic sampling approach to training neural networks for multiclass imbalance classification</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Lin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Tang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Yao</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE T. Neur. Net. Lear</title>
+		<imprint>
+			<biblScope unit="volume">24</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="647" to="660" />
+			<date type="published" when="2013">2013</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">M. Lin, K. Tang, and X. Yao, &quot;Dynamic sampling approach to training neural networks for multiclass imbalance classification,&quot; IEEE T. Neur. Net. Lear., vol. 24, no. 4, pp. 647-660, 2013.</note>
+</biblStruct>
+
+<biblStruct xml:id="b62">
+	<analytic>
+		<title level="a" type="main">Online bagging and boosting for imbalanced data streams</title>
+		<author>
+			<persName><forename type="first">B</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Pineau</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE T. Knowl. Data En</title>
+		<imprint>
+			<biblScope unit="volume">28</biblScope>
+			<biblScope unit="issue">12</biblScope>
+			<biblScope unit="page" from="3353" to="3366" />
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">B. Wang and J. Pineau, &quot;Online bagging and boosting for imbalanced data streams,&quot; IEEE T. Knowl. Data En., vol. 28, no. 12, pp. 3353-3366, 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b63">
+	<analytic>
+		<title level="a" type="main">Tool condition monitoring and remaining useful life prognostic based on a wireless sensor in dry milling operations</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Yao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Jin</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Sensors</title>
+		<imprint>
+			<biblScope unit="volume">16</biblScope>
+			<biblScope unit="issue">6</biblScope>
+			<biblScope unit="page">795</biblScope>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">C. Zhang, X. Yao, J. Zhang, and H. Jin, &quot;Tool condition monitoring and remaining useful life prognostic based on a wireless sensor in dry milling operations,&quot; Sensors, vol. 16, no. 6, p. 795, 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b64">
+	<analytic>
+		<title level="a" type="main">The force system and performance of the welding carbide gun drill to cut aisi 1045 steel</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><surname>Jia</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Zhang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Inter. J. Adv. Manuf. Technol</title>
+		<imprint>
+			<biblScope unit="volume">74</biblScope>
+			<biblScope unit="issue">9-12</biblScope>
+			<biblScope unit="page" from="1431" to="1443" />
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Y. Wang, W. Jia, and J. Zhang, &quot;The force system and performance of the welding carbide gun drill to cut aisi 1045 steel,&quot; Inter. J. Adv. Manuf. Technol., vol. 74, no. 9-12, pp. 1431-1443, 2014.</note>
+</biblStruct>
+
+<biblStruct xml:id="b65">
+	<analytic>
+		<title level="a" type="main">Experimental investigations on singlelip deep hole drilling of superalloy inconel 718 with small diameters</title>
+		<author>
+			<persName><forename type="first">D</forename><surname>Biermann</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Kirschner</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">J. Manuf. Processes</title>
+		<imprint>
+			<biblScope unit="volume">20</biblScope>
+			<biblScope unit="page" from="332" to="339" />
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">D. Biermann and M. Kirschner, &quot;Experimental investigations on single- lip deep hole drilling of superalloy inconel 718 with small diameters,&quot; J. Manuf. Processes, vol. 20, pp. 332-339, 2015.</note>
+</biblStruct>
+
+<biblStruct xml:id="b66">
+	<analytic>
+		<title level="a" type="main">Tool condition monitoring in deep hole gun drilling: a data-driven approach</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Hong</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Zhou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><forename type="middle">L</forename><surname>Chan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Xu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><forename type="middle">S</forename><surname>Hong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">IEEE Int. Conf. Ind. Eng. Eng. Manage. (IEEM)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2017-12">2017. Dec 2017</date>
+			<biblScope unit="page" from="2148" to="2152" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. Hong, J. Zhou, H. L. Chan, C. Zhang, H. Xu, and G. S. Hong, &quot;Tool condition monitoring in deep hole gun drilling: a data-driven approach,&quot; in IEEE Int. Conf. Ind. Eng. Eng. Manage. (IEEM), 2017. IEEE, Dec 2017, pp. 2148-2152.</note>
+</biblStruct>
+
+<biblStruct xml:id="b67">
+	<monogr>
+		<title/>
+		<author>
+			<persName><forename type="first">F</forename><surname>Pedregosa</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Varoquaux</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Gramfort</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">V</forename><surname>Michel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Thirion</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">O</forename><surname>Grisel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Blondel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Prettenhofer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Weiss</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">V</forename><surname>Dubourg</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Vanderplas</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Passos</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Cournapeau</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Brucher</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Perrot</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Duches</surname></persName>
+		</author>
+		<imprint/>
+	</monogr>
+	<note type="raw_reference">F. Pedregosa, G. Varoquaux, A. Gramfort, V. Michel, B. Thirion, O. Grisel, M. Blondel, P. Prettenhofer, R. Weiss, V. Dubourg, J. Vander- plas, A. Passos, D. Cournapeau, M. Brucher, M. Perrot, and E. Duches-</note>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

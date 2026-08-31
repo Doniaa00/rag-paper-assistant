@@ -1,0 +1,818 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">Locally Interpretable One-Class Anomaly Detection for Credit Card Fraud Detection</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability  status="unknown">
+					<licence/>
+				</availability>
+				<date type="published" when="2022-06-29">29 Jun 2022</date>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><forename type="first">Tung-Yu</forename><surname>Wu</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="institution">National Taiwain University</orgName>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">You-Ting</forename><surname>Wang</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="institution">National Taiwain University</orgName>
+							</affiliation>
+						</author>
+						<title level="a" type="main">Locally Interpretable One-Class Anomaly Detection for Credit Card Fraud Detection</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date type="published" when="2022-06-29">29 Jun 2022</date>
+						</imprint>
+					</monogr>
+					<idno type="MD5">A75B97E594B002BA529DDF3AC7079CFE</idno>
+					<idno type="arXiv">arXiv:2108.02501v3[cs.LG]</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.2-SNAPSHOT" ident="GROBID" when="2026-08-31T18:10+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<textClass>
+				<keywords>
+					<term>Credit card fraud</term>
+					<term>anomaly detection</term>
+					<term>adversarial learning</term>
+					<term>explainable AI</term>
+				</keywords>
+			</textClass>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>For the highly imbalanced credit card fraud detection problem, most existing methods either use data augmentation methods or conventional machine learning models, while anomaly-detection-based approaches are not sufficient. Furthermore, few studies have employed AI interpretability tools to investigate the feature importance of transaction data, which is crucial for the black-box fraud detection module. Considering these two points together, we propose a novel anomaly detection framework for credit card fraud detection as well as a model-explaining module responsible for prediction explanations. The fraud detection model is composed of two deep neural networks, which are trained in an unsupervised and adversarial manner. Precisely, the generator is an AutoEncoder aiming to reconstruct genuine transaction data, while the discriminator is a fully-connected network for fraud detection. The explanation module has three white-box explainers in charge of interpretations of the AutoEncoder, discriminator, and the whole detection model, respectively. Experimental results show the state-of-the-art performances of our fraud detection model on the benchmark dataset compared with baselines. In addition, prediction analyses by three explainers are presented, offering a clear perspective on how each feature of an instance of interest contributes to the final model output. Our code is available at <ref type="url" target="https://github.com/tony10101105/Locally-Interpretable-One-Class-Anomaly-Detection-for-Credit-Card-Fraud-Detection">https://github.com/tony10101105/Locally-Interpretable-One-Class-Anomaly-Detection-for-Credit-Card-Fraud-Detection</ref>.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>I. INTRODUCTION</head><p>With the rapid development of online payment, credit card fraud also continues to climb to new heights, which leads to losses totalling billions of US dollars each year <ref type="bibr" target="#b0">[1]</ref>. To address this issue, banks and online payment companies turn to anti-fraud systems to detect illegitimate transactions. Among numerous techniques considered, machine learning (ML) and deep learning (DL) are attracting much attention due to their powerful predictive ability as a fraud detection system <ref type="bibr" target="#b1">[2]</ref> <ref type="bibr" target="#b2">[3]</ref>. Generally, for ML/DL-based methods, models' input features are card transaction data such as the identity of card holders and amount of funds, while outputs are confidence scores that form a probability space for determination of genuine/fraudulent transactions.</p><p>Credit card fraud detection, however, is not a typical classification task since fraudulent transactions are extremely rare out of all transactions. Specifically, the dataset is highly skewed, which often causes models to perform poorly when encountering rare cases. There have been some works directly applying traditional ML-based methods <ref type="bibr" target="#b3">[4]</ref> <ref type="bibr" target="#b4">[5]</ref>[6] <ref type="bibr" target="#b6">[7]</ref> where a large dataset is inessential. In terms of DL-based approaches, attempts at high quality data augmentation <ref type="bibr" target="#b7">[8]</ref> and the use of key features <ref type="bibr" target="#b8">[9]</ref> <ref type="bibr" target="#b9">[10]</ref> have been made, while few studies <ref type="bibr" target="#b10">[11]</ref> regard this problem as anomaly detection which naturally avoids the imbalance problem and has larger room for improvement.</p><p>Another crucial topic for DL-based credit card fraud detection systems is the model explainability <ref type="bibr" target="#b11">[12]</ref>, a research hotspot in the ML community. Considering the black-box property of neural networks, it is desirable to give an explanation of why a transaction is detected as fraudulent for official reports in court. Though various techniques for different levels and perspectives of explanations have been proposed <ref type="bibr" target="#b12">[13]</ref> <ref type="bibr">[14][15]</ref>[16] <ref type="bibr" target="#b16">[17]</ref>, investigation into their applications of anomaly detection methods are lacking.</p><p>In this paper, we make the first attempt to leverage a novel anomaly detection framework <ref type="bibr" target="#b17">[18]</ref> along with a LIME-based <ref type="bibr" target="#b12">[13]</ref> explaining module in the realm of credit card fraud detection. This anomaly detection framework is adopted for its promising performance on detecting irregular images, while the LIME is chosen because of its focus on a single instance of interest which might be the fraudulent transaction in this case. The detection module is adjusted to match the properties of tabular financial data and experiments on comparison with other baseline methods are carried out. LIME explainers are displayed in different parts of the detection module to monitor and inspect the whole prediction pipeline. In summary, the contributions of this work is twofold:</p><p>1) Modifying and utilizing a novel yet simple anomaly detection architecture to cope with the credit card fraud detection problem, achieving state-of-the-art performance in comparison with other cutting-edge or iconic methods. 2) Applying LIME to give explanations to different inputoutput relations for a certain transaction of interest in the detection module.</p><p>II. RELATED WORK This paper puts effort into the imbalance issue of credit card fraud detection dataset and the interpretability of utilized anomaly detection framework. In this section, we shall discuss several benchmark methods for imbalanced classification and explainable AI.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. Imbalanced Classification</head><p>Datasets for detection of fraudulent transactions are inherently skewed because normal cases significantly outnumber dishonest ones. The class imbalance problem greatly increases the difficulty of neural network training. There are two main solutions: (1) manipulating data to balance the dataset and (2) using algorithms like weighted loss function or one-class classification (OCC).</p><p>The first approach includes undersampling of majority class and oversampling of minority class. The former deletes excessive data points and the latter generates synthetic data that have similar distributions of real data in minority class, which is much more complicated yet widely adopted. For data synthesis, SMOTE <ref type="bibr" target="#b18">[19]</ref> is the most common technique which utilizes k-nearest neighbors algorithm to produce samples close to the minor-class data in the feature space. GAN-based <ref type="bibr" target="#b19">[20]</ref> upsampling models <ref type="bibr" target="#b7">[8]</ref> have also been broadly studied due to its impressive performance in generating vivid images.</p><p>In terms of algorithm-based approaches, weighting of majority and minority class is usually implemented by weighted loss functions. Among them, Focal Loss <ref type="bibr" target="#b20">[21]</ref> is one of the most iconic works which encourages networks to down-weight easy examples and focus on learning hard negative examples. Oneclass classification, also known as anomaly detection from application point of view, merely uses the majority class during training. Conventional ML anomaly detection methods mainly include linear models, such as OCSVM <ref type="bibr" target="#b21">[22]</ref>, proximity-based models, such as OCNN <ref type="bibr" target="#b22">[23]</ref>, and probabilistic models, such as COPOD <ref type="bibr" target="#b23">[24]</ref>. OCSVM is SVM trained in an unsupervised manner, trying to find a hyperplane that well-encloses the only class in the training set and excludes potential outliers. OCNN is the one-class k-nearest neighbors method which calculates the averaged distance to k nearest data points as the outlier score. COPOD is a copula-based non-parametric statistical approach that can directly provide some decision explanations.</p><p>AnoGAN <ref type="bibr" target="#b24">[25]</ref> first utilizes adversarial training, where the generator learns to produce samples with distributions similar to major-class data (inliers). As a result, the discriminator could tell whether the input is from a minor class (outliers) by comparing its distribution with that of generated samples. OCAN <ref type="bibr" target="#b10">[11]</ref> uses a novel LSTM-AutoEncoder for input feature representation and then conducts the prediction process similar to AnoGAN. These two models both apply a generator to produce fake features sampling from a noise. However, as an intrinsic defect of GAN, the upsampling generation process is unstable. Reference <ref type="bibr" target="#b17">[18]</ref> replaces the original noise-to-sample generator with an AutoEncoder for sample reconstruction, which is adopted by many following works <ref type="bibr" target="#b25">[26]</ref> <ref type="bibr" target="#b26">[27]</ref>. For example, Both the GANomaly <ref type="bibr" target="#b25">[26]</ref> and Skip-GANomaly <ref type="bibr" target="#b26">[27]</ref> have an AutoEncoder as parts of the generator. The former introduces an extra encoder for latent space restriction, while the latter features the use of skip-connections.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Explainable AI</head><p>Explainable AI (XAI) is an emerging field in the AI community which aims at allowing human users to comprehend and trust model outputs. Though this domain is relatively new, broad and comprehensive studies <ref type="bibr" target="#b11">[12]</ref> have been done. This paper categorizes these methods based on the scope of explanations: (1) local interpretability and (2) global interpretability. Local interpretability refers to explanations of decisions a model makes about an instance. Methods in this category either visualize or plot the importance of each input feature to the final output. The saliency map <ref type="bibr" target="#b13">[14]</ref>, which has long been present and used in local explanations, is a gradient-based visualization approach that calculates each pixel's attribution. LIME <ref type="bibr" target="#b12">[13]</ref> proposes a concrete framework for implementations of local surrogate models. Given an instance of interest and a dataset, LIME first generates new data points by perturbing the dataset and getting the black-box predictions for these new data points. Subsequently, a simple transparent model, such as a decision tree, is trained on this dataset, which then should be a good approximation of the target model around this instance. Therefore, analysis on this explainable proxy model could be easily carried out to provide human users with a clear view on how each input feature of this particular instance leads to final outputs made by the black-box model.</p><p>Global interpretability answers how model parameters affect the final prediction. It explains the whole model rather than a certain input instance. Activation Maximization (AM) methods <ref type="bibr" target="#b14">[15]</ref>[16] put forward visualization of neural networks, which is done by finding the input probing image that maximally activates certain neurons with gradient ascent. In particular, reference <ref type="bibr" target="#b15">[16]</ref> proposes to use generative models, where the generated images are fed into the target model for classification. We could then examine what kinds of noises and corresponding generated images lead to a certain prediction result. Following works <ref type="bibr" target="#b16">[17]</ref> have achieved image-level finegrained visual explanations for convolutional neural networks (CNN).</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>III. METHODOLOGY</head><p>The proposed framework comprises two modules: (1) the anomaly detection model and (2) the model explainers. The former's architecture is mainly derived from <ref type="bibr" target="#b17">[18]</ref>, which consists of an AutoEncoder for input-output reconstruction and a fully-connected classifier for fraud detection. The two networks are trained in an adversarial and unsupervised manner so as to cope with the class imbalance issue, and some adjustments are applied on account of specific properties of this credit card fraud detection task. The model explainers provide users with a clear perspective on how the network output is influenced by input features. We choose LIME to analyze a single transaction instance of interest. The overview of the proposed structure is shown in Fig <ref type="figure" target="#fig_0">1</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. Anomaly Detection Model -AutoEncoder</head><p>Capable of reconstructing and denoising input samples <ref type="bibr" target="#b17">[18]</ref>[26] <ref type="bibr" target="#b26">[27]</ref>, AutoEncoders have been widely used in novelty detection tasks recently. In this paper, the target and non-target class are the genuine and fraudulent transaction, respectively. For the low-dimensional tabular financial transaction data, we adopt an AutoEncoder for reconstruction. That is, no extra Gaussian noise is added in the input.</p><p>The model is composed of fully-connected layers. Batch Normalization (BN) and Rectified Linear Unit (ReLU) are utilized to ensure stable gradient flows. Given that fraudulent transactions are extremely rare, we only train the AutoEncoder with genuine transactions. Specifically, the model is trained to preserve the distribution of target-class inputs, while the outliers, namely, non-target class, will be naturally mapped to an uncertain point in the latent space and fail to be reconstructed due to their absence from the training set. To achieve this goal, two loss functions are presented:</p><formula xml:id="formula_0">L R = R(X) -X) 2 ,<label>(1)</label></formula><formula xml:id="formula_1">L GAN R = -log C(R(X)).<label>(2)</label></formula><p>Equation ( <ref type="formula" target="#formula_0">1</ref>) is the reconstruction loss, which is decided to be L2 loss in the next section. R denotes the reconstructor, that is, the AutoEncoder. X is the transaction data. Equation (2), which is a part of adversarial loss, is the binary cross entropy that guides the AutoEncoder to produce outputs that have the same distribution as inputs and subsequently confuse the discriminator. C stands for the Classifier. The overall training objective of the AutoEncoder is then:</p><formula xml:id="formula_2">min(E X∼pt [ R(X) -X) 2 -log C(R(X))]),<label>(3)</label></formula><p>where pt denotes the distribution of genuine transactions.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Anomaly Detection Model -Classifier</head><p>The classifier is a simple Multilayer Perceptron (MLP) that aims to separate original transaction data from the reconstructed one. The output of this model is a single value representing the probability of target class. As a result, the binary cross entropy loss for the Classifier can be as follows:</p><formula xml:id="formula_3">L GAN C = -log C(X) -log(1 -C(R(X))).<label>(4)</label></formula><p>The adversarial training objective in the whole anomaly detection model can then be summarized as:</p><formula xml:id="formula_4">min R max C (E X∼pt [log C(X) + log(1 -C(R(X)))]).<label>(5)</label></formula><p>It is notable that the training procedure is done when the AutoEncoder and classifier reach the Nash equilibrium and the reconstruction loss is small. This means the reconstruction process is performed well and the classifier outputs around 0.5 on both original and reconstructed features, which indicates that their distributions are too close to be distinguished. In this situation, it is simple and straightforward to determine by a threshold whether the instance of interest is a fraudulent transaction, which is mapped to an unknown distribution when passing through the AutoEncoder and leads to a prediction value far from 0.5 at the classifier. The threshold is set to be 0.7 in this work.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>C. Model Explainer</head><p>In terms of the explainability of our one-class fraud detection framework, we are particularly interested in the interpretations of (1) how the reconstruction stage is affected by genuine/fraudulent transaction data, (2) how the consequent reconstructed features bring about final prediction results, and (3) the overall credit card fraud detection module. Therefore, three LIME-based explainers, which are simple white-box models, are employed to interpret the three different inputoutput relations. According to their functions, models are named as AE explainer, C explainer, and general explainer, respectively, as demonstrated in Fig 1 . 
+As a model-agnostic technique, LIME only requires the target model to be a classifier or regressor. Thus, the C and general classification explainer can be directly trained with samples acquired by sampling from the distribution of the given dataset, while the vector output of AutoEncoder obstructs this way for the AE explainer. To address this problem, we make use of L2-norm to compute a single value of reconstruction error as the label for the training of the AE regression explainer. This is equivalent to (1), while we describe the formula here to clarify the calculation of label:</p><formula xml:id="formula_5">label = n i=1 (R(X) i -X i ) 2 n ,<label>(6)</label></formula><p>where the character n is the number of features. With this step, the AE explainer is turned to an explainable regression model whose outputs denote L2 reconstruction error.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>IV. EXPERIMENTS</head><p>A. Experimental setup 1) Datasets: We test the performance of our anomaly detection framework on a benchmark credit card fraud detection dataset <ref type="foot" target="#foot_0">1</ref> . The dataset contains 284,807 credit card transactions, collected in Europe during a 2-day period in September 2013. There are only 492 fraudulent cases (minority class, labeled as 1) accounting for 0.172% and the other 234315 cases are genuine transactions (majority class, labeled as 0), which indicates the dataset is highly imbalanced. Each transaction has 30 features, 28 of which are principal components obtained from PCA and the other two are time and amount. The 28 features are listed as V1 to V28 and further information is not provided because of confidentiality issues. Time feature denotes the elapsed time between the current and first transaction, which is considered in temporal-based models <ref type="bibr" target="#b8">[9]</ref> <ref type="bibr" target="#b9">[10]</ref>. Amount feature is the amount of money in the transaction, and it is used in cost-sensitive learning. We only utilize the 28 features in this 2) anomaly detection methods: We compare our framework with five baseline models: OCSVM, OCNN, COPOD, vanilla AutoEncoder, and OCAN. For the first four baselines, we use implementations provided in PyOD <ref type="bibr" target="#b27">[28]</ref>, which is a renowned high-quality toolkit for novelty detection. OCAN is not included in this package, so we retrieve its open-source original implementation 2 . In terms of training parameters, OCSVM, COPOD, AutoEncoder, and OCAN are trained with 700 genuine cases. OCNN has no training stage, but an evaluation set is required for hyper-parameter tuning. Thus, we randomly pick 25 genuine and 25 fraudulent cases for evaluation and subsequently determine k = 5. All hyper-parameters are manually adjusted to reach the best performances if no default values are provided by the original paper or source code.</p><p>Our model is trained on the whole training set for 2 epochs. The batch size is 4096, and the learning rate is 2e-4. Weight initialization is applied to ensure a fine starting point. The threshold is 0.7, and a classifier output above this value is identified as an illegal transaction.</p><p>3) LIME: We use LIME's open-source implementations 3 to build the three explainers. The AE explainer is a regression model, where the label is defined in <ref type="bibr" target="#b5">(6)</ref>. The D and general explainer are classifiers, where the label is the output of the fraud detection module.</p><p>Firstly, we select a single fraudulent case from the testing set. Secondly, 5000 data points are produced by sampling from the distribution of the class-balanced testing set, and their corresponding outputs by our anomaly detection model are used as labels. Finally, these data points and labels serve as the training set to build a simple explainable model, into which we can feed the original fraudulent case to obtain its prediction explanation.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Results</head><p>1) Anomaly Detection Performance: The performance measures include accuracy, precision, recall, F1-score, and 2 <ref type="url" target="https://github.com/PanpanZheng/OCAN">https://github.com/PanpanZheng/OCAN</ref> 3 <ref type="url" target="https://github.com/marcotcr/lime">https://github.com/marcotcr/lime</ref> Matthews correlation coefficient (MCC). Particularly, F1-score and MCC are balanced binary classification measures that take the entire confusion matrix into account. Precision indicates how likely a case detected asf fraudulent is indeed illegitimate. Recall denotes the proportion of fraudulent cases that are successfully detected. The testing results are displayed in Table <ref type="table" target="#tab_0">1</ref>.</p><p>It is remarkable that our method achieves 0.9061 accuracy, 0.9044 F1-score, and 0.8128 MCC, higher than any other baselines. This indicates that our model reaches the best performance if we consider precision and recall simultaneously. For precision only, AutoEncoder sacrifices recall to reach the highest precision (0.9245), resulting in a lower accuracy, F1-score, and MCC. However, this merely outperforms our result (0.9216), by a small margin. For recall only, OCAN and COPOD obtain promising results (0.9472 and 0.9415, respectively). Nevertheless, they fail to reach a balance between precision and recall. If we compare OCSVM, OCNN, and our method, which have relatively balanced precision and recall, our method almost outperforms the other two models in all indices except for recall, where OCNN is only slightly better.</p><p>We also compare different loss functions to determine the most suitable form for reconstruction. Three candidates are L1, SmoothL1, and L2 loss. For simplicity, we finally choose L2 loss because it results in the best MCC, as shown in Table <ref type="table" target="#tab_1">2</ref>. Finally, we plot the receiver operating characteristic (ROC) curve and calculate the area under curve (AUC) in Fig 2 . ROC and AUC show the classifier performance at various thresholds and serve as a criterion for model robustness. The AUC value ranges from 0 to 1. Specifically, 0.5 (such as the diagonal in Fig 2 ) denotes a naive classifier and 1 indicates a perfect classifier. Our method achieves an AUC of 0.9434.      </p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head>FIG 1 .</head><label>1</label><figDesc>FIG 1. Structure of our method.</figDesc><graphic coords="2,321.84,56.07,231.32,142.38" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head>FIG 2 .</head><label>2</label><figDesc>FIG 2. ROC and AUC of our model</figDesc><graphic coords="5,97.38,56.07,154.23,115.67" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_2"><head>FIG 3 .</head><label>3</label><figDesc>FIG 3. Interpretations by the AE explainer</figDesc><graphic coords="5,146.22,323.00,102.81,57.02" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_4"><head>FIG 4 .</head><label>4</label><figDesc>FIG 4. Interpretations by the C explainer</figDesc><graphic coords="5,146.22,556.25,102.81,57.02" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_5"><head>FIG 5 .</head><label>5</label><figDesc>FIG 5. Interpretations by the general explainer</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_6"><head></head><label></label><figDesc>V. CONCLUSIONThis work proposes to leverage an adversarially trained anomaly detection model for credit card fraud detection problem. Experimental results show that this framework outperforms other iconic or state-of-the-art baseline models. Furthermore, LIME is applied to investigate input-output relations of this fraud detection model and analyses of an instance of interest are presented, providing a clear view on how each input feature influences the final prediction. Future work will focus on interpretability of other unsupervised or semisupervised methods in the application area.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_0"><head>TABLE 1 .</head><label>1</label><figDesc>Credit card fraud detection results on accuracy, precision, recall, F1-score, and Matthews correlation coefficient Since the data have been normalized before PCA, we do not clean them again before the training process. Since the original dataset is not split into training and testing sets, we select 490 out of 492 fraudulent cases and 490 out of 234315 genuine cases to generate a well-balanced testing set, and the remaining 233825 genuine cases form the training set for our model. All the baselines are tested on this testing set, while training sets for different methods may differ.</figDesc><table><row><cell>Methods</cell><cell>Accuracy</cell><cell>Precision</cell><cell>Recall</cell><cell>F1-score</cell><cell>MCC</cell></row><row><cell>OCSVM</cell><cell>0.8898</cell><cell>0.9204</cell><cell>0.8673</cell><cell>0.8931</cell><cell>0.7811</cell></row><row><cell>OCNN</cell><cell>0.9000</cell><cell>0.9122</cell><cell>0.8904</cell><cell>0.9012</cell><cell>0.8002</cell></row><row><cell>COPOD</cell><cell>0.8388</cell><cell>0.7224</cell><cell>0.9415</cell><cell>0.8175</cell><cell>0.6967</cell></row><row><cell>AutoEncoder</cell><cell>0.8000</cell><cell>0.9245</cell><cell>0.7402</cell><cell>0.8221</cell><cell>0.6195</cell></row><row><cell>OCAN</cell><cell>0.8806</cell><cell>0.8061</cell><cell>0.9472</cell><cell>0.8710</cell><cell>0.7698</cell></row><row><cell>Ours</cell><cell>0.9061</cell><cell>0.9216</cell><cell>0.8878</cell><cell>0.9044</cell><cell>0.8128</cell></row><row><cell>work as in [11].</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_1"><head>TABLE 2 .</head><label>2</label><figDesc>MCC of different reconstruction losses</figDesc><table><row><cell>Loss Function</cell><cell>MCC</cell></row><row><cell>L1</cell><cell>0.7990</cell></row><row><cell>SmoothL1</cell><cell>0.7970</cell></row><row><cell>L2</cell><cell>0.8128</cell></row></table></figure>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot" n="1" xml:id="foot_0"><p>https://www.kaggle.com/mlg-ulb/creditcardfraud</p></note>
+		</body>
+		<back>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<analytic>
+		<title level="a" type="main">Analysis on credit card fraud detection methods</title>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">B E</forename><surname>Raj</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">A</forename><surname>Portia</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">2011 International Conference on Computer, Communication and Electrical Technology (ICCCET)</title>
+		<imprint>
+			<date type="published" when="2011-03">Mar. 2011</date>
+			<biblScope unit="page" from="152" to="156" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S. B. E. Raj, A. A. Portia, &quot;Analysis on credit card fraud detection methods,&quot; In 2011 International Conference on Computer, Communica- tion and Electrical Technology (ICCCET), pp. 152-156, Mar. 2011.</note>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<monogr>
+		<title level="m" type="main">A survey of credit card fraud detection techniques: data and technique oriented perspective</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Sorournejad</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Zojaji</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">E</forename><surname>Atani</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">H</forename><surname>Monadjemi</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1611.06439[cs.CR</idno>
+		<imprint>
+			<date type="published" when="2016-11">Nov. 2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S. Sorournejad, Z. Zojaji, R. E. Atani, A. H. Monadjemi, &quot;A survey of credit card fraud detection techniques: data and technique oriented perspective,&quot; arXiv:1611.06439 [cs.CR], Nov. 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<analytic>
+		<title level="a" type="main">Data mining for credit card fraud: A comparative study</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Bhattacharyya</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Jha</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Tharakunnel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">C</forename><surname>Westland</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Decision support systems</title>
+		<imprint>
+			<biblScope unit="volume">50</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="602" to="613" />
+			<date type="published" when="2011-02">Feb. 2011</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S. Bhattacharyya, S. Jha, K. Tharakunnel and J. C. Westland, &quot;Data mining for credit card fraud: A comparative study,&quot; Decision support systems, vol. 50, issue. 3, pp. 602-613, Feb. 2011.</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<analytic>
+		<title level="a" type="main">Credit card fraud detection using deep learning based on auto-encoder and restricted boltzmann machine</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Pumsirirat</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Yan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of advanced computer science and applications</title>
+		<imprint>
+			<biblScope unit="volume">9</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="18" to="25" />
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">A. Pumsirirat, L. Yan, &quot;Credit card fraud detection using deep learning based on auto-encoder and restricted boltzmann machine,&quot; International Journal of advanced computer science and applications, vol. 9, no. 1, pp. 18-25, 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<analytic>
+		<title level="a" type="main">Detecting Credit Card Fraud by Decision Trees and Support Vector Machines</title>
+		<author>
+			<persName><forename type="first">Y</forename><forename type="middle">G</forename><surname>S ¸ahin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Duman</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">IMECS 2011 -International MultiConference of Engineers and Computer Scientists</title>
+		<imprint>
+			<date type="published" when="2011-03">2011. Mar. 2011</date>
+			<biblScope unit="volume">1</biblScope>
+			<biblScope unit="page" from="442" to="447" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Y. G. S ¸ahin, E. Duman, &quot;Detecting Credit Card Fraud by Decision Trees and Support Vector Machines,&quot; IMECS 2011 -International MultiConference of Engineers and Computer Scientists 2011, vol. 1, pp. 442-447, Mar. 2011.</note>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<analytic>
+		<title level="a" type="main">Application of credit card fraud detection: Based on bagging ensemble classifier</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Zareapoor</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Shamsolmoali</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Procedia computer science</title>
+		<imprint>
+			<biblScope unit="volume">48</biblScope>
+			<biblScope unit="page" from="679" to="685" />
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">M. Zareapoor, P. Shamsolmoali, &quot;Application of credit card fraud detection: Based on bagging ensemble classifier,&quot; Procedia computer science, vol. 48, pp. 679-685, 2015.</note>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<analytic>
+		<title level="a" type="main">Credit Card Fraud Detection Using AdaBoost and Majority Voting</title>
+		<author>
+			<persName><forename type="first">K</forename><surname>Randhawa</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">K</forename><surname>Loo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Seera</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">P</forename><surname>Lim</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">K</forename><surname>Nandi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Access</title>
+		<imprint>
+			<biblScope unit="volume">6</biblScope>
+			<biblScope unit="page" from="14277" to="14284" />
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">K. Randhawa, C. K. Loo, M. Seera, C. P. Lim and A. K. Nandi, &quot;Credit Card Fraud Detection Using AdaBoost and Majority Voting,&quot; IEEE Access, vol. 6, pp. 14277-14284, 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<monogr>
+		<title level="m" type="main">Improving Detection of Credit Card Fraudulent Transactions using Generative Adversarial Networks</title>
+		<author>
+			<persName><forename type="first">H</forename><surname>Ba</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1907.03355[cs.LG</idno>
+		<imprint>
+			<date type="published" when="2019-07">Jul. 2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">H. Ba, &quot;Improving Detection of Credit Card Fraudulent Transactions using Generative Adversarial Networks,&quot; arXiv:1907.03355 [cs.LG], Jul. 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">Spatiotemporal attention-based neural network for credit card fraud detection</title>
+		<author>
+			<persName><forename type="first">D</forename><surname>Cheng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Xiang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Shang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Yang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Zhang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the AAAI Conference on Artificial Intelligence</title>
+		<meeting>the AAAI Conference on Artificial Intelligence</meeting>
+		<imprint>
+			<date type="published" when="2020-04">Apr. 2020</date>
+			<biblScope unit="volume">34</biblScope>
+			<biblScope unit="page" from="362" to="369" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">D. Cheng, S. Xiang, C. Shang, Y. Zhang, F. Yang and L. Zhang &quot;Spatio- temporal attention-based neural network for credit card fraud detection,&quot; In Proceedings of the AAAI Conference on Artificial Intelligence, vol. 34, no. 01, pp. 362-369, Apr. 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<analytic>
+		<title level="a" type="main">Pd-fds: Purchase density based online credit card fraud detection system</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Ki</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">W</forename><surname>Yoon</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">KDD 2017 Workshop on Anomaly Detection in Finance</title>
+		<imprint>
+			<publisher>PMLR</publisher>
+			<date type="published" when="2018-01">Jan. 2018</date>
+			<biblScope unit="page" from="76" to="84" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Y. Ki, J. W. Yoon &quot;Pd-fds: Purchase density based online credit card fraud detection system,&quot; In KDD 2017 Workshop on Anomaly Detection in Finance, PMLR, pp. 76-84, Jan. 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<analytic>
+		<title level="a" type="main">One-Class Adversarial Nets for Fraud Detection</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Zheng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Yuan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Wu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Lu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">AAAI</title>
+		<imprint>
+			<biblScope unit="volume">33</biblScope>
+			<biblScope unit="issue">01</biblScope>
+			<biblScope unit="page" from="1286" to="1293" />
+			<date type="published" when="2019-07">Jul. 2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">P. Zheng, S. Yuan, X. Wu, J. Li, and A. Lu, &quot;One-Class Adversarial Nets for Fraud Detection&quot;, AAAI, vol. 33, no. 01, pp. 1286-1293, Jul. 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<analytic>
+		<title level="a" type="main">Explainable Artificial Intelligence (XAI): Concepts, taxonomies, opportunities and challenges toward responsible AI</title>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">Barredo</forename><surname>Arrieta</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Information Fusion</title>
+		<imprint>
+			<biblScope unit="volume">58</biblScope>
+			<biblScope unit="page" from="82" to="115" />
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">A. Barredo Arrieta et al., &quot;Explainable Artificial Intelligence (XAI): Concepts, taxonomies, opportunities and challenges toward responsible AI,&quot; Information Fusion, vol. 58, pp. 82-115, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<analytic>
+		<title level="a" type="main">Why should i trust you?&apos; Explaining the predictions of any classifier</title>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">T</forename><surname>Ribeiro</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Singh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Guestrin</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 22nd ACM SIGKDD international conference on knowledge discovery and data mining</title>
+		<meeting>the 22nd ACM SIGKDD international conference on knowledge discovery and data mining</meeting>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+			<biblScope unit="page" from="1135" to="1144" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">M. T. Ribeiro, S. Singh and C. Guestrin &quot;&apos;Why should i trust you?&apos; Explaining the predictions of any classifier,&quot; In Proceedings of the 22nd ACM SIGKDD international conference on knowledge discovery and data mining, pp. 1135-1144, 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<monogr>
+		<title level="m" type="main">Deep inside convolutional networks: Visualising image classification models and saliency maps</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>K Simonyan</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Vedald</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Zisserman</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1312.6034[cs.CV</idno>
+		<imprint>
+			<date type="published" when="2014-04">Apr. 2014</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">K Simonyan, A Vedald and A Zisserman &quot;Deep inside convolutional networks: Visualising image classification models and saliency maps,&quot; arXiv:1312.6034 [cs.CV], Apr. 2014.</note>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<monogr>
+		<title level="m" type="main">Understanding neural networks through deep visualization</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Yosinski</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Clune</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Nguyen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Fuchs</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Lipson</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1506.06579[cs.CV</idno>
+		<imprint>
+			<date type="published" when="2015-06">Jun. 2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. Yosinski, J. Clune, A. Nguyen, T. Fuchs and H. Lipson, &quot;Under- standing neural networks through deep visualization,&quot; arXiv:1506.06579 [cs.CV], Jun. 2015.</note>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<analytic>
+		<title level="a" type="main">Plug &amp; play generative networks: Conditional iterative generation of images in latent space</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Nguyen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Clune</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Bengio</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Dosovitskiy</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Yosinski</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition</title>
+		<meeting>the IEEE Conference on Computer Vision and Pattern Recognition</meeting>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+			<biblScope unit="page" from="4467" to="4477" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">A. Nguyen, J. Clune, Y. Bengio, A. Dosovitskiy, and J. Yosinski &quot;Plug &amp; play generative networks: Conditional iterative generation of images in latent space,&quot; In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition, pp. 4467-4477, 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<analytic>
+		<title level="a" type="main">Interpretable and fine-grained visual explanations for convolutional neural networks</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Wagner</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">M</forename><surname>Kohler</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Gindele</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Hetzel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">T</forename><surname>Wiedemer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Behnke</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition</title>
+		<meeting>the IEEE/CVF Conference on Computer Vision and Pattern Recognition</meeting>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+			<biblScope unit="page" from="9097" to="9107" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. Wagner, J. M.Kohler, T. Gindele, L. Hetzel, J. T. Wiedemer, and S.Behnke, &quot;Interpretable and fine-grained visual explanations for convo- lutional neural networks,&quot; In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pp. 9097-9107, 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<analytic>
+		<title level="a" type="main">Adversarially learned one-class classifier for novelty detection</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Sabokrou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Khalooei</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Fathy</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Adeli</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition</title>
+		<meeting>the IEEE Conference on Computer Vision and Pattern Recognition</meeting>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+			<biblScope unit="page" from="3379" to="3388" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">M. Sabokrou, M. Khalooei, M. Fathy, and E. Adeli, &quot;Adversarially learned one-class classifier for novelty detection,&quot; In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition, pp. 3379-3388, 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<analytic>
+		<title level="a" type="main">SMOTE: synthetic minority over-sampling technique</title>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">V</forename><surname>Chawla</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">W</forename><surname>Bowyer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><forename type="middle">O</forename><surname>Hall</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><forename type="middle">P</forename><surname>Kegelmeyer</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of artificial intelligence research</title>
+		<imprint>
+			<biblScope unit="volume">16</biblScope>
+			<biblScope unit="page" from="321" to="357" />
+			<date type="published" when="2002-06">Jun. 2002</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">N. V. Chawla, K. W. Bowyer, L. O. Hall and W. P. Kegelmeyer, &quot;SMOTE: synthetic minority over-sampling technique,&quot; Journal of arti- ficial intelligence research, vol. 16, pp. 321-357, Jun. 2002.</note>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<analytic>
+		<title level="a" type="main">Generative adversarial nets</title>
+		<author>
+			<persName><forename type="first">I</forename><surname>Goodfellow</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Pouget-Abadie</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Mirza</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Xu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Warde-Farley</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Ozair</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Courville</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Bengio</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Advances in neural information processing systems</title>
+		<imprint>
+			<biblScope unit="volume">27</biblScope>
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">I. Goodfellow, J. Pouget-Abadie, M. Mirza, B. Xu, D. Warde-Farley, S. Ozair, A. Courville and Y. Bengio, &quot;Generative adversarial nets,&quot; Advances in neural information processing systems, vol. 27, 2014.</note>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<analytic>
+		<title level="a" type="main">Focal loss for dense object detection</title>
+		<author>
+			<persName><forename type="first">T</forename><forename type="middle">Y</forename><surname>Lin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Goyal</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Girshick</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>He</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Dollár</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the IEEE international conference on computer vision</title>
+		<meeting>the IEEE international conference on computer vision</meeting>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+			<biblScope unit="page" from="2980" to="2988" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">T. Y. Lin, P. Goyal, R. Girshick, K. He, and P. Dollár, &quot;Focal loss for dense object detection,&quot; In Proceedings of the IEEE international conference on computer vision, pp. 2980-2988, 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<analytic>
+		<title level="a" type="main">Estimating the support of a high-dimensional distribution</title>
+		<author>
+			<persName><forename type="first">B</forename><surname>Schölkopf</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">C</forename><surname>Platt</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Shawe-Taylor</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">J</forename><surname>Smola</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">C</forename><surname>Williamson</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Neural computation</title>
+		<imprint>
+			<biblScope unit="volume">13</biblScope>
+			<biblScope unit="issue">7</biblScope>
+			<biblScope unit="page" from="1443" to="1471" />
+			<date type="published" when="2001-07">Jul. 2001</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">B. Schölkopf, J. C. Platt, J. Shawe-Taylor, A. J. Smola, and R. C. Williamson, &quot;Estimating the support of a high-dimensional distribution,&quot; Neural computation, vol. 13, issue. 7, pp. 1443-1471, Jul. 2001.</note>
+</biblStruct>
+
+<biblStruct xml:id="b22">
+	<analytic>
+		<title level="a" type="main">Efficient algorithms for mining outliers from large data sets</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Ramaswamy</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Rastogi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Shim</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 2000 ACM SIGMOD international conference on Management of data</title>
+		<meeting>the 2000 ACM SIGMOD international conference on Management of data</meeting>
+		<imprint>
+			<date type="published" when="2000-05">May. 2000</date>
+			<biblScope unit="page" from="427" to="438" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S. Ramaswamy, R. Rastogi and K. Shim. &quot;Efficient algorithms for mining outliers from large data sets,&quot; In Proceedings of the 2000 ACM SIGMOD international conference on Management of data, pp. 427-438, May. 2000.</note>
+</biblStruct>
+
+<biblStruct xml:id="b23">
+	<analytic>
+		<title level="a" type="main">COPOD: copulabased outlier detection</title>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><surname>Botta</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Ionescu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Hu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">2020 IEEE International Conference on Data Mining (ICDM)</title>
+		<imprint>
+			<date type="published" when="2020-11">Nov. 2020</date>
+			<biblScope unit="page" from="1118" to="1123" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Z. Li, Y. Zhao, N. Botta, C. Ionescu and X. Hu, &quot;COPOD: copula- based outlier detection,&quot; In 2020 IEEE International Conference on Data Mining (ICDM), pp. 1118-1123, Nov. 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b24">
+	<analytic>
+		<title level="a" type="main">Unsupervised anomaly detection with generative adversarial networks to guide marker discovery</title>
+		<author>
+			<persName><forename type="first">T</forename><surname>Schlegl</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Seeböck</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">M</forename><surname>Waldstein</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">U</forename><surname>Schmidt-Erfurth</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Langs</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International conference on information processing in medical imaging</title>
+		<meeting><address><addrLine>Cham</addrLine></address></meeting>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2017-06">Jun. 2017</date>
+			<biblScope unit="page" from="146" to="157" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">T. Schlegl, P. Seeböck, S. M. Waldstein, U. Schmidt-Erfurth and G. Langs &quot;Unsupervised anomaly detection with generative adversarial networks to guide marker discovery,&quot; In International conference on information processing in medical imaging, Springer, Cham, pp. 146- 157, Jun. 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b25">
+	<analytic>
+		<title level="a" type="main">Ganomaly: Semi-supervised anomaly detection via adversarial training</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Akcay</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Atapour-Abarghouei</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><forename type="middle">P</forename><surname>Breckon</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Asian conference on computer vision</title>
+		<meeting><address><addrLine>Cham</addrLine></address></meeting>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2018-12">Dec. 2018</date>
+			<biblScope unit="page" from="622" to="637" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S. Akcay, A. Atapour-Abarghouei and T. P. Breckon, &quot;Ganomaly: Semi-supervised anomaly detection via adversarial training,&quot; In Asian conference on computer vision , Springer, Cham, pp. 622-637, Dec. 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b26">
+	<analytic>
+		<title level="a" type="main">Skip-ganomaly: Skip connected and adversarially trained encoder-decoder anomaly detection</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Akcay</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Atapour-Abarghouei</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><forename type="middle">P</forename><surname>Breckon</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">2019 International Joint Conference on Neural Networks (IJCNN)</title>
+		<imprint>
+			<date type="published" when="2019-07">Jul. 2019</date>
+			<biblScope unit="page" from="1" to="8" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S. Akcay, A. Atapour-Abarghouei and T. P. Breckon, &quot;Skip-ganomaly: Skip connected and adversarially trained encoder-decoder anomaly de- tection,&quot; In 2019 International Joint Conference on Neural Networks (IJCNN), pp. 1-8, Jul. 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b27">
+	<monogr>
+		<title level="m" type="main">Pyod: A python toolbox for scalable outlier detection</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Nasrullah</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Li</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1901.01588[cs.LG</idno>
+		<imprint>
+			<date type="published" when="2019-06">Jun. 2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Y. Zhao, Z. Nasrullah and Z. Li &quot;Pyod: A python toolbox for scalable outlier detection,&quot; arXiv:1901.01588 [cs.LG], Jun. 2019.</note>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

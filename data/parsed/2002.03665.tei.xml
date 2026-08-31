@@ -1,0 +1,655 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">ANOMALYDAE: DUAL AUTOENCODER FOR ANOMALY DETECTION ON ATTRIBUTED NETWORKS</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability status="unknown"><licence/></availability>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><forename type="first">Haoyi</forename><surname>Fan</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="department">School of Computer Science and Technology</orgName>
+								<orgName type="institution">Harbin University of Science and Technology</orgName>
+								<address>
+									<postCode>150080</postCode>
+									<settlement>Harbin</settlement>
+									<country key="CN">China</country>
+								</address>
+							</affiliation>
+						</author>
+						<author role="corresp">
+							<persName><forename type="first">Fengbin</forename><surname>Zhang</surname></persName>
+							<email>zhangfengbin@hrbust.edu.cn</email>
+							<affiliation key="aff0">
+								<orgName type="department">School of Computer Science and Technology</orgName>
+								<orgName type="institution">Harbin University of Science and Technology</orgName>
+								<address>
+									<postCode>150080</postCode>
+									<settlement>Harbin</settlement>
+									<country key="CN">China</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Zuoyong</forename><surname>Li</surname></persName>
+							<affiliation key="aff1">
+								<orgName type="department">Fujian Provincial Key Laboratory of Information Processing and Intelligent Control</orgName>
+								<orgName type="institution">Minjiang University</orgName>
+								<address>
+									<postCode>350121</postCode>
+									<settlement>Fuzhou</settlement>
+									<country key="CN">China</country>
+								</address>
+							</affiliation>
+						</author>
+						<title level="a" type="main">ANOMALYDAE: DUAL AUTOENCODER FOR ANOMALY DETECTION ON ATTRIBUTED NETWORKS</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date/>
+						</imprint>
+					</monogr>
+					<idno type="MD5">0346766B93EDD47DF292AD727941B965</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.2-SNAPSHOT" ident="GROBID" when="2026-08-31T18:09+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<textClass>
+				<keywords>
+					<term>Anomaly detection</term>
+					<term>attributed networks</term>
+					<term>dual autoencoder</term>
+					<term>graph signal processing</term>
+				</keywords>
+			</textClass>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>Anomaly detection on attributed networks aims at finding nodes whose patterns deviate significantly from the majority of reference nodes, which is pervasive in many applications such as network intrusion detection and social spammer detection. However, most existing methods neglect the complex cross-modality interactions between network structure and node attribute. In this paper, we propose a deep joint representation learning framework for anomaly detection through a dual autoencoder (AnomalyDAE), which captures the complex interactions between network structure and node attribute for high-quality embeddings. Specifically, Anoma-lyDAE consists of a structure autoencoder and an attribute autoencoder to learn both node embedding and attribute embedding jointly in latent space. Moreover, attention mechanism is employed in structure encoder to learn the importance between a node and its neighbors for an effective capturing of structure pattern, which is important to anomaly detection. Besides, by taking both the node embedding and attribute embedding as inputs of attribute decoder, the cross-modality interactions between network structure and node attribute are learned during the reconstruction of node attribute. Finally, anomalies can be detected by measuring the reconstruction errors of nodes from both the structure and attribute perspectives. Extensive experiments on real-world datasets demonstrate the effectiveness of the proposed method.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1.">INTRODUCTION</head><p>Attributed networks <ref type="bibr" target="#b0">[1]</ref> are ubiquitous in the real world such as social networks <ref type="bibr" target="#b1">[2]</ref>, communication networks <ref type="bibr" target="#b2">[3]</ref>, and product co-purchase networks <ref type="bibr" target="#b3">[4]</ref>, in which each node is associated with a rich set of attributes or characteristics, in addition to the raw network topology.</p><p>Corresponding authors: Fengbin Zhang, Zuoyong <ref type="bibr">Li.</ref> Anomaly detection on attribute networks aims at finding nodes whose patterns or behaviors significantly deviate from the reference nodes, which has a broad impact on various domains such as network intrusion detection <ref type="bibr" target="#b4">[5]</ref>, system fault diagnosis <ref type="bibr" target="#b5">[6]</ref>, and social spammer detection <ref type="bibr" target="#b6">[7]</ref>. Recently, there is a growing interest in researches about anomaly detection on attributed networks. Some of them study the problem of community-level anomalies detection by comparing the current node with other reference nodes within the same community <ref type="bibr" target="#b7">[8]</ref> or measuring the quality of connected subgraphs <ref type="bibr" target="#b8">[9]</ref>. Some of them conduct anomaly analysis through subspace selection of node feature <ref type="bibr" target="#b9">[10,</ref><ref type="bibr" target="#b10">11]</ref>. While some recent residual analysis based methods attempt to find anomalies by assuming that anomalies cannot be approximated from other reference nodes <ref type="bibr" target="#b11">[12,</ref><ref type="bibr" target="#b12">13]</ref>.</p><p>Although above mentioned algorithms had their fair share of success, these methods either suffer from severe computational overhead caused by shallow learning mechanisms and subspace selection, or neglect the complex interactions between nodes and attributes by only learning the representations for nodes <ref type="bibr" target="#b13">[14]</ref>, while interactions between two different modality sources are of great importance for anomaly detection task to capture both structure and attribute induced anomalies. To alleviate the above-mentioned problems, in this paper, we propose a deep joint representation learning framework for anomaly detection through a dual autoencoder (AnomalyDAE), which captures the complex interactions between the network structure and node attribute for highquality embeddings. Different from <ref type="bibr" target="#b13">[14]</ref>, which employs one single graph convolutional network (GCN) <ref type="bibr" target="#b14">[15]</ref> based encoder for node embedding, AnomalyDAE consists of a structure autoencoder and an attribute autoencoder to learn the latent representation of nodes and attributes jointly by reconstructing the original network topologies and node attributes respectively. Then, anomalies in the network are detected by measuring the reconstruction errors of nodes from both the structure and attribute perspectives.</p><p>In sum, the main contributions of this paper are as follows: </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>M</head><p>The number of nodes.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>N</head><p>The dimension of attribute.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>D</head><p>The dimension of embedding.</p><formula xml:id="formula_0">A ∈ R M ×M Adjacency matrix of a network. X ∈ R M ×N</formula><p>Attribute matrix of all nodes.</p><formula xml:id="formula_1">Z V ∈ R M ×D</formula><p>Latent embedding of nodes.</p><formula xml:id="formula_2">Z A ∈ R N ×D</formula><p>Latent embedding of attributes.</p><p>• We propose a deep joint representation learning framework for anomaly detection on attributed networks via a dual autoencoder where the complex cross-modality interactions between the network structure and node attribute are captured, and the anomalies are measured from both the structure and attribute perspectives.</p><p>• We conduct extensive experiments on multiple realworld datasets, and the results show that AnomalyDAE consistently outperforms state-of-the-art deep model significantly, with up to 22.32% improvement in terms of the ROC AUC score. The source codes 1 are publicly available.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.">NOTATIONS AND PROBLEM STATEMENT</head><p>In this section, we formally define the frequently-used notations and the studied problem. The notations used in this paper are summarized in Table <ref type="table" target="#tab_0">1</ref>.</p><p>Definition 1. Attributed Network G = {V, E, X} is defined as an undirected graph with M=|V| nodes and |E| edges, each of nodes is associated with a N=|X| dimension attribute.</p><p>Problem 1. Given an attributed network G = {V, E, X}, our goal is to detect the nodes that are rare and differ significantly from the majority of the reference nodes in terms both the structure and attribute information of the nodes. More formally, we aim to learn a score function f : V i → y i ∈ R, to classify sample x i based on the threshold λ:</p><formula xml:id="formula_3">y i = 1, if f (V i ) ≥ λ, 0, otherwise.<label>(1)</label></formula><p>where y i denotes the label of sample x i , with 0 being the normal class and 1 the anomalous class.</p><p>1 <ref type="url" target="https://github.com/haoyfan/AnomalyDAE">https://github.com/haoyfan/AnomalyDAE</ref> </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.">METHOD</head><p>In this section, we introduce the proposed AnomalyDAE in detail. As shown in Fig. <ref type="figure" target="#fig_0">1</ref>, AnomalyDAE is an end-toend joint representation learning framework that consists of a structure autoencoder for network structure reconstruction, and an attribute autoencoder for node attributes reconstruction. Take the learned node embedding from the structure encoder and the learned attribute embedding from the attribute encoder as inputs, the interactions between the network structure and the node attribute are jointly captured by both structure decoder and attribute decoder during the training. Finally, anomalies in the network can be measured by the reconstruction errors of network structure and node attribute.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.1.">Structure Autoencoder</head><p>In order to obtain sufficient representative high-level node features, structure encoder firstly transforms the original observed node attribute X into the low-dimentional latent representation Z V , which is shown as follows:</p><formula xml:id="formula_4">Z V = σ(XW V (1) + b V (1) )<label>(2)</label></formula><p>where σ(•) is the activation function such as ReLU or Tanh,</p><formula xml:id="formula_5">W V (1) ∈ R D V (1) in ×D V (1)</formula><p>out and b</p><formula xml:id="formula_6">V (1) ∈ R D V (1)</formula><p>out are the weight and bias learned by encoder, D</p><formula xml:id="formula_7">V (1)</formula><p>in and D</p><formula xml:id="formula_8">V (1)</formula><p>out are the dimensionalities of X and Z V , respectively.</p><p>Given the transformed node embedding Z V , a graph attention layer <ref type="bibr" target="#b15">[16]</ref> is then employed to aggregate the representation from neighbor nodes, by performing a shared attentional mechanism on the nodes:</p><formula xml:id="formula_9">e i,j = attn( Z V i , Z V j ) = σ(a T • [W V (2) Z V i ||W V (2) Z V j ])<label>(3)</label></formula><p>where e i,j is the importance weight of node V i to node V j , attn(•) denotes the neural network parameterized by weights</p><formula xml:id="formula_10">a ∈ R D and W V (2) ∈ R D 2 ×D V (1)</formula><p>out that shared by all nodes, || denotes the concatenate operation. Then, the final importance weight γ i,j is normalized through the softmax function:</p><formula xml:id="formula_11">γ i,j = exp(e i,j ) k∈Ni exp(e i,k )<label>(4)</label></formula><p>where N i denotes the neighbors of node V i , which is provided by adjacency matrix A, and its final embedding Z V i can be obtained by weighted sum based on the learned importance weights as follows:</p><formula xml:id="formula_12">Z V i = k∈Ni γ i,k • Z V k<label>(5)</label></formula><p>Finally, structure decoder takes the final node embeddings Z V as inputs to decode them for reconstruction of the original network structure:</p><formula xml:id="formula_13">Â = Sigmoid(Z V (Z V ) T )<label>(6)</label></formula><p>where Sigmoid(•) is the sigmoid activation function. Here, inner product between two node embeddings is performed to estimate the probability of a link between two nodes:</p><formula xml:id="formula_14">p( Âi,j = 1|Z V i , Z V j ) = Sigmoid(Z V i (Z V j ) T )<label>(7)</label></formula></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.2.">Attribute Autoencoder</head><p>In the attribute encoder, two non-linear feature transform layers are employed to map the observed attribute data to the latent attribute embedding Z A , which can be formulated as follows:</p><formula xml:id="formula_15">Z A = σ((X) T W A (1) + b A (1) )<label>(8)</label></formula><formula xml:id="formula_16">Z A = Z A W A (2) + b A (2)<label>(9)</label></formula><p>where</p><formula xml:id="formula_17">W A (1) ∈ R D A (1) in ×D A (1) out , b A (1) ∈ R D A (1) out , W A (2) ∈ R D A (1)</formula><p>out ×D and b A (2) ∈ R D are the weights and biases learned by two layers, D</p><formula xml:id="formula_18">A (1) in , D A (1)</formula><p>out , and D are the dimensionalities of (X) T , Z A and Z A , respectively. Finally, attribute decoder takes both the node embeddings Z V learned by structure encoder, and the attribute embeddings Z A as inputs for decoding of the original node attribute:</p><formula xml:id="formula_19">X = Z V (Z A ) T<label>(10)</label></formula><p>in which, the interactions between network structure and node attribute are jointly captured. Different from the structure decoder, in the attribute decoder, no activation function is utilized here for the arbitrary-valued attribute.</p><p>In AnomalyDAE, the computational complexity of structure autoencoder and attribute autoencoder are O(M D + ED + M 2 ) and O(N D + N M ) respectively, where M is the number of nodes, E is the number of edge, N is the dimension of attribute, D is the dimension of embedding.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.3.">Loss function</head><p>The training objective of AnomalyDAE is to minimize the reconstruction errors of both network structure and node attribute:</p><formula xml:id="formula_20">L rec = α||(A -Â) θ|| 2 F + (1 -α)||(X -X) η|| 2 F (<label>11</label></formula><formula xml:id="formula_21">)</formula><p>where α is the parameter which control the trade off between structure reconstruction and attribute reconstruction. is the Hadamard product, η and θ are defined as follows:</p><formula xml:id="formula_22">θ i,j = 1 if A i,j = 0, θ otherwise. , η i,j = 1 if X i,j = 0, η otherwise. (<label>12</label></formula><formula xml:id="formula_23">)</formula><p>where η &gt; 1 and θ &gt; 1, which are used to impose more penalty to the reconstruction error of the non-zero elements due to some missing edges or attributes in the real world.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.4.">Anomaly Detection</head><p>Inspired by the motivation that the pattern of abnormal nodes deviate from the majority of other nodes in either structure or attribute, the anomaly score S Vi of node V i is defined as the reconstruction error from both network structure and node attribute perspective:</p><formula xml:id="formula_24">S Vi = α||(A i -Âi ) θ i || 2 F + (1 -α)||(X i -Xi ) η i || 2 F (<label>13</label></formula><formula xml:id="formula_25">)</formula><p>Based on the measured anomaly scores, the threshold λ in Eq. 1 can be determined according to distribution of scores, e.g. the nodes of top-k scores are classified as anomalous nodes. Three commonly used real-world datasets <ref type="bibr" target="#b13">[14]</ref> are used in this paper to evaluate the proposed method, including Blog-Catalog, Flickr, and ACM. The statistics of datasets are shown in Table <ref type="table" target="#tab_1">2</ref>. In the experiment, we train AnomalyDAE with 100, 100, 80 iterations for BlogCatalog, Flickr, and ACM respectively. Adam <ref type="bibr" target="#b16">[17]</ref> algorithm is utilized for optimization with learning rate as 0.001. The embedding dimension is set as 128 for all datasets. The parameters (α, η, θ) are empirically set as (0.7, 5, 40), (0.9, 8, 90), (0.7, 3, 10) for BlogCatalog, Flickr, and ACM respectively.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.2.">Result Analysis</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.2.1.">Performance Evaluation</head><p>We compare AnomalyDAE with the state-of-the-art methods including LOF <ref type="bibr" target="#b17">[18]</ref>, SCAN <ref type="bibr" target="#b18">[19]</ref>, AMEN <ref type="bibr" target="#b7">[8]</ref>, Radar <ref type="bibr" target="#b11">[12]</ref>, Anomalous <ref type="bibr" target="#b12">[13]</ref>, and Dominant <ref type="bibr" target="#b13">[14]</ref>. The AUC scores (the Area Under a receiver operating characteristic Curve) for anomaly detection are reported in Table <ref type="table">3</ref>.</p><p>The experimental results show that the proposed Anoma-lyDAE significantly outperforms all baselines in various datasets. The performance of AnomalyDAE is much higher than traditional anomaly detection methods, i.e., Anomaly-DAE outperforms LOF by 48.66%, SCAN by 70.54%, and AMEN by 44.44% respectively on AUC for BlogCatalog dataset, because of that LOF and SCAN consider only network structure or node attribute, and AMEN is designed for anomalous neighborhoods rather than node itself. Besides, for Flickr dataset, AnomalyDAE increases the AUC score by 24.36% compared with Radar and 25.63% compared with Anomalous, this is because that residual analysis or CUR decomposition <ref type="bibr" target="#b19">[20]</ref> based methods are not only sensitive to network sparsity, but with limited learning ability on large graph. Compared with more recent Dominant, AnomalyDAE achieves gains by 19.68%, 22.32%, 15.11% on BlogCatalog, Flickr, and ACM datasets respectively. Although GCN based encoder in Dominant is capable of learning discriminative node embeddings by aggregating neighbor features, the single graph encoder cannot jointly capture the complex interactions between network structure and node attribute, while AnomalyDAE employs two separate encoders for jointly learning of node embedding and attribute embedding respectively, which considers the complex modality interactions of Table <ref type="table">3</ref>. AUC scores of all methods on three datasets. Method BlogCatalog Flickr ACM LOF <ref type="bibr" target="#b17">[18]</ref> 49.15 48.81 47.38 SCAN <ref type="bibr" target="#b18">[19]</ref> 27.27 26.86 35.99 AMEN <ref type="bibr" target="#b7">[8]</ref> 53.37 60.47 72.62 Radar <ref type="bibr" target="#b11">[12]</ref> 71.04 72.86 69.36 Anomalous <ref type="bibr" target="#b12">[13]</ref> 72.81 71.59 71.85 Dominant <ref type="bibr" target="#b13">[14]</ref> 78  </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.2.2.">Parameter Sensitivity</head><p>In this section, we investigate the parameter sensitivity of different numbers of the embedding dimension D and the trade-off parameter α for anomaly detection. The experiment results are shown in Fig. <ref type="figure" target="#fig_1">2</ref>. We can see that a relative high dimension such as 128 or 256 facilitates high performance because higher dimensional embeddings are capable of encoding more information. However, the dimension with too low value or too high value would degrade the performance because of the weak modeling ability or suffering from overfitting. In terms of α, considering only attribute reconstruction (α=0) or structure reconstruction (α=1) would results in poor performance, which demonstrates the importance of the interactions between the network structure and node attribute on attributed network for anomaly detection.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.">CONCLUSION</head><p>In this paper, we study the problem of anomaly detection on attributed network by considering the complex modality interaction between network structure and node attribute. To cope with this problem, we propose a deep joint representation learning framework for anomaly detection via a dual autoencoder. By introducing two separate autoencoders for jointly learning of node embedding and attribute embedding, AnomalyDAE performs better than current state-of-the-art methods on multiple real-world datasets.</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head>Fig. 1 .</head><label>1</label><figDesc>Fig. 1. The framework of the proposed AnomalyDAE.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head>Fig. 2 .</head><label>2</label><figDesc>Fig. 2. Parameter sensitivity for anomaly detection.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_0"><head>Table 1 .</head><label>1</label><figDesc>Notations.</figDesc><table><row><cell>Notation</cell><cell>Description</cell></row><row><cell>G</cell><cell>Attributed network.</cell></row><row><cell>V</cell><cell>A set of nodes in network.</cell></row><row><cell>A</cell><cell>A set of node attributes in network.</cell></row><row><cell>E</cell><cell>A set of edges in network.</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_1"><head>Table 2 .</head><label>2</label><figDesc>Statistics of the used Real-World datasets.</figDesc><table><row><cell>Database</cell><cell># V</cell><cell># E</cell><cell># A</cell><cell># Anomalies</cell></row><row><cell cols="4">BlogCatalog 5,196 171,743 8,189</cell><cell>300</cell></row><row><cell>Flickr</cell><cell cols="3">7,575 239,738 12,047</cell><cell>450</cell></row><row><cell>ACM</cell><cell cols="2">16,484 71,980</cell><cell>8,337</cell><cell>600</cell></row><row><cell></cell><cell cols="3">4. EXPERIMENTS</cell><cell></cell></row><row><cell cols="2">4.1. Experimental Setup</cell><cell></cell><cell></cell><cell></cell></row></table></figure>
+		</body>
+		<back>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<analytic>
+		<title level="a" type="main">Adaptive unsupervised feature selection on attributed networks</title>
+		<author>
+			<persName><forename type="first">Jundong</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ruocheng</forename><surname>Guo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Chenghao</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Huan</forename><surname>Liu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 25th ACM SIGKDD International Conference on Knowledge Discovery &amp; Data Mining</title>
+		<meeting>the 25th ACM SIGKDD International Conference on Knowledge Discovery &amp; Data Mining</meeting>
+		<imprint>
+			<publisher>ACM</publisher>
+			<date type="published" when="2019">2019</date>
+			<biblScope unit="page" from="92" to="100" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Jundong Li, Ruocheng Guo, Chenghao Liu, and Huan Liu, &quot;Adaptive unsupervised feature selection on at- tributed networks,&quot; in Proceedings of the 25th ACM SIGKDD International Conference on Knowledge Dis- covery &amp; Data Mining. ACM, 2019, pp. 92-100.</note>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<analytic>
+		<title level="a" type="main">Attributed social network embedding</title>
+		<author>
+			<persName><forename type="first">Lizi</forename><surname>Liao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Xiangnan</forename><surname>He</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Hanwang</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Tat-Seng</forename><surname>Chua</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Knowledge and Data Engineering</title>
+		<imprint>
+			<biblScope unit="volume">30</biblScope>
+			<biblScope unit="issue">12</biblScope>
+			<biblScope unit="page" from="2257" to="2270" />
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Lizi Liao, Xiangnan He, Hanwang Zhang, and Tat-Seng Chua, &quot;Attributed social network embedding,&quot; IEEE Transactions on Knowledge and Data Engineering, vol. 30, no. 12, pp. 2257-2270, 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<analytic>
+		<title level="a" type="main">Spamhmm: Sparse mixture of hidden markov models for graph connected entities</title>
+		<author>
+			<persName><forename type="first">Diogo</forename><surname>Pernes</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jaime</forename><forename type="middle">S</forename><surname>Cardoso</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the International Joint Conference on Neural Networks (IJCNN)</title>
+		<meeting>the International Joint Conference on Neural Networks (IJCNN)</meeting>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Diogo Pernes and Jaime S. Cardoso, &quot;Spamhmm: Sparse mixture of hidden markov models for graph con- nected entities,&quot; in Proceedings of the International Joint Conference on Neural Networks (IJCNN), 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<analytic>
+		<title level="a" type="main">Heterogeneous information network embedding for recommendation</title>
+		<author>
+			<persName><forename type="first">Chuan</forename><surname>Shi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Binbin</forename><surname>Hu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Wayne</forename><forename type="middle">Xin</forename><surname>Zhao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Yu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Philip</forename></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Knowledge and Data Engineering</title>
+		<imprint>
+			<biblScope unit="volume">31</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="357" to="370" />
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Chuan Shi, Binbin Hu, Wayne Xin Zhao, and S Yu Philip, &quot;Heterogeneous information network embed- ding for recommendation,&quot; IEEE Transactions on Knowledge and Data Engineering, vol. 31, no. 2, pp. 357-370, 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<analytic>
+		<title level="a" type="main">Intrusion as (anti) social communication: characterization and detection</title>
+		<author>
+			<persName><forename type="first">Qi</forename><surname>Ding</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Natallia</forename><surname>Katenka</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Paul</forename><surname>Barford</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Eric</forename><surname>Kolaczyk</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mark</forename><surname>Crovella</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 18th ACM SIGKDD international conference on Knowledge discovery and data mining</title>
+		<meeting>the 18th ACM SIGKDD international conference on Knowledge discovery and data mining</meeting>
+		<imprint>
+			<publisher>ACM</publisher>
+			<date type="published" when="2012">2012</date>
+			<biblScope unit="page" from="886" to="894" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Qi Ding, Natallia Katenka, Paul Barford, Eric Kolaczyk, and Mark Crovella, &quot;Intrusion as (anti) social communi- cation: characterization and detection,&quot; in Proceedings of the 18th ACM SIGKDD international conference on Knowledge discovery and data mining. ACM, 2012, pp. 886-894.</note>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<analytic>
+		<title level="a" type="main">Ranking causal anomalies via temporal and dynamical analysis on vanishing correlations</title>
+		<author>
+			<persName><forename type="first">Wei</forename><surname>Cheng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Kai</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Haifeng</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Guofei</forename><surname>Jiang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Zhengzhang</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Wei</forename><surname>Wang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</title>
+		<meeting>the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</meeting>
+		<imprint>
+			<publisher>ACM</publisher>
+			<date type="published" when="2016">2016</date>
+			<biblScope unit="page" from="805" to="814" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Wei Cheng, Kai Zhang, Haifeng Chen, Guofei Jiang, Zhengzhang Chen, and Wei Wang, &quot;Ranking causal anomalies via temporal and dynamical analysis on van- ishing correlations,&quot; in Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Dis- covery and Data Mining. ACM, 2016, pp. 805-814.</note>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<analytic>
+		<title level="a" type="main">Collective spammer detection in evolving multi-relational social networks</title>
+		<author>
+			<persName><forename type="first">Shobeir</forename><surname>Fakhraei</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">James</forename><surname>Foulds</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Madhusudana</forename><surname>Shashanka</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Lise</forename><surname>Getoor</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 21th acm sigkdd international conference on knowledge discovery and data mining</title>
+		<meeting>the 21th acm sigkdd international conference on knowledge discovery and data mining</meeting>
+		<imprint>
+			<publisher>ACM</publisher>
+			<date type="published" when="2015">2015</date>
+			<biblScope unit="page" from="1769" to="1778" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Shobeir Fakhraei, James Foulds, Madhusudana Shashanka, and Lise Getoor, &quot;Collective spammer detection in evolving multi-relational social networks,&quot; in Proceedings of the 21th acm sigkdd international conference on knowledge discovery and data mining. ACM, 2015, pp. 1769-1778.</note>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<analytic>
+		<title level="a" type="main">Scalable anomaly ranking of attributed neighborhoods</title>
+		<author>
+			<persName><forename type="first">Bryan</forename><surname>Perozzi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Leman</forename><surname>Akoglu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 2016 SIAM International Conference on Data Mining</title>
+		<meeting>the 2016 SIAM International Conference on Data Mining</meeting>
+		<imprint>
+			<publisher>SIAM</publisher>
+			<date type="published" when="2016">2016</date>
+			<biblScope unit="page" from="207" to="215" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Bryan Perozzi and Leman Akoglu, &quot;Scalable anomaly ranking of attributed neighborhoods,&quot; in Proceedings of the 2016 SIAM International Conference on Data Min- ing. SIAM, 2016, pp. 207-215.</note>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">Discovering communities and anomalies in attributed graphs: Interactive visual exploration and summarization</title>
+		<author>
+			<persName><forename type="first">Bryan</forename><surname>Perozzi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Leman</forename><surname>Akoglu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">ACM Transactions on Knowledge Discovery from Data (TKDD)</title>
+		<imprint>
+			<biblScope unit="volume">12</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page">24</biblScope>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Bryan Perozzi and Leman Akoglu, &quot;Discovering com- munities and anomalies in attributed graphs: Interactive visual exploration and summarization,&quot; ACM Transac- tions on Knowledge Discovery from Data (TKDD), vol. 12, no. 2, pp. 24, 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<analytic>
+		<title level="a" type="main">Statistical selection of congruent subspaces for mining attributed graphs</title>
+		<author>
+			<persName><forename type="first">P</forename><forename type="middle">I</forename><surname>Snchez</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Mller</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Laforet</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Keller</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Bhm</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">2013 IEEE 13th International Conference on Data Mining</title>
+		<imprint>
+			<date type="published" when="2013-12">Dec 2013</date>
+			<biblScope unit="page" from="647" to="656" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">P. I. Snchez, E. Mller, F. Laforet, F. Keller, and K. Bhm, &quot;Statistical selection of congruent subspaces for min- ing attributed graphs,&quot; in 2013 IEEE 13th International Conference on Data Mining, Dec 2013, pp. 647-656.</note>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<analytic>
+		<title level="a" type="main">Focused clustering and outlier detection in large attributed graphs</title>
+		<author>
+			<persName><forename type="first">Bryan</forename><surname>Perozzi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Leman</forename><surname>Akoglu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Patricia</forename><forename type="middle">Iglesias</forename><surname>Sánchez</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Emmanuel</forename><surname>Müller</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 20th ACM SIGKDD international conference on Knowledge discovery and data mining</title>
+		<meeting>the 20th ACM SIGKDD international conference on Knowledge discovery and data mining</meeting>
+		<imprint>
+			<publisher>ACM</publisher>
+			<date type="published" when="2014">2014</date>
+			<biblScope unit="page" from="1346" to="1355" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Bryan Perozzi, Leman Akoglu, Patricia Igle- sias Sánchez, and Emmanuel Müller, &quot;Focused clustering and outlier detection in large attributed graphs,&quot; in Proceedings of the 20th ACM SIGKDD international conference on Knowledge discovery and data mining. ACM, 2014, pp. 1346-1355.</note>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<analytic>
+		<title level="a" type="main">Radar: Residual analysis for anomaly detection in attributed networks</title>
+		<author>
+			<persName><forename type="first">Jundong</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Harsh</forename><surname>Dani</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Xia</forename><surname>Hu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Huan</forename><surname>Liu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">IJCAI</title>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+			<biblScope unit="page" from="2152" to="2158" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Jundong Li, Harsh Dani, Xia Hu, and Huan Liu, &quot;Radar: Residual analysis for anomaly detection in attributed networks.,&quot; in IJCAI, 2017, pp. 2152-2158.</note>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<analytic>
+		<title level="a" type="main">Anomalous: A joint modeling approach for anomaly detection on attributed networks</title>
+		<author>
+			<persName><forename type="first">Zhen</forename><surname>Peng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Minnan</forename><surname>Luo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jundong</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Huan</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Qinghua</forename><surname>Zheng</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">IJCAI</title>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+			<biblScope unit="page" from="3513" to="3519" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zhen Peng, Minnan Luo, Jundong Li, Huan Liu, and Qinghua Zheng, &quot;Anomalous: A joint modeling ap- proach for anomaly detection on attributed networks.,&quot; in IJCAI, 2018, pp. 3513-3519.</note>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<analytic>
+		<title level="a" type="main">Deep anomaly detection on attributed networks</title>
+		<author>
+			<persName><forename type="first">Kaize</forename><surname>Ding</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jundong</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Rohit</forename><surname>Bhanushali</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Huan</forename><surname>Liu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 2019 SIAM International Conference on Data Mining</title>
+		<meeting>the 2019 SIAM International Conference on Data Mining</meeting>
+		<imprint>
+			<publisher>SIAM</publisher>
+			<date type="published" when="2019">2019</date>
+			<biblScope unit="page" from="594" to="602" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Kaize Ding, Jundong Li, Rohit Bhanushali, and Huan Liu, &quot;Deep anomaly detection on attributed networks,&quot; in Proceedings of the 2019 SIAM International Confer- ence on Data Mining. SIAM, 2019, pp. 594-602.</note>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<analytic>
+		<title level="a" type="main">Semi-supervised classification with graph convolutional networks</title>
+		<author>
+			<persName><forename type="first">N</forename><surname>Thomas</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Max</forename><surname>Kipf</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Welling</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">ternational Conference on Learning Representations (ICLR)</title>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Thomas N Kipf and Max Welling, &quot;Semi-supervised classification with graph convolutional networks,&quot; In- ternational Conference on Learning Representations (ICLR), 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<monogr>
+		<title level="m" type="main">Graph attention networks</title>
+		<author>
+			<persName><forename type="first">Petar</forename><surname>Veličković</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Guillem</forename><surname>Cucurull</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Arantxa</forename><surname>Casanova</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Adriana</forename><surname>Romero</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Pietro</forename><surname>Liò</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yoshua</forename><surname>Bengio</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note>accepted as poster</note>
+	<note type="raw_reference">Petar Veličković, Guillem Cucurull, Arantxa Casanova, Adriana Romero, Pietro Liò, and Yoshua Bengio, &quot;Graph attention networks,&quot; 2018, accepted as poster.</note>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<analytic>
+		<title level="a" type="main">Adam: A method for stochastic optimization</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Diederick</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jimmy</forename><surname>Kingma</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Ba</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Learning Representations (ICLR)</title>
+		<imprint>
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Diederick P Kingma and Jimmy Ba, &quot;Adam: A method for stochastic optimization,&quot; in International Confer- ence on Learning Representations (ICLR), 2015.</note>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<analytic>
+		<title level="a" type="main">Lof: identifying density-based local outliers</title>
+		<author>
+			<persName><forename type="first">Markus</forename><forename type="middle">M</forename><surname>Breunig</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Hans-Peter</forename><surname>Kriegel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Raymond</forename><forename type="middle">T</forename><surname>Ng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jörg</forename><surname>Sander</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">ACM sigmod record</title>
+		<imprint>
+			<publisher>ACM</publisher>
+			<date type="published" when="2000">2000</date>
+			<biblScope unit="volume">29</biblScope>
+			<biblScope unit="page" from="93" to="104" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Markus M Breunig, Hans-Peter Kriegel, Raymond T Ng, and Jörg Sander, &quot;Lof: identifying density-based local outliers,&quot; in ACM sigmod record. ACM, 2000, vol. 29, pp. 93-104.</note>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<analytic>
+		<title level="a" type="main">Scan: a structural clustering algorithm for networks</title>
+		<author>
+			<persName><forename type="first">Xiaowei</forename><surname>Xu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Nurcan</forename><surname>Yuruk</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Zhidan</forename><surname>Feng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Thomas Aj</forename><surname>Schweiger</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 13th ACM SIGKDD international conference on Knowledge discovery and data mining</title>
+		<meeting>the 13th ACM SIGKDD international conference on Knowledge discovery and data mining</meeting>
+		<imprint>
+			<publisher>ACM</publisher>
+			<date type="published" when="2007">2007</date>
+			<biblScope unit="page" from="824" to="833" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Xiaowei Xu, Nurcan Yuruk, Zhidan Feng, and Thomas AJ Schweiger, &quot;Scan: a structural clustering algorithm for networks,&quot; in Proceedings of the 13th ACM SIGKDD international conference on Knowledge discovery and data mining. ACM, 2007, pp. 824-833.</note>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<analytic>
+		<title level="a" type="main">Cur matrix decompositions for improved data analysis</title>
+		<author>
+			<persName><forename type="first">W</forename><surname>Michael</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Petros</forename><surname>Mahoney</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Drineas</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Proceedings of the National Academy of Sciences</title>
+		<imprint>
+			<biblScope unit="volume">106</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="697" to="702" />
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Michael W Mahoney and Petros Drineas, &quot;Cur matrix decompositions for improved data analysis,&quot; Proceed- ings of the National Academy of Sciences, vol. 106, no. 3, pp. 697-702, 2009.</note>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

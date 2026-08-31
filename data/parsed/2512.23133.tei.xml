@@ -1,0 +1,2574 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">Principled Algorithms for Optimizing Generalized Metrics in Binary Classification</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability  status="unknown">
+					<licence/>
+				</availability>
+				<date type="published" when="2025-12-29">29 Dec 2025</date>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><forename type="first">Anqi</forename><surname>Mao</surname></persName>
+						</author>
+						<author>
+							<persName><forename type="first">Mehryar</forename><surname>Mohri</surname></persName>
+						</author>
+						<author>
+							<persName><forename type="first">Yutao</forename><surname>Zhong</surname></persName>
+						</author>
+						<title level="a" type="main">Principled Algorithms for Optimizing Generalized Metrics in Binary Classification</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date type="published" when="2025-12-29">29 Dec 2025</date>
+						</imprint>
+					</monogr>
+					<idno type="MD5">C29D434C420DDF3A094322A344878554</idno>
+					<idno type="arXiv">arXiv:2512.23133v1[cs.LG]</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.2-SNAPSHOT" ident="GROBID" when="2026-08-31T18:12+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>In applications with significant class imbalance or asymmetric costs, metrics such as the F βmeasure, AM measure, Jaccard similarity coefficient, and weighted accuracy offer more suitable evaluation criteria than standard binary classification loss. However, optimizing these metrics present significant computational and statistical challenges. Existing approaches often rely on the characterization of the Bayes-optimal classifier, and use threshold-based methods that first estimate class probabilities and then seek an optimal threshold. This leads to algorithms that are not tailored to restricted hypothesis sets and lack finite-sample performance guarantees. In this work, we introduce principled algorithms for optimizing generalized metrics, supported by H-consistency and finite-sample generalization bounds. Our approach reformulates metric optimization as a generalized cost-sensitive learning problem, enabling the design of novel surrogate loss functions with provable H-consistency guarantees. Leveraging this framework, we develop new algorithms, METRO (Metric Optimization), with strong theoretical performance guarantees. We report the results of experiments demonstrating the effectiveness of our methods compared to prior baselines.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1.">Introduction</head><p>In many applications, performance metrics such as the F βmeasure <ref type="bibr">(Lewis, 1995a;</ref><ref type="bibr" target="#b29">Jansche, 2005;</ref><ref type="bibr" target="#b95">Ye et al., 2012)</ref>, the AM measure <ref type="bibr" target="#b64">(Menon et al., 2013)</ref>, the Jaccard similarity 1 Courant Institute of Mathematical Sciences, New York, NY; 2 Google Research, New York, NY. Correspondence to:</p><p>Anqi Mao &lt;aqmao@cims.nyu.edu&gt;, Mehryar Mohri &lt;mohri@google.com&gt;, Yutao Zhong &lt;yutaozhong@google.com&gt;.</p><p>Proceedings of the 42 nd International Conference on Machine <ref type="bibr">Learning, Vancouver, Canada. PMLR 267, 2025.</ref> Copyright 2025 by the author(s).</p><p>coefficient <ref type="bibr" target="#b91">(Sokolova &amp; Lapalme, 2009)</ref>, or the weighted accuracy are preferred over the standard zero-one misclassification loss. These metrics are particularly relevant in scenarios with significant class imbalance, such as fraud detection, medical diagnosis, and information retrieval <ref type="bibr">(Lewis, 1995b;</ref><ref type="bibr" target="#b22">Drummond &amp; Holte, 2005;</ref><ref type="bibr" target="#b28">He &amp; Garcia, 2009;</ref><ref type="bibr" target="#b27">Gu et al., 2009)</ref>, or in settings where classification costs are asymmetrical. However, optimizing these alternative metrics presents both computational and statistical challenges, as they deviate from the standard single-loss expectation framework commonly used in surrogate loss function analysis <ref type="bibr" target="#b92">(Steinwart, 2007)</ref>.</p><p>Research on the design of algorithms for specific instances of such metrics or the general family has largely focused on the characterization of the Bayes-optimal classifier. For the standard zero-one binary classification loss, it is known that the Bayes classifier can be defined as x ↦ sign(η(x) -1 2 ), where η(x) is the probability of a positive label conditioned on x. A similar characterization applies to the weighted zero-one loss <ref type="bibr" target="#b90">(Scott, 2012)</ref>, where the threshold corresponds to a weight different from 1 2 . For imbalanced metrics, <ref type="bibr" target="#b95">Ye et al. (2012)</ref> characterized the Bayes-classifier for the F 1measure, while <ref type="bibr" target="#b64">Menon et al. (2013)</ref> characterized the Bayes classifier for the AM measure as x ↦ sign(η(x) -δ * ) for some δ * ∈ (0, 1). These results were later generalized by <ref type="bibr" target="#b37">Koyejo et al. (2014)</ref> to a broader family of metrics that can be formulated as a ratio of two linear functions of true positive (TP), false positive (FP), true negative (TN), and false negative (FN) statistics. This family of linear-fractional metrics includes the aforementioned weighted accuracy, F βmeasures, the AM measure, as well as the Jaccard similarity coefficient <ref type="bibr" target="#b91">(Sokolova &amp; Lapalme, 2009)</ref>, among others.</p><p>Existing algorithms for optimizing these metrics heavily rely on the structure of the Bayes-optimal solution <ref type="bibr" target="#b37">(Koyejo et al., 2014;</ref><ref type="bibr" target="#b84">Parambath et al., 2014)</ref>. These methods generally adopt a two-stage approach: first estimating the conditional probability η(x) and then searching for a suitable threshold δ * specific to the metric.</p><p>These algorithms naturally come with consistency guarantees <ref type="bibr" target="#b37">(Koyejo et al., 2014)</ref>. However, consistency is an asymptotic property and does not provide explicit convergence rate guarantees. Moreover, it applies only to the overly broad class of all measurable functions, making it less relevant in practical scenarios where learning is constrained to a restricted hypothesis class <ref type="bibr" target="#b44">(Long &amp; Servedio, 2013;</ref><ref type="bibr">Zhang &amp; Agarwal, 2020)</ref>.</p><p>Beyond these theoretical limitations, a key drawback of prior work is its reliance on the structure of the Bayesoptimal classifier, which may differ significantly from the best predictor within a given hypothesis class. For example, we show that in a two-dimensional setting with linear classifiers (see Section 5, Figure <ref type="figure" target="#fig_4">1</ref>), the best linear classifier derived via a margin-maximizing classifier can have a significantly different orientation from the best linear classifier optimized for an F β -measure.</p><p>Contributions. In contrast to previous work, we introduce a hypothesis set-specific analysis grounded in recent advances in H-consistency bounds <ref type="bibr">(Awasthi, Mao, Mohri, and Zhong, 2022a;</ref><ref type="bibr">b;</ref><ref type="bibr">Mao, Mohri, and Zhong, 2023f;</ref><ref type="bibr">2024h)</ref>. Unlike Bayes-consistency, these bounds are non-asymptotic and explicitly account for the hypothesis set H used in practice. They provide direct upper bounds on the target estimation error in terms of the surrogate estimation error, making them more relevant to practical learning. We leverage this framework to develop new algorithms with strong theoretical guarantees, including finite-sample learning bounds.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Related work.</head><p>A comprehensive discussion on consistency and generalized metrics in binary classification is provided in Appendix A. Here, we briefly summarize the most relevant prior work. <ref type="bibr" target="#b37">Koyejo et al. (2014)</ref> studied a broad family of performance metrics, including the F β -measure, AM measure, Jaccard similarity coefficient, and weighted accuracy. They proposed two-stage thresholding algorithms that first train a binary classifier (e.g., logistic regression) to estimate η(x) and then optimize a threshold θ to maximize the empirical metric of interest. Their approach comes with a consistency-type guarantee but lacks finite-sample guarantees. <ref type="bibr" target="#b84">Parambath et al. (2014)</ref> focused specifically on optimizing the F 1 -measure. Their algorithm is similar to the second approach in <ref type="bibr" target="#b37">Koyejo et al. (2014)</ref> but additionally considers an extra threshold θ ′ , both of which are optimized to maximize the empirical metric. They provide stability-type guarantees, though their analysis lacks explicit details.</p><p>Structure of the paper. We introduce principled algorithms for optimizing a broad family of generalized metrics, supported by H-consistency bounds and finite-sample generalization bounds. We first present an equivalent reformulation of the problem of minimizing generalized metrics (Section 3). This reformulation allows us to interpret the problem as minimizing a generalized cost-sensitive target loss function (Section 4.1). We then address this broader cost-sensitive learning problem by introducing a new family of surrogate loss functions tailored to this framework (Section 4.2). We further establish strong H-consistency guarantees for these surrogate losses (Section 4.3). In Section 5, we leverage these theoretical insights to design new algorithms for optimizing generalized metrics, METRO (Metric Optimization), for which we prove strong performance guarantees. Finally, we present experimental results in Section 6, demonstrating the effectiveness of our algorithms in comparison to prior baselines.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.">Preliminaries</head><p>Binary classification. We consider the familiar setting of binary classification, where the input space is denoted by X, the label space by Y = {+1, -1}, and the data is distributed according to an unknown distribution D over X × Y. We will consider prediction functions h mapping from X to R and will denote by H all the family of all measurable functions of this type. For a given loss function ℓ mapping from H all × X × Y to R, the expected loss of a hypothesis h and the best-in-class expected loss of a hypothesis set H ⊆ H all are defined by E ℓ (h) = E (x,y)∼D <ref type="bibr">[ℓ(h, x, y)</ref>] and</p><formula xml:id="formula_0">E * ℓ (H) = inf h∈H E ℓ (h). The excess error of a hypothesis h, E ℓ (h) - E *</formula><p>ℓ (H all ), can be decomposed as the sum of its estimation error, E ℓ (h) -E * ℓ (H), and the approximation error of H,</p><formula xml:id="formula_1">E * ℓ (H) -E * ℓ (H all ).</formula><p>Given a sample S = (x 1 , . . . , x m ) and a hypothesis h, the empirical error is defined by Êℓ,S (h) = Definition 2.1 (Bayes-Consistency). A loss function ℓ 1 is Bayes-consistent with respect to a loss function ℓ 2 if, for all distributions and sequences {h</p><formula xml:id="formula_2">n } n∈N ⊂ H all , if [E ℓ1 (h n ) -E * ℓ1 (H all )] tends to zero when n tends to +∞, then [E ℓ2 (h n ) -E *</formula><p>ℓ2 (H all )] also tends to zero.</p><p>While Bayes consistency is a natural and desirable property, it is inherently asymptotic and applies only to the family of all measurable functions. As such, it offers no insights into convergence rates or the behavior of learning algorithms when restricted hypothesis classes are used, as is typical in machine learning applications. In this context, a more informative property is an H-consistency bound <ref type="bibr">(Awasthi, Mao, Mohri, and Zhong, 2022a;</ref><ref type="bibr">Mao, Mohri, and Zhong, 2023f;</ref><ref type="bibr" target="#b105">Zhong, 2025)</ref>, which provides a quantitative guarantee tailored to specific hypothesis classes.</p><p>Definition 2.2 (H-Consistency bound). A surrogate loss ℓ 1 admits an H-consistency bound with respect to the target loss ℓ 2 if there exists a non-decreasing concave function Γ∶ R + → R + with Γ(0) = 0 such that, for all h ∈ H and all distributions, the following inequality holds:</p><formula xml:id="formula_3">E ℓ2 (h) -E * ℓ2 (H) + M ℓ2 (H) ≤ Γ(E ℓ1 (h) -E * ℓ1 (H) + M ℓ1 (H)),<label>(1)</label></formula><p>where, for any loss function ℓ, M ℓ (H) is defined as</p><formula xml:id="formula_4">M ℓ (H) = E * ℓ (H) -E[inf h∈H E[ℓ(h, x, y) | x]],</formula><p>and is referred to as the minimizability gap.</p><p>For H = H all , the second term coincides with E * ℓ (H) <ref type="bibr" target="#b92">(Steinwart, 2007;</ref><ref type="bibr">Mao, Mohri, and Zhong, 2024h)</ref> and the minimizability gap is zero. In this case, the bound simplifies to</p><formula xml:id="formula_5">E ℓ2 (h) -E * ℓ2 (H) ≤ Γ(E ℓ1 (h) -E * ℓ1 (H))</formula><p>which, in particular, implies Bayes-consistency. More generally, the minimizability gap vanishes when</p><formula xml:id="formula_6">E * ℓ (H) = E * ℓ (H all ).</formula><p>The minimizability gap is always upper bounded by the approximation error but it can be strictly smaller in many cases. In general, H-consistency bounds provide a stronger, nonasymptotic, and hypothesis set-dependent consistency guarantee.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.">Problem Formulation</head><p>Our goal is to devise a principled learning algorithm seeking to optimize any instance within a broad family of generalized metrics. We first define this family and then reformulate the learning problem using an alternative loss function.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.1.">Generalized Metrics</head><p>We study generalized metrics for binary classification, defined as follows for any h ∈ H all :</p><formula xml:id="formula_7">L(h) = E (x,y)∼D [α 1 h(x)y + α 2 y + α 3 h(x) + α 4 ] E (x,y)∼D [β 1 h(x)y + β 2 y + β 3 h(x) + β 4 ] ,<label>(2)</label></formula><p>where h(x) = sign(h(x)) represents the prediction of a hypothesis h on an input x ∈ X, with sign(α) = 1 α≥0 -1 α&lt;0 , and with α</p><formula xml:id="formula_8">= [α 1 , α 2 , α 3 , α 4 ], β = [β 1 , β 2 , β 3 , β 4 ] ∈ R 4 .</formula><p>To avoid notational clutter, we assume the dependence on (α, β) is understood from the context and omit it when it is not necessary. Note that the true positive (TP), false positive (FP), true negative (TN), and false negative (FN) statistics can be expressed in terms of E (x,y) [h(x)y], E (x,y) [y], and E (x,y) [h(x)]:</p><formula xml:id="formula_9">TP = E (x,y) [h(x)y] FN = E (x,y) [1 -h(x) -y + h(x)y] TN = E (x,y) [y -h(x)y] FP = E (x,y) [h(x) -h(x)y],</formula><p>where h(x) = h(x)+1 2 ∈ {0, 1} and y = y+1 2 ∈ {0, 1}. Thus, any ratio of two linear combinations of TP, FP, TN, and FN, which are considered in <ref type="bibr" target="#b37">(Koyejo et al., 2014)</ref>, can be expressed equivalently in the form of (2). This formulation covers several widely used metrics, including the AM measure <ref type="bibr" target="#b64">(Menon et al., 2013)</ref>, the F β -measure <ref type="bibr" target="#b95">(Ye et al., 2012)</ref>, the Jaccard similarity coefficient (JAC) <ref type="bibr" target="#b91">(Sokolova &amp; Lapalme, 2009)</ref>, Weighted Accuracy (WA), and many others of interest. Given a hypothesis set H, our goal is to find a hypothesis h ∈ H with small loss L(h). We denote the best-inclass expected loss by L * (H) = inf h∈H L(h). Given a sample S = (x 1 , . . . , x m ) and a hypothesis h, the empirical loss</p><formula xml:id="formula_10">is defined by LS (h) = 1 m ∑ m i=1 [α1h(xi)yi+α2yi+α3h(xi)+α4] 1 m ∑ m i=1 [β1h(xi)yi+β2yi+β3h(xi)+β4] .</formula></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.2.">Equivalent Problem</head><p>The generalized metrics introduced above are defined as the ratio of two expected loss functions. This formulation differs from the more familiar single-loss expectations, which are commonly used for deriving and analyzing surrogate loss functions in machine learning. In this section, we present an equivalent reformulation of the problem of minimizing L(h). This reformulation will provide a more convenient framework for designing surrogate loss functions.</p><p>For any (h, x, y) ∈ H all × X × Y, we define two loss functions:</p><formula xml:id="formula_11">ℓ α ∶ (h, x, y) ↦ α 1 h(x)y + α 2 y + α 3 h(x) + α 4 and ℓ β ∶ (h, x, y) ↦ β 1 h(x)y + β 2 y + β 3 h(x) + β 4 .</formula><p>Using these definitions, L(h) can be rewritten as follows:</p><formula xml:id="formula_12">L(h) = E (x,y)∼D [ℓ α (h, x, y)] E (x,y)∼D [ℓ β (h, x, y)] ,</formula><p>that is, the fractional form of the expected losses of ℓ α and ℓ β . Next, to minimize L(h), we reformulate it as an equivalent optimization problem, which will facilitate further analysis and surrogate design.</p><p>For any λ (and α and β), define the loss function ℓ λ by:</p><formula xml:id="formula_13">∀(h, x, y), ℓ λ (h, x, y) = ℓ α (h, x, y) -λℓ β (h, x, y).<label>(3)</label></formula><p>We will denote by Êℓ λ ,S the empirical loss of ℓ λ over a sample S. </p><formula xml:id="formula_14">ℓ λ * (h * ) = E ℓ λ * (H) = 0.</formula><p>Proof. Assume that there exists a hypothesis h * ∈ H such that L(h * ) = L * (H) holds. We have for all h ∈ H:</p><formula xml:id="formula_15">λ * = L(h * ) = E[ℓ α (h * , x, y)] E[ℓ β (h * , x, y)] ≤ E[ℓ α (h, x, y)] E[ℓ β (h, x, y)]</formula><p>.</p><p>Thus, under the assumption, the following holds for all h ∈ H:</p><formula xml:id="formula_16">λ * E (x,y)∼D [ℓ β (h, x, y)] ≤ E (x,y)∼D [ℓ α (h, x, y)], λ * E (x,y)∼D [ℓ β (h * , x, y)] = E (x,y)∼D [ℓ α (h * , x, y)].</formula><p>This implies that E ℓ λ * (h * ) = E ℓ λ * (H) = 0, which completes one direction of the proof.</p><p>Assume now that there exists h * ∈ H such that E ℓ λ * (h * ) = E ℓ λ * (H) = 0 holds. We have for all h ∈ H:</p><formula xml:id="formula_17">E (x,y)∼D [ℓ α (h * , x, y)] -λ * E (x,y)∼D [ℓ β (h * , x, y)] = 0 E (x,y)∼D [ℓ α (h, x, y)] -λ * E (x,y)∼D [ℓ β (h, x, y)] ≥ 0.</formula><p>Thus, we have</p><formula xml:id="formula_18">λ * = E (x,y)∼D [ℓ α(h * ,x,y)] E (x,y)∼D [ℓ β (h * ,x,y)] = L(h * ) ≤ L(h) for all h ∈ H, which implies L(h * ) = L * (H). This com- pletes the proof.</formula><p>More generally, the following non-asymptotic equivalence holds. The proof is given in Appendix B.</p><formula xml:id="formula_19">Theorem 3.2. Fix η ≥ 0 and h ∈ H. Then, the inequal- ity E ℓ λ * (h) ≤ η holds if and only if L(h) -L * (H) ≤ η E (x,y)∼D [ℓ β (h,x,y)] .</formula><p>Theorems 3.1 and 3.2 show that our problem can be reduced to minimizing the expected value of the loss function ℓ λ * . However, this remains intractable because ℓ λ * is nondifferentiable and even non-continuous as a function of h (as it is linear in h). In the next section, we will define a general family of consistent surrogate losses for ℓ λ * that are more suitable for practical optimization techniques.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.">General Cost-Sensitive Learning</head><p>In this section, we first establish that ℓ λ * can be interpreted as a generalized cost-sensitive target loss function. We then consider the broader problem of cost-sensitive learning and introduce a novel family of surrogate loss functions tailored to this framework. Finally, we present strong theoretical guarantees for these surrogate losses, demonstrating that minimizing them yields efficient algorithms for both general cost-sensitive learning and the optimization of ℓ λ * .</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.1.">General Target Loss</head><p>Define</p><formula xml:id="formula_20">γ = [γ 1 , γ 2 , γ 3 , γ 4 ], where γ i = α i -λ * β i , for i ∈ {1, 2, 3, 4}.</formula><p>Then, for any h ∈ H and (x, y) ∈ X × Y, ℓ λ * (h, x, y) can be expressed as:</p><formula xml:id="formula_21">γ 1 h(x)y + γ 2 y + γ 3 h(x) + γ 4 = L γ (h(x), y),<label>(4)</label></formula><p>where L γ is a cost-sensitive function over Y × Y defined as</p><formula xml:id="formula_22">L γ (y ′ , y) = ⎧ ⎪ ⎪ ⎪ ⎪ ⎪ ⎪ ⎪ ⎨ ⎪ ⎪ ⎪ ⎪ ⎪ ⎪ ⎪ ⎩ γ 1 + γ 2 + γ 3 + γ 4 y ′ = 1, y = 1, -γ 1 -γ 2 + γ 3 + γ 4 y ′ = 1, y = -1, -γ 1 + γ 2 -γ 3 + γ 4 y ′ = -1, y = 1, γ 1 -γ 2 -γ 3 + γ 4 y ′ = -1, y = -1.</formula><p>Adding a constant to L γ does not affect its minimization. Therefore, we can augment it with a non-negative constant</p><formula xml:id="formula_23">τ to ensure L γ + τ ≥ 0. A suitable choice is τ = |γ 1 | + |γ 2 | + |γ 3 | + |γ 4 |.</formula><p>This can be regarded as a special case of the general costsensitive learning problem <ref type="bibr" target="#b24">(Elkan, 2001)</ref>. In this context, we consider a cost-sensitive loss function L∶ {+1, -1} × {+1, -1} → R + , which defines four non-negative costs: L(+1, +1), L(+1, -1), L(-1, +1), and L(-1, -1). These costs depend on the prediction h(x) ∈ {-1, +1} and the true label y ∈ {-1, +1}. We denote by L the target loss function induced by L, defined as:</p><formula xml:id="formula_24">∀(h, x, y), L(h, x, y) = L(h(x), y). (<label>5</label></formula><formula xml:id="formula_25">)</formula><p>This approach is referred to as general cost-sensitive learning, as opposed to the specific cost-sensitive learning problem analyzed in <ref type="bibr" target="#b90">(Scott, 2012)</ref>, where L(+1, -1) = θ, L(-1, +1) = 1 -θ, and L(+1, +1) = L(-1, -1) = 0. Furthermore, the existing θ-weighted surrogate losses in <ref type="bibr" target="#b90">(Scott, 2012)</ref> are not applicable in this general setting.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.2.">General Surrogate Losses</head><p>As with many target loss functions in learning problems, such as the zero-one loss in binary classification, directly minimizing the general cost-sensitive loss function L is intractable for most hypothesis sets due to its non-continuity and non-differentiability. Instead, surrogate losses are typically adopted in practice. These surrogate losses are designed to be consistent, or even H-consistent in the standard classification settings <ref type="bibr" target="#b101">(Zhang, 2004;</ref><ref type="bibr" target="#b7">Bartlett et al., 2006;</ref><ref type="bibr">Awasthi et al., 2022a;</ref><ref type="bibr">b;</ref><ref type="bibr">Mao et al., 2023f)</ref>. They are frequently formulated as margin-based loss functions <ref type="bibr" target="#b42">(Lin, 2004)</ref>, which are defined by non-increasing functions Φ∶ t → R that upper bound t ↦ 1 t≤0 . For example, Φ could be the hinge loss, t ↦ max{0, 1 -t}, or the logistic loss, t ↦ log(1 + e -t ).</p><p>Here, we define the following surrogate loss functions for the general cost-sensitive loss function L by extending the standard margin-based loss function to the general costsensitive setting:</p><formula xml:id="formula_26">L Φ (h, x, y) = L(+1, y)Φ(-h(x))+L(-1, y)Φ(h(x)). (6)</formula><p>Table <ref type="table" target="#tab_1">1</ref> lists common examples of Φ along with the corresponding general cost-sensitive surrogate losses. A special </p><formula xml:id="formula_27">Φ Exponential Φ exp (t) = e -t L(+1, y)e h(x) + L(-1, y)e -h(x) Logistic Φ log (t) = log(1 + e -t ) L(+1, y) log(1 + e h(x) ) + L(-1, y) log(1 + e -h(x) ) Quadratic Φ quad (t) = max{1 -t, 0} 2 L(+1, y)Φ quad (-h(x)) + L(-1, y)Φ quad (h(x)) Hinge Φ hinge (t) = max{1 -t, 0} L(+1, y)Φ hinge (-h(x)) + L(-1, y)Φ hinge (h(x)) Sigmoid Φ sig (t) = 1 -tanh(kt), k &gt; 0 L(+1, y)Φ sig (-h(x)) + L(-1, y)Φ sig (h(x)) ρ-Margin Φ ρ (t) = min{1, max{0, 1 -t ρ }}, ρ &gt; 0 L(+1, y)Φ ρ (-h(x)) + L(-1, y)Φ ρ (h(x))</formula><p>case of ( <ref type="formula">6</ref>) arises when the costs satisfy L(+1, -1) = θ, L(-1, +1) = 1 -θ, and L(+1, +1) = L(-1, -1) = 0. This corresponds to the θ-weighted surrogate loss considered in <ref type="bibr" target="#b90">(Scott, 2012;</ref><ref type="bibr" target="#b37">Koyejo et al., 2014)</ref>. Our formulation generalizes and significantly extends this surrogate loss framework to address the broader context of general cost-sensitive learning.</p><p>It is important to highlight that our proposed algorithm, detailed in Section 5, for optimizing generalized metrics differs fundamentally from the second algorithm introduced in <ref type="bibr" target="#b37">(Koyejo et al., 2014)</ref> (see also <ref type="bibr" target="#b84">(Parambath et al., 2014)</ref>), despite both leveraging a sub-algorithm for cost-sensitive learning. As discussed in Section 1, their approach involves approximating the Bayes-classifier, a threshold function, using the θ-weighted cost-sensitive surrogate loss function. In contrast, our algorithm minimizes a general cost-sensitive surrogate loss function that is H-consistent (see Section 4.3) with respect to a general cost-sensitive target loss function (4), with label-dependent costs that take into account the best-in-class error of the generalized metric in binary classification, which can be approximated through a binary search-based algorithm (see Section 5).</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.3.">Theoretical Guarantees</head><p>In this section, we establish strong theoretical guarantees for a surrogate loss L Φ . Specifically, we derive H-consistency bounds for L Φ with respect to the cost-sensitive loss function L, focusing on commonly used hypothesis sets.</p><p>We define a hypothesis set H as regular if, for any x ∈ X, the set of predictions made by the hypotheses in H on x covers all possible labels: {h(x)∶ h ∈ H} = {+1, -1}. Commonly used hypothesis sets, such as linear models, neural networks, and the family of all measurable functions, all naturally satisfy this regularity condition.</p><p>It was shown by <ref type="bibr">Awasthi, Mao, Mohri, and Zhong (2022a)</ref> that common margin-based loss functions, such as the hinge loss, logistic loss, and exponential loss, admit strong Hconsistency bounds with respect to the binary zero-one loss function ℓ 0-1 ∶ (h, x, y) ↦ 1 h(x)≠y when using such regular hypothesis sets. The next result shows that, for such margin-based loss functions Φ, their corresponding cost-sensitive surrogate losses L Φ (Eq. ( <ref type="formula">6</ref>)) also admit Hconsistency bounds with respect to the cost-sensitive loss L (Eq. ( <ref type="formula" target="#formula_24">5</ref>)).</p><p>Theorem 4.1. Assume that L takes values in [0, L max ]. Let H be a regular hypothesis set and Φ a margin-based loss function for the binary zero-one loss function ℓ 0-1 . Assume that Φ admits a Γ-H-consistency bound with respect to ℓ 0-1 for a function Γ∶ t ↦ β t α , with α ∈ (0, 1] and β &gt; 0.</p><p>Then, L Φ admits a Γ-H-consistency bound with respect to L, where</p><formula xml:id="formula_28">Γ(t) = β(2 L max ) 1-α t α .</formula><p>The proof is included in Appendix C. Based on the results of <ref type="bibr">Awasthi et al. (2022a)</ref>, the theorem holds with Γ(t) = √ 2t for the logistic loss and the exponential loss (α = 1/2), Γ(t) = √ t for the quadratic loss, and Γ(t) = t for the hinge loss, sigmoid loss and ρ-margin loss (α = 1).</p><p>As already mentioned, when the best-in-class error coincides with the Bayes error, E * ℓ (H) = E * ℓ (H all ) for ℓ = L Φ and ℓ = L, the minimizability gaps M L (H) and M L Φ (H) vanish. Under these conditions, the H-consistency bound guarantees that when the surrogate estimation error</p><formula xml:id="formula_29">E L Φ (h) - E * L Φ (H) is reduced to ϵ, the estimation error of the cost- sensitive loss E L (h) -E *</formula><p>L (H) is upper bounded by Γ(ϵ). More generally, since a concave function Γ is sub-additive over R + , the following guarantee holds:</p><formula xml:id="formula_30">E L (h) -E * L (H)) ≤ Γ(E L Φ (h) -E * L Φ (H)) + Γ(M L Φ (H)) -M L (H).</formula><p>When the minimizability gaps (or the upper bounding approximation errors) are small, the last terms,</p><formula xml:id="formula_31">[Γ(M L Φ (H)) -M L (H)]</formula><p>is also small and close to zero.</p><p>In particular, when H = H all , the family of all measurable functions, all minimizability gap terms in Theorem 4.1 vanish, yielding the following result.</p><p>Corollary 4.2. Fix a margin-based loss function Φ. Assume that there exists a function Γ(t) = β t α for some α ∈ (0, 1] and β &gt; 0, such that the following excess error bound holds for all h ∈ H all and all distributions:</p><formula xml:id="formula_32">E ℓ0-1 (h) -E * ℓ0-1 (H all ) ≤ Γ(E Φ (h) -E * Φ (H all )).</formula><p>Then, the following excess error bound holds for all h ∈ H all and all distributions:</p><formula xml:id="formula_33">E L (h) -E * L (H all ) ≤ Γ(E L Φ (h) -E * L Φ (H all )),</formula><p>where</p><formula xml:id="formula_34">Γ(t) = β(2 L max ) 1-α t α .</formula><p>Building on the results of <ref type="bibr">Awasthi et al. (2022a)</ref> for Γ(t) already mentioned and Corollary 4.2, we now derive the following result. Corollary 4.3. For all h ∈ H all and all distributions,</p><formula xml:id="formula_35">E L (h) -E * L (H all ) ≤ Γ(E L Φ (h) -E * L Φ (H all )),</formula><p>where</p><formula xml:id="formula_36">Γ(t) = 2 √ L max t for Φ = Φ exp and Φ log , Γ(t) = √</formula><p>2 L max t for Φ = Φ quad , and Γ(t) = t for Φ = Φ hinge , Φ sig , and Φ ρ .</p><p>By taking the limit on both sides, we establish the Bayesconsistency of these cost-sensitive surrogate losses L Φ with respect to the cost-sensitive target loss L. More generally, Corollary 4.2 demonstrates that L Φ admits an excess error bound with respect to L if Φ admits an excess error bound with respect to ℓ 0-1 .</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.">Algorithm for Generalized Metrics</head><p>In this section, we build on the previous theoretical analysis to develop algorithms for optimizing general metrics with strong guarantees. We first characterize λ * , motivating a binary search algorithm under oracle access to the sign of the expected loss. We then propose an algorithm based on empirical minimization of a surrogate loss L Φ for ℓ λ and introduce a simpler cross-validation approach for selecting λ. Finally, we discuss the theoretical foundations of our algorithms, compare them to prior work, and highlight cases where existing methods may fail due to reliance on the Bayes-optimal solution.</p><p>First, note that in the general cost-sensitive learning problem, the costs L(+1, y) and L(-1, y) are known a priori. In our scenario, the costs defining ℓ λ * depend on λ * , which is not known. We will seek to determine or approximate λ * . Recall that h,x,y)] and that the expected loss of h ∈ H with respect to the loss function ℓ λ can be expressed as follows:</p><formula xml:id="formula_37">λ * = L * (H) = inf h∈H E (x,y)∼D [ℓα(h,x,y)] E (x,y)∼D [ℓ β (</formula><formula xml:id="formula_38">E ℓ λ (h) = E (x,y)∼D [ℓ α (h, x, y)] -λ E (x,y)∼D [ℓ β (h, x, y)].</formula><p>The following provides a key characterization of λ * . Theorem 5.1. We have E * ℓ λ * (H) = 0 and, for any</p><formula xml:id="formula_39">λ ∈ R, sign(E * ℓ λ (H)) = sign(λ * -λ).</formula><p>The proof is included in Appendix D. Theorem 5.1 provides a characterization of the sign of the best-in-class expected loss E * ℓ λ (H) in terms of the sign of λ * -λ.</p><p>Algorithm 1 Binary search estimation of λ * input ϵ</p><formula xml:id="formula_40">1: Initialize [a, b] ← [λ min , λ max ] 2: repeat 3: λ ← a+b 2 4: if (E * ℓ λ (H) &gt; 0) then 5: [a, b] = [λ, b] 6: else 7: [a, b] = [a, λ] 8:</formula><p>end if 9: until |b -a| ≤ ϵ 10: return λ This naturally suggests a binary search-based algorithm to compute an ϵ-approximation of λ * , assuming oracle access to the sign of E * ℓ λ (H). The pseudocode of this algorithm is provided in Algorithm 1,where λ min and λ max denote the minimum and maximum possible values of λ, respectively. These bounds can be determined from the range of λ * using the formulation (2) for the given pair (α, β).</p><p>Theorem 5.2. Let ϵ &gt; 0 be fixed. Algorithm 1 returns an ϵ-approximation λ of λ * in O(log 2 ( λmax-λ min ϵ )) time, such that the following property holds:</p><formula xml:id="formula_41">E * ℓ λ (H) ≤ E * ℓ λ * (H) + ϵℓ β = ϵℓ β .</formula><p>The proof is presented in Appendix E. Of course, in practice, we do not have oracle access to the sign of E * ℓ λ (H). However, we can approximate E * ℓ λ (H) by computing the solution ĥS that minimizes a surrogate loss L Φ of ℓ λ on a labeled sample S of size m. To do that, we first provide a generalization bound for the target loss ℓ λ by using our H-consistency bounds presented in Section 4.3. Given a sample S of size m, we denote by R λ m (H) the Rademacher complexity of the function class {(x, y) ↦ L Φ (h, x, y)∶ h ∈ H} and B λ = sup h,x,y L Φ (h, x, y) an upper bound on L Φ .</p><p>Theorem 5.3. Assume that the surrogate loss L Φ admits a Γ-H-consistency bound with respect to ℓ λ . Then, for any δ &gt; 0, with probability at least 1 -δ over the draw of a sample S from D m , the following estimation bound holds for an empirical minimizer ĥS ∈ H of the L Φ over S:</p><formula xml:id="formula_42">E ℓ λ ( ĥS ) -E * ℓ λ (H) ≤ Γ(M L Φ (H) + 4R λ m (H) + 2B λ √ log 2 δ 2m )-M ℓ λ (H).</formula><p>Note that such ℓ λ -estimation loss guarantees for the minimizer of a surrogate loss L Φ can rarely be found in the literature. The proof is presented in Appendix F. For Theorem 5.3, the parameter λ is fixed. But, the bound of the theorem can be generalized to hold uniformly for all λ ∈ [λ min , λ max ] by covering the interval using sub-intervals of size 1/m.</p><p>Theorem 5.4. Assume that the surrogate loss L Φ admits a Γ-H-consistency bound with respect to ℓ λ . Then, for any δ &gt; 0, with probability at least 1 -δ over the draw of a sample S from D m , the following estimation bound holds for an empirical minimizer ĥS ∈ H of the surrogate loss L Φ over S and λ ∈ [λ min , λ max ]:</p><formula xml:id="formula_43">E ℓ λ ( ĥS ) -E * ℓ λ (H) ≤ Γ(M L Φ (H) + 4R λ m (H) + 8 max i |β i |B Φ m 2 +[2B λ + 4 max i |β i |B Φ m ] √ log 2∆λ m δ 2m )+ ℓ β m ,</formula><p>where ∆λ = λ max -λ min . In particular, when</p><formula xml:id="formula_44">Γ(t) = 2(L max ) 1 2 t 1 2</formula><p>for Φ = Φ log , the bound can be expressed as follows:</p><formula xml:id="formula_45">E ℓ λ ( ĥS ) -E * ℓ λ (H) ≤ (2 L max ) 1 2 [M L Φ (H) + 4R λ m (H) + 8 max i |β i |B Φ m 2 +[2B λ + 4 max i |β i |B Φ m ] √ log 2(∆λ) m δ 2m ] 1 2 + ℓ β m .</formula><p>Then, for any δ &gt; 0, with probability at least 1 -δ, for all λ ∈ [λ min , λ max ], we have</p><formula xml:id="formula_46">E ℓ λ ( ĥS ) -E * ℓ λ (H) ≤ O(Γ(R λ m (H) + √ log((λmax-λ min )m/δ) m + M L Φ (H))).</formula><p>The proof is presented in Appendix G. We denote the righthand of this bound by ϵ m . Building on the ideas from Algorithm 1, we introduce the modified algorithm Algorithm 2. Note that, with high probability, Êℓ λ ,S ( ĥλ ) &gt; ϵ m implies E * ℓ λ (H) &gt; 0 and, similarly, Êℓ λ ,S ( ĥλ ) &lt; -ϵ m implies E * ℓ λ (H) &lt; 0. Thus, this follows conditions used in the previous algorithm. The algorithm benefits from the following guarantee. )) time a hypothesis ĥλ that admits the following guarantee:</p><formula xml:id="formula_47">L( ĥλ ) ≤ L * (H) + 4ϵ m ℓ β .</formula><p>The proof can be found in Appendix H. Thus, when ϵ m is small, that is, when the sample size is sufficiently large relative to the complexity of H and the minimizability gap is small, the performance of ĥλ closely approaches the optimal performance achievable with H.</p><p>In practice, the theoretical expression for ϵ m may not be sufficiently tight due to constants or the minimizability gap, which cannot be accurately approximated in non-realizable i ← i + 1 10: until a + iϵ &gt; b 11: return ĥλ cases. In such scenarios, λ can be treated as a hyperparameter and tuned via cross-validation, as outlined in Algorithm 3. The following result establishes convergence and performance guarantees for this algorithm. Compared to Algorithm 2, its computational complexity is linear rather than logarithmic.</p><p>Theorem 5.6. For any δ &gt; 0, with probability at least 1 -δ, for ϵ ≤ ϵm  ) time a hypothesis ĥλ that admits the following guarantee:</p><formula xml:id="formula_48">L( ĥλ ) ≤ L * (H) + 2ϵ m ℓ β .</formula><p>The proof is presented in Appendix I. We refer to Algorithms 2 and 3 as METRO (Metric Optimization). The effectiveness of METRO compared to prior baselines is demonstrated by the experimental results reported in Section 6.</p><p>Note that the quantities ĥλ and Êℓ λ ,S ( ĥλ ) in Algorithm 2, as well as ĥλ and LS ( ĥλ ) in Algorithm 3, are approximated using data sampled from the same distribution, but they can be obtained from different samples. In practice, as done in  <ref type="bibr" target="#b37">(Koyejo et al., 2014)</ref>, we can split the training data into two parts: λ is obtained from one part, and then used to train the hypothesis ĥλ on the other. Theorems 5.5 and 5.6 remain valid as long as the data are sampled independently from the same distribution. However, in over-parameterized settings, the value of ϵ m may be larger due to the high complexity of the model. This quantity becomes small only when the sample size is sufficiently large relative to the complexity of the hypothesis set. This limitation applies broadly to most generalization bounds for complex neural networks.</p><p>The current analysis of over-parameterized settings typically requires alternative tools, particularly those that account for the optimization algorithm (e.g., Stochastic Gradient Descent (SGD) <ref type="bibr" target="#b11">(Bottou, 2010)</ref>) and its dynamics. Such analyses often apply only to more restricted model families.</p><p>Comparison of our algorithms with prior work. As discussed in previous sections, our algorithms METRO for optimizing general metrics are supported by strong theoretical guarantees. These guarantees apply to arbitrary hypothesis sets and provide finite-sample bounds. In contrast, prior methods <ref type="bibr" target="#b37">(Koyejo et al., 2014)</ref> rely solely on Bayesconsistency, which holds only for the class of all measurable functions. This makes their analysis less relevant in realistic settings where learning is restricted to specific function classes, an issue explicitly left open in <ref type="bibr" target="#b37">(Koyejo et al., 2014)</ref>. Furthermore, their approach does not provide convergence rate guarantees, in contrast with our finite-sample bounds. In many modern applications, particularly with complex neural networks, the minimizability gap is often small or close to zero due to near-separable data. In such cases, our learning guarantees become even more favorable.</p><p>Beyond theoretical advantages, a key limitation of prior methods is their reliance on the structure of the Bayesoptimal solution. Since the Bayes-optimal predictor for a given metric typically differs from that of binary classifi-cation only by an offset, their approach first trains a binary classifier and then selects an optimal threshold or offset. However, this approach typically fails to find the best predictor within a restricted hypothesis set.</p><p>Figure <ref type="figure" target="#fig_4">1</ref> illustrates this issue with a simulated example. The best-in-class linear hypothesis for L with α = -( <ref type="formula" target="#formula_24">5</ref>16 , 5 16 , 5 16 , 5 16 ) and β = (0, 1 8 , 1 2 , 5 8 ) (corresponding to the F 0.5 -measure) is significantly different from the linear hypothesis obtained by thresholding the best-in-class SVM classifier. The two decision boundaries are not even parallel, highlighting the fundamental inadequacy of thresholdingbased approaches such as those in <ref type="bibr" target="#b37">(Koyejo et al., 2014)</ref>. In contrast, our algorithm successfully finds a linear hypothesis that closely matches the best-in-class solution for L.</p><p>Finally, note that when β 1 = β 3 = 0 for generalized metrics, the independence of λ * from the hypothesis h in the target loss (Eq. ( <ref type="formula" target="#formula_21">4</ref>)) significantly simplifies our algorithm, as λ * no longer needs to be estimated.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="6.">Experiments</head><p>In this section, we present empirical results for our principled algorithms for optimizing generalized metrics on the CIFAR-10 ( <ref type="bibr" target="#b38">Krizhevsky, 2009)</ref>, CIFAR-100 <ref type="bibr" target="#b38">(Krizhevsky, 2009)</ref> and SVHN <ref type="bibr" target="#b83">(Netzer et al., 2011)</ref> datasets.</p><p>Our experiments use a three-hidden-layer CNN with ReLU activations <ref type="bibr" target="#b39">(LeCun et al., 1995)</ref>. Standard data augmentations were applied to CIFAR-10 and CIFAR-100, including 4-pixel padding followed by 32 × 32 random cropping and random horizontal flipping. Training was conducted using Stochastic Gradient Descent (SGD) with Nesterov momentum <ref type="bibr" target="#b82">(Nesterov, 1983)</ref>. The initial learning rate, batch size, and weight decay were set to 0.02, 1,024, and 1×10 -4 , respectively. A cosine decay learning rate schedule <ref type="bibr" target="#b45">(Loshchilov &amp; Hutter, 2022)</ref> was used over the course of 100 epochs. During training, we extract two classes from each dataset to form a binary classification task.</p><p>We evaluated the models using their averaged generalized metric L. In particular, we consider the F β measure <ref type="bibr" target="#b95">(Ye et al., 2012)</ref>, where α = -(</p><formula xml:id="formula_49">1+β 2 4 , 1+β 2 4 , 1+β 2 4 , 1+β 2 4 ) and β = (0, β 2 2 , 1 2 , β 2 +1</formula><p>2 ), and the Jaccard similarity coefficient (JAC) <ref type="bibr" target="#b91">(Sokolova &amp; Lapalme, 2009)</ref>, where α = -( <ref type="formula" target="#formula_3">1</ref>4 , 1 4 , 1 4 , 1 4 ) and β = ( 1 4 , 1 4 , -1 4 , 3 4 ). The reported metric is averaged over five runs, with standard deviations included. We compared the METRO algorithm using cross-validation (Algorithm 3) with four baselines: the standard empirical risk minimization (ERM), the first algorithm (Algorithm 1) and the second algorithm (Algorithm 2) from <ref type="bibr" target="#b37">(Koyejo et al., 2014)</ref>, as well as the algorithm from <ref type="bibr" target="#b84">(Parambath et al., 2014)</ref>, as detailed in Section 1. For METRO algorithm, we used the surrogate loss L Φ in ( <ref type="formula">6</ref>) with the auxiliary func-Table <ref type="table">2</ref>. F β measure and JAC of three-hidden-layer neural network on CIFAR-10, CIFAR-100 and SVHN; mean ± standard deviation over five runs for ERM, Algorithm 1 and Algorithm 2 in <ref type="bibr" target="#b37">(Koyejo et al., 2014)</ref>, Algorithm in <ref type="bibr" target="#b84">(Parambath et al., 2014)</ref>, and METRO Algorithm.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Algorithm</head><p>Metric CIFAR-10 CIFAR-100 SVHN ERM F 1 0.9004 ± 0.0015 0.9265 ± 0.0067 0.9676 ± 0.0028 Algorithm 1 in <ref type="bibr" target="#b37">(Koyejo et al., 2014)</ref> 0.9040 ± 0.0134 0.9320 ± 0.0065 0.9679 ± 0.0035 Algorithm 2 in <ref type="bibr" target="#b37">(Koyejo et al., 2014)</ref> 0.9090 ± 0.0070 0.9317 ± 0.0114 0.9677 ± 0.0022 Algorithm in <ref type="bibr" target="#b84">(Parambath et al., 2014)</ref> 0.9185 ± 0.0029 0.9343 ± 0.0111 0.9682 ± 0.0021 METRO Algorithm 0.9359 ± 0.0041 0.9405 ± 0.0103 0.9713 ± 0.0029 ERM F 0.5 0.9418 ± 0.0092 0.9338 ± 0.0216 0.9689 ± 0.0037 Algorithm 1 in <ref type="bibr" target="#b37">(Koyejo et al., 2014)</ref> 0.9476 ± 0.0032 0.9510 ± 0.0138 0.9715 ± 0.0035 Algorithm 2 in <ref type="bibr" target="#b37">(Koyejo et al., 2014)</ref> 0.9503 ± 0.0028 0.9435 ± 0.0140 0.9730 ± 0.0017 Algorithm in <ref type="bibr" target="#b84">(Parambath et al., 2014)</ref> 0.9507 ± 0.0036 0.9515 ± 0.0105 0.9746 ± 0.0011 METRO Algorithm 0.9585 ± 0.0023 0.9759 ± 0.0115 0.9807 ± 0.0015</p><formula xml:id="formula_50">ERM F 1.5</formula><p>0.9234 ± 0.0074 0.9279 ± 0.0160 0.9675 ± 0.0035 Algorithm 1 in <ref type="bibr" target="#b37">(Koyejo et al., 2014)</ref> 0.9305 ± 0.0029 0.9331 ± 0.0218 0.9688 ± 0.0025 Algorithm 2 in <ref type="bibr" target="#b37">(Koyejo et al., 2014)</ref> 0.9263 ± 0.0036 0.9340 ± 0.0119 0.9677 ± 0.0020 Algorithm in <ref type="bibr" target="#b84">(Parambath et al., 2014)</ref> 0.9312 ± 0.0044 0.9345 ± 0.0118 0.9702 ± 0.0023 METRO Algorithm 0.9459 ± 0.0030 0.9449 ± 0.0115 0.9771 ± 0.0018 ERM JAC 0.4689 ± 0.0022 0.4693 ± 0.0063 0.4767 ± 0.0036 Algorithm 1 in <ref type="bibr" target="#b37">(Koyejo et al., 2014)</ref> 0.4821 ± 0.0024 0.4728 ± 0.0109 0.4814 ± 0.0031 Algorithm 2 in <ref type="bibr" target="#b37">(Koyejo et al., 2014)</ref> 0.5746 ± 0.0121 0.4753 ± 0.0119 0.4875 ± 0.0017 Algorithm in <ref type="bibr" target="#b84">(Parambath et al., 2014)</ref> 0.6428 ± 0.0130 0.4924 ± 0.0152 0.4934 ± 0.0019 METRO Algorithm 0.6575 ± 0.0018 0.5017 ± 0.0046 0.4965 ± 0.0024</p><formula xml:id="formula_51">tion Φ(t) = log(1 + e -t</formula><p>), which corresponds to the logistic loss function used in logistic regression. The logistic loss was also used for ERM and Algorithm 1 in <ref type="bibr" target="#b37">(Koyejo et al., 2014)</ref>, while Algorithm 2 in <ref type="bibr" target="#b37">(Koyejo et al., 2014)</ref> and the algorithm from <ref type="bibr" target="#b84">(Parambath et al., 2014)</ref> used the weighted logistic loss. All the hyperparameters in these algorithms were selected through cross-validation.</p><p>Table <ref type="table">2</ref> shows that our algorithm consistently outperforms the four baselines across all datasets. Notably, the algorithm in <ref type="bibr" target="#b84">(Parambath et al., 2014)</ref> consistently outperforms Algorithms 1 and 2 in <ref type="bibr" target="#b37">(Koyejo et al., 2014)</ref> by using two hyperparameters: θ for weighting the logistic loss and θ ′ for thresholding the classifier. In contrast, the relative performance of Algorithms 1 and 2 in <ref type="bibr" target="#b37">(Koyejo et al., 2014)</ref> varies across datasets, although both outperform ERM.</p><p>Note that the per-epoch computational cost of our method is comparable to that of Algorithm 2 in <ref type="bibr" target="#b37">(Koyejo et al., 2014)</ref>. Both methods involve a single hyperparameter, and for a fixed value of this parameter, the computational cost is similar to training a standard binary classifier using a standard surrogate loss.</p><p>In line with prior work <ref type="bibr" target="#b37">(Koyejo et al., 2014)</ref>, we used standard image classification datasets for our empirical evaluation to demonstrate the effectiveness of our methods relative to existing baselines. However, we acknowledge the importance of evaluating our algorithms on more imbalanced datasets, which often present greater challenges and are more representative of real-world applications. We plan to include such experiments and comparisons in future work.</p><p>One may wonder about the difficulty of directly optimizing a general metric defined as the ratio of the expectations of two loss functions, both linear in h, where h(x) = sign(h(x)).</p><p>While the metric is quasi-concave in h, optimizing it with respect to h is NP-hard, even when the denominator is constant and h is restricted to a linear hypothesis set. In contrast, each surrogate loss optimization problem we consider (framed as supervised learning) can be solved in polynomial time over a convex hypothesis set, as the surrogate loss functions we adopt are convex. Furthermore, directly optimizing the empirical ratio of the numerator and denominator may not yield a provably good approximation of the metric, since their expectation does not align with the ratio of expectations.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="7.">Conclusion</head><p>We presented a series of theoretical, algorithmic, and empirical results for optimizing generalized metrics in binary classification, highlighting the significance of our algorithms supported by H-consistency guarantees. Looking ahead, a natural direction is extending our theory and algorithms to cover generalized metrics in multi-class classification and multi-label learning, broadening their applicability. 2016; <ref type="bibr" target="#b88">Sanyal et al., 2018;</ref><ref type="bibr" target="#b25">Fathony &amp; Kolter, 2020;</ref><ref type="bibr">Zhang et al., 2020;</ref><ref type="bibr" target="#b46">Luo et al., 2021;</ref><ref type="bibr" target="#b13">Busa-Fekete et al., 2022;</ref><ref type="bibr" target="#b89">Schultheis et al., 2024)</ref>, as well as generalized metrics under missing, corrupted, or noisy labels <ref type="bibr" target="#b65">(Menon et al., 2015;</ref><ref type="bibr" target="#b80">Natarajan &amp; Jain, 2016;</ref><ref type="bibr" target="#b100">Zhang et al., 2021;</ref><ref type="bibr" target="#b98">Zhang &amp; Agarwal, 2024)</ref>. Theoretical analyses and algorithms have also been developed for specific metrics, including the F -measure <ref type="bibr" target="#b30">(Jansche, 2007;</ref><ref type="bibr" target="#b31">Jasinska et al., 2016;</ref><ref type="bibr" target="#b85">Pillai et al., 2017;</ref><ref type="bibr" target="#b8">Bascol et al., 2019;</ref><ref type="bibr" target="#b32">Jiang et al., 2020;</ref><ref type="bibr" target="#b9">Berger &amp; Guda, 2020;</ref><ref type="bibr">Zhang et al., 2020;</ref><ref type="bibr" target="#b18">Dai &amp; Li, 2023)</ref>, fairness measures <ref type="bibr" target="#b66">(Menon &amp; Williamson, 2018)</ref>, precision-recall <ref type="bibr" target="#b26">(Flach &amp; Kull, 2015)</ref>, and the balanced error rate (BER) <ref type="bibr" target="#b103">(Zhao et al., 2013)</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Contents of Appendix</head><p>B. Proof of Theorem 3.2 Theorem 3.2. Fix η ≥ 0 and h ∈ H. Then, the inequality E ℓ λ * (h) ≤ η holds if and only if h,x,y)] .</p><formula xml:id="formula_52">L(h)-L * (H) ≤ η E (x,y)∼D [ℓ β (</formula><p>Proof. Since we have E (x,y)∼D [ℓ β (h, x, y)] &gt; 0, the following equivalence holds for all h ∈ H and η ≥ 0:</p><formula xml:id="formula_53">E ℓ λ * (h) ≤ η ⇐⇒ E (x,y)∼D [ℓ α (h, x, y)] -λ * E (x,y)∼D [ℓ β (h, x, y)] ≤ η (def. of ℓ λ * ) ⇐⇒ E (x,y)∼D [ℓ α (h, x, y)] E (x,y)∼D [ℓ β (h, x, y)] ≤ λ * + η E (x,y)∼D [ℓ β (h, x, y)] (E (x,y)∼D [ℓ β (h, x, y)] &gt; 0) ⇐⇒ L(h) -L * (H) ≤ η E (x,y)∼D [ℓ β (h, x, y)] . (λ * = L * (H))</formula><p>This completes the proof.</p><p>C. Proof of Theorem 4.1</p><p>We will use the following definitions. For any x ∈ X, we adopt the definition η(x) = P(Y = +1 | X = x). Then, the conditional loss of a hypothesis h at point x ∈ X for a loss function ℓ is defined as follows:</p><formula xml:id="formula_54">C ℓ (h, x) = η(x)ℓ(h, x, +1) + (1 -η(x))ℓ(h, x, -1).</formula><p>The best-in-class conditional loss of a hypothesis set H at x ∈ X is defined by C * ℓ (H, x) = inf h∈H C ℓ (h, x) . Lemma C.1. Assume that the following H-consistency bound holds for all h ∈ H and all distributions:</p><formula xml:id="formula_55">E ℓ0-1 (h) -E * ℓ0-1 (H) + M ℓ0-1 (H) ≤ Γ(E Φ (h) -E * Φ (H) + M Φ (H)).</formula><p>Then, for any η ∈ [0, 1] and x ∈ X, we have</p><formula xml:id="formula_56">ℓ 0-1 (h, x, +1)η + ℓ 0-1 (h, x, -1)(1 -η) -inf h∈H (ℓ 0-1 (h, x, +1)η + ℓ 0-1 (h, x, -1)(1 -η)) ≤ Γ(Φ(h(x))η + Φ(-h(x))(1 -η) -inf h∈H (Φ(h(x))η + Φ(-h(x))(1 -η))).</formula><p>Proof. For any x ∈ X, consider a distribution δ x that concentrates on that point. Let η = P(Y = +1 | X = x). Then, by definition, E ℓ0-1 (h) -E * ℓ0-1 (H) + M ℓ0-1 (H) can be expressed as</p><formula xml:id="formula_57">E ℓ0-1 (h)-E * ℓ0-1 (H)+M ℓ0-1 (H) = ℓ 0-1 (h, x, +1)η+ℓ 0-1 (h, x, -1)(1 -η)-inf h∈H (ℓ 0-1 (h, x, +1)η + ℓ 0-1 (h, x, -1)(1 -η)).</formula><p>Similarly, E Φ (h) -E * Φ (H) + M Φ (H) can be expressed as</p><formula xml:id="formula_58">Φ(h(x))η + Φ(-h(x))(1 -η) -inf h∈H (Φ(h(x))η + Φ(-h(x))(1 -η)).</formula><p>Since the H-consistency bound holds by the assumption, we complete the proof.</p><p>Theorem 4.1. Assume that L takes values in [0, L max ]. Let H be a regular hypothesis set and Φ a margin-based loss function for the binary zero-one loss function ℓ 0-1 . Assume that Φ admits a Γ-H-consistency bound with respect to ℓ 0-1 for a function Γ∶ t ↦ β t α , with α ∈ (0, 1] and β &gt; 0. Then, L Φ admits a Γ-H-consistency bound with respect to L, where</p><formula xml:id="formula_59">Γ(t) = β(2 L max ) 1-α t α .</formula><p>Proof. Let η(x) = P(Y = 1|X = x) be the conditional probability of Y = 1 given X = x. By the definition, the conditional loss of the target loss can be expressed as follows:</p><formula xml:id="formula_60">C L (h, x) = η(x)L(h(x), +1) + (1 -η(x))L(h(x), -1) = 1 h(x)=+1 [η(x)L(+1, +1) + (1 -η(x))L(+1, -1)] + 1 h(x)=-1 [η(x)L(-1, +1) + (1 -η(x))L(-1, -1)] = [ℓ 0-1 (h, x, +1)η ′ (x) + ℓ 0-1 (h, x, -1)(1 -η ′ (x))]c(x), where c(x) = [η(x)L(+1, +1) + (1 -η(x))L(+1, -1)] + [η(x)L(-1, +1) + (1 -η(x))L(-1, -1)] ∈ [0, 2 L max ] and η ′ (x) = η(x)L(-1,+1)+(1-η(x))L(-1,-1) c(x)</formula><p>∈ [0, 1]. Thus, the best-in-class conditional loss can be expressed as follows:</p><formula xml:id="formula_61">C * L (H, x) = inf h∈H [ℓ 0-1 (h, x, -1)η ′ (x) + ℓ 0-1 (h, x, -1)(1 -η ′ (x))]c(x)</formula><p>By the definition,</p><formula xml:id="formula_62">∆C L,H (h, x) = C L (h, x) -C * L (H, x) = ([ℓ 0-1 (h, x, -1)η ′ (x) + ℓ 0-1 (h, x, -1)(1 -η ′ (x))] -inf h∈H [ℓ 0-1 (h, x, -1)η ′ (x) + ℓ 0-1 (h, x, -1)(1 -η ′ (x))])c(x).</formula><p>The conditional loss of the surrogate loss can be expressed as follows:</p><formula xml:id="formula_63">C L Φ (h, x) = η(x)(L(+1, +1)Φ(-h(x)) + L(-1, +1)Φ(h(x))) + (1 -η(x))(L(+1, -1)Φ(-h(x)) + L(-1, -1)Φ(h(x))) = Φ(-h(x))[η(x)L(+1, +1) + (1 -η(x))L(+1, -1)] + Φ(h(x))[η(x)L(-1, +1) + (1 -η(x))L(-1, -1)] = [Φ(h(x))η ′ (x) + Φ(-h(x))(1 -η ′ (x))]c(x).</formula><p>Thus, the best-in-class conditional loss can be expressed as follows:</p><formula xml:id="formula_64">C * L Φ (H, x) = inf h∈H [Φ(h(x))η ′ (x) + Φ(-h(x))(1 -η ′ (x))]c(x).</formula><p>By the definition,</p><formula xml:id="formula_65">∆C L Φ ,H (h, x) = C L Φ (h, x) -C * L Φ (H, x) = ([Φ(h(x))η ′ (x) + Φ(-h(x))(1 -η ′ (x))] -inf h∈H [Φ(h(x))η ′ (x) + Φ(-h(x))(1 -η ′ (x))])c(x).</formula><p>By Lemma C.1, we have</p><formula xml:id="formula_66">∆C L Φ ,H (h, x) ([Φ(h(x))η ′ (x) + Φ(-h(x))(1 -η ′ (x))] -inf h∈H [Φ(h(x))η ′ (x) + Φ(-h(x))(1 -η ′ (x))])c(x) ≥ Γ -1 ([ℓ 0-1 (h, x, -1)η ′ (x) + ℓ 0-1 (h, x, -1)(1 -η ′ (x))] -inf h∈H [ℓ 0-1 (h, x, -1)η ′ (x) + ℓ 0-1 (h, x, -1)(1 -η ′ (x))])c(x) = 1 β 1 α ([ℓ 0-1 (h, x, -1)η ′ (x) + ℓ 0-1 (h, x, -1)(1 -η ′ (x))] -inf h∈H [ℓ 0-1 (h, x, -1)η ′ (x) + ℓ 0-1 (h, x, -1)(1 -η ′ (x))]) 1 α c(x) = 1 β 1 α (([ℓ 0-1 (h, x, -1)η ′ (x) + ℓ 0-1 (h, x, -1)(1 -η ′ (x))] -inf h∈H [ℓ 0-1 (h, x, -1)η ′ (x) + ℓ 0-1 (h, x, -1)(1 -η ′ (x))])c(x)) 1 α (c(x)) 1-1 α ≥ 1 β 1 α (∆C L,H (h, x)) 1 α (2 L max ) 1-1 α .</formula><p>By taking the expectation on both sides and applying Jensen's inequality, we obtain:</p><formula xml:id="formula_67">E L (h) -E * L (H) + M L (H) ≤ Γ(E L Φ (h) -E * L Φ (H) + M L Φ (H)),</formula><p>where</p><formula xml:id="formula_68">Γ(t) = β(2 L max ) 1-α t α .</formula><p>D. Proof of Theorem 5.1</p><p>Theorem 5.1. We have E * ℓ λ * (H) = 0 and, for any λ ∈ R, sign(E * ℓ λ (H)) = sign(λ * -λ).</p><p>Proof. For any h ∈ H, define f (h) and g(h) to simplify notation:</p><formula xml:id="formula_69">f (h) = E (x,y)∼D [ℓ α (h, x, y)] E (x,y)∼D [ℓ β (h, x, y)] , g(h) = E (x,y)∼D [ℓ β (h, x, y)].</formula><p>By assumption, we have g(h) &gt; 0 for all h ∈ H and λ * = inf h∈H f (h) and</p><formula xml:id="formula_70">E * ℓ λ * (H) = inf h∈H {(f (h) -λ * )g(h)}. Since g is upper-bounded by ℓ β and (f (h) -λ * ) ≥ 0, it follows that E * ℓ λ * (H) ≤ inf h∈H {f (h) -λ * } ℓ β = 0.</formula><p>By definition of E * ℓ λ * (H) as an infimum, for any η &gt; 0, there exists</p><formula xml:id="formula_71">h η ∈ H such that E * ℓ λ * (H) + η &gt; (f (h η ) -λ * )g(h η ) ≥ 0. Since E * ℓ λ * (H) + η &gt; 0 for all η &gt; 0, it follows that E * ℓ λ * (H) ≥ 0.</formula><p>Combining the two inequalities yields E * ℓ λ * (H) = 0. This establishes the first equality.</p><p>Next, assume λ * -λ &gt; 0. By the definition of λ * as an infimum, we have f (h) -λ &gt; 0 for all h ∈ H. This implies</p><formula xml:id="formula_72">E * ℓ λ (H) = inf h∈H {(f (h) -λ)g(h)} ≥ ℓ β inf h∈H {(f (h) -λ)} = ℓ β (λ * -λ) &gt; 0, thus E * ℓ λ<label>(</label></formula><p>H) &gt; 0, which proves one direction of the statement. Now, assume λ * -λ &lt; 0. By the definition of λ * as an infimum, for any η &gt; 0, there exists</p><formula xml:id="formula_73">h η ∈ H such that f (h η ) &lt; λ * + η. Choose η &lt; (λ -λ * ). This implies E * ℓ λ (H) ≤ (f (h η ) -λ)g(h η ) ≤ (λ * + η -λ)g(h η ). Since (λ * + η -λ) &lt; 0 and g(h η ) &gt; 0, it follows that E * ℓ λ (H) &lt; 0.</formula><p>This proves the other direction.</p><p>E. Proof of Theorem 5.2</p><p>Lemma E.1. Fix ϵ &gt; 0 and assume |λ -λ * | ≤ ϵ. Then, the following inequality holds:</p><formula xml:id="formula_74">E * ℓ λ (H) ≤ ϵℓ β .</formula><p>Proof. By definition of E ℓ λ (h), the following holds for any h ∈ H:</p><formula xml:id="formula_75">E ℓ λ (h) = E ℓ λ * (h) + (λ * -λ) E (x,y)∼D [ℓ β (h, x, y)] ≤ E ℓ λ * (h) + ϵℓ β .</formula><p>Thus, by definition of E * ℓ λ (H) as an infimum, for any h ∈ H, we have E * ℓ λ (H) ≤ E ℓ λ * (h) + ϵℓ β . Taking the infimum of the right-hand side over H yields E * ℓ λ (H) ≤ E * ℓ λ * (H) + ϵℓ β . By Theorem 5.1, we have E * ℓ λ * (H) = 0. This completes the proof.</p><p>Theorem 5.2. Let ϵ &gt; 0 be fixed. Algorithm 1 returns an ϵ-approximation λ of λ * in O(log 2 ( λmax-λ min ϵ )) time, such that the following property holds:</p><formula xml:id="formula_76">E * ℓ λ (H) ≤ E * ℓ λ * (H) + ϵℓ β = ϵℓ β .</formula><p>Proof. By definition of the binary search, we have |λ -λ * | ≤ ϵ. Thus, the inequality holds by Lemma E.1. The time complexity follows straightforwardly the property of the binary search.</p><p>F. Proof of Theorem 5.3</p><p>Theorem 5.3. Assume that the surrogate loss L Φ admits a Γ-H-consistency bound with respect to ℓ λ . Then, for any δ &gt; 0, with probability at least 1 -δ over the draw of a sample S from D m , the following estimation bound holds for an empirical minimizer ĥS ∈ H of the L Φ over S:</p><formula xml:id="formula_77">E ℓ λ ( ĥS ) -E * ℓ λ (H) ≤ Γ(M L Φ (H) + 4R λ m (H) + 2B λ √ log 2 δ 2m ) -M ℓ λ (H).</formula><p>Proof. By the standard Rademacher complexity bounds <ref type="bibr" target="#b69">(Mohri et al., 2018)</ref>, the following holds with probability at least 1 -δ for all h ∈ H:</p><formula xml:id="formula_78">|E L Φ (h) -ÊL Φ ,S (h)| ≤ 2R λ m (H) + B λ √ log(2/δ) 2m .</formula><p>Fix ϵ &gt; 0. By the definition of the infimum, there exists h * ∈ H such that E L Φ (h * ) ≤ E * L Φ (H) + ϵ. By definition of ĥλ , we have</p><formula xml:id="formula_79">E L Φ ( ĥλ ) -E * L Φ (H) = E L Φ ( ĥλ ) -ÊL Φ ,S ( ĥλ ) + ÊL Φ ,S ( ĥλ ) -E * L Φ (H) ≤ E L Φ ( ĥλ ) -ÊL Φ ,S ( ĥλ ) + ÊL Φ ,S (h * ) -E * L Φ (H) ≤ E L Φ ( ĥλ ) -ÊL Φ ,S ( ĥλ ) + ÊL Φ ,S (h * ) -E * L Φ (h * ) + ϵ ≤ 2[2R λ m (H) + B λ √ log(2/δ) 2m ] + ϵ.</formula><p>Since the inequality holds for all ϵ &gt; 0, it implies:</p><formula xml:id="formula_80">E L Φ ( ĥλ ) -E * L Φ (H) ≤ 4R λ m (H) + 2B λ √ log(2/δ) 2m .</formula><p>Substituting this inequality into the H-consistency bound in the assumption completes the proof.</p><p>G. Proof of Theorem 5.4</p><p>Let B Φ be an upper bound for the function Φ. This boundedness holds in practice when we consider a bounded input space.</p><p>Lemma G.1. Fix ϵ &gt; 0 and assume |λ 1 -λ 2 | ≤ ϵ. Then, the following inequalities hold:</p><formula xml:id="formula_81">|R λ1 m (H) -R λ2 m (H)| ≤ 4 max i |β i |B Φ ϵ m , |B λ1 -B λ2 | ≤ 4 max i |β i |B Φ ϵ.</formula><p>Proof. Let L λ Φ be the surrogate loss (6) with the parameter λ. By the definition of the cost function (4), the following holds for any (h, x, y) ∈ H × X × Y:</p><formula xml:id="formula_82">|L λ1 Φ (h, x, y) -L λ2 Φ (h, x, y)| ≤ 4 max i |β i |B Φ |λ 1 -λ 2 |.</formula><p>Thus, by definition of Rademacher complexity and using B λ = sup h,x,y L Φ (h, x, y), we have</p><formula xml:id="formula_83">|R λ1 m (H) -R λ2 m (H)| ≤ 4 max i |β i |B Φ ϵ m , |B λ1 -B λ2 | ≤ 4 max i |β i |B Φ ϵ.</formula><p>This completes the proof.</p><p>Theorem 5.4. Assume that the surrogate loss L Φ admits a Γ-H-consistency bound with respect to ℓ λ . Then, for any δ &gt; 0, with probability at least 1 -δ over the draw of a sample S from D m , the following estimation bound holds for an empirical minimizer ĥS ∈ H of the surrogate loss L Φ over S and λ ∈ [λ min , λ max ]:</p><formula xml:id="formula_84">E ℓ λ ( ĥS ) -E * ℓ λ (H) ≤ Γ(M L Φ (H) + 4R λ m (H) + 8 max i |β i |B Φ m 2 + [2B λ + 4 max i |β i |B Φ m ] √ log 2∆λ m δ 2m ) + ℓ β m .</formula><p>where ∆λ = λ max -λ min . In particular, when Γ(t) = 2(L max ) 1 2 t 1 2 for Φ = Φ log , the bound can be expressed as follows:</p><formula xml:id="formula_85">E ℓ λ ( ĥS ) -E * ℓ λ (H) ≤ (2 L max ) 1 2 [M L Φ (H) + 4R λ m (H) + 8 max i |β i |B Φ m 2 + [2B λ + 4 max i |β i |B Φ m ] √ log 2(∆λ) m δ 2m ] 1 2 + ℓ β m .</formula><p>Proof. To derive the uniform bound, we cover the interval [λ min , λ max ] using sub-intervals of size 1/m. Consider sequences (λ k ) k , where λ k = λ min + k-1 m , 1 ≤ k ≤ m(λ max -λ min ). By Theorem 5.3 and the standard uniform bounds <ref type="bibr" target="#b69">(Mohri et al., 2018)</ref>, for any δ &gt; 0, with probability at least 1 -δ, the following bound holds for all k:</p><formula xml:id="formula_86">E λ k ( ĥS ) -E * λ k (H) ≤ Γ(M L Φ (H) + 4R λ k m (H) + 2B λ k √ log 2(λmax-λ min ) m δ 2m</formula><p>).</p><p>Then  Proof. Suppose that ĥλ is the solution returned at step 10 of Algorithm 2. Then, by definition of the algorithm, we must have | Êℓ λ ( ĥλ )| ≤ ϵ m , which, by the standard generalization bound <ref type="bibr" target="#b69">(Mohri et al., 2018)</ref>, implies that (with high probability)</p><formula xml:id="formula_87">E ℓ λ ( ĥλ ) ≤ 2ϵ m</formula><p>Expanding the definition of the surrogate risk, this gives </p><p>Next, observe that for all h ∈ H, we have</p><formula xml:id="formula_89">E ℓ λ (h) -E ℓ λ * (h) = (λ -λ * ) E[ℓ β (h, x, y)].</formula><p>Rearranging gives</p><formula xml:id="formula_90">(λ -λ * ) = E ℓ λ (h) -E ℓ λ * (h) E[ℓ β (h, x, y)]</formula><p>.</p><p>Since E ℓ λ * (H) = 0, by definition of the infimum, it follows that E ℓ λ * (h) ≥ 0. In view of that, we can write:</p><formula xml:id="formula_91">(λ -λ * ) ≤ E ℓ λ (h) E[ℓ β (h, x, y)]</formula><p>.</p><p>Applying this inequality with h = ĥλ and substituting into (7), we obtain</p><formula xml:id="formula_92">L( ĥλ ) ≤ λ * + 2ϵ m ℓ β + E ℓ λ ( ĥλ ) E[ℓ β ( ĥλ , x, y)] ≤ λ * + 4ϵ m ℓ β .</formula><p>This ends the analysis of that case. This completes the proof.</p><p>I. Proof of Theorem 5.6</p><p>Theorem 5.6. For any δ &gt; 0, with probability at least 1 -δ, for ϵ ≤ ϵm Combining this with the estimation bound for ℓ λ , we have (with high probability)</p><formula xml:id="formula_93">E ℓ λ ( ĥλ ) ≤ E * ℓ λ (H) + ϵ m ≤ ϵℓ β + ϵ m .</formula><p>Thus, E[ℓ λ α ( ĥλ , x, y)] -λ E[ℓ λ β ( ĥλ , x, y)] ≤ ϵℓ β + ϵ m .</p><p>Dividing by E[ℓ λ β ( ĥλ , x, y)] both sides yields</p><formula xml:id="formula_94">L α,β ( ĥλ ) ≤ λ + ϵℓ β + ϵ m ℓ β ≤ λ * + ϵ + ϵℓ β + ϵ m ℓ β .</formula><p>Choosing ϵ ≤ ϵ m /(2ℓ β ) yields</p><formula xml:id="formula_95">L α,β ( ĥλ ) ≤ λ + ϵℓ β + ϵ m ℓ β ≤ λ * + ϵ m 2ℓ β + 3ϵ m 2ℓ β ≤ λ * + 2ϵ m ℓ β .</formula><p>This completes the proof.</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head>Theorem 5. 5 .</head><label>5</label><figDesc>Let ϵ = ϵm 2ℓ β . For any δ &gt; 0, with probability at least 1 -δ, Algorithm 2 returns in O(log 2 ( λmax-λ min ϵ</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head>Algorithm 2</head><label>2</label><figDesc>Generalized metrics optimization algorithm input ϵ, ϵ m . 1: Initialize with [a, b] = [λ min , λ max ] |b -a| ≤ ϵ 13: return ĥλ Algorithm 3 Generalized metrics optimization algorithm with cross-validation input ϵ 1: Initialize with [a, b] = [λ min , λ max ], λ * = λ max , i = 0</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_2"><head>,</head><label></label><figDesc>Algorithm 3 returns in O( λmax-λ min</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_3"><head></head><label></label><figDesc>ϵ</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_4"><head>Figure 1 .</head><label>1</label><figDesc>Figure1. Comparison of the best-in-class SVM classifier, the optimal linear hypothesis for the F0.5-measure, and the linear hypothesis returned by our algorithm.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_6"><head>H</head><label></label><figDesc>. Proof of Theorem 5.5 Theorem 5.5. Let ϵ = ϵm 2ℓ β . For any δ &gt; 0, with probability at least 1 -δ, Algorithm 2 returns in O(log 2 ( λmax-λ min ϵ )) time a hypothesis ĥλ that admits the following guarantee: L( ĥλ ) ≤ L * (H) + 4ϵ m ℓ β .</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_7"><head>E</head><label></label><figDesc>[ℓ α (h, x, y)] -λ E[ℓ β (h, x, y)] ≤ 2ϵ m . Dividing through by E[ℓ β (h, x, y)] yields L( ĥλ ) ≤ λ + 2ϵ m E[ℓ β (h, x, y)] ≤ λ + 2ϵ m ℓ β .</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_8"><head></head><label></label><figDesc>Since the algorithm terminates with a + iϵ &gt; b, we have |λ -λ * | ≤ ϵ. By Lemma E.1, this implies E * ℓ λ (H) ≤ ϵℓ β .</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_1"><head>Table 1 .</head><label>1</label><figDesc>Common Margin-Based Losses and Their General Cost-Sensitive Surrogate Extensions.</figDesc><table><row><cell>Name</cell><cell>Φ(t)</cell><cell>Cost-Sensitive Surrogate Loss L</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_2"><head></head><label></label><figDesc>, for any λ ∈ [λ min , λ max ], there exists k ≥ 1 such that |λ -λ k | ≤ 1 2m . By Lemma E.1 and Lemma G.1, we obtainE ℓ λ ( ĥS ) -E * ℓ λ (H) ≤ Γ(M L Φ (H) + 4R λ m (H) +This completes the proof of the first bound. The second bound follows directly by substituting Γ(t) = 2(L max )</figDesc><table><row><cell>8 max i |β i |B Φ m 2</cell><cell>+ (2B λ +</cell><cell>4 max i |β i |B Φ m</cell><cell>) √</cell><cell>log</cell><cell>2(λmax-λ min ) m δ 2m</cell><cell>) +</cell><cell>ℓ β m</cell><cell>.</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>1 2 t</cell><cell cols="3">1 2 into the</cell></row><row><cell>first bound.</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_3"><head></head><label></label><figDesc>Now, consider the case where the algorithm terminates with |b -a| ≤ ϵ m . In this case, we have (with high probability) |λ -λ * | ≤ ϵ. By Lemma E.1, this implies E * ℓ λ (H) ≤ ϵℓ β . Combining this with the estimation bound for ℓ λ , we have (with high probability)E ℓ λ ( ĥλ ) ≤ E * ℓ λ (H) + ϵ m ≤ ϵℓ β + ϵ m . ( ĥλ , x, y)] -λ E[ℓ λ β ( ĥλ , x, y)] ≤ ϵℓ β + ϵ m .Dividing by E[ℓ λ β ( ĥλ , x, y)] both sides yieldsL α,β ( ĥλ ) ≤ λ + ϵℓ β + ϵ m ℓ β ≤ λ * + ϵ + ϵℓ β + ϵ m ℓ β . Choosing ϵ = ϵ m /(2ℓ β ) yields L α,β ( ĥλ ) ≤ λ + ϵℓ β + ϵ m</figDesc><table><row><cell>Thus,</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>E[ℓ λ α ℓ β</cell><cell>≤ λ  *  +</cell><cell>ϵ m 2ℓ β</cell><cell>+</cell><cell>3ϵ m 2ℓ β</cell><cell>≤ λ  *  +</cell><cell>2ϵ m ℓ β</cell><cell>.</cell></row></table></figure>
+		</body>
+		<back>
+
+			
+			<div type="acknowledgement">
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Acknowledgements</head><p>We thank the anonymous reviewers for their valuable feedback and constructive suggestions.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Impact Statement</head><p>This paper presents work whose goal is to advance the field of Machine Learning. There are many potential societal consequences of our work, none which we feel must be specifically highlighted here.</p></div>
+			</div>
+
+			<div type="annex">
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. Related work</head><p>In binary classification, zero-one misclassification loss may not always serve as an appropriate evaluation metric, particularly in scenarios where more complex metrics are better suited to the problem. For instance, in scenarios with significant class imbalance, which frequently arise in applications such as fraud detection, medical diagnosis, and text retrieval <ref type="bibr">(Lewis, 1995b;</ref><ref type="bibr" target="#b22">Drummond &amp; Holte, 2005;</ref><ref type="bibr" target="#b28">He &amp; Garcia, 2009;</ref><ref type="bibr" target="#b27">Gu et al., 2009)</ref>, metrics like the F β -measure <ref type="bibr">(Lewis, 1995a;</ref><ref type="bibr" target="#b29">Jansche, 2005;</ref><ref type="bibr" target="#b95">Ye et al., 2012)</ref> and the AM measure <ref type="bibr" target="#b64">(Menon et al., 2013)</ref> are commonly used. Similarly, weighted accuracy is often used to address the asymmetrical costs associated with different classes in real-world applications. However, optimizing these generalized performance metrics introduces both computational and statistical challenges, as they do not conform to the standard single-loss expectations commonly used for analyzing surrogate loss functions in machine learning <ref type="bibr" target="#b92">(Steinwart, 2007)</ref>.</p><p>Research on the design of algorithms for specific instances of such metrics or the general family has largely focused on the characterization of the Bayes-optimal classifier. For the standard zero-one binary classification loss, it is known that the Bayes classifier can be defined as x ↦ sign(η(x) -1 2 ), where η(x) is the probability of a positive label conditioned on x. A similar characterization applies to the weighted zero-one loss <ref type="bibr" target="#b90">(Scott, 2012)</ref>, where the threshold corresponds to a weight different from 1 2 . For imbalanced metrics, Ye et al. ( <ref type="formula">2012</ref>) characterized the Bayes-classifier for the F 1 -measure, while <ref type="bibr" target="#b64">Menon et al. (2013)</ref> characterized the Bayes classifier for the AM measure as x ↦ sign(η(x) -δ * ) for some δ * ∈ (0, 1). These results were later generalized by <ref type="bibr" target="#b37">Koyejo et al. (2014)</ref> to a broader family of metrics that can be formulated as a ratio of two linear functions of true positive (TP), false positive (FP), true negative (TN), and false negative (FN) statistics. This family of linear-fractional metrics includes the aforementioned weighted accuracy, F β -measures, the AM measure, as well as the Jaccard similarity coefficient <ref type="bibr" target="#b91">(Sokolova &amp; Lapalme, 2009)</ref>, among others. Existing algorithms for optimizing these metrics heavily rely on the structure of the Bayes-optimal solution <ref type="bibr" target="#b37">(Koyejo et al., 2014;</ref><ref type="bibr" target="#b84">Parambath et al., 2014)</ref>. These methods generally adopt a two-stage approach: first estimating the conditional probability η(x) and then searching for a suitable threshold δ * specific to the metric.</p><p>In particular, <ref type="bibr" target="#b37">Koyejo et al. (2014)</ref> study a general family of performance metrics, including the F β -measure, AM measure, Jaccard similarity coefficient (JAC), and Weighted Accuracy (WA). These metrics can be expressed as the ratio of two linear combinations of four fundamental classification quantities. The authors propose two relatively simple algorithms. Their first algorithm consists of training a standard binary classifier such as logistic regression to return a real-valued predictor h. Next, a threshold θ is chosen to maximize the empirical L-measure for binary classifier x ↦ sign(h(x) -θ), where L represents the metric of interest. The authors do not discuss how to find θ but presumably this can be done via cross-validation based on a grid, or by binary search over all possible values. Their second algorithm consists of training for each fixed value of θ a cost-sensitive logistic regression (or other margin-based algorithm) with weights θ and (1 -θ) and return h θ . Then, they find θ to maximize the empirical L-measure for the binary classifier x ↦ sign(h θ (x)). The authors provide a consistency-type guarantee for these two-stage algorithms. <ref type="bibr" target="#b84">Parambath et al. (2014)</ref> address the specific case of the F 1 -measure. Their algorithm coincides with the second algorithm of <ref type="bibr" target="#b37">Koyejo et al. (2014)</ref>. However, the authors also suggest returning sign(h θ (x) -θ ′ ) where both θ and θ ′ are selected to maximize the L-measure. The authors provide a stability-type guarantee for their method, although the analysis lacks explicit details.</p><p>These algorithms naturally come with consistency guarantees <ref type="bibr" target="#b101">(Zhang, 2004;</ref><ref type="bibr" target="#b7">Bartlett et al., 2006;</ref><ref type="bibr" target="#b92">Steinwart, 2007;</ref><ref type="bibr" target="#b37">Koyejo et al., 2014;</ref><ref type="bibr" target="#b69">Mohri et al., 2018)</ref>. However, consistency is an asymptotic property and does not provide explicit convergence rate guarantees. Moreover, it applies only to the overly broad class of all measurable functions, making it less relevant in practical scenarios where learning is constrained to a restricted hypothesis class <ref type="bibr" target="#b44">(Long &amp; Servedio, 2013;</ref><ref type="bibr">Zhang &amp; Agarwal, 2020;</ref><ref type="bibr">Awasthi et al., 2021a;</ref><ref type="bibr">b;</ref><ref type="bibr">2023;</ref><ref type="bibr">2024;</ref><ref type="bibr">Mao et al., 2023d;</ref><ref type="bibr">c;</ref><ref type="bibr">a;</ref><ref type="bibr">b;</ref><ref type="bibr" target="#b82">e;</ref><ref type="bibr" target="#b104">Zheng et al., 2023;</ref><ref type="bibr">Mao et al., 2024a;</ref><ref type="bibr">b;</ref><ref type="bibr">c;</ref><ref type="bibr">g;</ref><ref type="bibr">d;</ref><ref type="bibr">2025b;</ref><ref type="bibr">2024f;</ref><ref type="bibr" target="#b82">e;</ref><ref type="bibr">Mohri et al., 2024;</ref><ref type="bibr" target="#b15">Cortes et al., 2024;</ref><ref type="bibr">2025a;</ref><ref type="bibr">b;</ref><ref type="bibr">Mao et al., 2025a;</ref><ref type="bibr" target="#b47">Mao, 2025;</ref><ref type="bibr" target="#b70">Montreuil et al., 2024;</ref><ref type="bibr">2025d;</ref><ref type="bibr">a;</ref><ref type="bibr">b;</ref><ref type="bibr">c;</ref><ref type="bibr" target="#b21">DeSalvo et al., 2025;</ref><ref type="bibr">Mohri &amp; Zhong, 2025;</ref><ref type="bibr" target="#b105">Zhong, 2025)</ref>.</p><p>Other related work on generalized metrics includes studies on surrogate regret bounds <ref type="bibr" target="#b87">(Reid &amp; Williamson, 2009;</ref><ref type="bibr" target="#b35">Kotlowski &amp; Dembczyński, 2016)</ref>, extensions of the plug-in rule <ref type="bibr" target="#b95">(Ye et al., 2012;</ref><ref type="bibr" target="#b19">Dembczynski et al., 2013;</ref><ref type="bibr" target="#b75">Narasimhan et al., 2014;</ref><ref type="bibr" target="#b43">Lipton et al., 2014;</ref><ref type="bibr" target="#b20">Dembczyński et al., 2017;</ref><ref type="bibr" target="#b94">Yan et al., 2018;</ref><ref type="bibr" target="#b93">Tavker et al., 2020;</ref><ref type="bibr" target="#b9">Berger &amp; Guda, 2020)</ref>, and structural loss optimization <ref type="bibr" target="#b33">(Joachims, 2005;</ref><ref type="bibr" target="#b34">Kar et al., 2014;</ref><ref type="bibr" target="#b96">Yu &amp; Blaschko, 2015;</ref><ref type="bibr" target="#b23">Eban et al., 2017;</ref><ref type="bibr" target="#b10">Berman et al., 2018;</ref><ref type="bibr" target="#b6">Bao &amp; Sugiyama, 2020)</ref>. Additionally, various optimization approaches have been explored, including online optimization <ref type="bibr" target="#b34">(Kar et al., 2014;</ref><ref type="bibr" target="#b102">Zhang et al., 2018;</ref><ref type="bibr" target="#b36">Kotłowski et al., 2024;</ref><ref type="bibr" target="#b12">Busa-Fekete et al., 2015)</ref> and constrained optimization <ref type="bibr" target="#b79">(Narasimhan et al., 2019)</ref>. Further extensions address multi-class classification and multi-label learning <ref type="bibr" target="#b19">(Dembczynski et al., 2013;</ref><ref type="bibr">Narasimhan et al., 2015a;</ref><ref type="bibr" target="#b86">Ramaswamy et al., 2015;</ref><ref type="bibr">Narasimhan et al., 2015b;</ref><ref type="bibr">2016;</ref><ref type="bibr" target="#b14">Cheng et al., 2016;</ref><ref type="bibr">Natarajan et al.,</ref> </p></div>			</div>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<analytic>
+		<title level="a" type="main">Calibration and consistency of adversarial surrogate losses</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Awasthi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><surname>Frank</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Mao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Mohri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in Neural Information Processing Systems</title>
+		<imprint>
+			<date type="published" when="2021">2021</date>
+			<biblScope unit="page" from="9804" to="9815" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Awasthi, P., Frank, N., Mao, A., Mohri, M., and Zhong, Y. Calibration and consistency of adversarial surrogate losses. Advances in Neural Information Processing Sys- tems, pp. 9804-9815, 2021a.</note>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<monogr>
+		<author>
+			<persName><forename type="first">P</forename><surname>Awasthi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Mao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Mohri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhong</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2105.01550</idno>
+		<title level="m">A finer calibration analysis for adversarial robustness</title>
+		<imprint>
+			<date type="published" when="2021">2021</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Awasthi, P., Mao, A., Mohri, M., and Zhong, Y. A finer calibration analysis for adversarial robustness. arXiv preprint arXiv:2105.01550, 2021b.</note>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<analytic>
+		<title level="a" type="main">Hconsistency bounds for surrogate loss minimizers</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Awasthi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Mao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Mohri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning</title>
+		<imprint>
+			<date type="published" when="2022">2022</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Awasthi, P., Mao, A., Mohri, M., and Zhong, Y. H- consistency bounds for surrogate loss minimizers. In International Conference on Machine Learning, 2022a.</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<analytic>
+		<title level="a" type="main">Multi-class H-consistency bounds</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Awasthi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Mao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Mohri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in Neural Information Processing Systems</title>
+		<imprint>
+			<date type="published" when="2022">2022</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Awasthi, P., Mao, A., Mohri, M., and Zhong, Y. Multi-class H-consistency bounds. In Advances in Neural Informa- tion Processing Systems, 2022b.</note>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<analytic>
+		<title level="a" type="main">Theoretically grounded loss functions and algorithms for adversarial robustness</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Awasthi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Mao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Mohri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Artificial Intelligence and Statistics</title>
+		<imprint>
+			<date type="published" when="2023">2023</date>
+			<biblScope unit="page" from="10077" to="10094" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Awasthi, P., Mao, A., Mohri, M., and Zhong, Y. Theoreti- cally grounded loss functions and algorithms for adversar- ial robustness. In International Conference on Artificial Intelligence and Statistics, pp. 10077-10094, 2023.</note>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<analytic>
+		<title level="a" type="main">DCprogramming for neural network optimizations</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Awasthi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Mao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Mohri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Global Optimization</title>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Awasthi, P., Mao, A., Mohri, M., and Zhong, Y. DC- programming for neural network optimizations. Journal of Global Optimization, 2024.</note>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<analytic>
+		<title level="a" type="main">Calibrated surrogate maximization of linear-fractional utility in binary classification</title>
+		<author>
+			<persName><forename type="first">H</forename><surname>Bao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Sugiyama</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Artificial Intelligence and Statistics</title>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+			<biblScope unit="page" from="2337" to="2347" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Bao, H. and Sugiyama, M. Calibrated surrogate maximiza- tion of linear-fractional utility in binary classification. In International Conference on Artificial Intelligence and Statistics, pp. 2337-2347, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<analytic>
+		<title level="a" type="main">Convexity, classification, and risk bounds</title>
+		<author>
+			<persName><forename type="first">P</forename><forename type="middle">L</forename><surname>Bartlett</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">I</forename><surname>Jordan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">D</forename><surname>Mcauliffe</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of the American Statistical Association</title>
+		<imprint>
+			<biblScope unit="volume">101</biblScope>
+			<biblScope unit="issue">473</biblScope>
+			<biblScope unit="page" from="138" to="156" />
+			<date type="published" when="2006">2006</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Bartlett, P. L., Jordan, M. I., and McAuliffe, J. D. Convexity, classification, and risk bounds. Journal of the American Statistical Association, 101(473):138-156, 2006.</note>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">From cost-sensitive to tight F-measure bounds</title>
+		<author>
+			<persName><forename type="first">K</forename><surname>Bascol</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Emonet</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Fromont</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Habrard</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Metzler</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Sebban</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Artificial Intelligence and Statistics</title>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+			<biblScope unit="page" from="1245" to="1253" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Bascol, K., Emonet, R., Fromont, E., Habrard, A., Met- zler, G., and Sebban, M. From cost-sensitive to tight F-measure bounds. In International Conference on Artifi- cial Intelligence and Statistics, pp. 1245-1253, 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<analytic>
+		<title level="a" type="main">Threshold optimization for F measure of macro-averaged precision and recall</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Berger</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Guda</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Pattern Recognition</title>
+		<imprint>
+			<biblScope unit="volume">102</biblScope>
+			<biblScope unit="page">107250</biblScope>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Berger, A. and Guda, S. Threshold optimization for F mea- sure of macro-averaged precision and recall. Pattern Recognition, 102:107250, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<analytic>
+		<title level="a" type="main">The lovászsoftmax loss: A tractable surrogate for the optimization of the intersection-over-union measure in neural networks</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Berman</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">R</forename><surname>Triki</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">B</forename><surname>Blaschko</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition</title>
+		<meeting>the IEEE Conference on Computer Vision and Pattern Recognition</meeting>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+			<biblScope unit="page" from="4413" to="4421" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Berman, M., Triki, A. R., and Blaschko, M. B. The lovász- softmax loss: A tractable surrogate for the optimization of the intersection-over-union measure in neural networks. In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition, pp. 4413-4421, 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<analytic>
+		<title level="a" type="main">Large-scale machine learning with stochastic gradient descent</title>
+		<author>
+			<persName><forename type="first">L</forename><surname>Bottou</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of COMPSTAT&apos;2010: 19th International Conference on Computational Statistics</title>
+		<meeting>COMPSTAT&apos;2010: 19th International Conference on Computational Statistics</meeting>
+		<imprint>
+			<date type="published" when="2010">2010</date>
+			<biblScope unit="page" from="177" to="186" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Bottou, L. Large-scale machine learning with stochastic gra- dient descent. In Proceedings of COMPSTAT&apos;2010: 19th International Conference on Computational Statistics, pp. 177-186, 2010.</note>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<analytic>
+		<title level="a" type="main">Online F-measure optimization</title>
+		<author>
+			<persName><forename type="first">R</forename><surname>Busa-Fekete</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Szörényi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Dembczynski</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Hüllermeier</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in Neural Information Processing Systems</title>
+		<imprint>
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Busa-Fekete, R., Szörényi, B., Dembczynski, K., and Hüllermeier, E. Online F-measure optimization. In Ad- vances in Neural Information Processing Systems, 2015.</note>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<analytic>
+		<title level="a" type="main">Regret bounds for multilabel classification in sparse label regimes</title>
+		<author>
+			<persName><forename type="first">R</forename><surname>Busa-Fekete</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Choi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Dembczynski</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Gentile</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Reeve</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Szorenyi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in Neural Information Processing Systems</title>
+		<imprint>
+			<date type="published" when="2022">2022</date>
+			<biblScope unit="page" from="5404" to="5416" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Busa-Fekete, R., Choi, H., Dembczynski, K., Gentile, C., Reeve, H., and Szorenyi, B. Regret bounds for multilabel classification in sparse label regimes. In Advances in Neural Information Processing Systems, pp. 5404-5416, 2022.</note>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<analytic>
+		<title level="a" type="main">Efficient optimization oF-measure with cost-sensitive svm</title>
+		<author>
+			<persName><forename type="first">F</forename><surname>Cheng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Gao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Zheng</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Mathematical Problems in Engineering</title>
+		<imprint>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="1" to="11" />
+			<date type="published" when="2016">2016. 2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Cheng, F., Zhou, Y., Gao, J., and Zheng, S. Efficient opti- mization oF-measure with cost-sensitive svm. Mathemat- ical Problems in Engineering, 2016(1):1-11, 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<analytic>
+		<title level="a" type="main">Cardinality-aware set prediction and top-k classification</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Cortes</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Mao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Mohri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Mohri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in neural information processing systems</title>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Cortes, C., Mao, A., Mohri, C., Mohri, M., and Zhong, Y. Cardinality-aware set prediction and top-k classification. In Advances in neural information processing systems, 2024.</note>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<analytic>
+		<title level="a" type="main">Balancing the scales: A theoretical and algorithmic framework for learning from imbalanced data</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Cortes</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Mao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Mohri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning</title>
+		<imprint>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Cortes, C., Mao, A., Mohri, M., and Zhong, Y. Balancing the scales: A theoretical and algorithmic framework for learning from imbalanced data. In International Confer- ence on Machine Learning, 2025a.</note>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<analytic>
+		<title level="a" type="main">Improved balanced classification with theoretically grounded loss functions</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Cortes</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Mohri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in neural information processing systems</title>
+		<imprint>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Cortes, C., Mohri, M., and Zhong, Y. Improved balanced classification with theoretically grounded loss functions. In Advances in neural information processing systems, 2025b.</note>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<analytic>
+		<title level="a" type="main">Rankseg: a consistent ranking-based framework for segmentation</title>
+		<author>
+			<persName><forename type="first">B</forename><surname>Dai</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Li</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Machine Learning Research</title>
+		<imprint>
+			<biblScope unit="volume">24</biblScope>
+			<biblScope unit="issue">224</biblScope>
+			<biblScope unit="page" from="1" to="50" />
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Dai, B. and Li, C. Rankseg: a consistent ranking-based framework for segmentation. Journal of Machine Learn- ing Research, 24(224):1-50, 2023.</note>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<analytic>
+		<title level="a" type="main">Optimizing the F-measure in multi-label classification: Plug-in rule approach versus structured loss minimization</title>
+		<author>
+			<persName><forename type="first">K</forename><surname>Dembczynski</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Jachnik</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><surname>Kotlowski</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><surname>Waegeman</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Hüllermeier</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning</title>
+		<imprint>
+			<date type="published" when="2013">2013</date>
+			<biblScope unit="page" from="1130" to="1138" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Dembczynski, K., Jachnik, A., Kotlowski, W., Waegeman, W., and Hüllermeier, E. Optimizing the F-measure in multi-label classification: Plug-in rule approach versus structured loss minimization. In International Conference on Machine Learning, pp. 1130-1138, 2013.</note>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<analytic>
+		<title level="a" type="main">Consistency analysis for binary classification revisited</title>
+		<author>
+			<persName><forename type="first">K</forename><surname>Dembczyński</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><surname>Kotłowski</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">O</forename><surname>Koyejo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><surname>Natarajan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning</title>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+			<biblScope unit="page" from="961" to="969" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Dembczyński, K., Kotłowski, W., Koyejo, O., and Natarajan, N. Consistency analysis for binary classification revisited. In International Conference on Machine Learning, pp. 961-969, 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<monogr>
+		<author>
+			<persName><forename type="first">G</forename><surname>Desalvo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Mohri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Mohri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhong</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2510.26706</idno>
+		<title level="m">Budgeted multiple-expert deferral</title>
+		<imprint>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">DeSalvo, G., Mohri, C., Mohri, M., and Zhong, Y. Budgeted multiple-expert deferral. arXiv preprint arXiv:2510.26706, 2025.</note>
+</biblStruct>
+
+<biblStruct xml:id="b22">
+	<analytic>
+		<title level="a" type="main">Severe class imbalance: Why better algorithms aren&apos;t the answer</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Drummond</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">C</forename><surname>Holte</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">European Conference on Machine Learning</title>
+		<imprint>
+			<date type="published" when="2005">2005</date>
+			<biblScope unit="page" from="539" to="546" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Drummond, C. and Holte, R. C. Severe class imbalance: Why better algorithms aren&apos;t the answer. In European Conference on Machine Learning, pp. 539-546, 2005.</note>
+</biblStruct>
+
+<biblStruct xml:id="b23">
+	<analytic>
+		<title level="a" type="main">Scalable learning of non-decomposable objectives</title>
+		<author>
+			<persName><forename type="first">E</forename><surname>Eban</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Schain</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Mackey</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Gordon</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Rifkin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Elidan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Artificial Intelligence and Statistics</title>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+			<biblScope unit="page" from="832" to="840" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Eban, E., Schain, M., Mackey, A., Gordon, A., Rifkin, R., and Elidan, G. Scalable learning of non-decomposable objectives. In Artificial Intelligence and Statistics, pp. 832-840, 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b24">
+	<analytic>
+		<title level="a" type="main">The foundations of cost-sensitive learning</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Elkan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Joint Conference on Artificial Intelligence</title>
+		<imprint>
+			<date type="published" when="2001">2001</date>
+			<biblScope unit="page" from="973" to="978" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Elkan, C. The foundations of cost-sensitive learning. In International Joint Conference on Artificial Intelligence, pp. 973-978, 2001.</note>
+</biblStruct>
+
+<biblStruct xml:id="b25">
+	<analytic>
+		<title level="a" type="main">Ap-perf: Incorporating generic performance metrics in differentiable learning</title>
+		<author>
+			<persName><forename type="first">R</forename><surname>Fathony</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Kolter</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Artificial Intelligence and Statistics</title>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+			<biblScope unit="page" from="4130" to="4140" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Fathony, R. and Kolter, Z. Ap-perf: Incorporating generic performance metrics in differentiable learning. In Interna- tional Conference on Artificial Intelligence and Statistics, pp. 4130-4140, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b26">
+	<analytic>
+		<title level="a" type="main">Precision-recall-gain curves: Pr analysis done right</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Flach</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Kull</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in Neural Information Processing Systems</title>
+		<imprint>
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Flach, P. and Kull, M. Precision-recall-gain curves: Pr analysis done right. In Advances in Neural Information Processing Systems, 2015.</note>
+</biblStruct>
+
+<biblStruct xml:id="b27">
+	<analytic>
+		<title level="a" type="main">Evaluation measures of the classification performance of imbalanced data sets</title>
+		<author>
+			<persName><forename type="first">Q</forename><surname>Gu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Zhu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Cai</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Computational Intelligence and Intelligent Systems: 4th International Symposium</title>
+		<imprint>
+			<date type="published" when="2009">2009</date>
+			<biblScope unit="page" from="461" to="471" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Gu, Q., Zhu, L., and Cai, Z. Evaluation measures of the classification performance of imbalanced data sets. In Computational Intelligence and Intelligent Systems: 4th International Symposium, pp. 461-471, 2009.</note>
+</biblStruct>
+
+<biblStruct xml:id="b28">
+	<analytic>
+		<title level="a" type="main">Learning from imbalanced data</title>
+		<author>
+			<persName><forename type="first">H</forename><surname>He</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><forename type="middle">A</forename><surname>Garcia</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Knowledge and Data Engineering</title>
+		<imprint>
+			<biblScope unit="volume">21</biblScope>
+			<biblScope unit="issue">9</biblScope>
+			<biblScope unit="page" from="1263" to="1284" />
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">He, H. and Garcia, E. A. Learning from imbalanced data. IEEE Transactions on Knowledge and Data Engineering, 21(9):1263-1284, 2009.</note>
+</biblStruct>
+
+<biblStruct xml:id="b29">
+	<analytic>
+		<title level="a" type="main">Maximum expected F-measure training of logistic regression models</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Jansche</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of Human Language Technology Conference and Conference on Empirical Methods in Natural Language Processing</title>
+		<meeting>Human Language Technology Conference and Conference on Empirical Methods in Natural Language Processing</meeting>
+		<imprint>
+			<date type="published" when="2005">2005</date>
+			<biblScope unit="page" from="692" to="699" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Jansche, M. Maximum expected F-measure training of logistic regression models. In Proceedings of Human Language Technology Conference and Conference on Empirical Methods in Natural Language Processing, pp. 692-699, 2005.</note>
+</biblStruct>
+
+<biblStruct xml:id="b30">
+	<analytic>
+		<title level="a" type="main">A maximum expected utility framework for binary sequence labeling</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Jansche</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 45th Annual Meeting of the Association of Computational Linguistics</title>
+		<meeting>the 45th Annual Meeting of the Association of Computational Linguistics</meeting>
+		<imprint>
+			<date type="published" when="2007">2007</date>
+			<biblScope unit="page" from="736" to="743" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Jansche, M. A maximum expected utility framework for binary sequence labeling. In Proceedings of the 45th Annual Meeting of the Association of Computational Lin- guistics, pp. 736-743, 2007.</note>
+</biblStruct>
+
+<biblStruct xml:id="b31">
+	<analytic>
+		<title level="a" type="main">Extreme F-measure maximization using sparse probability estimates</title>
+		<author>
+			<persName><forename type="first">K</forename><surname>Jasinska</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Dembczynski</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Busa-Fekete</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Pfannschmidt</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Klerx</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Hullermeier</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning</title>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+			<biblScope unit="page" from="1435" to="1444" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Jasinska, K., Dembczynski, K., Busa-Fekete, R., Pfannschmidt, K., Klerx, T., and Hullermeier, E. Ex- treme F-measure maximization using sparse probability estimates. In International Conference on Machine Learn- ing, pp. 1435-1444, 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b32">
+	<analytic>
+		<title level="a" type="main">Optimizing black-box metrics with adaptive surrogates</title>
+		<author>
+			<persName><forename type="first">Q</forename><surname>Jiang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">O</forename><surname>Adigun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Narasimhan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">M</forename><surname>Fard</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Gupta</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning</title>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+			<biblScope unit="page" from="4784" to="4793" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Jiang, Q., Adigun, O., Narasimhan, H., Fard, M. M., and Gupta, M. Optimizing black-box metrics with adap- tive surrogates. In International Conference on Machine Learning, pp. 4784-4793, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b33">
+	<analytic>
+		<title level="a" type="main">A support vector method for multivariate performance measures</title>
+		<author>
+			<persName><forename type="first">T</forename><surname>Joachims</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning</title>
+		<imprint>
+			<date type="published" when="2005">2005</date>
+			<biblScope unit="page" from="377" to="384" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Joachims, T. A support vector method for multivariate performance measures. In International Conference on Machine Learning, pp. 377-384, 2005.</note>
+</biblStruct>
+
+<biblStruct xml:id="b34">
+	<analytic>
+		<title level="a" type="main">Online and stochastic gradient methods for non-decomposable loss functions</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Kar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Narasimhan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Jain</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in Neural Information Processing Systems</title>
+		<imprint>
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Kar, P., Narasimhan, H., and Jain, P. Online and stochastic gradient methods for non-decomposable loss functions. In Advances in Neural Information Processing Systems, 2014.</note>
+</biblStruct>
+
+<biblStruct xml:id="b35">
+	<analytic>
+		<title level="a" type="main">Surrogate regret bounds for generalized classification performance metrics</title>
+		<author>
+			<persName><forename type="first">W</forename><surname>Kotlowski</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Dembczyński</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Asian Conference on Machine Learning</title>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+			<biblScope unit="page" from="301" to="316" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Kotlowski, W. and Dembczyński, K. Surrogate regret bounds for generalized classification performance metrics. In Asian Conference on Machine Learning, pp. 301-316, 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b36">
+	<analytic>
+		<title level="a" type="main">A general online algorithm for optimizing complex performance metrics</title>
+		<author>
+			<persName><forename type="first">W</forename><surname>Kotłowski</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Wydmuch</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Schultheis</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Babbar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Dembczyński</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning</title>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Kotłowski, W., Wydmuch, M., Schultheis, E., Babbar, R., and Dembczyński, K. A general online algorithm for op- timizing complex performance metrics. In International Conference on Machine Learning, 2024.</note>
+</biblStruct>
+
+<biblStruct xml:id="b37">
+	<analytic>
+		<title level="a" type="main">Consistent binary classification with generalized performance metrics</title>
+		<author>
+			<persName><forename type="first">O</forename><surname>Koyejo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><surname>Natarajan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Ravikumar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">I</forename><forename type="middle">S</forename><surname>Dhillon</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in Neural Information Processing Systems</title>
+		<imprint>
+			<date type="published" when="2014">2014</date>
+			<biblScope unit="page" from="2744" to="2752" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Koyejo, O., Natarajan, N., Ravikumar, P., and Dhillon, I. S. Consistent binary classification with generalized perfor- mance metrics. In Advances in Neural Information Pro- cessing Systems, pp. 2744-2752, 2014.</note>
+</biblStruct>
+
+<biblStruct xml:id="b38">
+	<monogr>
+		<title level="m" type="main">Learning multiple layers of features from tiny images</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Krizhevsky</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2009">2009</date>
+		</imprint>
+		<respStmt>
+			<orgName>Toronto University</orgName>
+		</respStmt>
+	</monogr>
+	<note type="report_type">Technical report</note>
+	<note type="raw_reference">Krizhevsky, A. Learning multiple layers of features from tiny images. Technical report, Toronto University, 2009.</note>
+</biblStruct>
+
+<biblStruct xml:id="b39">
+	<analytic>
+		<title level="a" type="main">Convolutional networks for images, speech, and time series</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Lecun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Bengio</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">The Handbook of Brain Theory and Neural Networks</title>
+		<imprint>
+			<date type="published" when="1995">1995</date>
+			<biblScope unit="volume">3361</biblScope>
+			<biblScope unit="page">1995</biblScope>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">LeCun, Y., Bengio, Y., et al. Convolutional networks for images, speech, and time series. The Handbook of Brain Theory and Neural Networks, 3361(10):1995, 1995.</note>
+</biblStruct>
+
+<biblStruct xml:id="b40">
+	<analytic>
+		<title level="a" type="main">Evaluating and optimizing autonomous text classification systems</title>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">D</forename><surname>Lewis</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 18th Annual International ACM SIGIR Conference on Research and Development in Information Retrieval</title>
+		<meeting>the 18th Annual International ACM SIGIR Conference on Research and Development in Information Retrieval</meeting>
+		<imprint>
+			<date type="published" when="1995">1995</date>
+			<biblScope unit="page" from="246" to="254" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Lewis, D. D. Evaluating and optimizing autonomous text classification systems. In Proceedings of the 18th An- nual International ACM SIGIR Conference on Research and Development in Information Retrieval, pp. 246-254, 1995a.</note>
+</biblStruct>
+
+<biblStruct xml:id="b41">
+	<analytic>
+		<title level="a" type="main">A sequential algorithm for training text classifiers: Corrigendum and additional data</title>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">D</forename><surname>Lewis</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Acm Sigir Forum</title>
+		<imprint>
+			<date type="published" when="1995">1995</date>
+			<biblScope unit="volume">29</biblScope>
+			<biblScope unit="page" from="13" to="19" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Lewis, D. D. A sequential algorithm for training text clas- sifiers: Corrigendum and additional data. In Acm Sigir Forum, volume 29, pp. 13-19, 1995b.</note>
+</biblStruct>
+
+<biblStruct xml:id="b42">
+	<analytic>
+		<title level="a" type="main">A note on margin-based loss functions in classification</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Lin</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Statistics &amp; Probability Letters</title>
+		<imprint>
+			<biblScope unit="volume">68</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="73" to="82" />
+			<date type="published" when="2004">2004</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Lin, Y. A note on margin-based loss functions in classi- fication. Statistics &amp; Probability Letters, 68(1):73-82, 2004.</note>
+</biblStruct>
+
+<biblStruct xml:id="b43">
+	<analytic>
+		<title level="a" type="main">Thresholding classifiers to maximize F1 score</title>
+		<author>
+			<persName><forename type="first">Z</forename><forename type="middle">C</forename><surname>Lipton</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Elkan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Narayanaswamy</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Stat</title>
+		<imprint>
+			<biblScope unit="volume">1050</biblScope>
+			<biblScope unit="page">14</biblScope>
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Lipton, Z. C., Elkan, C., and Narayanaswamy, B. Thresh- olding classifiers to maximize F1 score. Stat, 1050:14, 2014.</note>
+</biblStruct>
+
+<biblStruct xml:id="b44">
+	<analytic>
+		<title level="a" type="main">Consistency versus realizable Hconsistency for multiclass classification</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Long</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Servedio</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning</title>
+		<imprint>
+			<date type="published" when="2013">2013</date>
+			<biblScope unit="page" from="801" to="809" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Long, P. and Servedio, R. Consistency versus realizable H- consistency for multiclass classification. In International Conference on Machine Learning, pp. 801-809, 2013.</note>
+</biblStruct>
+
+<biblStruct xml:id="b45">
+	<analytic>
+		<title level="a" type="main">Stochastic gradient descent with warm restarts</title>
+		<author>
+			<persName><forename type="first">I</forename><surname>Loshchilov</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Hutter</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Sgdr</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Learning Representations</title>
+		<imprint>
+			<date type="published" when="2022">2022</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Loshchilov, I. and Hutter, F. SGDR: Stochastic gradient descent with warm restarts. In International Conference on Learning Representations, 2022.</note>
+</biblStruct>
+
+<biblStruct xml:id="b46">
+	<analytic>
+		<title level="a" type="main">A minimax probability machine for nondecomposable performance measures</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Luo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Qiao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Zhang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Neural Networks and Learning Systems</title>
+		<imprint>
+			<biblScope unit="volume">34</biblScope>
+			<biblScope unit="issue">5</biblScope>
+			<biblScope unit="page" from="2353" to="2365" />
+			<date type="published" when="2021">2021</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Luo, J., Qiao, H., and Zhang, B. A minimax probability machine for nondecomposable performance measures. IEEE Transactions on Neural Networks and Learning Systems, 34(5):2353-2365, 2021.</note>
+</biblStruct>
+
+<biblStruct xml:id="b47">
+	<monogr>
+		<title level="m" type="main">Theory and Algorithms for Learning with Multi-Class Abstention and Multi-Expert Deferral</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Mao</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+		<respStmt>
+			<orgName>New York University</orgName>
+		</respStmt>
+	</monogr>
+	<note type="report_type">PhD thesis</note>
+	<note type="raw_reference">Mao, A. Theory and Algorithms for Learning with Multi- Class Abstention and Multi-Expert Deferral. PhD thesis, New York University, 2025.</note>
+</biblStruct>
+
+<biblStruct xml:id="b48">
+	<analytic>
+		<title level="a" type="main">Two-stage learning to defer with multiple experts</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Mao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Mohri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Mohri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in neural information processing systems</title>
+		<imprint>
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Mao, A., Mohri, C., Mohri, M., and Zhong, Y. Two-stage learning to defer with multiple experts. In Advances in neural information processing systems, 2023a.</note>
+</biblStruct>
+
+<biblStruct xml:id="b49">
+	<analytic>
+		<title level="a" type="main">H-consistency bounds: Characterization and extensions</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Mao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Mohri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in Neural Information Processing Systems</title>
+		<imprint>
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Mao, A., Mohri, M., and Zhong, Y. H-consistency bounds: Characterization and extensions. In Advances in Neural Information Processing Systems, 2023b.</note>
+</biblStruct>
+
+<biblStruct xml:id="b50">
+	<analytic>
+		<title level="a" type="main">H-consistency bounds for pairwise misranking loss surrogates</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Mao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Mohri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International conference on Machine learning</title>
+		<imprint>
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Mao, A., Mohri, M., and Zhong, Y. H-consistency bounds for pairwise misranking loss surrogates. In International conference on Machine learning, 2023c.</note>
+</biblStruct>
+
+<biblStruct xml:id="b51">
+	<analytic>
+		<title level="a" type="main">Ranking with abstention</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Mao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Mohri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">ICML 2023 Workshop The Many Facets of Preference-Based Learning</title>
+		<imprint>
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Mao, A., Mohri, M., and Zhong, Y. Ranking with abstention. In ICML 2023 Workshop The Many Facets of Preference- Based Learning, 2023d.</note>
+</biblStruct>
+
+<biblStruct xml:id="b52">
+	<analytic>
+		<title level="a" type="main">Structured prediction with stronger consistency guarantees</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Mao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Mohri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in Neural Information Processing Systems</title>
+		<imprint>
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Mao, A., Mohri, M., and Zhong, Y. Structured prediction with stronger consistency guarantees. In Advances in Neural Information Processing Systems, 2023e.</note>
+</biblStruct>
+
+<biblStruct xml:id="b53">
+	<analytic>
+		<title level="a" type="main">Cross-entropy loss functions: Theoretical analysis and applications</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Mao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Mohri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning</title>
+		<imprint>
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Mao, A., Mohri, M., and Zhong, Y. Cross-entropy loss functions: Theoretical analysis and applications. In Inter- national Conference on Machine Learning, 2023f.</note>
+</biblStruct>
+
+<biblStruct xml:id="b54">
+	<analytic>
+		<title level="a" type="main">Principled approaches for learning to defer with multiple experts</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Mao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Mohri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Symposium on Artificial Intelligence and Mathematics</title>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Mao, A., Mohri, M., and Zhong, Y. Principled approaches for learning to defer with multiple experts. In Interna- tional Symposium on Artificial Intelligence and Mathe- matics, 2024a.</note>
+</biblStruct>
+
+<biblStruct xml:id="b55">
+	<analytic>
+		<title level="a" type="main">Predictor-rejector multiclass abstention: Theoretical analysis and algorithms</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Mao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Mohri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Algorithmic Learning Theory</title>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+			<biblScope unit="page" from="822" to="867" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Mao, A., Mohri, M., and Zhong, Y. Predictor-rejector multi- class abstention: Theoretical analysis and algorithms. In International Conference on Algorithmic Learning Theory, pp. 822-867, 2024b.</note>
+</biblStruct>
+
+<biblStruct xml:id="b56">
+	<analytic>
+		<title level="a" type="main">Theoretically grounded loss functions and algorithms for score-based multi-class abstention</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Mao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Mohri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Artificial Intelligence and Statistics</title>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+			<biblScope unit="page" from="4753" to="4761" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Mao, A., Mohri, M., and Zhong, Y. Theoretically grounded loss functions and algorithms for score-based multi-class abstention. In International Conference on Artificial In- telligence and Statistics, pp. 4753-4761, 2024c.</note>
+</biblStruct>
+
+<biblStruct xml:id="b57">
+	<analytic>
+		<title level="a" type="main">H-consistency guarantees for regression</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Mao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Mohri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning</title>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+			<biblScope unit="page" from="34712" to="34737" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Mao, A., Mohri, M., and Zhong, Y. H-consistency guar- antees for regression. In International Conference on Machine Learning, pp. 34712-34737, 2024d.</note>
+</biblStruct>
+
+<biblStruct xml:id="b58">
+	<analytic>
+		<title level="a" type="main">Multi-label learning with stronger consistency guarantees</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Mao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Mohri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in Neural Information Processing Systems</title>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Mao, A., Mohri, M., and Zhong, Y. Multi-label learning with stronger consistency guarantees. In Advances in Neural Information Processing Systems, 2024e.</note>
+</biblStruct>
+
+<biblStruct xml:id="b59">
+	<analytic>
+		<title level="a" type="main">Realizable H-consistent and Bayes-consistent loss functions for learning to defer</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Mao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Mohri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in Neural Information Processing Systems</title>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Mao, A., Mohri, M., and Zhong, Y. Realizable H-consistent and Bayes-consistent loss functions for learning to defer. In Advances in Neural Information Processing Systems, 2024f.</note>
+</biblStruct>
+
+<biblStruct xml:id="b60">
+	<analytic>
+		<title level="a" type="main">Regression with multiexpert deferral</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Mao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Mohri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning</title>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+			<biblScope unit="page" from="34738" to="34759" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Mao, A., Mohri, M., and Zhong, Y. Regression with multi- expert deferral. In International Conference on Machine Learning, pp. 34738-34759, 2024g.</note>
+</biblStruct>
+
+<biblStruct xml:id="b61">
+	<analytic>
+		<title level="a" type="main">A universal growth rate for learning with smooth surrogate losses</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Mao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Mohri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in Neural Information Processing Systems</title>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Mao, A., Mohri, M., and Zhong, Y. A universal growth rate for learning with smooth surrogate losses. In Advances in Neural Information Processing Systems, 2024h.</note>
+</biblStruct>
+
+<biblStruct xml:id="b62">
+	<analytic>
+		<title level="a" type="main">Mastering multipleexpert routing: Realizable H-consistency and strong guarantees for learning to defer</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Mao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Mohri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning</title>
+		<imprint>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Mao, A., Mohri, M., and Zhong, Y. Mastering multiple- expert routing: Realizable H-consistency and strong guar- antees for learning to defer. In International Conference on Machine Learning, 2025a.</note>
+</biblStruct>
+
+<biblStruct xml:id="b63">
+	<analytic>
+		<title level="a" type="main">Enhanced Hconsistency bounds</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Mao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Mohri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Algorithmic Learning Theory</title>
+		<imprint>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Mao, A., Mohri, M., and Zhong, Y. Enhanced H- consistency bounds. In International Conference on Al- gorithmic Learning Theory, 2025b.</note>
+</biblStruct>
+
+<biblStruct xml:id="b64">
+	<analytic>
+		<title level="a" type="main">On the statistical consistency of algorithms for binary classification under class imbalance</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Menon</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Narasimhan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Agarwal</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Chawla</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning</title>
+		<imprint>
+			<date type="published" when="2013">2013</date>
+			<biblScope unit="page" from="603" to="611" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Menon, A., Narasimhan, H., Agarwal, S., and Chawla, S. On the statistical consistency of algorithms for binary classification under class imbalance. In International Conference on Machine Learning, pp. 603-611, 2013.</note>
+</biblStruct>
+
+<biblStruct xml:id="b65">
+	<analytic>
+		<title level="a" type="main">Learning from corrupted binary labels via classprobability estimation</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Menon</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Van Rooyen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">S</forename><surname>Ong</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Williamson</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning</title>
+		<imprint>
+			<date type="published" when="2015">2015</date>
+			<biblScope unit="page" from="125" to="134" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Menon, A., Van Rooyen, B., Ong, C. S., and Williamson, B. Learning from corrupted binary labels via class- probability estimation. In International Conference on Machine Learning, pp. 125-134, 2015.</note>
+</biblStruct>
+
+<biblStruct xml:id="b66">
+	<analytic>
+		<title level="a" type="main">The cost of fairness in binary classification</title>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">K</forename><surname>Menon</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">C</forename><surname>Williamson</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Conference on Fairness, Accountability, and Transparency</title>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+			<biblScope unit="page" from="107" to="118" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Menon, A. K. and Williamson, R. C. The cost of fairness in binary classification. In Conference on Fairness, Ac- countability, and Transparency, pp. 107-118, 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b67">
+	<analytic>
+		<title level="a" type="main">Learning to reject with a fixed predictor: Application to decontextualization</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Mohri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Andor</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Choi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Collins</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Mao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Learning Representations</title>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Mohri, C., Andor, D., Choi, E., Collins, M., Mao, A., and Zhong, Y. Learning to reject with a fixed predictor: Ap- plication to decontextualization. In International Confer- ence on Learning Representations, 2024.</note>
+</biblStruct>
+
+<biblStruct xml:id="b68">
+	<monogr>
+		<author>
+			<persName><forename type="first">M</forename><surname>Mohri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhong</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2511.15816</idno>
+		<title level="m">Beyond tsybakov: Model margin noise and H-consistency bounds</title>
+		<imprint>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Mohri, M. and Zhong, Y. Beyond tsybakov: Model mar- gin noise and H-consistency bounds. arXiv preprint arXiv:2511.15816, 2025.</note>
+</biblStruct>
+
+<biblStruct xml:id="b69">
+	<monogr>
+		<author>
+			<persName><forename type="first">M</forename><surname>Mohri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Rostamizadeh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Talwalkar</surname></persName>
+		</author>
+		<title level="m">Foundations of Machine Learning</title>
+		<imprint>
+			<publisher>MIT Press</publisher>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note>second edition</note>
+	<note type="raw_reference">Mohri, M., Rostamizadeh, A., and Talwalkar, A. Founda- tions of Machine Learning. MIT Press, second edition, 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b70">
+	<monogr>
+		<title level="m" type="main">Optimal query allocation in extractive QA with LLMs: A learning-to-defer framework with theoretical guarantees</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Montreuil</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">H</forename><surname>Yeo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Carlier</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><forename type="middle">X</forename><surname>Ng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><forename type="middle">T</forename><surname>Ooi</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2410.15761</idno>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Montreuil, Y., Yeo, S. H., Carlier, A., Ng, L. X., and Ooi, W. T. Optimal query allocation in extractive QA with LLMs: A learning-to-defer framework with theoretical guarantees. arXiv preprint arXiv:2410.15761, 2024.</note>
+</biblStruct>
+
+<biblStruct xml:id="b71">
+	<analytic>
+		<title level="a" type="main">Adversarial robustness in two-stage learning-to-defer: Algorithms and guarantees</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Montreuil</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Carlier</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><forename type="middle">X</forename><surname>Ng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><forename type="middle">T</forename><surname>Ooi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning</title>
+		<imprint>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Montreuil, Y., Carlier, A., Ng, L. X., and Ooi, W. T. Ad- versarial robustness in two-stage learning-to-defer: Algo- rithms and guarantees. In International Conference on Machine Learning, 2025a.</note>
+</biblStruct>
+
+<biblStruct xml:id="b72">
+	<monogr>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Montreuil</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Carlier</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><forename type="middle">X</forename><surname>Ng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><forename type="middle">T</forename><surname>Ooi</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2504.12988</idno>
+		<title level="m">Why ask one when you can ask k? two-stage learning-to-defer to the top-k experts</title>
+		<imprint>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Montreuil, Y., Carlier, A., Ng, L. X., and Ooi, W. T. Why ask one when you can ask k? two-stage learning-to-defer to the top-k experts. arXiv preprint arXiv:2504.12988, 2025b.</note>
+</biblStruct>
+
+<biblStruct xml:id="b73">
+	<monogr>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Montreuil</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Carlier</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><forename type="middle">X</forename><surname>Ng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><forename type="middle">T</forename><surname>Ooi</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2505.10160</idno>
+		<title level="m">One-stage top-k learning-to-defer: Score-based surrogates with theoretical guarantees</title>
+		<imprint>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Montreuil, Y., Carlier, A., Ng, L. X., and Ooi, W. T. One-stage top-k learning-to-defer: Score-based sur- rogates with theoretical guarantees. arXiv preprint arXiv:2505.10160, 2025c.</note>
+</biblStruct>
+
+<biblStruct xml:id="b74">
+	<analytic>
+		<title level="a" type="main">A two-stage learning-to-defer approach for multitask learning</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Montreuil</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">H</forename><surname>Yeo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Carlier</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><forename type="middle">X</forename><surname>Ng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><forename type="middle">T</forename><surname>Ooi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning</title>
+		<imprint>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Montreuil, Y., Yeo, S. H., Carlier, A., Ng, L. X., and Ooi, W. T. A two-stage learning-to-defer approach for multi- task learning. In International Conference on Machine Learning, 2025d.</note>
+</biblStruct>
+
+<biblStruct xml:id="b75">
+	<analytic>
+		<title level="a" type="main">On the statistical consistency of plug-in classifiers for non-decomposable performance measures</title>
+		<author>
+			<persName><forename type="first">H</forename><surname>Narasimhan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Vaish</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Agarwal</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in Neural Information Processing Systems</title>
+		<imprint>
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Narasimhan, H., Vaish, R., and Agarwal, S. On the statistical consistency of plug-in classifiers for non-decomposable performance measures. In Advances in Neural Informa- tion Processing Systems, 2014.</note>
+</biblStruct>
+
+<biblStruct xml:id="b76">
+	<analytic>
+		<title level="a" type="main">Optimizing nondecomposable performance measures: A tale of two classes</title>
+		<author>
+			<persName><forename type="first">H</forename><surname>Narasimhan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Kar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Jain</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning</title>
+		<imprint>
+			<date type="published" when="2015">2015</date>
+			<biblScope unit="page" from="199" to="208" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Narasimhan, H., Kar, P., and Jain, P. Optimizing non- decomposable performance measures: A tale of two classes. In International Conference on Machine Learn- ing, pp. 199-208, 2015a.</note>
+</biblStruct>
+
+<biblStruct xml:id="b77">
+	<analytic>
+		<title level="a" type="main">Consistent multiclass algorithms for complex performance measures</title>
+		<author>
+			<persName><forename type="first">H</forename><surname>Narasimhan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Ramaswamy</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Saha</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Agarwal</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning</title>
+		<imprint>
+			<date type="published" when="2015">2015</date>
+			<biblScope unit="page" from="2398" to="2407" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Narasimhan, H., Ramaswamy, H., Saha, A., and Agarwal, S. Consistent multiclass algorithms for complex perfor- mance measures. In International Conference on Ma- chine Learning, pp. 2398-2407, 2015b.</note>
+</biblStruct>
+
+<biblStruct xml:id="b78">
+	<analytic>
+		<title level="a" type="main">Optimizing the multiclass F-measure via biconcave programming</title>
+		<author>
+			<persName><forename type="first">H</forename><surname>Narasimhan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><surname>Pan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Kar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Protopapas</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><forename type="middle">G</forename><surname>Ramaswamy</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Data Mining</title>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+			<biblScope unit="page" from="1101" to="1106" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Narasimhan, H., Pan, W., Kar, P., Protopapas, P., and Ra- maswamy, H. G. Optimizing the multiclass F-measure via biconcave programming. In International Conference on Data Mining, pp. 1101-1106, 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b79">
+	<analytic>
+		<title level="a" type="main">Optimizing generalized rate metrics with three players</title>
+		<author>
+			<persName><forename type="first">H</forename><surname>Narasimhan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Cotter</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Gupta</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in Neural Information Processing Systems</title>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Narasimhan, H., Cotter, A., and Gupta, M. Optimizing generalized rate metrics with three players. In Advances in Neural Information Processing Systems, 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b80">
+	<analytic>
+		<title level="a" type="main">Regret bounds for nondecomposable metrics with missing labels</title>
+		<author>
+			<persName><forename type="first">N</forename><surname>Natarajan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Jain</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in Neural Information Processing Systems</title>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Natarajan, N. and Jain, P. Regret bounds for non- decomposable metrics with missing labels. In Advances in Neural Information Processing Systems, 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b81">
+	<analytic>
+		<title level="a" type="main">Optimal classification with multivariate losses</title>
+		<author>
+			<persName><forename type="first">N</forename><surname>Natarajan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">O</forename><surname>Koyejo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Ravikumar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">I</forename><surname>Dhillon</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning</title>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+			<biblScope unit="page" from="1530" to="1538" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Natarajan, N., Koyejo, O., Ravikumar, P., and Dhillon, I. Optimal classification with multivariate losses. In Interna- tional Conference on Machine Learning, pp. 1530-1538, 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b82">
+	<analytic>
+		<title level="a" type="main">A method for solving the convex programming problem with convergence rate o(1/k 2 )</title>
+		<author>
+			<persName><forename type="first">Y</forename><forename type="middle">E</forename><surname>Nesterov</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Dokl. akad. nauk Sssr</title>
+		<imprint>
+			<biblScope unit="volume">269</biblScope>
+			<biblScope unit="page" from="543" to="547" />
+			<date type="published" when="1983">1983</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Nesterov, Y. E. A method for solving the convex program- ming problem with convergence rate o(1/k 2 ). Dokl. akad. nauk Sssr, 269:543-547, 1983.</note>
+</biblStruct>
+
+<biblStruct xml:id="b83">
+	<analytic>
+		<title level="a" type="main">Reading digits in natural images with unsupervised feature learning</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Netzer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Coates</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Bissacco</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Wu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">Y</forename><surname>Ng</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in Neural Information Processing Systems</title>
+		<imprint>
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Netzer, Y., Wang, T., Coates, A., Bissacco, A., Wu, B., and Ng, A. Y. Reading digits in natural images with unsupervised feature learning. In Advances in Neural Information Processing Systems, 2011.</note>
+</biblStruct>
+
+<biblStruct xml:id="b84">
+	<analytic>
+		<title level="a" type="main">Optimizing F-measures by cost-sensitive classification</title>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">P</forename><surname>Parambath</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><surname>Usunier</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Grandvalet</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in Neural Information Processing Systems</title>
+		<imprint>
+			<date type="published" when="2014">2014</date>
+			<biblScope unit="page" from="2123" to="2131" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Parambath, S. P., Usunier, N., and Grandvalet, Y. Opti- mizing F-measures by cost-sensitive classification. In Advances in Neural Information Processing Systems, pp. 2123-2131, 2014.</note>
+</biblStruct>
+
+<biblStruct xml:id="b85">
+	<analytic>
+		<title level="a" type="main">Designing multi-label classifiers that maximize F measures: State of the art</title>
+		<author>
+			<persName><forename type="first">I</forename><surname>Pillai</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Fumera</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Roli</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Pattern Recognition</title>
+		<imprint>
+			<biblScope unit="volume">61</biblScope>
+			<biblScope unit="page" from="394" to="404" />
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Pillai, I., Fumera, G., and Roli, F. Designing multi-label classifiers that maximize F measures: State of the art. Pattern Recognition, 61:394-404, 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b86">
+	<monogr>
+		<title level="m" type="main">Consistent classification algorithms for multi-class nondecomposable performance metrics</title>
+		<author>
+			<persName><forename type="first">H</forename><forename type="middle">G</forename><surname>Ramaswamy</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Narasimhan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Agarwal</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1501.00287</idno>
+		<imprint>
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Ramaswamy, H. G., Narasimhan, H., and Agarwal, S. Consistent classification algorithms for multi-class non- decomposable performance metrics. arXiv preprint arXiv:1501.00287, 2015.</note>
+</biblStruct>
+
+<biblStruct xml:id="b87">
+	<analytic>
+		<title level="a" type="main">Surrogate regret bounds for proper losses</title>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">D</forename><surname>Reid</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">C</forename><surname>Williamson</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning</title>
+		<imprint>
+			<date type="published" when="2009">2009</date>
+			<biblScope unit="page" from="897" to="904" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Reid, M. D. and Williamson, R. C. Surrogate regret bounds for proper losses. In International Conference on Ma- chine Learning, pp. 897-904, 2009.</note>
+</biblStruct>
+
+<biblStruct xml:id="b88">
+	<analytic>
+		<title level="a" type="main">Optimizing non-decomposable measures with deep networks</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Sanyal</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Kumar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Kar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Chawla</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Sebastiani</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Machine Learning</title>
+		<imprint>
+			<biblScope unit="volume">107</biblScope>
+			<biblScope unit="page" from="1597" to="1620" />
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Sanyal, A., Kumar, P., Kar, P., Chawla, S., and Sebastiani, F. Optimizing non-decomposable measures with deep networks. Machine Learning, 107:1597-1620, 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b89">
+	<analytic>
+		<title level="a" type="main">Consistent algorithms for multi-label classification with macro-at-k metrics</title>
+		<author>
+			<persName><forename type="first">E</forename><surname>Schultheis</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><surname>Kotłowski</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Wydmuch</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Babbar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Borman</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Dembczyński</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Learning Representations</title>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Schultheis, E., Kotłowski, W., Wydmuch, M., Babbar, R., Borman, S., and Dembczyński, K. Consistent algorithms for multi-label classification with macro-at-k metrics. In International Conference on Learning Representations, 2024.</note>
+</biblStruct>
+
+<biblStruct xml:id="b90">
+	<analytic>
+		<title level="a" type="main">Calibrated asymmetric surrogate losses</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Scott</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Electronic Journal of Statistics</title>
+		<imprint>
+			<biblScope unit="volume">6</biblScope>
+			<biblScope unit="page">958</biblScope>
+			<date type="published" when="2012">2012</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Scott, C. Calibrated asymmetric surrogate losses. Electronic Journal of Statistics, 6:958, 2012.</note>
+</biblStruct>
+
+<biblStruct xml:id="b91">
+	<analytic>
+		<title level="a" type="main">A systematic analysis of performance measures for classification tasks</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Sokolova</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Lapalme</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Information Processing &amp; Management</title>
+		<imprint>
+			<biblScope unit="volume">45</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="427" to="437" />
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Sokolova, M. and Lapalme, G. A systematic analysis of per- formance measures for classification tasks. Information Processing &amp; Management, 45(4):427-437, 2009.</note>
+</biblStruct>
+
+<biblStruct xml:id="b92">
+	<analytic>
+		<title level="a" type="main">How to compare different loss functions and their risks</title>
+		<author>
+			<persName><forename type="first">I</forename><surname>Steinwart</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Constructive Approximation</title>
+		<imprint>
+			<biblScope unit="volume">26</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="225" to="287" />
+			<date type="published" when="2007">2007</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Steinwart, I. How to compare different loss functions and their risks. Constructive Approximation, 26(2):225-287, 2007.</note>
+</biblStruct>
+
+<biblStruct xml:id="b93">
+	<analytic>
+		<title level="a" type="main">Consistent plug-in classifiers for complex objectives and constraints</title>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">K</forename><surname>Tavker</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><forename type="middle">G</forename><surname>Ramaswamy</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Narasimhan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in Neural Information Processing Systems</title>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+			<biblScope unit="page" from="20366" to="20377" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Tavker, S. K., Ramaswamy, H. G., and Narasimhan, H. Consistent plug-in classifiers for complex objectives and constraints. In Advances in Neural Information Process- ing Systems, pp. 20366-20377, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b94">
+	<analytic>
+		<title level="a" type="main">Binary classification with karmic, threshold-quasi-concave metrics</title>
+		<author>
+			<persName><forename type="first">B</forename><surname>Yan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Koyejo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Zhong</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Ravikumar</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning</title>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+			<biblScope unit="page" from="5531" to="5540" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Yan, B., Koyejo, S., Zhong, K., and Ravikumar, P. Binary classification with karmic, threshold-quasi-concave met- rics. In International Conference on Machine Learning, pp. 5531-5540, 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b95">
+	<analytic>
+		<title level="a" type="main">Optimizing F-measures: a tale of two approaches</title>
+		<author>
+			<persName><forename type="first">N</forename><surname>Ye</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">M A</forename><surname>Chai</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><forename type="middle">S</forename><surname>Lee</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><forename type="middle">L</forename><surname>Chieu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning</title>
+		<imprint>
+			<date type="published" when="2012">2012</date>
+			<biblScope unit="page" from="1555" to="1562" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ye, N., Chai, K. M. A., Lee, W. S., and Chieu, H. L. Opti- mizing F-measures: a tale of two approaches. In Interna- tional Conference on Machine Learning, pp. 1555-1562, 2012.</note>
+</biblStruct>
+
+<biblStruct xml:id="b96">
+	<analytic>
+		<title level="a" type="main">Learning submodular losses with the lovász hinge</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Yu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Blaschko</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning</title>
+		<imprint>
+			<date type="published" when="2015">2015</date>
+			<biblScope unit="page" from="1623" to="1631" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Yu, J. and Blaschko, M. Learning submodular losses with the lovász hinge. In International Conference on Machine Learning, pp. 1623-1631, 2015.</note>
+</biblStruct>
+
+<biblStruct xml:id="b97">
+	<analytic>
+		<title level="a" type="main">Bayes consistency vs. Hconsistency: The interplay between surrogate loss functions and the scoring function class</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Agarwal</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in Neural Information Processing Systems</title>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zhang, M. and Agarwal, S. Bayes consistency vs. H- consistency: The interplay between surrogate loss func- tions and the scoring function class. In Advances in Neural Information Processing Systems, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b98">
+	<analytic>
+		<title level="a" type="main">Multiclass learning from noisy labels for non-decomposable performance measures</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Agarwal</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Artificial Intelligence and Statistics</title>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+			<biblScope unit="page" from="2170" to="2178" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zhang, M. and Agarwal, S. Multiclass learning from noisy labels for non-decomposable performance measures. In International Conference on Artificial Intelligence and Statistics, pp. 2170-2178, 2024.</note>
+</biblStruct>
+
+<biblStruct xml:id="b99">
+	<analytic>
+		<title level="a" type="main">Convex calibrated surrogates for the multi-label F-measure</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><forename type="middle">G</forename><surname>Ramaswamy</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Agarwal</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning</title>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+			<biblScope unit="page" from="11246" to="11255" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zhang, M., Ramaswamy, H. G., and Agarwal, S. Con- vex calibrated surrogates for the multi-label F-measure. In International Conference on Machine Learning, pp. 11246-11255, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b100">
+	<analytic>
+		<title level="a" type="main">Learning from noisy labels with no change to the training process</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Lee</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Agarwal</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning</title>
+		<imprint>
+			<date type="published" when="2021">2021</date>
+			<biblScope unit="page" from="12468" to="12478" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zhang, M., Lee, J., and Agarwal, S. Learning from noisy labels with no change to the training process. In Inter- national Conference on Machine Learning, pp. 12468- 12478, 2021.</note>
+</biblStruct>
+
+<biblStruct xml:id="b101">
+	<analytic>
+		<title level="a" type="main">Statistical behavior and consistency of classification methods based on convex risk minimization</title>
+		<author>
+			<persName><forename type="first">T</forename><surname>Zhang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">The Annals of Statistics</title>
+		<imprint>
+			<biblScope unit="volume">32</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="56" to="85" />
+			<date type="published" when="2004">2004</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zhang, T. Statistical behavior and consistency of classifi- cation methods based on convex risk minimization. The Annals of Statistics, 32(1):56-85, 2004.</note>
+</biblStruct>
+
+<biblStruct xml:id="b102">
+	<analytic>
+		<title level="a" type="main">Faster online learning of optimal threshold for consistent F-measure optimization</title>
+		<author>
+			<persName><forename type="first">X</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Zhou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Yang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in Neural Information Processing Systems</title>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zhang, X., Liu, M., Zhou, X., and Yang, T. Faster online learning of optimal threshold for consistent F-measure optimization. In Advances in Neural Information Pro- cessing Systems, 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b103">
+	<analytic>
+		<title level="a" type="main">Beyond fano&apos;s inequality: Bounds on the optimal F-score, ber, and cost-sensitive risk and their implications</title>
+		<author>
+			<persName><forename type="first">M.-J</forename><surname>Zhao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><surname>Edakunni</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Pocock</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Brown</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Machine Learning Research</title>
+		<imprint>
+			<biblScope unit="volume">14</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="1033" to="1090" />
+			<date type="published" when="2013">2013</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zhao, M.-J., Edakunni, N., Pocock, A., and Brown, G. Be- yond fano&apos;s inequality: Bounds on the optimal F-score, ber, and cost-sensitive risk and their implications. Journal of Machine Learning Research, 14(1):1033-1090, 2013.</note>
+</biblStruct>
+
+<biblStruct xml:id="b104">
+	<analytic>
+		<title level="a" type="main">Revisiting discriminative vs. generative classifiers: Theory and implications</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Zheng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Wu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Bao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Cao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Zhu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Machine Learning</title>
+		<imprint>
+			<date type="published" when="2023">2023</date>
+			<biblScope unit="page" from="42420" to="42477" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Zheng, C., Wu, G., Bao, F., Cao, Y., Li, C., and Zhu, J. Revisiting discriminative vs. generative classifiers: The- ory and implications. In International Conference on Machine Learning, pp. 42420-42477, 2023.</note>
+</biblStruct>
+
+<biblStruct xml:id="b105">
+	<monogr>
+		<title level="m" type="main">Fundamental Novel Consistency Theory: H-Consistency Bounds</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhong</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+		<respStmt>
+			<orgName>New York University</orgName>
+		</respStmt>
+	</monogr>
+	<note type="report_type">PhD thesis</note>
+	<note type="raw_reference">Zhong, Y. Fundamental Novel Consistency Theory: H- Consistency Bounds. PhD thesis, New York University, 2025.</note>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

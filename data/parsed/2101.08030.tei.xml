@@ -1,0 +1,950 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">Adversarial Attacks for Tabular Data: Application to Fraud Detection and Imbalanced Data</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability  status="unknown">
+					<licence/>
+				</availability>
+				<date type="published" when="2021-01-20">20 Jan 2021</date>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><forename type="first">Francesco</forename><surname>Cartella</surname></persName>
+							<email>francesco.cartella@sony.com</email>
+							<affiliation key="aff0">
+								<orgName type="institution" key="instit1">Sony Corporation</orgName>
+								<orgName type="institution" key="instit2">Joint first author</orgName>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Orlando</forename><surname>Anunciac ¸ão</surname></persName>
+							<email>orlando.anunciacao@sony.com</email>
+							<affiliation key="aff0">
+								<orgName type="institution" key="instit1">Sony Corporation</orgName>
+								<orgName type="institution" key="instit2">Joint first author</orgName>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Yuki</forename><surname>Funabiki</surname></persName>
+							<email>yuki.funabiki@sony.com</email>
+							<affiliation key="aff0">
+								<orgName type="institution" key="instit1">Sony Corporation</orgName>
+								<orgName type="institution" key="instit2">Joint first author</orgName>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Daisuke</forename><surname>Yamaguchi</surname></persName>
+							<email>daisuke.c.yamaguchi@sony.com</email>
+							<affiliation key="aff0">
+								<orgName type="institution" key="instit1">Sony Corporation</orgName>
+								<orgName type="institution" key="instit2">Joint first author</orgName>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Toru</forename><surname>Akishita</surname></persName>
+							<email>toru.akishita@sony.com</email>
+							<affiliation key="aff0">
+								<orgName type="institution" key="instit1">Sony Corporation</orgName>
+								<orgName type="institution" key="instit2">Joint first author</orgName>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Olivier</forename><surname>Elshocht</surname></persName>
+							<email>olivier.elshocht@sony.com</email>
+							<affiliation key="aff0">
+								<orgName type="institution" key="instit1">Sony Corporation</orgName>
+								<orgName type="institution" key="instit2">Joint first author</orgName>
+							</affiliation>
+						</author>
+						<title level="a" type="main">Adversarial Attacks for Tabular Data: Application to Fraud Detection and Imbalanced Data</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date type="published" when="2021-01-20">20 Jan 2021</date>
+						</imprint>
+					</monogr>
+					<idno type="MD5">14CA601E68B032110D5F204AFA2B8F49</idno>
+					<idno type="arXiv">arXiv:2101.08030v1[cs.CR]</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.2-SNAPSHOT" ident="GROBID" when="2026-08-31T18:10+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>Guaranteeing the security of transactional systems is a crucial priority of all institutions that process transactions, in order to protect their businesses against cyberattacks and fraudulent attempts. Adversarial attacks are novel techniques that, other than being proven to be effective to fool image classification models, can also be applied to tabular data. Adversarial attacks aim at producing adversarial examples, in other words, slightly modified inputs that induce the Artificial Intelligence (AI) system to return incorrect outputs that are advantageous for the attacker. In this paper we illustrate a novel approach to modify and adapt state-of-the-art algorithms to imbalanced tabular data, in the context of fraud detection. Experimental results show that the proposed modifications lead to a perfect attack success rate, obtaining adversarial examples that are also less perceptible when analyzed by humans. Moreover, when applied to a real-world production system, the proposed techniques shows the possibility of posing a serious threat to the robustness of advanced AI-based fraud detection procedures.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1">Introduction</head><p>Fraud detection plays a crucial role in financial transactional systems such as banks, insurances or online purchases. The ability to detect early whether a transaction is fraudulent has a very high value and big investments have been made to make these systems more effective. It is however important to note that fraudsters are constantly developing new ways of fooling these systems, a phenomenon known as concept drift <ref type="bibr" target="#b27">(Widmer and Kubat 1996)</ref>. A fraud detection system therefore typically has high maintenance requirements.</p><p>Machine Learning (ML) is a classical approach for fraud detection systems <ref type="bibr" target="#b0">(Abdallah, Maarof, and Zainal 2016;</ref><ref type="bibr" target="#b20">Ngai et al. 2011)</ref>. The ability to retrain the models with new data helps in this need for adaptation to new fraud patterns. However, given the possibility of errors in the models decisions, which could lead to overlooking frauds or blocking licit transactions and sales opportunities, fraud detection systems often do not rely solely on the models but also contain one or more layers involving some form of human intervention <ref type="bibr" target="#b4">(Carcillo et al. 2018;</ref><ref type="bibr" target="#b11">Dal Pozzolo et al. 2017)</ref>.</p><p>Risky transactions can be manually inspected and a decision is made whether those transactions should go through or should be blocked.</p><p>Fraudsters may use a wide range of techniques to bypass fraud detection systems. Among these techniques, adversarial attacks are novel and innovative approaches that might be used as a next level of smart financial frauds. The goal of adversarial attacks is to generate adversarial examples, i.e., inputs that are almost indistinguishable from natural data and yet classified incorrectly by the machine learning model <ref type="bibr" target="#b19">(Madry et al. 2018)</ref>.</p><p>Algorithms to build adversarial examples have recently been shown to be very effective in fooling Machine Learning models, in particular Deep Neural Networks (DNNs) in Image Recognition <ref type="bibr">(Papernot et al. 2016b)</ref>. This is a cause of concern for many applications that rely on these technologies, such as self-driving cars or facial recognition. The reason adversarial examples exist is a consequence of the difference between the way humans and machines represent knowledge and relations of visual elements in object recognition tasks. This difference leads to the possibility for an attacker to perturb the pixels of an image in a way that the change is imperceptible to a human, but still induces an image classifier to produce a wrong interpretation. For instance, an attacker can induce an image classifier to recognize with very high confidence a gibbon in a picture that represents a panda, after the color of a few pixels has been slightly modified <ref type="bibr" target="#b14">(Goodfellow, Shlens, and Szegedy 2014)</ref>.</p><p>Recent studies <ref type="bibr" target="#b1">(Ballet et al. 2019</ref>) have shown that adversarial algorithms can also be applied to other types of machine learning models using tabular data. The positive results obtained by these studies highlighted the need and the importance of investigating adversarial algorithms for a wider range of domains and applications, so that effective defensive strategies can be designed.</p><p>Motivated by the crucial role that security plays in the financial sector, in this paper we deal with the problem of creating adversarial examples for tabular data to effectively bypass fraud detection checks. In the particular case of this research, bypassing fraud checks means either inducing the system to classify a fraudulent transaction as non-fraud, or make the violation unnoticed by a potential human inspection. These kinds of misclassifications are particularly risky for fraud detection systems, as they would lead attackers to succeed in their criminal intent and to obtain illegal economic advantages.</p><p>It is a well-known fact that the security of a system is related to the protection of multiple layers of an application <ref type="bibr" target="#b28">(Zhu, Rieger, and Bas ¸ar 2011)</ref>. Therefore, the security of a particular part of a system should be treated independently, without relying on the integrity of other layers. In light of this concept, in this paper we assume that the training set is available to the attacker, as our main focus is the analysis of security risks affecting the Machine Learning layer of a fraud detection system. Using this data, a proper surrogate model can be created and used to evaluate the effectiveness of the obtained adversarial examples, before submitting them to the real system. Notice that we do not make any assumptions on the architecture of the real model, which can be considered as unknown by the attacker.</p><p>To build successful attacks we tackled several problems, like adapting adversarial algorithms to imbalanced fraud detection data and properly treating non-editable variables. Moreover, as fraud detection systems often involve human intervention, we also considered the problem of building imperceptible adversarial examples, that are more difficult to be detected by operators. Experimental results show that, with the modifications introduced in this paper, it is possible to build realistic and imperceptible adversarial examples for all the fraudulent transactions of the considered use case. In comparison with state-of-the-art techniques, we achieved a drop of up to 64% in the number of perturbed variables that are most commonly checked by human investigators and, for the most successful cases, adversarial examples were obtained by modifying just a minimum number of fields, reducing the probability for an attack to be discovered. Finally, by obtaining a 13.6% success rate in attacking a deployed production system, we also demonstrated that the resulting adversarial examples were transferable to a target real-world model, representing a real threat to businesses dealing with fraud detection operations.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2">Related Works</head><p>Since the concept of adversarial examples was proposed <ref type="bibr" target="#b26">(Szegedy et al. 2013)</ref>, it has been a main topic in the field of adversarial machine learning. This topic is especially discussed in image recognition tasks using DNNs, but has recently been discussed in other tasks such as audio recognition <ref type="bibr" target="#b6">(Carlini and Wagner 2018</ref>), text summarization <ref type="bibr" target="#b10">(Cheng et al. 2020)</ref>, neural network policy for reinforcement learning <ref type="bibr" target="#b17">(Huang et al. 2017</ref>) and so on. Furthermore, the provision of tools to assist in the generation of adversarial examples is being promoted. This is intended to make the training of models more robust against adversarial machine learning. Adversarial examples can be easily generated using tools like Adversarial Robustness Toolbox <ref type="bibr" target="#b21">(Nicolae et al. 2018)</ref>, CleverHans <ref type="bibr">(Papernot et al. 2016a)</ref>, Foolbox <ref type="bibr" target="#b25">(Rauber, Brendel, and Bethge 2017)</ref> and advertorch <ref type="bibr" target="#b12">(Ding, Wang, and Jin 2019)</ref>. However, despite such trends, there are only a few studies of adversarial examples on tabular data.</p><p>To the best of our knowledge, the paper (a) <ref type="bibr" target="#b1">(Ballet et al. 2019)</ref> was the first systematic introduction to adversarial examples in tabular domain using recent terminology. However, similar concepts, such as performing small changes in features to get desired outputs or executing model inversion, were studied before <ref type="bibr" target="#b15">(Grosse et al. 2017;</ref><ref type="bibr" target="#b23">Papernot, McDaniel, and Goodfellow 2016;</ref><ref type="bibr" target="#b2">Bella et al. 2010)</ref>. Although it is very difficult to discuss the imperceptibility of perturbations in the tabular domain as opposed to the image domain, the authors of <ref type="bibr" target="#b1">(Ballet et al. 2019)</ref> proposed to use the feature importance (the contribution of each feature to the model) as an indicator and applied more perturbations on the less important features. Another recent paper (b) <ref type="bibr" target="#b16">(Hashemi and Fathi 2020)</ref> treated the adversarial examples on tabular data as counterfactual examples to help the explainability of the model. Another paper (c) <ref type="bibr" target="#b18">(Levy et al. 2020)</ref> proposed a method of conversion to a surrogate model that maintains the properties of the target model in order to apply existing generation methods.</p><p>The main differentiators of our research with respect to the contributions mentioned above consist of: (a) they adopted a gradient-based attack method, which is applicable to models like DNNs but not to architectures with discrete gradients (such as decision trees), while we propose a model agnostic approach applicable to any architecture; (b) they provide a counterfactual explanation for model interpretation, while we assume a more realistic scenario of attack attempts; (c) the generation method they used is a variant of the black-box attack via surrogate model, while we assume that less information about the model is available to the attacker.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3">Main Contributions</head><p>As discussed in Section 1, in this paper we present a novel approach to adapt adversarial attack algorithms, that are commonly used in the image recognition domain, to tabular data. In particular, we target fraud detection use cases. Achieving this goal requires facing and solving several challenges that arise from the different nature of data and model types used, compared to image classification applications.</p><p>One of the main differences between image and fraud detection data is the balance of samples that represent each class. While image classification is a multiclass problem where each of the classes is represented by a relatively similar amount of instances, fraud detection data sets are usually binary (i.e., they contain only two classes) and are typically characterized by a large imbalance between genuine and fraudulent transactions, the first being in big majority. Fraud detection models return a risk score that represents the estimated probability that the classified transaction is fraudulent. The large imbalance in the data leads to highly biased models that tend to attribute a risk score that takes into account the higher probability of observing instances belonging to the most numerous class. Differently from image classification, where the image is generally attributed to highest predicted probability class (with some exception, like in the case of diagnosis or fault detection applications), a decision threshold is normally tuned for fraud detection, according to some business requirements. The input transaction is deemed to be fraudulent if the predicted risk score is bigger than the threshold. In this research, we introduced the concept of the decision threshold within the attack algorithms, as it represents essential information to verify if the perturbations correctly resulted in the creation of adversarial samples.</p><p>Moreover, ensemble models and, in particular, Extreme Gradient Boosting techniques are commonly used in applications handling imbalanced tabular data, having proven to be particularly effective for these kind of settings. Applying adversarial attack algorithms in a model agnostic fashion, rather than closely targeted to Deep Neural Networks, was also one of the main challenges of this research.</p><p>Another aspect that differentiates image and tabular data is the value range that each feature can assume. Representing pixel values, image data can normally vary within limited ranges and data types (i.e., integer numbers between 0 and 255). On the other hand, tabular data can represent disparate pieces of information, like email addresses, surnames or amounts. As such, features representing a transaction can be extremely different from each other. Even if ultimately encoded as numerical values, a proper handling and representation of data types and range was essential to enable algorithms to generate realistic adversarial transactions.</p><p>Field editability also represents a crucial aspect to take into account when dealing with transactional data. Differently from the image domain, where an attacker can potentially modify any of the pixels independently, for tabular data there might be fields that are not directly controllable by the user but that are rather automatically determined by the system. Examples of these fields could be the historical amount borrowed in a loan application or the discount rate applied for an online purchase. To simulate the fact that direct changes to these values are not allowed by the system, specific constraints were added to the algorithm to prevent the modification of non-editable information.</p><p>Finally, we addressed imperceptibility as one of the main challenges of our research. Differently from image data, where imperceptibility is an intuitive concept related to human perception, for fraud detection we assume that imperceptibility is related to the number and entity of changes made to important features, such as fields that are most commonly checked by human operators within the specific application context. From a purely practical point of view, we define as imperceptible an adversarial attack that ultimately passes the fraud check, remaining unnoticed. We approached imperceptibility by introducing a custom norm as a measure of distance between the original transaction and the adversarial sample. The distance is obtained through weights assigned to each feature that are proportional to a novel definition of importance that takes into account the propensity of a feature to be inspected. We will show that the custom norm properly drives the algorithm procedures to prioritize changes made on features that are rarely checked by human operators, obtaining less perceptible attacks. Details of the contributions described above will be given in Section 5, together with other aspects introduced in this research, including some algorithms specific solutions, like a novel loss function definition for the Zeroth Order Optimization (ZOO) algorithm <ref type="bibr" target="#b8">(Chen et al. 2017</ref>) and an improved initialization strategy for Bound-ary attack <ref type="bibr" target="#b3">(Brendel, Rauber, and Bethge 2018)</ref> and Hop-SkipJumpAttack <ref type="bibr" target="#b7">(Chen, Jordan, and Wainwright 2020)</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4">Problem Statement</head><p>In this paper we address the problem of building adversarial examples for fraud detection systems on financial data.</p><p>A financial transaction is a vector of m variables, v 1 , ..., v m with each v i ∈ R<ref type="foot" target="#foot_0">foot_0</ref> .</p><p>Fraud detection systems in financial data analyze a set of n transactions t 1 , ..., t n in a certain period of time. A model M is used to label each transaction t i with a corresponding class c i ∈ {0, 1} in which 0 corresponds to Non-Fraud and 1 corresponds to Fraud:</p><formula xml:id="formula_0">M (t i ) = c i .</formula><p>The first goal of an attacker is to find a perturbation vector</p><formula xml:id="formula_1">p i = [p 1 i , ..., p m i ]</formula><p>such that:</p><formula xml:id="formula_2">M (t i + p i ) = 0 (1)</formula><p>for values of i = 1, ..., n such that M (t i ) = 1 and t i is a real fraud.</p><p>If such a perturbation vector p i can be found then ti = t i + p i is a successful adversarial sample.</p><p>For the purpose of our experiments, our goal is to create an adversarial sample ti such that M ( ti ) = 0 for each fraudulent transaction t i that is correctly identified by model M (M (t i ) = 1).</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5">Algorithms modifications</head><p>In this section we describe the main problems that were faced to create successful adversarial examples. We used the Adversarial Robustness Toolbox (ART) <ref type="bibr" target="#b21">(Nicolae et al. 2018)</ref> as the reference tool. ART is a Python library for Machine Learning Security that provides tools to enable developers and researchers to defend and evaluate Machine Learning models and applications against adversarial attacks.</p><p>Even though some ART algorithms can be applied to tabular data, the majority of the tool's algorithms is designed to deal with image data. So it was no surprise that it was necessary to make changes in order to build successful adversarial examples for tabular data, and more specifically fraud detection.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.1">A Generic Adversarial Algorithm</head><p>Adversarial algorithms can be used by attackers to retrieve the optimal changes that, when applied to the fraudulent transactions they want to submit, induce the fraud check to fail, by erroneously accepting the submitted transactions as legitimate. To simulate this scenario in our experimental setup, we applied adversarial algorithms on fraudulent samples that are correctly detected as fraud by the model under attack. An adversarial algorithm is considered successful if it outputs adversarial examples that are classified as non-frauds by the same model. A generic adversarial algorithm starts with an initial sample and makes perturbations to that sample until the model misclassifies it. A second goal of adversarial algorithms is to make the adversarial sample as similar as possible to the original sample. Algorithm 1 shows the pseudo-code of a simple generic algorithm that serves the purpose of illustrating the main concepts. This algorithm receives a fraudulent transaction t, a model M such that M (t) = 1 and a similarity threshold ρ. The perturbations can be selected through many different ways. Two of the most common approaches involve the use of distance metrics to get the adversarial sample t closer to the original sample t (e.g.: Boundary or HopSkipJump) or calculations based on the gradient of the model (e.g.: ZOO algorithm). Algorithm 1 uses a similarity function and a similarity threshold ρ. The similarity function can be based on the distance between t and t, calculated using a norm such as L 2 or L ∞ . Threshold ρ can be provided explicitly, as is the case in our generic algorithm. However, some algorithms calculate it in an indirect way. As an example, Boundary attack algorithm converges when it is close enough to the decision boundary. Algorithms usually also have a maximum number of allowed steps in the while loop. This was not included in the pseudo-code for simplicity reasons.</p><formula xml:id="formula_3">Algorithm 1 Generic Adversarial Algorithm 1: function GENERATE ADV(t, M, ρ) 2: t ← initialize sample() 3: while M ( t) = 1 ∨ similarity( t, t) &lt; ρ do 4: t = make perturbation( t, t) 5:</formula><p>end while return t 6: end function</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.2">Using Custom Threshold</head><p>In ART, adversarial algorithms are fed with the model that is being attacked. Adversarial examples are iteratively refined and, at every iteration, the model is used to evaluate the current samples' success. Because fraud detection is binary, the adversarial algorithms stop as soon as the current adversarial example is deemed to be successful, i.e., when it is classified as non-fraud with a score higher than 0.5. While this may work well for an image recognition model, it is problematic for a fraud detection model.</p><p>In fraud detection use cases, a decision threshold τ ∈ [0, 1] is commonly tuned and an input transaction is classified as fraud if [M (t)] 1 &gt; τ ,where [M (t)] 1 is the probability that the transaction t belongs to class 1, i.e., fraud. The threshold τ is typically very small and much lower than 0.5, to compensate for the tendency of the model to attribute very low risk scores to new transactions, given the big majority of non-fraud samples observed at training time.</p><p>Our initial results when applying the default ART algorithms were poor because a threshold of 0.5 was used, misleading the algorithms by assuming that a successful adversarial sample had been found. To correct the problem we modified the Boundary <ref type="bibr" target="#b3">(Brendel, Rauber, and Bethge 2018)</ref>, HopSkipJumpAttack (Chen, Jordan, and Wainwright 2020) and ZOO <ref type="bibr" target="#b8">(Chen et al. 2017)</ref> attacks. These algorithms are now fed with a custom threshold and whenever the model is evaluated internally, the custom threshold is taken into account for the models' decision. With this correction, the adversarial algorithms have access to true information about whether a sample is classified as fraud or not by the model.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.3">Specifying a Custom Loss Function for ZOO</head><p>To drive the creation of adversarial examples, the ZOO algorithm uses a specific loss function that, as detailed below, implicitly considers a balanced threshold of 0.5 in its standard formulation. For this reason, the introduction of a novel loss function was essential to adapt the algorithm to biased cases.</p><p>To adapt the ZOO algorithm formulation to the specific case of binary classification and fraud detection, following the notation introduced in Section 4, let us define the model under attack as a function M (t) that takes a transaction t and returns a two dimensional vector M (t) ∈ [0, 1] 2 . The two dimensions of this vector represent the probability score of class 0 (not fraud) and of class 1 (fraud), respectively. As a consequence,</p><formula xml:id="formula_4">[M (t)] 0 + [M (t)] 1 = 1</formula><p>Given a fraudulent transaction t f correctly classified by the model, the ZOO attack finds the corresponding adversarial sample t by solving the following optimization problem:</p><formula xml:id="formula_5">minimize t || t -t f || 2 2 + r • f ( t)<label>(2)</label></formula><p>where ||v|| 2 = m i=1 v 2 i denotes the Euclidean norm (or the L 2 norm) of the vector v = [v 1 , ..., v m ] T and r &gt; 0 is a regularization parameter. Equation 2 is expressed as a sum of two terms to be minimized: the first term || t -t f || 2 2 represents a measure of distance between the adversarial example t and the original transaction t f ; the f ( t) of the second term represents a loss function that measures how unsuccessful an adversarial attack is. The minimization of Equation 2 is performed using stochastic coordinate descent methods (see <ref type="bibr" target="#b8">(Chen et al. 2017</ref>) for details). The loss function proposed in the standard formulation of the ZOO algorithm is the following:</p><formula xml:id="formula_6">f (t) = max [(log[M (t)] 1 -log[M (t)] 0 ), -ν]<label>(3)</label></formula><p>where ν &gt;= 0 is a tuning parameter for attack transferability, commonly set to 0 for attacking a targeted model or to a larger value when performing a transfer attack. If, for simplicity, we consider ν = 0, the loss function above will return its minimum value of 0 for all the adversarial samples t having [M ( t)] 0 &gt;= [M ( t)] 1 , i.e., probability of not fraud bigger or equal than fraud. As explained previously, in the context of biased models, assigning to a transaction a not fraud probability higher than the probability of fraud, does not necessarily imply that the transaction is classified as licit, but it is necessary that [M (t)] 1 ≤ τ , where τ ∈ [0, 1] is the decision threshold. As a consequence, the loss function of Equation 3 is minimized also by a set of adversarial examples that, being still classified as fraud, are unsuccessful. This is the set of adversarial examples t for which</p><formula xml:id="formula_7">[M ( t)] 0 ≥ [M ( t)] 1 and [M (t)] 1 &gt; τ .</formula><p>As Equation 3 results inadequate for imbalanced use cases, we propose to use the following loss function in the optimization of Equation <ref type="formula" target="#formula_5">2</ref>:</p><formula xml:id="formula_8">f (t) = max [([M (t)] 1 -τ ) , -ν]<label>(4)</label></formula><p>The loss function above assures that minimum values are obtained only for successful adversarial examples t, for which [M ( t)] 1 &lt;= τ (i.e., classified as not frauds).</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.4">Creating Realistic Attacks with Editability Constraints</head><p>We analyzed the nature of the perturbations that were obtained by the adversarial algorithms. In particular, tabular data has features of different types: boolean, integer, hotencoded variables, integers that only take positive values, etc. Without imposing any constraint, the adversarial algorithms created perturbations that led to illegal values, with respect to the type of features that are taken into consideration (e.g.: a boolean feature having value different from 0 or 1, or a positive integer feature that becomes negative). It was then necessary to make sure that perturbations assume only what we designated by realistic values. Each variable v i can assume values from a specific domain D i (e.g.: for a real variable v i , D i = R). An adversarial sample t has a realistic value x for variable v i ∈ D i if x ∈ D i . In the case that x / ∈ D i a transformation needs to be made in order to ensure that x ∈ D i .</p><p>The inspection of adversarial samples raised awareness about the presence of non-editable fields in the data (i.e., fields that cannot be directly modified by the user), but are rather calculated automatically by the system. An example of this could be the total amount of money borrowed by a customer in the past, in the context of a loan management application. This value cannot be changed when a new loan is requested. Adversarial algorithms should take this into account and only make changes to variables that the user can have access to. In order to address this we defined an editability vector that contains the variables that can be changed by adversarial algorithms.</p><p>In order to address realistic and editability problems, we modified the adversarial algorithms ZOO, Boundary and HopSkipJump. In the execution of each algorithm, whenever a potential adversarial sample is modified, editability and realistic properties are enforced by correcting the illegal values.</p><p>In order to make adversarial samples realistic we considered the data types and the corresponding corrections for a specific value x that are listed on Table <ref type="table">1</ref>:</p><p>In order to implement corrections listed on Table <ref type="table">1</ref>, adversarial algorithms now receive a data specification dictionary containing a list of features for each data type.</p><p>The editability constraints are enforced by defining a vector of editable features and passing it to the adversarial algorithms. The editability vector e for variables v i , ..., v m is defined as e i = 1 if v i is editable, 0 otherwise, for i = 1, ..., m. Algorithms will only allow perturbations on features v i , with i = 1, ..., m for which e i = 1. Features v j , with j = 1, ..., m for which e j = 0 are not perturbed and forced to maintain their original values. Which feature v i are editable is a property of the system under consideration. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.5">Specifying a Custom Norm</head><p>After creating realistic adversarial samples and taking editability into consideration, it was important to go one step further in terms of imperceptibility of the attack. Besides editability considerations, adversarial algorithms pick up any available feature as a candidate for a perturbation. Within a specific application context, an attacker can guess that, in the case of a hypothetical manual inspection, some features may capture the attention of human operators more than others. For instance, in a loan request application, the applicant salary information is usually more informative than other fields, like the number of owned pets <ref type="bibr" target="#b1">(Ballet et al. 2019</ref>). Nevertheless, less important features are also considered by the model to estimate the request's risk score. As a consequence, the attacker's goal is to minimize the perturbations made on features that have a bigger chance to be checked. Adversarial algorithms such as Boundary or Hop-SkipJump attacks use norms as measures of distance between adversarial and original examples. These algorithms try to minimize this distance as much as possible in order to make the adversarial example imperceptible. L 2 norm considers the global distance between the original and the adversarial sample, disregarding that some features may have very large perturbations. Minimizing L ∞ on the other hand means that the algorithm will try to avoid having a big perturbation on a single feature, giving preference to small perturbations on many features. None of these norms completely satisfy the needs of an imperceptible attack in the context of tabular data. In order to do that more successfully it is necessary to consider features differently, depending on whether they are checked by a human operator. This motivated the introduction of a novel custom norm that is expressed in Equation <ref type="formula" target="#formula_9">5</ref>:</p><formula xml:id="formula_9">n = ||p(αh + β[(1 -h)(1 -v) + hv])|| γ (<label>5</label></formula><formula xml:id="formula_10">)</formula><p>where p is the perturbation vector, h is a Boolean vector indicating whether a variable is checked, v is a vector of feature importance, α, β ∈ [0, 1] are weights on the check and importance of a feature respectively, and ||.|| γ is a γ-norm such as L 2 norm that is being used. It is known that algorithms using gradient descent can empirically derive values of coefficients such as α and β in a binary search <ref type="bibr" target="#b5">(Carlini and Wagner 2017</ref>), but it is future work to verify whether these techniques are applicable to our approach.</p><p>For the definition of the custom norm, two properties were considered: 1) whether a feature is checked or ignored by the operators and 2) the importance of the feature for the model. The idea behind the custom norm is that changes to features that are checked and important lead to high values of the distance, so that the optimization algorithm prefers other solutions. Moreover, we also want to penalize solutions in which the feature is not checked and not important, because it will not have a significant effect in the attack. On the other hand, we would like the algorithm to prefer solutions based on perturbing features that are not checked and have high importance for the model. For these types of perturbations the custom norm returns low values. Finally, if checked variables need to be perturbed it is preferable that they are not important for the model, so we assign low distances for these situations. In conclusion, the goal of the custom norm is to drive the optimization procedure of the attack algorithms to obtain adversarial examples that are imperceptible and unnoticed by human operators.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="6">Experiments and Results</head><p>In this section we describe the experiments that were performed and the obtained results. After having modified the ART algorithms as discussed in Section 5, we applied them to the German Credit Dataset (Dua and Graff 2017) use case. The strategy described in the following sections was also applied to 2 additional datasets with similar results. The results obtained using the first dataset (the IEEE-CIS Fraud Detection dataset) are not detailed due to space limitations. The second dataset is an internal dataset that cannot be disclosed for confidentiality reasons.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="6.1">Use Case and Data Preparation</head><p>German Credit Dataset <ref type="bibr" target="#b13">(Dua and Graff 2017</ref>) is a publicly available dataset used for building models that evaluate the risk of a loan application, given account and customer information. Out of 1000 applications in total, 700 were accepted while 300 were rejected and deemed to be risky in terms of low propensity of the applicant of being able to pay back the loan. In the context of adversarial attacks, we considered the rejected applications as fraudulent, as the goal of a potential attacker would be to slightly modify their loan request such that it eventually gets accepted. The data contains 20 features with 7 integer and 13 categorical ones, such as age, sex, purpose of the loan or if the customer is a foreign worker. We applied a one-hot encoding to categorical features, obtaining a total of 61 numerical features for modeling.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Capabilities of Attackers</head><p>As discussed, the goal of attackers is to modify true-positive requests (i.e., applications that are deemed risky and should not be accepted) so that they can be accepted. Our assumption is that the attacker can make reasonable judgments about the importance of the features and estimate what are the fields that a human investigator most probably checks to measure the applicant's ability to pay back the loan. In this experiment, we assumed that human investigators would mainly check 10 of the total 20 features such as the "Purpose (of the loan)"</p><p>and "Credit amount". Moreover, we assumed that the features "Credit history", "Personal status and sex", "Other debtors/guarantors" and "Age in years" are not directly modifiable by the attacker and set them as non-editable. Although we conducted experiments under these hypothesis, different settings can be considered as well, depending on different assumptions on the system and the application context.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Model</head><p>Construction We used XG-Boost (Chen and Guestrin 2016) as a learning algorithm. At first, the dataset was split into train and test sets consisting of 70% and 30% of the data, respectively. Furthermore, train set was split into training and validation sets consisting 80% and 20% of the data, respectively. The training data was used to generate a binary classification model and the validation data was used to adjust the threshold. Before the threshold adjustment, the accuracy on validation set was 75.7%, the recall was 38.1% and the precision was 66.6%. An optimal threshold of 0.192 was obtained using the F2 score maximization as a target metric. With this threshold we obtained an accuracy of 60.0%, a recall of 95.2% and a precision of 42.6%. Using the resulting model on the test set, we were able to discriminate 82 true-positive data, representing a recall of 91% and a precision of 42.5%. These results show that, even without performing particularly sophisticated feature engineering, we obtained a fair model with satisfactory performance that can be effectively used to evaluate our study.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="6.2">Results</head><p>In this subsection we summarize the results obtained. Our goal is to show that the approaches we followed to build adversarial samples were successful.</p><p>We considered 4 parameters that can be switched on and off in our experiment designs: threshold (Section 5.2), realistic (Section 5.4), editability (Section 5.4) and custom norm (Section 5.5). As shown in Table <ref type="table" target="#tab_1">2</ref> Experiment 1 is performed with ART as it is, without any changes or adaptations. In Experiment 2 we use custom thresholds as described in Section 5.2 and in Experiment 3 we make the attacks realistic (Section 5.4). In Experiment 4 we use the custom norm as described in Section 5.5 and in Experiment 5 we add editability constraints (Section 5.4).</p><p>The results obtained are shown in Tables 3, 4 and 5. Experiment 1 was very unsuccessful, with no adversarial samples found. This means that the original algorithms cannot be applied directly to an unbalanced problem. When changes are made to the algorithm to use a proper threshold in Experiment 2, the success rate increases to 100% for the three algorithms. This experiment however still generates unrealistic values for some features. As an example, Table <ref type="table">4</ref> shows that 87% of the values generated by HopSkipJump are unrealistic. This makes it easy for a human operator to detect the attack. In Experiment 3 this problem is solved and only realistic values are generated. Experiment 3 does not use the custom norm, which is done in Experiment 4. By observing the results we can check that, by using the custom norm, the number of perturbed checked fields decreased in the application of each of the 3 adversarial algorithms, thus increasing imperceptibility. For instance, Table <ref type="table">3</ref> shows that, in Experiment 3, a total of 592 fields that are checked by human operators were perturbed by the boundary attack. When the proposed custom norm is used in Experiment 4, only 214 of these fields are modified, representing a drop of 64%, with respect to the state-of-the-art norm. Experiment 5 considers editability constraints and we observe that the number of non-editable fields that are changed is reduced to 0 in each algorithm. For Boundary and ZOO attacks on Experiment 5 there is a slight increase on the number of checked fields that are changed. This can be explained by the fact that the algorithms are not allowed to change non-editable fields and the pressure to change checked fields is higher.</p><p>Finally, it is important to mention that some successful adversarial examples were obtained by changing just a few fields. Table <ref type="table" target="#tab_3">6</ref> shows an example where changing only the value of one attribute (Status checking account) caused the model to return a lower risk score and flip its decision from rejection to the acceptance of the loan application. It is evident that these types of adversarial examples are highly imperceptible and that it is very probable that they might remain unnoticed.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>ZOO algorithm</head><p>Original </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="7">Conclusions and Future Work</head><p>In this paper we illustrated the process we followed to adapt state-of-the-art adversarial algorithms, that are commonly used in the image classification domain, to imbalanced tabular data. In particular we targeted fraud detection use cases.</p><p>After verifying the inadequacy of existing techniques to handle tabular data, we introduced modifications to address the shortcomings. In particular (i) we allowed adversarial algorithms to deal with biased model scores through the usage of a custom threshold within the algorithms and the introduction of a novel loss function for ZOO algorithm; (ii) we introduced constraints in the allowed perturbation to obtain realistic adversarial examples and avoid out-of-bound values; (iii) we improved imperceptibility through a proper management of not editable fields and through the introduction of a custom norm that drives the creation of adversarial examples that have a higher chance to be unnoticed by human investigators.</p><p>In terms of results, the changes we made contributed to increase the attack success rate from 0% to 100%. Moreover we showed examples of successful imperceptible attacks that were obtained by changing the value of just a few features.</p><p>Ultimately, we conducted a final experiment on the transferability of the adversarial examples to a real-world production system. To this extent, we could not perform attack transferability for the use case we considered in this paper, given the lack of a real deployed AI system. For this reason, we executed the full adversarial attack process on a real-world use case that is currently in production. For confidentiality reasons and due to the substantial economical dangers that sharing information on internal system vulnerabilities might cause, only final results can be reported, without disclosing any detail about the analyzed use case. We submitted 44 modified fraudulent transactions, created using a surrogate side model, to the real production system. For 35 transactions, representing 80% of the submitted adversarial examples, the production model returned a lower risk score than for the original transaction. More importantly, 6 cases, representing 13.6% of the submitted transactions, were flagged as safe by the system and automatically accepted, bypassing the human check. These results demonstrate that the techniques introduced in this paper represent a real threat for many AI-based fraud detection models, used in day-to-day business.</p><p>Future work will be conducted in the direction of performing more extensive experiments on attack transferability, by setting a lower target threshold for the adversarial algorithms, in order to increase the success probability of attacks for the considered real-world use case.</p><p>On the other hand, these preliminary results highlighted the need of assuring a better robustness of production fraud detection models. To this extent, we started exploring the topic of defense techniques, with the goal of improving their ability to detect and block also the most sophisticated adversarial attacks. After conducting a survey of existing defensive methodologies, our plan is to identify their shortcomings and, eventually, come up with new approaches, following a similar process we used for the attack techniques.</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_1"><head>Table 2 :</head><label>2</label><figDesc>Configurations of the performed experiments</figDesc><table><row><cell></cell><cell></cell><cell></cell><cell cols="2">, we obtained 5 different</cell></row><row><cell cols="2">configurations.</cell><cell></cell><cell></cell><cell></cell></row><row><cell cols="5">ID Threshold Realistic Custom Editability</cell></row><row><cell></cell><cell></cell><cell></cell><cell>Norm</cell><cell></cell></row><row><cell>1</cell><cell>OFF</cell><cell>OFF</cell><cell>OFF</cell><cell>OFF</cell></row><row><cell>2</cell><cell>ON</cell><cell>OFF</cell><cell>OFF</cell><cell>OFF</cell></row><row><cell>3</cell><cell>ON</cell><cell>ON</cell><cell>OFF</cell><cell>OFF</cell></row><row><cell>4</cell><cell>ON</cell><cell>ON</cell><cell>ON</cell><cell>OFF</cell></row><row><cell>5</cell><cell>ON</cell><cell>ON</cell><cell>ON</cell><cell>ON</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_2"><head>Table 5 :</head><label>5</label><figDesc>Results obtained with each experiment configuration for ZOO attack</figDesc><table><row><cell>Boundary</cell><cell>1</cell><cell>2</cell><cell>3</cell><cell>4</cell><cell>5</cell></row><row><cell>Success Rate (%)</cell><cell cols="5">0 100 100 100 100</cell></row><row><cell cols="3">% of Unrealistic Values -47.6</cell><cell>0</cell><cell>0</cell><cell>0</cell></row><row><cell># Checked Fields</cell><cell>-</cell><cell>-</cell><cell cols="3">592 214 228</cell></row><row><cell># Non-Editable Fields</cell><cell>-</cell><cell>-</cell><cell>-</cell><cell>63</cell><cell>0</cell></row><row><cell cols="6">Table 3: Results obtained with each experiment configura-</cell></row><row><cell>tion for Boundary attack</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>HopSkipJump</cell><cell>1</cell><cell>2</cell><cell>3</cell><cell>4</cell><cell>5</cell></row><row><cell>Success Rate (%)</cell><cell cols="5">0 100 100 100 100</cell></row><row><cell cols="3">% of Unrealistic Values -87.0</cell><cell>0</cell><cell>0</cell><cell>0</cell></row><row><cell># Checked Fields</cell><cell>-</cell><cell>-</cell><cell cols="3">554 465 418</cell></row><row><cell># Non-Editable Fields</cell><cell>-</cell><cell>-</cell><cell>-</cell><cell>159</cell><cell>0</cell></row><row><cell cols="6">Table 4: Results obtained with each experiment configura-</cell></row><row><cell cols="2">tion for HopSkipJump attack</cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>ZOO</cell><cell>1</cell><cell>2</cell><cell>3</cell><cell>4</cell><cell>5</cell></row><row><cell>Success Rate (%)</cell><cell cols="5">0 100 100 100 100</cell></row><row><cell cols="3">% of Unrealistic Values -1.6</cell><cell>0</cell><cell>0</cell><cell>0</cell></row><row><cell># Checked Fields</cell><cell>-</cell><cell>-</cell><cell cols="3">159 133 153</cell></row><row><cell># Non-Editable Fields</cell><cell>-</cell><cell>-</cell><cell>-</cell><cell>37</cell><cell>0</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_3"><head>Table 6 :</head><label>6</label><figDesc>One adversarial example obtained with ZOO algorithm.</figDesc><table><row><cell>Adversarial</cell></row></table></figure>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot" n="1" xml:id="foot_0"><p>Some variables can be textual, booleans, naturals or integers, but for the sake of simplicity we assume that there is a feature processing step that transforms all values into real numbers.</p></note>
+		</body>
+		<back>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<analytic>
+		<title level="a" type="main">Fraud detection system: A survey</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Abdallah</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">A</forename><surname>Maarof</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Zainal</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Network and Computer Applications</title>
+		<imprint>
+			<biblScope unit="volume">68</biblScope>
+			<biblScope unit="page" from="90" to="113" />
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Abdallah, A.; Maarof, M. A.; and Zainal, A. 2016. Fraud detection system: A survey. Journal of Network and Computer Applications 68: 90-113.</note>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<monogr>
+		<title level="m" type="main">Imperceptible Adversarial Attacks on Tabular Data</title>
+		<author>
+			<persName><forename type="first">V</forename><surname>Ballet</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Renard</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Aigrain</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Laugel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Frossard</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Detyniecki</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1911.03274</idno>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Ballet, V.; Renard, X.; Aigrain, J.; Laugel, T.; Frossard, P.; and De- tyniecki, M. 2019. Imperceptible Adversarial Attacks on Tabular Data. arXiv preprint arXiv:1911.03274 .</note>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<analytic>
+		<title level="a" type="main">Data mining strategies for CRM negotiation prescription problems</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Bella</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Ferri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Hernández-Orallo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">J</forename><surname>Ramírez-Quintana</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Industrial, Engineering and Other Applications of Applied Intelligent Systems</title>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2010">2010</date>
+			<biblScope unit="page" from="520" to="530" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Bella, A.; Ferri, C.; Hernández-Orallo, J.; and Ramírez-Quintana, M. J. 2010. Data mining strategies for CRM negotiation prescrip- tion problems. In International Conference on Industrial, En- gineering and Other Applications of Applied Intelligent Systems, 520-530. Springer.</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<analytic>
+		<title level="a" type="main">Decision-Based Adversarial Attacks: Reliable Attacks Against Black-Box Machine Learning Models</title>
+		<author>
+			<persName><forename type="first">W</forename><surname>Brendel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Rauber</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Bethge</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">6th International Conference on Learning Representations, ICLR 2018</title>
+		<title level="s">Conference Track Proceedings</title>
+		<meeting><address><addrLine>Vancouver, BC, Canada</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2018-04-30">2018. April 30 -May 3, 2018</date>
+		</imprint>
+	</monogr>
+	<note>OpenReview.net</note>
+	<note type="raw_reference">Brendel, W.; Rauber, J.; and Bethge, M. 2018. Decision-Based Adversarial Attacks: Reliable Attacks Against Black-Box Machine Learning Models. In 6th International Conference on Learning Representations, ICLR 2018, Vancouver, BC, Canada, April 30 - May 3, 2018, Conference Track Proceedings. OpenReview.net.</note>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<analytic>
+		<title level="a" type="main">Scarff: a scalable framework for streaming credit card fraud detection with spark</title>
+		<author>
+			<persName><forename type="first">F</forename><surname>Carcillo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Dal Pozzolo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y.-A</forename><surname>Le Borgne</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">O</forename><surname>Caelen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Mazzer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Bontempi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Information fusion</title>
+		<imprint>
+			<biblScope unit="volume">41</biblScope>
+			<biblScope unit="page" from="182" to="194" />
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Carcillo, F.; Dal Pozzolo, A.; Le Borgne, Y.-A.; Caelen, O.; Mazzer, Y.; and Bontempi, G. 2018. Scarff: a scalable framework for streaming credit card fraud detection with spark. Information fusion 41: 182-194.</note>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<analytic>
+		<title level="a" type="main">Towards Evaluating the Robustness of Neural Networks</title>
+		<author>
+			<persName><forename type="first">N</forename><surname>Carlini</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">A</forename><surname>Wagner</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/SP.2017.49</idno>
+		<ptr target="https://doi.org/10.1109/SP.2017" />
+	</analytic>
+	<monogr>
+		<title level="m">2017 IEEE Symposium on Security and Privacy, SP 2017</title>
+		<meeting><address><addrLine>San Jose, CA, USA</addrLine></address></meeting>
+		<imprint>
+			<publisher>IEEE Computer Society</publisher>
+			<date type="published" when="2017-05-22">2017. May 22-26, 2017</date>
+			<biblScope unit="page" from="39" to="57" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Carlini, N.; and Wagner, D. A. 2017. Towards Evaluating the Robustness of Neural Networks. In 2017 IEEE Sympo- sium on Security and Privacy, SP 2017, San Jose, CA, USA, May 22-26, 2017, 39-57. IEEE Computer Society. URL https://doi.org/10.1109/SP.2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<analytic>
+		<title level="a" type="main">Audio Adversarial Examples: Targeted Attacks on Speech-to-Text</title>
+		<author>
+			<persName><forename type="first">N</forename><surname>Carlini</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">A</forename><surname>Wagner</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/SP.2017.49</idno>
+	</analytic>
+	<monogr>
+		<title level="m">2018 IEEE Security and Privacy Workshops, SP Workshops 2018</title>
+		<meeting><address><addrLine>San Francisco, CA, USA</addrLine></address></meeting>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2018-05-24">2018. May 24, 2018</date>
+			<biblScope unit="page" from="1" to="7" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Carlini, N.; and Wagner, D. A. 2018. Audio Adversarial Examples: Targeted Attacks on Speech-to-Text. In 2018 IEEE Security and Privacy Workshops, SP Workshops 2018, San Francisco, CA, USA, May 24, 2018, 1-7. IEEE.</note>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<analytic>
+		<title level="a" type="main">Hop-SkipJumpAttack: A Query-Efficient Decision-Based Attack</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">I</forename><surname>Jordan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">J</forename><surname>Wainwright</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">2020 IEEE Symposium on Security and Privacy, SP 2020</title>
+		<meeting><address><addrLine>San Francisco, CA, USA</addrLine></address></meeting>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2020-05-18">2020. May 18-21, 2020</date>
+			<biblScope unit="page" from="1277" to="1294" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Chen, J.; Jordan, M. I.; and Wainwright, M. J. 2020. Hop- SkipJumpAttack: A Query-Efficient Decision-Based Attack. In 2020 IEEE Symposium on Security and Privacy, SP 2020, San Francisco, CA, USA, May 18-21, 2020, 1277-1294. IEEE.</note>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">ZOO: Zeroth Order Optimization Based Black-box Attacks to Deep Neural Networks without Training Substitute Models</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Sharma</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Yi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Hsieh</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 10th ACM Workshop on Artificial Intelligence and Security, AISec@CCS 2017</title>
+		<editor>
+			<persName><forename type="first">B</forename><forename type="middle">M</forename><surname>Thuraisingham</surname></persName>
+		</editor>
+		<editor>
+			<persName><forename type="first">B</forename><surname>Biggio</surname></persName>
+		</editor>
+		<editor>
+			<persName><forename type="first">D</forename><forename type="middle">M</forename><surname>Freeman</surname></persName>
+		</editor>
+		<editor>
+			<persName><forename type="first">B</forename><surname>Miller</surname></persName>
+		</editor>
+		<editor>
+			<persName><forename type="first">A</forename><surname>Sinha</surname></persName>
+		</editor>
+		<meeting>the 10th ACM Workshop on Artificial Intelligence and Security, AISec@CCS 2017<address><addrLine>Dallas, TX, USA</addrLine></address></meeting>
+		<imprint>
+			<publisher>ACM</publisher>
+			<date type="published" when="2017-11-03">2017. November 3, 2017</date>
+			<biblScope unit="page" from="15" to="26" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Chen, P.; Zhang, H.; Sharma, Y.; Yi, J.; and Hsieh, C. 2017. ZOO: Zeroth Order Optimization Based Black-box Attacks to Deep Neu- ral Networks without Training Substitute Models. In Thuraising- ham, B. M.; Biggio, B.; Freeman, D. M.; Miller, B.; and Sinha, A., eds., Proceedings of the 10th ACM Workshop on Artificial Intelli- gence and Security, AISec@CCS 2017, Dallas, TX, USA, Novem- ber 3, 2017, 15-26. ACM.</note>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<analytic>
+		<title level="a" type="main">XGBoost: A Scalable Tree Boosting System</title>
+		<author>
+			<persName><forename type="first">T</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Guestrin</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</title>
+		<editor>
+			<persName><forename type="first">B</forename><surname>Krishnapuram</surname></persName>
+		</editor>
+		<editor>
+			<persName><forename type="first">M</forename><surname>Shah</surname></persName>
+		</editor>
+		<editor>
+			<persName><forename type="first">A</forename><forename type="middle">J</forename><surname>Smola</surname></persName>
+		</editor>
+		<editor>
+			<persName><forename type="first">C</forename><forename type="middle">C</forename><surname>Aggarwal</surname></persName>
+		</editor>
+		<editor>
+			<persName><forename type="first">D</forename><surname>Shen</surname></persName>
+		</editor>
+		<editor>
+			<persName><forename type="first">R</forename><surname>Rastogi</surname></persName>
+		</editor>
+		<meeting>the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining<address><addrLine>San Francisco, CA, USA</addrLine></address></meeting>
+		<imprint>
+			<publisher>ACM</publisher>
+			<date type="published" when="2016-08-13">2016. August 13-17, 2016</date>
+			<biblScope unit="page" from="785" to="794" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Chen, T.; and Guestrin, C. 2016. XGBoost: A Scalable Tree Boost- ing System. In Krishnapuram, B.; Shah, M.; Smola, A. J.; Aggar- wal, C. C.; Shen, D.; and Rastogi, R., eds., Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining, San Francisco, CA, USA, August 13-17, 2016, 785-794. ACM.</note>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<analytic>
+		<title level="a" type="main">Seq2Sick: Evaluating the Robustness of Sequence-to-Sequence Models with Adversarial Examples</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Cheng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Yi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Hsieh</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">The Thirty-Fourth AAAI Conference on Artificial Intelligence, AAAI 2020</title>
+		<meeting><address><addrLine>New York, NY, USA</addrLine></address></meeting>
+		<imprint>
+			<publisher>AAAI Press</publisher>
+			<date type="published" when="2020-02-07">2020. February 7-12, 2020</date>
+			<biblScope unit="page" from="3601" to="3608" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Cheng, M.; Yi, J.; Chen, P.; Zhang, H.; and Hsieh, C. 2020. Seq2Sick: Evaluating the Robustness of Sequence-to-Sequence Models with Adversarial Examples. In The Thirty-Fourth AAAI Conference on Artificial Intelligence, AAAI 2020, New York, NY, USA, February 7-12, 2020, 3601-3608. AAAI Press.</note>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<analytic>
+		<title level="a" type="main">Credit card fraud detection: a realistic modeling and a novel learning strategy</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Dal Pozzolo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Boracchi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">O</forename><surname>Caelen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Alippi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Bontempi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE transactions on neural networks and learning systems</title>
+		<imprint>
+			<biblScope unit="volume">29</biblScope>
+			<biblScope unit="issue">8</biblScope>
+			<biblScope unit="page" from="3784" to="3797" />
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Dal Pozzolo, A.; Boracchi, G.; Caelen, O.; Alippi, C.; and Bon- tempi, G. 2017. Credit card fraud detection: a realistic modeling and a novel learning strategy. IEEE transactions on neural net- works and learning systems 29(8): 3784-3797.</note>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<monogr>
+		<title level="m" type="main">AdverTorch v0. 1: An adversarial robustness toolbox based on pytorch</title>
+		<author>
+			<persName><forename type="first">G</forename><forename type="middle">W</forename><surname>Ding</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jin</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename></persName>
+		</author>
+		<idno type="arXiv">arXiv:1902.07623</idno>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Ding, G. W.; Wang, L.; and Jin, X. 2019. AdverTorch v0. 1: An adversarial robustness toolbox based on pytorch. arXiv preprint arXiv:1902.07623 .</note>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<monogr>
+		<title level="m" type="main">UCI Machine Learning Repository</title>
+		<author>
+			<persName><forename type="first">D</forename><surname>Dua</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Graff</surname></persName>
+		</author>
+		<ptr target="http://archive.ics.uci.edu/ml" />
+		<imprint>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Dua, D.; and Graff, C. 2017. UCI Machine Learning Repository. URL http://archive.ics.uci.edu/ml.</note>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<monogr>
+		<author>
+			<persName><forename type="first">I</forename><forename type="middle">J</forename><surname>Goodfellow</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Shlens</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Szegedy</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1412.6572</idno>
+		<title level="m">Explaining and harnessing adversarial examples</title>
+		<imprint>
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Goodfellow, I. J.; Shlens, J.; and Szegedy, C. 2014. Explaining and harnessing adversarial examples. arXiv preprint arXiv:1412.6572 .</note>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<monogr>
+		<author>
+			<persName><forename type="first">K</forename><surname>Grosse</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Manoharan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><surname>Papernot</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Backes</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Mc-Daniel</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1702.06280</idno>
+		<title level="m">On the (statistical) detection of adversarial examples</title>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Grosse, K.; Manoharan, P.; Papernot, N.; Backes, M.; and Mc- Daniel, P. 2017. On the (statistical) detection of adversarial ex- amples. arXiv preprint arXiv:1702.06280 .</note>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<monogr>
+		<title level="m" type="main">PermuteAttack: Counterfactual Explanation of Machine Learning Credit Scorecards</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Hashemi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Fathi</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2008.10138</idno>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Hashemi, M.; and Fathi, A. 2020. PermuteAttack: Counterfac- tual Explanation of Machine Learning Credit Scorecards. arXiv preprint arXiv:2008.10138 .</note>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<analytic>
+		<title level="a" type="main">Adversarial Attacks on Neural Network Policies</title>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">H</forename><surname>Huang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><surname>Papernot</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">I</forename><forename type="middle">J</forename><surname>Goodfellow</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Duan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Abbeel</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">5th International Conference on Learning Representations, ICLR 2017</title>
+		<title level="s">Workshop Track Proceedings</title>
+		<meeting><address><addrLine>Toulon, France</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2017-04-24">2017. April 24-26, 2017</date>
+		</imprint>
+	</monogr>
+	<note>OpenReview.net</note>
+	<note type="raw_reference">Huang, S. H.; Papernot, N.; Goodfellow, I. J.; Duan, Y.; and Abbeel, P. 2017. Adversarial Attacks on Neural Network Poli- cies. In 5th International Conference on Learning Representations, ICLR 2017, Toulon, France, April 24-26, 2017, Workshop Track Proceedings. OpenReview.net.</note>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<monogr>
+		<title level="m" type="main">Not All Datasets Are Born Equal: On Heterogeneous Data and Adversarial Examples</title>
+		<author>
+			<persName><forename type="first">E</forename><surname>Levy</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Mathov</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Katzir</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Shabtai</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Elovici</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2010.03180</idno>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Levy, E.; Mathov, Y.; Katzir, Z.; Shabtai, A.; and Elovici, Y. 2020. Not All Datasets Are Born Equal: On Heterogeneous Data and Ad- versarial Examples. arXiv preprint arXiv:2010.03180 .</note>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<analytic>
+		<title level="a" type="main">Towards Deep Learning Models Resistant to Adversarial Attacks</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Madry</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Makelov</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Schmidt</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Tsipras</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Vladu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">6th International Conference on Learning Representations, ICLR 2018</title>
+		<title level="s">Conference Track Proceedings</title>
+		<meeting><address><addrLine>Vancouver, BC, Canada</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2018-04-30">2018. April 30 -May 3, 2018</date>
+		</imprint>
+	</monogr>
+	<note>OpenReview.net</note>
+	<note type="raw_reference">Madry, A.; Makelov, A.; Schmidt, L.; Tsipras, D.; and Vladu, A. 2018. Towards Deep Learning Models Resistant to Adversarial Attacks. In 6th International Conference on Learning Representa- tions, ICLR 2018, Vancouver, BC, Canada, April 30 -May 3, 2018, Conference Track Proceedings. OpenReview.net.</note>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<analytic>
+		<title level="a" type="main">The application of data mining techniques in financial fraud detection: A classification framework and an academic review of literature</title>
+		<author>
+			<persName><forename type="first">E</forename><forename type="middle">W</forename><surname>Ngai</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Hu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><forename type="middle">H</forename><surname>Wong</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Sun</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Decision support systems</title>
+		<imprint>
+			<biblScope unit="volume">50</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="559" to="569" />
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ngai, E. W.; Hu, Y.; Wong, Y. H.; Chen, Y.; and Sun, X. 2011. The application of data mining techniques in financial fraud detection: A classification framework and an academic review of literature. Decision support systems 50(3): 559-569.</note>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<monogr>
+		<author>
+			<persName><forename type="first">M.-I</forename><surname>Nicolae</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Sinn</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">N</forename><surname>Tran</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Buesser</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Rawat</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Wistuba</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">V</forename><surname>Zantedeschi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><surname>Baracaldo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Ludwig</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1807.01069</idno>
+		<title level="m">Adversarial Robustness Toolbox</title>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+			<biblScope unit="volume">1</biblScope>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Nicolae, M.-I.; Sinn, M.; Tran, M. N.; Buesser, B.; Rawat, A.; Wis- tuba, M.; Zantedeschi, V.; Baracaldo, N.; Chen, B.; Ludwig, H.; et al. 2018. Adversarial Robustness Toolbox v1. 0.0. arXiv preprint arXiv:1807.01069 .</note>
+</biblStruct>
+
+<biblStruct xml:id="b22">
+	<monogr>
+		<author>
+			<persName><forename type="first">N</forename><surname>Papernot</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Faghri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><surname>Carlini</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">I</forename><surname>Goodfellow</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Feinman</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Kurakin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Xie</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Sharma</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Brown</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Roy</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1610.00768</idno>
+		<title level="m">Technical report on the cleverhans v2. 1.0 adversarial examples library</title>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Papernot, N.; Faghri, F.; Carlini, N.; Goodfellow, I.; Feinman, R.; Kurakin, A.; Xie, C.; Sharma, Y.; Brown, T.; Roy, A.; et al. 2016a. Technical report on the cleverhans v2. 1.0 adversarial examples li- brary. arXiv preprint arXiv:1610.00768 .</note>
+</biblStruct>
+
+<biblStruct xml:id="b23">
+	<monogr>
+		<title level="m" type="main">Transferability in machine learning: from phenomena to black-box attacks using adversarial samples</title>
+		<author>
+			<persName><forename type="first">N</forename><surname>Papernot</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Mcdaniel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">I</forename><surname>Goodfellow</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1605.07277</idno>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Papernot, N.; McDaniel, P.; and Goodfellow, I. 2016. Transfer- ability in machine learning: from phenomena to black-box attacks using adversarial samples. arXiv preprint arXiv:1605.07277 .</note>
+</biblStruct>
+
+<biblStruct xml:id="b24">
+	<analytic>
+		<title level="a" type="main">The Limitations of Deep Learning in Adversarial Settings</title>
+		<author>
+			<persName><forename type="first">N</forename><surname>Papernot</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><forename type="middle">D</forename><surname>Mcdaniel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Jha</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Fredrikson</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><forename type="middle">B</forename><surname>Celik</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Swami</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">IEEE European Symposium on Security and Privacy</title>
+		<meeting><address><addrLine>EuroS&amp;P; Saarbrücken, Germany</addrLine></address></meeting>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2016-03-21">2016. 2016. March 21-24, 2016</date>
+			<biblScope unit="page" from="372" to="387" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Papernot, N.; McDaniel, P. D.; Jha, S.; Fredrikson, M.; Celik, Z. B.; and Swami, A. 2016b. The Limitations of Deep Learning in Adver- sarial Settings. In IEEE European Symposium on Security and Pri- vacy, EuroS&amp;P 2016, Saarbrücken, Germany, March 21-24, 2016, 372-387. IEEE.</note>
+</biblStruct>
+
+<biblStruct xml:id="b25">
+	<monogr>
+		<title level="m" type="main">Foolbox: A python toolbox to benchmark the robustness of machine learning models</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Rauber</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><surname>Brendel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Bethge</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1707.04131</idno>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Rauber, J.; Brendel, W.; and Bethge, M. 2017. Foolbox: A python toolbox to benchmark the robustness of machine learning models. arXiv preprint arXiv:1707.04131 .</note>
+</biblStruct>
+
+<biblStruct xml:id="b26">
+	<monogr>
+		<title level="m" type="main">Intriguing properties of neural networks</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Szegedy</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><surname>Zaremba</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">I</forename><surname>Sutskever</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Bruna</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Erhan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">I</forename><surname>Goodfellow</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Fergus</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1312.6199</idno>
+		<imprint>
+			<date type="published" when="2013">2013</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Szegedy, C.; Zaremba, W.; Sutskever, I.; Bruna, J.; Erhan, D.; Goodfellow, I.; and Fergus, R. 2013. Intriguing properties of neural networks. arXiv preprint arXiv:1312.6199 .</note>
+</biblStruct>
+
+<biblStruct xml:id="b27">
+	<analytic>
+		<title level="a" type="main">Learning in the presence of concept drift and hidden contexts</title>
+		<author>
+			<persName><forename type="first">G</forename><surname>Widmer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Kubat</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Machine learning</title>
+		<imprint>
+			<biblScope unit="volume">23</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="69" to="101" />
+			<date type="published" when="1996">1996</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Widmer, G.; and Kubat, M. 1996. Learning in the presence of con- cept drift and hidden contexts. Machine learning 23(1): 69-101.</note>
+</biblStruct>
+
+<biblStruct xml:id="b28">
+	<monogr>
+		<title level="m" type="main">A hierarchical security architecture for cyber-physical systems</title>
+		<author>
+			<persName><forename type="first">Q</forename><surname>Zhu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Rieger</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Bas ¸ar</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2011">2011. 2011</date>
+			<biblScope unit="page" from="15" to="20" />
+		</imprint>
+	</monogr>
+	<note>4th international symposium on resilient control systems</note>
+	<note type="raw_reference">Zhu, Q.; Rieger, C.; and Bas ¸ar, T. 2011. A hierarchical security ar- chitecture for cyber-physical systems. 2011 4th international sym- posium on resilient control systems 15-20.</note>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

@@ -1,0 +1,2251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">Credit card fraud detection using machine learning: A survey</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability  status="unknown">
+					<licence/>
+				</availability>
+				<date type="published" when="2020-10-14">October 14, 2020</date>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><roleName>Dr</roleName><forename type="first">Yvan</forename><surname>Lucas</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="institution" key="instit1">INSA Lyon</orgName>
+								<orgName type="institution" key="instit2">University of Passau</orgName>
+							</affiliation>
+						</author>
+						<author>
+							<persName><roleName>Dr</roleName><forename type="first">Johannes</forename><surname>Jurgovsky</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="institution" key="instit1">INSA Lyon</orgName>
+								<orgName type="institution" key="instit2">University of Passau</orgName>
+							</affiliation>
+						</author>
+						<title level="a" type="main">Credit card fraud detection using machine learning: A survey</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date type="published" when="2020-10-14">October 14, 2020</date>
+						</imprint>
+					</monogr>
+					<idno type="MD5">A9379AACE64669E7006738C4B2A40C09</idno>
+					<idno type="arXiv">arXiv:2010.06479v1[cs.LG]</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.2-SNAPSHOT" ident="GROBID" when="2026-08-31T18:10+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>Credit card fraud has emerged as major problem in the electronic payment sector. In this survey, we study data-driven credit card fraud detection particularities and several machine learning methods to address each of its intricate challenges with the goal to identify fraudulent transactions that have been issued illegitimately on behalf of the rightful card owner.</p><p>In particular, we first characterize a typical credit card detection task: the dataset and its attributes, the metric choice along with some methods to handle such unbalanced datasets. These questions are the entry point of every credit card fraud detection problem.</p><p>Then we focus on dataset shift (sometimes called concept drift), which refers to the fact that the underlying distribution generating the dataset evolves over times: For example, card holders may change their buying habits over seasons and fraudsters may adapt their strategies. This phenomenon may hinder the usage of machine learning methods for real world datasets such as credit card transactions datasets.</p><p>Afterwards we highlights different approaches used in order to capture the sequential properties of credit card transactions. These approaches range from feature engineering techniques (transactions aggregations for example) to proper sequence modeling methods such as recurrent neural networks (LSTM) or graphical models (hidden markov models).</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>Both credit card fraud and its detection are very specialized domains that attract interest from a small highly specialized audience. However, we believe that with this survey we may help both researchers and practitioners who recently started working in this field to bootstrap the most elemental detection ideas and to get a general overview of the area.</p><p>Indeed, credit card fraud detection is a crucial asset for ensuring customer trust and saving money by preventing fraudulent loss. However, credit card fraud detection presents several characteristics that make it a challenging task.</p><p>Skewed class distributions Most transactions are legitimate and only a very small fraction of the transactions has been issued by fraudsters. Some algorithms such as Support Vector Machines for example suffer a lot from class imbalance and can be completely unable to learn the minority class specific patterns ( <ref type="bibr" target="#b88">[Wu and Chang, 2003]</ref>, <ref type="bibr" target="#b89">[Yan et al., 2003]</ref>). Solutions have been presented in the literature in order to either adapt the algorithms (cost based methods for example) to imbalance or solve the imbalance in the data (sampling based methods).</p><p>Dataset shift Fraudsters tactics evolve over time. Some fraud strategies become out of date because of the constant cat and mouse play between fraudsters and experts, and new technologies show weaknesses that can be exploited by fraudster. Moreover, cardholders behaviours change over seasons. . The combination of the aforementioned factors makes typical algorithms become out of date or irrelevant. Real world algorithms have to be designed in order to be updated regularly or with ways to detect a decreasing efficiency. Besides, online learning schemes are very useful in order to prevent concept drift and covariate shift to affect the fraud detection systems.</p><p>Feature engineering Credit card transactions are represented as vectors of continuous, categorical and binary features that characterize the card-holder, the transaction and the terminal. However, most learning algorithms can't handle categorical feature without a preprocessing step in order to transform them into numerical features <ref type="bibr" target="#b48">(Kotsiantis [2007]</ref>). Additionally, specific feature engineering strategies for credit card detection exist. These strategies either aim to make the features more significant for the classifier or to create additional features in order to enrich transaction data.</p><p>Sequence modeling A major issue of typical credit card transaction dataset is that the feature set describing a credit card transaction usually ignores detailed sequential information. Therefore, the predictive models only use raw transactional features, such as time, amount, merchant category, etc. <ref type="bibr" target="#b13">Bolton and Hand [2001]</ref> showed the necessity to use features describing the history of the transaction. Indeed, credit card transactions of the same cardholder (or the same terminal) can be grouped together and compared to each other.</p><p>Interpretability Aside from the aforementioned research questions, interpretability of the machine learning algorithm's decision is a crucial concern for the industry who is one of the targeted user group of applied data science research work such as credit card fraud detection. Research has been done in order to understand better on which heuristics model decisions are based <ref type="bibr" target="#b64">(Pastor and Baralis [2019]</ref> for example). This stake also holds for the understanding of performance metrics by non machine learning experts.</p><p>Each of these challenges have been tackled in various ways over the 20 past years.</p><p>In this survey, we highlight works from different teams that aimed to solve the different credit card fraud detection challenges in order to provide a sound starting point to anyone wanting to dig in the field of credit card fraud detection.</p><p>1 Credit card fraud detection entry point: dataset and evaluation</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1.1">Credit card transactions dataset</head><p>Payment data contains very sensitive private information about individuals and businesses and access to such data is highly restricted to only the data owners and the companies that manage the data. Which is the reason why there is no publicly available data set that would sufficiently reflect the magnitude and variety of real-world card payments and that could therefore be considered as a basis for studying the many interesting challenges present in this domain.</p><p>The only credit card transactions we were able to find 1 was a small sample of 280.000 transactions with PCA-transformed features 2 published alongside a study which was conducted jointly together with the exact same payment service provider <ref type="bibr">[Pozzolo et al., 2015]</ref>. This scarcity of publicly available real-world data is problematic for the research community, since it compromises transparency, comparability and reproducibility of published findings.</p><p>As listed in table 1, transactions are characterized by several attributes. We can broadly categorize them into attributes characterizing the transaction itself, attributes characterizing the card holder/card that issues a transaction and attributes characterizing the merchant who receives the transaction. In addition, each card holder and each merchant is assigned a unique identifier.</p><p>The fraud label is binary and it indicates the authenticity of a transaction. The label was assigned by human investigators after consultation with the card holder. The label takes the value 0 in most of the cases. Only when a transaction has been identified as having been issued by a third party and not the rightful card holder, is the label set to 1, which flags the transaction as fraudulent. Throughout the paper we will refer to the label as the fraud label or the class of the transaction.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1.2">Performance Measures</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1.2.1">Confusion matrix based evaluation</head><p>Traditional ways of evaluating machine learning classifiers use the confusion matrix describing the difference between the ground truth of the dataset and the model prediction.</p><p>Using the confusion matrix, one can compute a variety of metrics in order to compare classifiers performances: The kind of transaction issued.</p><p>A real payment (e.g. e-commerce) or a virtual transaction (3D-secure ACS).</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>ecom, 3DSecureACS</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Authentication</head><p>The kind of authentication experienced by the card holder:</p><p>Chip-based PIN check, signature, 3D-secure.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>emv, authentication, 3DSecure</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Entry mode</head><p>The interaction modality between the card and the terminal: e.g. contactless, magentic stripe, manual entry.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>cardEntryMode</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Amount</head><p>The transacted monetary value.</p><p>amount</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Fraud label</head><p>The manually assigned label indicating whether a transaction was a fraud. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>creditLimit, cardType, expiryDate</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Merchant</head><p>Declarative profile Two attributes describing the terminal: The merchant category code assigned to the terminal (e.g. shoe store, ATM, etc.) and the country the terminal is registered in (e.g. Belgium, Germany, etc.)</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>terminalCategory, terminalCountry</head><p>Table 1: Transactions are described along three groups of attributes: Transaction related, card holder related and merchant related. Underlined attributes are in fact collections of several attributes. Examples of attributes in the collection are listed in the description. sion is detrimental for the recall and vice versa. F1 score is the harmonic mean between precision and recall and therefore gives equal importance to precision and recall. For this reason, this metric which takes values between 0 and 1 is often considered a good by default metric for unbalanced classification tasks:</p><formula xml:id="formula_0">F 1 = 2 * P recision * Recall P recision + Recall = 2 * 2T P 2T P + F P + F N MCC Matthews correlation coefficient is another score that is robust to imbal-</formula><p>ance <ref type="bibr" target="#b65">Power [2011]</ref>. It is related to the chi-square statistic and takes values between -1 and 1. For binary classification:</p><formula xml:id="formula_1">M CC = T P × T N -F P × F N (T P + F P )(T P + F N )(T N + F P )(T N + F N )</formula><p>Confusion matrix based metrics are a good starting point for evaluating classifiers' performances. However these metrics are point estimators and some users may want to have a fine grained knowledge of how the classifiers are performing over all the domains of the testing set. Parametric evaluation of classifier performance allows for that more fine grained look at the classifiers' behaviours.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1.2.2">Parametric evaluation</head><p>Some machine learning classifiers like random forest, neural networks, SVM, logistic regression classifier, etc. output a set of n predictions for each example corresponding to their confidence that each example belongs to each of the n classes.</p><p>By changing the value of a threshold parameter through all the possible values of probabilities obtainable with the machine learning classifier, one can monitor the efficiency of the prediction for each examples: from the most obvious to classify to the least obvious. In fine, parametric evaluation can be seen as an evaluation of all the possible confusion matrices obtainable given a prediction vector.</p><p>When doing a parametric evaluation, two curves are usually plotted: the ROC (Receiving Operating Characteristic) curve and the precision-recall curve</p><p>• The ROC curve's axes are: true positive rate (i.e. recall) for the y-axis and false positive rate for the x-axis. Both axes are proportion of the class they are representing: positive for the true positive rate and negative for the false positive rate. Therefore, the ROC curve is insensitive to unbalanced datasets: differences in class effectives won't affect the overall shape of the curve.</p><p>• The Precision-Recall curve axis are the precision for the y-axis and the recall for the x-axis. As for the axis of the ROC curve, the recall is a ratio of the positive class: it represents the proportion of example of the positive class identified. However, the precision is based on both positive class (TP) and negative class (FP) effectives. Therefore, a strong class imbalance (such as credit card fraud detection imbalance) would affect the precision values since the classification is harder. The precision recall curve is more punitive than ROC curve and consequently more challenging to improve: in a context of class imbalance, the precision value is closer to 0 and therefore the precision recall area under the curve decreases. Besides, we experienced that the precision recall curve is easier to read for industrial partners.</p><p>According to domain application needs, the area under a portion of the curve can also be calculated. For example, for credit card fraud detection evaluation, the need to calculate the AUC for values of recall below 0.2 was discussed since the experts can only investigate a limited number of alerts. Some others Further details about the intricacies in interpreting ROC curves versus precision recall curves have been discussed in <ref type="bibr" target="#b72">[Saito and Rehmsmeier, 2015]</ref> and <ref type="bibr" target="#b20">[Davis and Goadrich, 2006]</ref>. Although the interpolation between points requires special care, the area under the precision recall curve (AUCPR) can serve as a singlevalued aggregate measure of a classifier's performance <ref type="bibr" target="#b35">[Hand, 2009]</ref>. In fig. <ref type="figure" target="#fig_1">2</ref> we illustrate several measures that can be derived from a precision recall curve:</p><p>• Precision at K (P@K): The proportion of true-positives in the set of K transactions with the highest scores. Each choice of K corresponds to a specific level of recall on the x-axis.</p><p>• Area under the precision recall curve (AUCPR): The integral of precision over all levels of recall over the interval [0, 1].</p><p>• Area in the early retrieval range (AUCPR@0.2): The integral of precision over recall levels from 0 to 0.2. Instead of reporting precision at several values of K, we use this early retrieval range to reflect the applicationspecific focus on high precision in the range of low recall.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2">Learning to classify unbalanced datasets</head><p>Typical fraud detection tasks present a strong imbalance in the representations of the classes: Usually there is a majority genuine class that outweighs the mi-nority fraudulent class Ali et al. <ref type="bibr">[2019]</ref>.</p><p>Most learning algorithms are not adapted to a strong imbalance in the representations of classes in the dataset. Therefore, learning from unbalanced dataset is a challenging research question that needs to be considered <ref type="bibr" target="#b6">(Batista et al. [2000]</ref>). <ref type="bibr" target="#b84">Weiss and Provost [2001]</ref> and <ref type="bibr" target="#b26">Estabrooks et al. [2004]</ref> observed that an unbalanced dataset leads to a decrease in the performance of standard learning algorithms such as SVM or random forest. In fact, class imbalance have been shown to produce a negative effect on the performance of a wide variety of classifiers <ref type="bibr" target="#b16">(Chawla [2005]</ref>). <ref type="bibr" target="#b39">Japkowicz and Stephen [2002]</ref> have shown that skewed class distributions affects negatively the performance of decision trees and neural networks. <ref type="bibr" target="#b79">Visa and Ralescu [2005]</ref> drew the same conclusion for neural networks. <ref type="bibr" target="#b50">Kubat and Matwin [1997]</ref>, <ref type="bibr" target="#b60">Mani and Zhang [2003]</ref> and <ref type="bibr" target="#b7">Batista et al. [2004]</ref> showed the weakness of k Nearest Neighbors algorithms to imbalanced datasets. <ref type="bibr" target="#b89">Yan et al. [2003]</ref> and <ref type="bibr" target="#b88">Wu and Chang [2003]</ref> showed that SVM were also weak to skewed class distributions. Overall, most of the classifiers suffer from class imbalance, some more than others.</p><p>The strategies used to tackle this issue operate at two different levels: some aim to solve the imbalance of the dataset beforehand whereas others want to adapt the learning algorithm to make it robust to an unbalanced classification task <ref type="bibr" target="#b19">(Chawla et al. [2004]</ref>, <ref type="bibr">Pozzolo [2015]</ref>).</p><p>The data level strategies are called like that since they happen during the preprocessing time, before any learning algorithm is applied. They consist in rebalancing the dataset in order to compensate the structural imbalance. The algorithmic level strategies involve methods where the algorithms are designed especially to deal with an unbalanced task and methods where the classification costs of the algorithm are adapted in order to reflect the priorities of the unbalanced classification task. The latter are called cost sensitive classifiers <ref type="bibr" target="#b24">(Elkan [2001]</ref>).</p><p>The sampling based solutions to handle imbalance will be described in section 2.1. The model based methods will be briefly highlighted in section 2.2</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.1">Sampling methods</head><p>Sampling methods consist in reducing the class imbalance by changing the class effectives in the dataset. In this section we will first present two naive methods that reduce class imbalance in the dataset by adjusting class ratios: undersampling and oversampling. Afterwards we will introduce the Synthetic Minority Oversampling Technique strategy (SMOTE) that aims to create new examples of the minority class <ref type="bibr" target="#b17">(Chawla et al. [2002]</ref>). The different strategies are illustrated in figure <ref type="figure" target="#fig_2">3</ref>.</p><p>Undersampling consists in rebalancing the dataset by taking less examples from the majority class in order to match the absolute number of examples of the minority class <ref type="bibr" target="#b23">(Drummond and Holte [2003]</ref>). The assumption made with undersampling is that the majority class contains redundant information that can be removed. The main issue with undersampling is that, when the imbalance is too pronounced, too many examples from the majority class need to be taken away. This may cause a decrease in the performance of the algorithm due to a lack of data. It is worth mentioning that undersampling speeds up the learning phase, which makes it an interesting choice when in presence of an unbalanced dataset.</p><p>Oversampling consists in rebalancing the dataset by repeating random examples of the minority class <ref type="bibr" target="#b23">(Drummond and Holte [2003]</ref>). The main issue of oversampling is that repeating some examples doesn't add information and may lead to an overfitting of the learning algorithms. Besides, oversampling increases the learning time since it makes the train-set artificially bigger. <ref type="bibr">In 2002</ref><ref type="bibr" target="#b17">, Chawla et al. [2002]</ref> introduce SMOTE, a strategy to reduce class imbalance by creating new examples in the neighbourhood of the minority class. The creation of new minority class example is done by averaging neighboring examples of the minority class. For categorical features, the averaging consists in a majority voting for the category: the category mostly represented in the neighbourhood becomes the category of the corresponding categorical feature of the newly created example. They show an increase in the performance of classifier when using this rebalancing strategy. However SMOTE does not consider the label of neighboring examples when creating examples from the minority class. This can lead to an overlap between minority and majority classes. <ref type="bibr">ADASYN He et al. [2008]</ref> and Borderline-SMOTE <ref type="bibr" target="#b34">Han et al. [2005]</ref> tackle this issue by taking into account only neighboring examples from the minority class.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.2">Model based methods</head><p>Some solutions were published in order to strengthen ensemble based methods when in presence of class imbalance. EasyEnsemble <ref type="bibr" target="#b55">(Liu et al. [2009]</ref>), Un-derBagging <ref type="bibr" target="#b82">(Wang et al. [2009]</ref>) and <ref type="bibr">SMOTEboost (Chawla et al. [2003]</ref>) are ensemble based method that are adapted by design to skewed class distributions. <ref type="bibr">SMOTEboost (Chawla et al. [2003]</ref>) combines boosting with SMOTE in order to provide balanced datasets to each boosting weak learner. Similarly, EasyEnsemble <ref type="bibr" target="#b55">(Liu et al. [2009]</ref>) uses undersampling in order to create different balanced datasets for the boosting learners. In UnderBagging <ref type="bibr" target="#b82">(Wang et al. [2009]</ref>) undersampled datasets are used to train several learners whose predictions are aggregated with bagging.</p><p>An other leverage for dealing with class imbalance is to adapt the metrics used to evaluate the models and the costs used to train some of them in order to counterbalance class imbalance. Indeed, some real world imbalanced classification tasks such as credit card fraud detection give more importance to correctly identify the element of the minority class than those of the majority class. In the case of cost sensitive learners, the misclassification cost can be adapted in order to reflect this priority. <ref type="bibr" target="#b74">Shirazi and Vasconcelos [2010]</ref> present cost sensitive SVMs. <ref type="bibr" target="#b51">Kukar and Kononenko [1998]</ref> introduced earlier the possibility of cost adaptation for neural networks. Adapting the misclassification cost for imbalanced problem has also been studied for boosting methods <ref type="bibr" target="#b78">(Sun et al. [2007]</ref>, <ref type="bibr" target="#b27">Fan et al. [1999]</ref>).</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3">Dataset shift detection and adaptation</head><p>Many machine learning tasks make the assumption that the random variables in the data are i.i.d. (independent and identically distributed) among the train and the test sets. That property ensures that the decision function learned by the classifier on the train set is valid on the testing set. However in some case the i.i.d. hypothesis isn't valid: there are changes in the data distribution between the training and testing set. These changes of the data distribution can decrease drastically the performances of the classifiers <ref type="bibr" target="#b66">(Pozzolo et al. [2014]</ref>, <ref type="bibr" target="#b0">Abdallah et al. [2016]</ref>, <ref type="bibr" target="#b1">Alaiz-Rodriguez and Japkowicz [2008]</ref>) and need to be taken into account.</p><p>The term "dataset shift" is used in order to include the phenomenons where the i.i.d. hypothesis isn't valid. It is defined by <ref type="bibr" target="#b62">Moreno-Torres et al. [2012]</ref> as "cases where the joint distribution of inputs and outputs differs between training and test stage" Dataset shift of various types have been shown to affect classifiers performance. <ref type="bibr" target="#b1">Alaiz-Rodriguez and Japkowicz [2008]</ref> showed that complex classifiers are more robust to population drift than simple classifiers.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.1">Different types of dataset shift</head><p>Dataset shift is a broad word that refers to a change in the joint distribution of the target variable and the input features p(x, y). However, since p(x, y) = p(y|x) * p(x), the causes of the change in the joint distribution can be different. Several shifting phenomenon can be identified <ref type="bibr" target="#b62">(Moreno-Torres et al. [2012]</ref>, <ref type="bibr" target="#b76">Storkey [2009]</ref>, <ref type="bibr" target="#b30">Gao et al. [2007]</ref>, Shimodaira <ref type="bibr">[2000]</ref>):</p><p>• Covariate shift was formerly called population drift. It refers to the phenomenon when the conditional distribution of the classes with respect to the training data doesn't change from the train set to the test set, but the distribution of the data do. For example in the credit card fraud detection settings, the phenomenon where the buying behaviors change over seasons but the fraudulent strategies don't can be seen as covariate shift.</p><p>It is formally defined as:</p><formula xml:id="formula_2">p train (y|x) = p test (y|x) and p train (x) = p test (x)<label>(1)</label></formula><p>• Prior probability shift is an other subtype of dataset shift. It is also sometimes called shifting priors. Prior probability shift refers to a change in the class distributions: for example when the proportion of fraudulent transactions in the training set is way smaller than for the testing set. It may cause a over-representation or an under-representation of one class in the prediction of machine learning classifiers. It is formally defined as:</p><formula xml:id="formula_3">p train (y|x) = p test (y|x) and p train (y) = p test (y)<label>(2)</label></formula><p>• Concept drift is the type of shift that appears the most in the credit card fraud detection literature.Concept shift or more often concept drift refers to the phenomenon where the conditional distribution of the target classes with respect to the input variables changes. For example when fraudster adapt their strategies and the classifier is not able to detect fraudulent transactions efficiently anymore. It is formally defined as:</p><formula xml:id="formula_4">p train (y|x) = p test (y|x) and p train (x) = p test (x) (3)</formula></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.2">Detecting dataset shift</head><p>Most of the studies passively detect dataset shift when a decrease in classifiers performance on the test set is witnessed <ref type="bibr">(Pozzolo [2015]</ref>, Gomes et al.</p><p>[2017],...).</p><p>In order to prevent the decrease of the classifier performance, some teams aimed to estimate more realistically the expected performance of classifiers in presence of dataset shift. For example, <ref type="bibr" target="#b83">Webb and Ting [2005]</ref> pointed out the weaknesses of the ROC evaluation in presence of prior probability shift. Earlier, Kelly et al.</p><p>[1999] stated that the weaknesses of classifiers in presence of covariate shift and prior probability shift can be highlighted with the decrease of classifiers performance for their loan risk prediction task. Additionally, <ref type="bibr" target="#b77">Sugiyama et al. [2007]</ref> discussed the issues appearing when classifier performance expectation is set using a cross validation hyper-parameter optimization: cross validation expectations can't be trusted if the distribution changes between train and test set. They proposed a cost based approach by comparing the data distribution p(x) in the train and test set and weighting more the data points of the train set that are similar to those of the test set for the cross validation optimization. If the data point is typical of the train and test distribution, then it is weighted more for the evaluation of the model. <ref type="bibr" target="#b44">Karax et al. [2019]</ref> provided interesting results where they showed how to describe in advance the concept shift in two dataset (Airlines and Sea<ref type="foot" target="#foot_0">foot_0</ref> ) by looking directly at the changes in the decision function through the changes of feature importance in an adaptive random forest classifier (described in next paragraph) Gomes et al. <ref type="bibr">[2017]</ref>. They could therefore predict the direction of the dataset shift and the resulting change in the conditional distribution p(y|x). Earlier, <ref type="bibr" target="#b53">Lane and Brodley [1998]</ref> tried to quantify the direction of drift on a continuous one dimensional axis by looking at which examples get misclassified when concept drift happens. An optimization of the threshold value of their classifier was managed in the decision process of their user identification for computer security task. Similarly, <ref type="bibr" target="#b81">Wang et al. [2003]</ref> wanted to precisely characterize concept shift by comparing the class prediction between two classifiers trained before and after a concept shift (old training data vs recent training data). The examples that present a conflict for class prediction can then be studied in order to understand which changes happen between the conditional distributions p old (y|x) and p new (y|x) <ref type="bibr" target="#b57">[Lucas et al., 2019]</ref> introduced a technique to detect and quantify the extent of covariate shift between credit card transactions from different days. For each pair of days (a, b):</p><p>• they collect all transactions from these days D = D a ∪ D b and label the transactions according to the day they came from.</p><p>• They partition the sets of transactions and train a classifier to distinguish the day from which each transaction comes.</p><p>• They evaluate the classifier performance and use this value as a distance measure between days: the better the performance, the easier the differ-entiation of the days, the more different the transactions of these days, and vice versa.</p><p>Through manual inspection and after clustering, the authors can show that low "day distinguishability performance" clearly corresponds to calendar clusters of weekdays, Sundays and work holidays or Fridays and Saturdays (see figure <ref type="figure" target="#fig_3">4</ref>). </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.3">Strategies in presence of dataset shift</head><p>Data based methods Some authors chose to handle dataset shift by adapting the training and testing set in order to erase the shift between these sets. <ref type="bibr" target="#b33">Gretton et al. [2009]</ref> used reproducing kernel Hilbert spaces (RKHS) in order to weight instances in the training set so that the averages of the training set features correspond to those of the test set features. This kernel mean matching approach is mostly used in the context of covariate shift since it allows to make the distribution of the data in the train and test set more similar. <ref type="bibr" target="#b9">Bickel et al. [2007]</ref> leveraged this kernel mean matching approach for data streams. They derived the kernel mean matching approach in order to integrate it in the logistic regression classifier used and to update it over time. Similarly to the kernel mean matching approach, Moreno-Torres et al. <ref type="bibr">[2013]</ref> proposed a method in order to achieve transfer learning between different cancer diagnosis datasets.</p><p>They used genetic programming in order to create a regressor that transforms the features of one dataset to the features of an other dataset in order to be able to apply a pretrained classifier without adapting it.</p><p>In addition to kernel mean matching techniques, <ref type="bibr" target="#b46">Klinkenberg [2003]</ref> propose to train SVMs with an adaptive time window in order to prevent covariate shift.</p><p>Classifier based methods An other way to prevent concept drift is to update regularly the models in order to adapt them to the dataset shift.</p><p>At first, sliding windows based approaches have been explored. The idea is that by retraining them regularly using fresh data, the classifiers will stay up to date with dataset shift events. <ref type="bibr" target="#b86">Widmer and Kubat [1996]</ref> used a sliding window strategy for their FLORA4 framework: they trained regularly new classifiers on recent and trusted data but stored the bad performing ones for hypothetical later usage. <ref type="bibr" target="#b54">Lichtenwalter and Chawla [2009]</ref> also leveraged the sliding window strategy for imbalanced data streams with concept drift: they re-trained regularly C4,5 decision trees classifiers in order to prevent covariate shift. Moreover, they adapted the information gain calculation used when building decision trees by incorporating the Hellinger distance in order to increase the robustness of the C4,5 trees to class imbalance and to prior probability shift. The Hellinger distance is a symmetric and non-negative measure of similarity between two probability distributions. The equation 5 corresponds to the Hellinger distance between two discrete probability distributions with equal effectives P = (p 1 , ..., p k ) and Q = (q 1 , ..., q k ).</p><formula xml:id="formula_5">d H (P, Q) = i∈V ( √ P ) -Q) 2<label>(4)</label></formula><p>Figure <ref type="figure">5</ref>: Hellinger distance: Measure of distributional divergence between two probability distributions P and Q</p><p>Pozzolo <ref type="bibr">[2015]</ref> proposed a sliding window method for data streams with delayed information on the same credit card transactions dataset used in this thesis (see figure <ref type="figure" target="#fig_4">6</ref>). Since the ground truth for the class of credit card transactions is delayed by a week in average, the labels of the most recent transaction aren't known. They proposed to aggregate the predictions of a classifier on the old ground truth example with the predictions of a classifier trained on the feedbacks of the investigators on alerts raised previously by the fraud detection system. They showed that aggregating predictions provided better fraud detection than pooling all the examples of the ground truth and investigators feedback together. Instead of preventing dataset shift by constantly re-training the classifiers, one may want to retrain them only if they prove to be lackluster. <ref type="bibr" target="#b47">Kolter and Maloof [2003]</ref> proposed to train again the classifiers when their performance drop. In order to prevent missclassification for data streams, <ref type="bibr" target="#b37">Hoens et al. [2011]</ref> used Hellinger distance on all the features of the dataset in order to detect early a covariate shift and which features are affected by it. They would therefore be able to know which trees of a random forest classifier will be affected by the dataset shift and need to be re-trained.</p><p>More recently, authors in Gomes et al. <ref type="bibr">[2017]</ref>, <ref type="bibr" target="#b5">Barddal and Enembreck [2019]</ref> proposed an autonomous architecture for random forest classifier introducing a variant to Hoeffding Adaptive Tree in order to include a drift detector inside decision nodes to monitor the internal error rates of the tree, thus, continuously selecting features and building its predictive model over time. The Hoeffding Adaptive Trees (also called Very Fast Decision Trees) leverage the observation that using only a subset of examples in order to build a decision tree is sufficient to obtain good prediction <ref type="bibr" target="#b10">Bifet and Gavalda [2009]</ref>. This computationally efficient and memory efficient tree architecture is therefore an asset in dataset shift contexts where models or parts of the models have to be retrained regularly.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4">Feature Engineering</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.1">Feature Encoding</head><p>Most learning algorithms can not handle categorical variables with a large number of levels directly. Both supervised <ref type="bibr" target="#b48">[Kotsiantis, 2007]</ref> and unsupervised methods <ref type="bibr" target="#b52">[Lam et al., 2015]</ref> require preprocessing steps to transform them into numerical features. In this section, we discuss several common solutions for encoding categorical attributes such that they can be used in learning algorithms.</p><p>Label Encoding and One-hot encoding The most direct encoding of categorical attributes with K different values is to create discrete variables x ∈ {1, 2, . . . , K}. Depending on the learning algorithm, label encoding might not be adequate to represent categorical attributes. The distance on integers typically does not reflect the distance on the attribute's values and would cause misleading results in distance-based algorithms. On the other hand, One-Hot encoding is particularly convenient and commonly used in machine learning literature <ref type="bibr" target="#b11">[Bishop, 2006]</ref>. A categorical variable is represented by a K-dimensional vector x, in which one element x k is set to 1 and all remaining elements are set to 0.</p><p>Likelihood Encoding (also known as target encoding) The value of a nominal attribute is encoded by its relative frequency of showing up in the positive class in a training set. If the k-th state of a nominal attribute appears n p times in the positive class and n-n p times in the negative class, the state gets assigned the value x k = np n-np . This type of encoding requires class labels and it assumes that the nominal values' representation in both classes provides sufficient information to distinguish the values. Therefore, we consider this technique rather as a feature engineering method than an actual encoding technique.</p><p>Vector Embeddings The values of categorical attributes may not always be orthogonal as suggested by a one-hot coding scheme but they rather exhibit some notion of similarity relevant to the prediction task. For instance, an attribute like the terminal's country can be endowed with different notions of similarity based on geographical locations, economic alliances or cultural backgrounds. It is common practice in machine learning to account for such expert knowledge through purposefully encoded attributes. Even if the main motivation is not an integration of a-priori knowledge, categorical attributes with many different levels partition the set of examples into many small sets for which it might be challenging to obtain reliable parameter estimates. Vector embeddings are the outcome of unsupervised encoding techniques with the aim to embed the values of a categorical variable in a continuous valued vector space. The role of unsupervised methods is thereby to estimate a map c : X → V d from categorical values X to points in a d-dimensional vector space V d such that distances between points reflect some sought notion of similarity between categorical values. We keep this superficial description of vector embeddings because there is an abundance of techniques by which such maps can be created, each with its own definition and interpretation of c and V . For instance, the rows and columns in a tf-idf -matrix <ref type="bibr" target="#b41">[Jones, 1973]</ref> in information retrieval, the projections on the first d principal components in dimensionality reduction, the mixture coefficients in probabilistic models with mixture distributions <ref type="bibr" target="#b12">[Blei et al., 2001]</ref> or the weights in neural networks <ref type="bibr" target="#b61">[Mikolov et al., 2011]</ref>. Similar to the likelihood encoding, the continuity in the embedding space is assumed to permit reasonable interpolation between otherwise distinct categorical values. <ref type="bibr" target="#b70">Russac et al. [2018]</ref> for example, successfully used Word2Vec embeddings in order to replace one-hot encoding for a distance based classifier (logistic regression) in a credit card fraud detection task.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.2">Feature Engineering</head><p>In credit-card fraud detection, a fraud is supposedly not exclusively a property of the transaction itself but rather a property of both the transaction and the context it appeared in. While a transaction might arouse suspicion if, for instance, the spent monetary amount is very high and it takes place at a particular type of merchant at a certain time of day, such fraud detection strategy considers transactions in isolation from each other. Neither the historic purchases of the customer nor other transactions from the merchant he interacted with are taken into consideration. Two transactions occurring in geographically distant locations at almost the same time are often considered as suspicious patterns ("collisions"). Also, it may be that the volume of transactions per time (in an account) is more indicative of fraud than the absolute attributes of any transaction <ref type="bibr" target="#b85">[Whitrow et al., 2008]</ref>. In order to go beyond transaction-level detection, it is crucial to choose a suitable transaction context and extract relevant features from it.</p><p>In general, most studies seem to agree that the Recency -Frequency -Monetary Value (RFM) framework provides the necessary information for discovering frauds. Recency refers to the time since the last transaction, frequency captures the volume of transactions per time interval and the monetary value corresponds to the total money spent within the interval. Some studies consider only frequency and monetary value <ref type="bibr" target="#b49">[Krivko, 2010]</ref>, whereas others also integrate the time difference <ref type="bibr" target="#b80">([Vlasselaer et al., 2015</ref><ref type="bibr" target="#b4">] [Bahnsen et al., 2016]</ref>). From this perspective, aggregations are convenient because they allow to condition the RFM statistics on transaction types. It should be noted that there is no consensus on how to choose the most suitable time intervals. Usually, researchers apply reasonable rules of thumb and compute aggregates over days, weeks or months.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Rules</head><p>Time differences Since frauds tend to appear in bursts of several transactions within a short time window, the time difference between consecutive transactions seems to be a promising indicator of fraud. For any two consecutive transactions x t-1 and x t with their time stamps denoted by x (Time) t-1 and x (Time) t the tdelta feature of the t-th transaction is:</p><formula xml:id="formula_6">tdelta t = x (Time) t -x (Time) t-1</formula><p>(5) These time differences feature have been shown to provide relevant insight to classifiers in a credit card fraud detection problem ( <ref type="bibr" target="#b43">[Jurgovsky et al., 2018]</ref>).</p><p>Feature aggregations Most feature engineering work in credit card fraud detection follows transaction aggregation strategies such as the ones described by <ref type="bibr" target="#b85">[Whitrow et al., 2008]</ref>. The idea is to characterize the spending pattern in an account, the so called activity record, by accumulating transaction information over time. Through exploratory data analysis, the authors identified several salient aspects of transactions as being relevant to fraud detection, such as the number of recently issued transactions and the total monetary value of these transactions. It is important to note that aggregates do not require any label information and, therefore, are entirely unsupervised. While aggregates function as account-level features, they can be turned into transaction-level features by updating the activity record with each new transaction. Most commonly, the statistics from the activity record are simply added as supplementary features to the basic feature set when training a fraud classifier. This aggregation strategy was found to work well in commercial applications and it is also an integral part of research in the academic field with broad usage in a number of studies ( <ref type="bibr" target="#b8">[Bhattacharyya et al., 2011]</ref>, <ref type="bibr" target="#b40">[Jha et al., 2012]</ref>, <ref type="bibr" target="#b3">[Bahnsen et al., 2013]</ref>, <ref type="bibr" target="#b71">[Sahin et al., 2013]</ref>, <ref type="bibr" target="#b66">[Pozzolo et al., 2014]</ref>).</p><p>Since then, the proposed aggregation strategy served as generic template for developing new features. For instance, <ref type="bibr" target="#b40">[Jha et al., 2012]</ref> and <ref type="bibr" target="#b4">[Bahnsen et al., 2016]</ref> do not aggregate over specific transaction types but instead on those transactions whose attribute values are identical to the current transaction. This difference is subtle but it has severe implications for the semantics of the aggregated value. For example, <ref type="bibr" target="#b85">[Whitrow et al., 2008]</ref> calculate the number of transactions issued in the last 24 hours at a specific merchant (e.g. "MyFan-cyShoeStore") for all transactions in the dataset. The value of this aggregate is probably zero for most transactions of most users but its semantic is consistent across all transactions. The aggregates defined in <ref type="bibr" target="#b40">[Jha et al., 2012</ref><ref type="bibr" target="#b4">][Bahnsen et al., 2016]</ref> calculate the number of transactions issued in the last 24 hours at the same merchant as the current transaction. Finally, feature aggregates can be easily integrated in any existing classification process and they seem to readily improve the prediction accuracy.</p><p>Trading entropy <ref type="bibr" target="#b29">[Fu et al., 2016]</ref> propose trading entropy, a feature that is supposed to quantify the amount of information added to a user's purchase history when he issues a new transaction. As an example, they define the feature based on the amount spent and the merchant. In a user's history, they consider all but the most recent transaction and calculate how the total amount is distributed over the merchants. They quantify the uncertainty in this distribution by means of the Shannon entropy. The trading entropy is then the difference between the entropy of this distribution and the distribution they obtain after adding the most recent transaction to his history.</p><p>Anomaly scores Another interesting approach for extracting expressive features is discussed in <ref type="bibr" target="#b80">[Vlasselaer et al., 2015]</ref>. Apart from the detection system the authors maintain a bipartite graph in which nodes correspond to merchants or card holders and edges correspond to transactions between these entities. The edge weight is determined by the volume of transactions exchanged between a card holder and a merchant, and it decays exponentially with time. With a page-rank style algorithm the authors propagate the fraud label of a transaction to directly connected or transitively reachable card holder and merchant nodes. The authors extract network features from the graph which measure the current exposure of each node to fraud. These features include a score for the card holder, the merchant and the transaction, aggregated over short, medium and long time periods.</p><p>External data integration <ref type="bibr" target="#b90">[Ziegler et al., 2017]</ref> explored external data sources for augmenting transactions with information beyond the raw attributes. They extracted indicators of public holidays from calendars and used them as additional features of transactions. They also extracted embeddings from the DBpedia knowledge graph for encoding the originally categorical country tokens as points in a continuous vector space. Their results suggest a better generalization of the trained classifier and they hypothesize that this improvement results from the continuum between semantically related countries. Later, <ref type="bibr" target="#b42">[Jurgovsky, 2020]</ref> supported this hypothesis by encoding country tokens in terms of several demographic statistics, such as a country's population, its gross domestic product or the corruption index. This explicit encoding led to a comparable performance increase as the unsupervised country embedding approach. Overall, encoding categorical tokens with semantic embeddings that can be extracted in an unsupervised fashion from public knowledge bases appears promising because such an approach does not require any manual effort and it readily improves the detection performance.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5">Sequence modeling for fraud detection</head><p>Sequence modeling is a major machine learning research question. In this section we will split the field with respect to three main approaches: the similarity-based approach that aims to learn the joint distribution of the events in a sequence in order to compute a similarity score, the model-based approach that aims to find the labels of the events in a sequence using data-driven strategies and the counting-based approach that aims to assess a likelihood score by counting the number of occurrences in a reference dataset.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.1">Similarity-based approaches</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.1.1">Graphical models</head><p>Hidden Markov models (HMMs) are the most used model in the field of anomaly detection for discrete sequences according to <ref type="bibr" target="#b15">Chandola et al. [2012]</ref>.</p><p>They comprise two matrices (see figure ??):</p><p>• The transition matrix describes the succession of the hidden states. It reflects a multinomial distribution from all hidden states at time t to all hidden states at time t+1. The hidden states obey to the Markov property. Indeed, the hidden state at the time t+1 only depends on the hidden state at the time t: There is no memory in the distribution of successive hidden states, only conditional probability given the immediate previous hidden state. Formally, it means that conditional distributions between hidden states t in a sequence of size n can be simplified as following:</p><formula xml:id="formula_7">p(t k |t k-1 , t k-2 , .., t 1 , w k-1 , w k-2 , w 1 ) = p(t k |t k-1 ) k ∈ {1, .., n}</formula><p>• The emission matrix describes the conditional distribution of the observed variable w i given the hidden states t i . The probability distribution changes with respect to the observed variable properties. For example it can be considered multinomial for categorical observed variables or gaussian for continuous observed variables. <ref type="bibr" target="#b75">Srivastava et al. [2008]</ref> used multinomial HMMs in the context of credit card fraud detection. They modeled the sequence of amount of users as a categorical feature with 3 values: "low amount" for the transactions with amounts less than 50 e, "mid amount" for transactions with amounts between 50 and 200 e and "big amount" for transactions with amounts bigger than 200 e. The anomaly score raised is the inverse of the likelihood of the recent amounts to have been generated by an HMM trained on a set of genuine sequences. They generated a credit card transactions dataset in order to assess the qualities of their strategies. Dhok [2012] used a similar approach for a real world credit card transaction dataset, and <ref type="bibr" target="#b69">Robinson and Aria [2018]</ref> extended that with success for a prepaid credit card fraud detection task. <ref type="bibr" target="#b22">Dorj et al. [2013]</ref> also used HMMs in an anomaly detection task in electronic systems, but they modeled an abnormal sequence in addition to a genuine sequence. This is interesting since assessing the abnormality of outliers detected decreases the number of false positives. Not only do they flag outliers as such, but they also confirm that these outliers belong to the abnormal class. <ref type="bibr" target="#b58">Lucas et al. [2020]</ref> proposed a protocol for creating sequential features describing temporal dependencies between the transactions in a supervised way. For this purpose they isolated 3 different perspectives. First, they compare the likelihood of sequence of transactions against historical honest sequences of transactions but also against historical sequences containing at least one fraudulent transaction. The reasoning is that to have a risk of fraud it is not enough for a sequence to be far from honest behavior but it is also expected to be relatively close to a risky behavior. Second, they create these features in order to describe the card-holders sequences but also the merchants sequences. Credit card transactions can be seen as edges in a bipartite graph of merchants and card-holders and they showed that the efficiency of detection was better when taking into account both card-holder and terminal sequences. Third, they considered the elapsed time between two transactions and the amount of a transaction as signal for building their features. Combinations of the three binary perspectives give eight sets of sequences from the (training) set of transactions. An Hidden Markov Model is trained on each one of these sequences. The proposed features is the likelihood that each the sequence of recent transactions have been generated by each HMM. They have shown a 15% increase in detection compared to the transactions aggregation strategy of <ref type="bibr" target="#b85">Whitrow et al. [2008]</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.1.2">Recurrent neural networks</head><p>Recurrent neural networks (RNNs) are a class of artificial neural networks where connections between nodes form a directed graph along a temporal sequence. These connections allow to model temporal dynamic behaviors.</p><p>Recurrent neural networks can be considered as an hidden state based model where the inner layers reproduce the hidden state based architectures. Furthermore, the connectivity between consecutive hidden states (or nodes) also follows the Markov property (p(y t ) only depends on y t-1 ). RNNs are discriminant models that aims to predict the label of an event given a past sequence of events. They are detailed extensively in <ref type="bibr" target="#b32">Graves [2012]</ref>.</p><p>HMMs for sequential anomaly detection have mostly been used in order to raise an anomaly score using the likelihood of the sequence to have been generated by the HMM. However, recurrent neural network (RNN) approaches and more precisely long short term memory networks were more varied. Similarly to the previously mentioned HMM approaches, LSTM were used in order to raise anomaly scores by <ref type="bibr" target="#b14">Bontemps et al. [2016]</ref> for an intrusion detection task. The anomaly scores of a window of events is the distance between this window of events and the window of events that would have been generated by the LSTM for the corresponding user. Since LSTM are discriminative models, a custom distance has been created by the authors for this generative task. <ref type="bibr" target="#b59">Malhotra et al. [2015]</ref> modeled the genuine distribution of sequence based dataset with LSTM in order to afterwards raise an anomaly score for electrocardiograms, space shuttle valve time series and power demand datasets. Alternatively, <ref type="bibr" target="#b25">Ergen et al. [2017]</ref> used LSTM to extend various length sequences in order to obtain sequences of equal length for raising an anomaly score afterwards with the help of One Class SVM. <ref type="bibr" target="#b87">Wiese and Omlin [2009]</ref> and <ref type="bibr" target="#b43">Jurgovsky et al. [2018]</ref> modeled the sequence of transactions in a card holder's account with Long short-term memory networks. In contrast to generative sequential models, the LSTM-based approaches are trained discriminatively by jointly learning a map from the sequence of transactions to a sequence of latent states and a map from latent states to the binary output variables (i.e. the fraud label of a transaction). The applications of LSTMs to credit card fraud detection are based on the assumption that the succession patterns of transactions bear relevant information for detecting frauds among them. Each latent state is considered a "summary" of the sequence of previously issued transactions and thereby it might permit a better classification of a recent purchase in the light of its summarized purchase sequence. However, in their comparison with order-agnostic feature aggregations, Jurgovsky et al. <ref type="bibr" target="#b43">Jurgovsky et al. [2018]</ref> found that feature aggregations yielded the best results overall -even in the card-present scenario in which consistent purchase patterns are more prevalent.</p><p>LSTM were also used in order to raise anomaly scores by <ref type="bibr" target="#b14">Bontemps et al. [2016]</ref> for an intrusion detection task. The anomaly scores of a window of events is the distance between this window of events and the window of events that would have been generated by the LSTM for the corresponding user. Since LSTM are discriminative models, a custom distance has been created by the authors for this generative task. <ref type="bibr" target="#b59">Malhotra et al. [2015]</ref> modeled the genuine distribution of sequence based dataset with LSTM in order to afterwards raise an anomaly score for electrocardiograms, space shuttle valve time series and power demand datasets. Alternatively, <ref type="bibr" target="#b25">Ergen et al. [2017]</ref> used LSTM to extend various length sequences in order to obtain sequences of equal length for raising an anomaly score afterwards with the help of One Class SVM.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.2">Counting-based approaches</head><p>Sequential anomaly detection aims to raise an anomaly score for events, subsequence of events or whole sequence with respect to a genuine distribution.</p><p>For sequential tasks, multiple definitions of anomalies exist that need to be handled differently <ref type="bibr" target="#b15">(Chandola et al. [2012]</ref>):</p><p>• An event of a sequence may be anomalous. For example, when a transaction is fraudulent within the sequence of transactions of a given cardholder.</p><p>• A subsequence may be anomalous. For example, if there is a delay between the credit card theft and its reporting, the transactions issued with the credit card are not made by the card-holder but by the fraudster and must be identified as anomalous.</p><p>• A sequence may be anomalous with respect to a set of non anomalous sequences. For example, a sentence in french will be anomalous in a set of english sentences.</p><p>One simple way to raise an anomaly score is counting the likelihood of the event or fixed length window of events in the genuine set of events.</p><formula xml:id="formula_8">L i =</formula><p>#subsequence(i) #subsequences (6) <ref type="bibr" target="#b28">Forrest et al. [1999]</ref> proposed the t-STIDE technique (threshold based sequence time delay embedding) in order to raise anomaly scores for sequences.</p><p>It consists in computing the ratio of sliding windows that have a likelihood (see equation 6) below a certain threshold λ. The anomaly score of the test sequence is proportional to the number of anomalous windows in the test sequence. The corresponding formula is:</p><formula xml:id="formula_9">A Sq = |i : L(w i ) &lt; λ, 1 ≤ i ≤ t| t (7)</formula><p>This kind of window based counting can also be used as anomaly signal to calculate a 2nd order anomaly score. For example, <ref type="bibr" target="#b38">Hofmeyr et al. [1998]</ref> proposed to compute the average of the strength of the anomaly signal over a set of windows that cover the considered event or subsequence.</p><formula xml:id="formula_10">A(Sq) = 1 N N i=1</formula><p>A(w i ) (8)</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="6">Conclusion</head><p>Credit card fraud detection presents several intrinsic challenges. (1) There is a strong difference in terms of absolute numbers between the positive and the negative class: fraudulent transactions are usually much more rare than genuine transactions.</p><p>(2) Purchase behaviours and fraudster strategies may change over time, making a learnt fraud detection decision function irrelevant if not updated. This phenomenon named dataset shift (change in the distribution p(x, y) ) may prevent fraud detection systems from obtaining good performances.</p><p>(3) The feature set describing a credit card transaction usually ignores detailed sequential information which was proven to be very relevant for the detection of credit card fraudulent transactions. Different approaches for tackling each of these challenges are highlighted in this survey and for each of these approaches at minimum one research work is described in full detail. The goal is to provide the reader with useful information on all the different research subjects introduced here.</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head>Figure 1 :</head><label>1</label><figDesc>Figure 1: A confusion matrix displaying the four possible outcomes of a binary decision (colored boxes) and an excerpt of measures that quantify different properties of the decision maker in terms of ratios of these outcomes. Type 1 errors (false positives) and type 2 errors (false negatives) are shaded in gray.</figDesc><graphic coords="6,133.77,124.80,343.71,160.61" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head>Figure 2 :</head><label>2</label><figDesc>Figure 2: Precision recall curve and area under the curve Top: Precision recall curve and precision at K, indicated by grey lines. Bottom: Area under the precision recall curve and area in the early retrieval range, calculated only over the interval [0, 0.2].</figDesc><graphic coords="8,166.48,124.80,274.96,185.87" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_2"><head>Figure 3 :</head><label>3</label><figDesc>Figure 3: Sampling strategy for unbalanced classification. (The + symbols refer to the majority class whereas the -symbols refer to the minority class. The symbols colored in red are newly created symbols by the oversampling strategy or by the SMOTE strategy(Chawla et al. [2002]))</figDesc><graphic coords="11,133.77,124.80,343.72,209.52" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_3"><head>Figure 4 :</head><label>4</label><figDesc>Figure 4: Weekly periodicity observed in the dataset shift for face-to-face transactions. (centile based coloration: green ⇔ similar days, red ⇔ dataset shift Lucas [2020]</figDesc><graphic coords="14,140.70,206.00,326.52,237.38" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_4"><head>Figure 6 :</head><label>6</label><figDesc>Figure 6: Aggregating ground truth examples with investigators feedbacks (Pozzolo [2015])</figDesc><graphic coords="16,185.66,124.80,236.60,119.35" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_0"><head></head><label></label><figDesc>Besides the confidential one used during our joint research project with Worldline 2 https://www.kaggle.com/mlg-ulb/creditcardfraud, Last access: 10.05.2019.</figDesc><table><row><cell>Category</cell><cell>Attribute</cell><cell cols="2">Description</cell><cell>Feature(s)</cell></row><row><cell cols="2">Transaction Time</cell><cell cols="2">Date and time of the trans-</cell><cell>weekday,</cell></row><row><cell></cell><cell></cell><cell cols="2">action</cell><cell>hourOfDay,</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell>timestamp</cell></row><row><cell></cell><cell>Type</cell><cell></cell><cell></cell></row><row><cell cols="5">Precision Proportion of well classified examples among examples of the pos-</cell></row><row><cell>itive class:</cell><cell></cell><cell>prec =</cell><cell>T P T P + F P</cell></row></table><note><p>1</p></note></figure>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot" n="3" xml:id="foot_0"><p>https://moa.cms.waikato.ac.nz/datasets/</p></note>
+		</body>
+		<back>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<analytic>
+		<title level="a" type="main">Fraud detection system: A survey</title>
+		<author>
+			<persName><forename type="first">Aisha</forename><surname>Abdallah</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mohd</forename><surname>Aizaini Maarof</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Anazida</forename><surname>Zainal</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Network and Computer Applications</title>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Aisha Abdallah, Mohd Aizaini Maarof, and Anazida Zainal. Fraud detection system: A survey. Journal of Network and Computer Applications, 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<analytic>
+		<title level="a" type="main">Assessing the impact of changing environments on classifier performance</title>
+		<author>
+			<persName><forename type="first">Rocio</forename><surname>Alaiz</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">-</forename><surname>Rodriguez</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Nathalie</forename><surname>Japkowicz</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Conference of the Canadian Society for Computational Studies of Intelligence</title>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2008">2008</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Rocio Alaiz-Rodriguez and Nathalie Japkowicz. Assessing the impact of chang- ing environments on classifier performance. Conference of the Canadian So- ciety for Computational Studies of Intelligence, Springer, 2008.</note>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<analytic>
+		<title level="a" type="main">Consumer-facing technology fraud: Economics, attack methods and potential solutions</title>
+		<author>
+			<persName><forename type="first">Mohammed</forename><surname>Aamir</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ali</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Muhammad</forename><forename type="middle">Ajmal</forename><surname>Azad</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mario</forename><forename type="middle">Parreno</forename><surname>Centeno</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Feng</forename><surname>Hao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Aad</forename><surname>Van Moorsel</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Future Generation Computer Systems</title>
+		<imprint>
+			<biblScope unit="volume">100</biblScope>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Mohammed Aamir Ali, Muhammad Ajmal Azad, Mario Parreno Centeno, Feng Hao, and Aad van Moorsel. Consumer-facing technology fraud: Economics, attack methods and potential solutions. Future Generation Computer Systems (volume 100), 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<analytic>
+		<title level="a" type="main">Cost sensitive credit card fraud detection using bayes minimum risk</title>
+		<author>
+			<persName><forename type="first">Alejandro</forename><surname>Correa Bahnsen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Aleksandar</forename><surname>Stojanovic</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Djamila</forename><surname>Aouada</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Björn</forename><surname>Ottersten</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/ICMLA.2013</idno>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 12th International Conference on Machine Learning and Applications (ICMLA)</title>
+		<meeting>the 12th International Conference on Machine Learning and Applications (ICMLA)</meeting>
+		<imprint>
+			<date type="published" when="2013">2013</date>
+			<biblScope unit="volume">1</biblScope>
+			<biblScope unit="page" from="333" to="338" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Alejandro Correa Bahnsen, Aleksandar Stojanovic, Djamila Aouada, and Björn Ottersten. Cost sensitive credit card fraud detection using bayes minimum risk. In Proceedings of the 12th International Conference on Machine Learning and Applications (ICMLA), volume 1, pages 333-338, 2013. doi: 10.1109/ ICMLA.2013.</note>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<analytic>
+		<title level="a" type="main">Feature engineering strategies for credit card fraud detection</title>
+		<author>
+			<persName><forename type="first">Alejandro</forename><surname>Correa Bahnsen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Djamila</forename><surname>Ouada</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Aleksandar</forename><surname>Stojanovic</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Björn</forename><surname>Ottersten</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Expert Systems with Applications</title>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Alejandro Correa Bahnsen, Djamila Ouada, Aleksandar Stojanovic, and Björn Ottersten. Feature engineering strategies for credit card fraud detection. Ex- pert Systems with Applications, 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<analytic>
+		<title level="a" type="main">Learning regularized hoeffding trees from data streams</title>
+		<author>
+			<persName><forename type="first">Jean</forename><surname>Paul</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Barddal</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Fabricio</forename><surname>Enembreck</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">34th ACM/SIGAPP Symposium on Applied Computing (SAC2019)</title>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Jean Paul Barddal and Fabricio Enembreck. Learning regularized hoeffding trees from data streams. 34th ACM/SIGAPP Symposium on Applied Computing (SAC2019), 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<analytic>
+		<title level="a" type="main">Applying one-sided selection to unbalanced datasets</title>
+		<author>
+			<persName><forename type="first">Gustavo</forename><surname>Batista</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Andre</forename><forename type="middle">Carlos</forename><surname>Carvalho</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Maria</forename><forename type="middle">Carolina</forename><surname>Monard</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">MICAI 2000: Advances in Artificial Intelligence</title>
+		<imprint>
+			<date type="published" when="2000">2000</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Gustavo Batista, Andre Carlos Carvalho, and Maria Carolina Monard. Apply- ing one-sided selection to unbalanced datasets. MICAI 2000: Advances in Artificial Intelligence, 2000.</note>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<analytic>
+		<title level="a" type="main">A study of the behavior of several methods for balancing machine learning training data</title>
+		<author>
+			<persName><forename type="first">Gustavo</forename><surname>Batista</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ronaldo</forename><surname>Prati</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Maria</forename><forename type="middle">Carolina</forename><surname>Monard</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">ACM SIGKDD Explorations Newsletter</title>
+		<imprint>
+			<date type="published" when="2004">2004</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Gustavo Batista, Ronaldo Prati, and Maria Carolina Monard. A study of the behavior of several methods for balancing machine learning training data. ACM SIGKDD Explorations Newsletter, 2004.</note>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">Data mining for credit card fraud: A comparative study</title>
+		<author>
+			<persName><forename type="first">Siddhartha</forename><surname>Bhattacharyya</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Sanjeev</forename><surname>Jha</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Kurian</forename><surname>Tharakunnel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Christopher Westland</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Decision support systems</title>
+		<imprint>
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Siddhartha Bhattacharyya, Sanjeev Jha, Kurian Tharakunnel, and J. Christo- pher Westland. Data mining for credit card fraud: A comparative study. Decision support systems, 2011.</note>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<analytic>
+		<title level="a" type="main">Discriminative learning for differing training and test distributions</title>
+		<author>
+			<persName><forename type="first">Steffen</forename><surname>Bickel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Michael</forename><surname>Brückner</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Tobias</forename><surname>Scheffer</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 24th International conference on Machine learning</title>
+		<meeting>the 24th International conference on Machine learning</meeting>
+		<imprint>
+			<date type="published" when="2007">2007</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Steffen Bickel, Michael Brückner, and Tobias Scheffer. Discriminative learning for differing training and test distributions. Proceedings of the 24th Interna- tional conference on Machine learning, 2007.</note>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<analytic>
+		<title level="a" type="main">Adaptive learning from evolving data streams</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Bifet</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Gavalda</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Symposium on Intelligent Data Analysis</title>
+		<imprint>
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">A. Bifet and R. Gavalda. Adaptive learning from evolving data streams. Inter- national Symposium on Intelligent Data Analysis, 2009.</note>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<monogr>
+		<title level="m" type="main">Pattern Recognition and Machine Learning</title>
+		<author>
+			<persName><forename type="first">Christopher</forename><surname>Bishop</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2006">2006</date>
+			<publisher>Springer</publisher>
+			<pubPlace>New York</pubPlace>
+		</imprint>
+	</monogr>
+	<note>1 edition</note>
+	<note type="raw_reference">Christopher Bishop. Pattern Recognition and Machine Learning. Springer, New York, 1 edition, 2006. ISBN 978-0-387-31073-2.</note>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<analytic>
+		<title level="a" type="main">Latent Dirichlet Allocation</title>
+		<author>
+			<persName><forename type="first">David</forename><forename type="middle">M</forename><surname>Blei</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Andrew</forename><forename type="middle">Y</forename><surname>Ng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Michael</forename><forename type="middle">I</forename><surname>Jordan</surname></persName>
+		</author>
+		<idno type="DOI">10.1162/jmlr.2003.3.4-5.993</idno>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 14th Annual Conference on Neural Information Processing Systems</title>
+		<meeting>the 14th Annual Conference on Neural Information Processing Systems</meeting>
+		<imprint>
+			<date type="published" when="2001-01">Jan. 2001</date>
+			<biblScope unit="volume">3</biblScope>
+			<biblScope unit="page" from="601" to="608" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">David M. Blei, Andrew Y. Ng, and Michael I. Jordan. Latent Dirichlet Allocation. Proceedings of the 14th Annual Conference on Neural Infor- mation Processing Systems, 3(Jan):601-608, 2001. ISSN 1532-4435. doi: 10.1162/jmlr.2003.3.4-5.993.</note>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<analytic>
+		<title level="a" type="main">Unsupervised profiling methods for fraud detection</title>
+		<author>
+			<persName><forename type="first">Richard</forename><forename type="middle">J</forename><surname>Bolton</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">David</forename><forename type="middle">J</forename><surname>Hand</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Credit Scoring and Credit Control</title>
+		<imprint>
+			<date type="published" when="2001">2001</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Richard J. Bolton and David J. Hand. Unsupervised profiling methods for fraud detection. Credit Scoring and Credit Control, 2001.</note>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<analytic>
+		<title level="a" type="main">Collective anomaly detection based on long short-term memory recurrent neural networks</title>
+		<author>
+			<persName><forename type="first">Loic</forename><surname>Bontemps</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">James</forename><surname>Van Loi Cao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Nhien-An</forename><surname>Mcdermott</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Le-Khac</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Future Data and Security Engineering</title>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Loic Bontemps, Van Loi Cao, James McDermott, and Nhien-An Le-Khac. Col- lective anomaly detection based on long short-term memory recurrent neural networks. International Conference on Future Data and Security Engineering, 2016.</note>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<analytic>
+		<title level="a" type="main">Anomaly detection for discrete sequences: A survey</title>
+		<author>
+			<persName><forename type="first">Varun</forename><surname>Chandola</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Arindam</forename><surname>Banerjee</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Vipin</forename><surname>Kumar</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Knowledge and Data Engineering</title>
+		<imprint>
+			<date type="published" when="2012">2012</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Varun Chandola, Arindam Banerjee, and Vipin Kumar. Anomaly detection for discrete sequences: A survey. IEEE Transactions on Knowledge and Data Engineering, 2012.</note>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<analytic>
+		<title level="a" type="main">Data mining for imbalance datasets: an overview</title>
+		<author>
+			<persName><forename type="first">V</forename><surname>Nitesh</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Chawla</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Data mining and knowledge discovery handbook</title>
+		<imprint>
+			<date type="published" when="2005">2005</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Nitesh V. Chawla. Data mining for imbalance datasets: an overview. Data mining and knowledge discovery handbook, 2005.</note>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<analytic>
+		<title level="a" type="main">Smote: Synthetic minority over-sampling technique</title>
+		<author>
+			<persName><forename type="first">V</forename><surname>Nitesh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Kevin</forename><forename type="middle">W</forename><surname>Chawla</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Lawrence</forename><forename type="middle">O</forename><surname>Bowyer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><forename type="middle">Philip</forename><surname>Hall</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Kegelmeyer</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Artificial Intelligence Research</title>
+		<imprint>
+			<biblScope unit="volume">16</biblScope>
+			<date type="published" when="2002">2002</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Nitesh V. Chawla, Kevin W. Bowyer, Lawrence O. Hall, and W. Philip Kegelmeyer. Smote: Synthetic minority over-sampling technique. Journal of Artificial Intelligence Research 16, 2002.</note>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<analytic>
+		<title level="a" type="main">Smoteboost: Improving prediction of the minority class in boosting</title>
+		<author>
+			<persName><forename type="first">V</forename><surname>Nitesh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Aleksandar</forename><surname>Chawla</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Kevin</forename><forename type="middle">W</forename><surname>Lazarevic</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Lawrence</forename><forename type="middle">O</forename><surname>Bowyer</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Hall</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Knowledge Discovery in Databases: PKDD</title>
+		<imprint>
+			<date type="published" when="2003">2003</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Nitesh V. Chawla, Aleksandar Lazarevic, Kevin W. Bowyer, and Lawrence O. Hall. Smoteboost: Improving prediction of the minority class in boosting. Knowledge Discovery in Databases: PKDD, 2003.</note>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<analytic>
+		<title level="a" type="main">Editorial: special issue on learning from imbalanced data sets</title>
+		<author>
+			<persName><forename type="first">V</forename><surname>Nitesh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Nathalie</forename><surname>Chawla</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Aleksander</forename><surname>Japkowicz</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Kotcz</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">ACM SIGKDD Explorations Newsletter</title>
+		<imprint>
+			<date type="published" when="2004">2004</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Nitesh V. Chawla, Nathalie Japkowicz, and Aleksander Kotcz. Editorial: special issue on learning from imbalanced data sets. ACM SIGKDD Explorations Newsletter, 2004.</note>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<analytic>
+		<title level="a" type="main">The relationship between precision-recall and roc curves</title>
+		<author>
+			<persName><forename type="first">Jesse</forename><surname>Davis</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mark</forename><surname>Goadrich</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">ICML &apos;06 Proceedings of the 23rd international conference on Machine learning</title>
+		<imprint>
+			<date type="published" when="2006">2006</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Jesse Davis and Mark Goadrich. The relationship between precision-recall and roc curves. ICML &apos;06 Proceedings of the 23rd international conference on Machine learning, 2006.</note>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<analytic>
+		<title level="a" type="main">Credit card fraud detection using hidden markov model</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Shailesh</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Dhok</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Soft Computing and Engineering</title>
+		<imprint>
+			<date type="published" when="2012">2012</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Shailesh S. Dhok. Credit card fraud detection using hidden markov model. International Journal of Soft Computing and Engineering, 2012.</note>
+</biblStruct>
+
+<biblStruct xml:id="b22">
+	<analytic>
+		<title level="a" type="main">A bayesian hidden markov model-based approach for anomaly detection in electronic systems</title>
+		<author>
+			<persName><forename type="first">Enkhjargal</forename><surname>Dorj</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Chaochao</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Michael</forename><surname>Pecht</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">IEEE Aerospace conference</title>
+		<imprint>
+			<date type="published" when="2013">2013</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Enkhjargal Dorj, Chaochao Chen, and Michael Pecht. A bayesian hidden markov model-based approach for anomaly detection in electronic systems. IEEE Aerospace conference, 2013.</note>
+</biblStruct>
+
+<biblStruct xml:id="b23">
+	<analytic>
+		<title level="a" type="main">C4.5, class imbalance, and cost sensitivity: why undersampling beats over-sampling</title>
+		<author>
+			<persName><forename type="first">Chris</forename><surname>Drummond</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Robert</forename><surname>Holte</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Workshop on Learning from Imbalanced Datasets II</title>
+		<imprint>
+			<date type="published" when="2003">2003</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Chris Drummond and Robert Holte. C4.5, class imbalance, and cost sensitiv- ity: why undersampling beats over-sampling. Workshop on Learning from Imbalanced Datasets II, 2003.</note>
+</biblStruct>
+
+<biblStruct xml:id="b24">
+	<analytic>
+		<title level="a" type="main">The foundations of cost-sensitive learning</title>
+		<author>
+			<persName><forename type="first">Charles</forename><surname>Elkan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Joint Conference on Artificial Intelligence</title>
+		<imprint>
+			<date type="published" when="2001">2001</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Charles Elkan. The foundations of cost-sensitive learning. International Joint Conference on Artificial Intelligence, 2001.</note>
+</biblStruct>
+
+<biblStruct xml:id="b25">
+	<monogr>
+		<title level="m" type="main">Unsupervised and semi-supervised anomaly detection with lstm neural networks</title>
+		<author>
+			<persName><forename type="first">Tolga</forename><surname>Ergen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ali</forename><surname>Hassan Mirza</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Suleyman</forename><surname>Serdar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Kozat</forename></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+	<note type="raw_reference">Tolga Ergen, Ali Hassan Mirza, and Suleyman Serdar Kozat. Unsupervised and semi-supervised anomaly detection with lstm neural networks. arXiv preprint, 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b26">
+	<analytic>
+		<title level="a" type="main">A multiple resampling method for learning from imbalanced data sets</title>
+		<author>
+			<persName><forename type="first">Andrew</forename><surname>Estabrooks</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Taeho</forename><surname>Jo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Nathalie</forename><surname>Japkowicz</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Computational Intelligence</title>
+		<imprint>
+			<date type="published" when="2004">2004</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Andrew Estabrooks, Taeho Jo, and Nathalie Japkowicz. A multiple resampling method for learning from imbalanced data sets. Computational Intelligence, 2004.</note>
+</biblStruct>
+
+<biblStruct xml:id="b27">
+	<analytic>
+		<title level="a" type="main">Adacost: misclassification cost-sensitive boosting</title>
+		<author>
+			<persName><forename type="first">Wei</forename><surname>Fan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Salvatore</forename><forename type="middle">J</forename><surname>Stolfo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Junxin</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Philip</forename><forename type="middle">K</forename><surname>Chan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">ICML</title>
+		<imprint>
+			<date type="published" when="1999">1999</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Wei Fan, Salvatore J Stolfo, Junxin Zhang, and Philip K Chan. Adacost: mis- classification cost-sensitive boosting. ICML, 1999.</note>
+</biblStruct>
+
+<biblStruct xml:id="b28">
+	<analytic>
+		<title level="a" type="main">Detecting intrusions using system calls: Alternate data models</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Forrest</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Warrender</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Pearlmutter</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 1999 IEEE ISRSP</title>
+		<meeting>the 1999 IEEE ISRSP</meeting>
+		<imprint>
+			<date type="published" when="1999">1999</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S. Forrest, C. Warrender, and B. Pearlmutter. Detecting intrusions using system calls: Alternate data models. Proceedings of the 1999 IEEE ISRSP, 1999.</note>
+</biblStruct>
+
+<biblStruct xml:id="b29">
+	<analytic>
+		<title level="a" type="main">Credit card fraud detection using convolutional neural networks</title>
+		<author>
+			<persName><forename type="first">Kang</forename><surname>Fu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Dawei</forename><surname>Cheng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yi</forename><surname>Tu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Liqing</forename><surname>Zhang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Neural Information Processing</title>
+		<editor>
+			<persName><forename type="first">Akira</forename><surname>Hirose</surname></persName>
+		</editor>
+		<editor>
+			<persName><forename type="first">Seiichi</forename><surname>Ozawa</surname></persName>
+		</editor>
+		<editor>
+			<persName><forename type="first">Kenji</forename><surname>Doya</surname></persName>
+		</editor>
+		<editor>
+			<persName><forename type="first">Kazushi</forename><surname>Ikeda</surname></persName>
+		</editor>
+		<editor>
+			<persName><forename type="first">Minho</forename><surname>Lee</surname></persName>
+		</editor>
+		<editor>
+			<persName><forename type="first">Derong</forename><surname>Liu</surname></persName>
+		</editor>
+		<meeting><address><addrLine>Cham</addrLine></address></meeting>
+		<imprint>
+			<publisher>Springer International Publishing</publisher>
+			<date type="published" when="2016">2016</date>
+			<biblScope unit="page" from="483" to="490" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Kang Fu, Dawei Cheng, Yi Tu, and Liqing Zhang. Credit card fraud detection using convolutional neural networks. In Akira Hirose, Seiichi Ozawa, Kenji Doya, Kazushi Ikeda, Minho Lee, and Derong Liu, editors, Neural Information Processing, pages 483-490, Cham, 2016. Springer International Publishing. ISBN 978-3-319-46675-0.</note>
+</biblStruct>
+
+<biblStruct xml:id="b30">
+	<analytic>
+		<title level="a" type="main">A general framework for mining conceptdrifting data streams with skewed distributions</title>
+		<author>
+			<persName><surname>Gao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Fan</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Han</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Yu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 2007 SIAM International Conference</title>
+		<meeting>the 2007 SIAM International Conference</meeting>
+		<imprint>
+			<date type="published" when="2007">2007</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J Gao, W Fan, J Han, and PS Yu. A general framework for mining concept- drifting data streams with skewed distributions. Proceedings of the 2007 SIAM International Conference, 2007.</note>
+</biblStruct>
+
+<biblStruct xml:id="b31">
+	<analytic>
+		<title level="a" type="main">Adaptive random forest for evolving data stream classification</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Heitor</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Albert</forename><surname>Gomes</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jesse</forename><surname>Bifet</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jean</forename><surname>Read</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Fabricio</forename><surname>Paul Barddal</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Bernhard</forename><surname>Enembreck</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Geoff</forename><surname>Pfharinger</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Talel</forename><surname>Holmes</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Abdessalem</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Machine Learning</title>
+		<imprint>
+			<biblScope unit="volume">106</biblScope>
+			<biblScope unit="issue">9</biblScope>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Heitor M. Gomes, Albert Bifet, Jesse Read, Jean Paul Barddal, Fabricio En- embreck, Bernhard Pfharinger, Geoff Holmes, and Talel Abdessalem. Adap- tive random forest for evolving data stream classification. Machine Learning 106(9), 2017.</note>
+</biblStruct>
+
+<biblStruct xml:id="b32">
+	<analytic>
+		<title level="a" type="main">Supervised sequence labelling with recurrent neural networks</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Graves</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Springer</title>
+		<imprint>
+			<biblScope unit="volume">385</biblScope>
+			<date type="published" when="2012">2012</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">A. Graves. Supervised sequence labelling with recurrent neural networks. Springer vol. 385, 2012.</note>
+</biblStruct>
+
+<biblStruct xml:id="b33">
+	<analytic>
+		<title level="a" type="main">Covariate shift by kernel mean matching</title>
+		<author>
+			<persName><forename type="first">Arthur</forename><surname>Gretton</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Alex</forename><surname>Smola</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jiayuan</forename><surname>Huang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Schmittful</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Borgwardt</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Dataset shift in machine learning</title>
+		<imprint>
+			<biblScope unit="volume">3</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Arthur Gretton, Alex Smola, Jiayuan Huang, M Schmittful, and K Borgwardt. Covariate shift by kernel mean matching. Dataset shift in machine learning 3(4), 2009.</note>
+</biblStruct>
+
+<biblStruct xml:id="b34">
+	<analytic>
+		<title level="a" type="main">Borderline-smote: a new oversampling method in imbalanced data sets learning</title>
+		<author>
+			<persName><forename type="first">Hui</forename><surname>Han</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Wen-Yuan</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Bing-Huan</forename><surname>Mao</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in intelligent computing</title>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2005">2005</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Hui Han, Wen-Yuan Wang, and Bing-Huan Mao. Borderline-smote: a new oversampling method in imbalanced data sets learning. Advances in intelligent computing, Springer, 2005.</note>
+</biblStruct>
+
+<biblStruct xml:id="b35">
+	<analytic>
+		<title level="a" type="main">Measuring classifier performance: A coherent alternative to the area under the ROC curve</title>
+		<author>
+			<persName><forename type="first">David</forename><forename type="middle">J</forename><surname>Hand</surname></persName>
+		</author>
+		<idno type="DOI">10.1007/s10994-009-5119-5</idno>
+		<ptr target="https://doi.org/10.1007/s10994-009-5119-5" />
+	</analytic>
+	<monogr>
+		<title level="j">Machine Learning</title>
+		<idno type="ISSN">08856125</idno>
+		<imprint>
+			<biblScope unit="volume">77</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="103" to="123" />
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">David J. Hand. Measuring classifier performance: A coherent alternative to the area under the ROC curve. Machine Learning, 77(1):103-123, 2009. ISSN 08856125. doi: 10.1007/s10994-009-5119-5. URL https://doi.org/ 10.1007/s10994-009-5119-5.</note>
+</biblStruct>
+
+<biblStruct xml:id="b36">
+	<analytic>
+		<title level="a" type="main">Adasyn: Adaptive synthetic sampling approach for imbalanced learning</title>
+		<author>
+			<persName><forename type="first">Haibo</forename><surname>He</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yang</forename><surname>Bai</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Edwardo</forename><surname>Garcia</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Shutao</forename><surname>Li</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">IEEE International Joint Conference on Neural Networks</title>
+		<imprint>
+			<date type="published" when="2008">2008</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Haibo He, Yang Bai, Edwardo Garcia, and Shutao Li. Adasyn: Adaptive syn- thetic sampling approach for imbalanced learning. IEEE International Joint Conference on Neural Networks, 2008.</note>
+</biblStruct>
+
+<biblStruct xml:id="b37">
+	<analytic>
+		<title level="a" type="main">Heuristic updatable weighted random subspaces for non-stationary environments</title>
+		<author>
+			<persName><forename type="first">Ryan</forename><forename type="middle">T</forename><surname>Hoens</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">V</forename><surname>Nitesh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Robi</forename><surname>Chawla</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Polikar</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">IEEE 11th International Conference on Data Mining</title>
+		<imprint>
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ryan T. Hoens, Nitesh V. Chawla, and Robi Polikar. Heuristic updatable weighted random subspaces for non-stationary environments. IEEE 11th In- ternational Conference on Data Mining, 2011.</note>
+</biblStruct>
+
+<biblStruct xml:id="b38">
+	<analytic>
+		<title level="a" type="main">Intrusion detection using sequences of system calls</title>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">A</forename><surname>Hofmeyr</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Forrest</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Somayaji</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Computer Security</title>
+		<imprint>
+			<date type="published" when="1998">1998</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S. A. Hofmeyr, S. Forrest, and A. Somayaji. Intrusion detection using sequences of system calls. Journal of Computer Security, 1998.</note>
+</biblStruct>
+
+<biblStruct xml:id="b39">
+	<analytic>
+		<title level="a" type="main">The class imbalance problem: a systematic study</title>
+		<author>
+			<persName><forename type="first">Nathalie</forename><surname>Japkowicz</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Shaju</forename><surname>Stephen</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Intelligent data analysis</title>
+		<imprint>
+			<date type="published" when="2002">2002</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Nathalie Japkowicz and Shaju Stephen. The class imbalance problem: a sys- tematic study. Intelligent data analysis, 2002.</note>
+</biblStruct>
+
+<biblStruct xml:id="b40">
+	<analytic>
+		<title level="a" type="main">Employing transaction aggregatin strategy to detect credit card fraud</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Jha</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Guillen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Westland</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Expert Systems with Applications</title>
+		<imprint>
+			<date type="published" when="2012">2012</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">S. Jha, M. Guillen, and J. Westland. Employing transaction aggregatin strategy to detect credit card fraud. Expert Systems with Applications, 2012.</note>
+</biblStruct>
+
+<biblStruct xml:id="b41">
+	<analytic>
+		<title level="a" type="main">Index term weighting</title>
+		<author>
+			<persName><forename type="first">Karen</forename><surname>Sparck</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jones</forename></persName>
+		</author>
+		<idno type="DOI">10.1016/0020-0271(73)90043-0</idno>
+		<ptr target="http://www.sciencedirect.com/science/article/pii/0020027173900430" />
+	</analytic>
+	<monogr>
+		<title level="j">Information Storage and Retrieval</title>
+		<idno type="ISSN">00200271</idno>
+		<imprint>
+			<biblScope unit="volume">9</biblScope>
+			<biblScope unit="issue">11</biblScope>
+			<biblScope unit="page" from="619" to="633" />
+			<date type="published" when="1973">1973</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Karen Sparck Jones. Index term weighting. Information Storage and Re- trieval, 9(11):619-633, 1973. ISSN 00200271. doi: 10.1016/0020-0271(73) 90043-0. URL http://www.sciencedirect.com/science/article/pii/ 0020027173900430.</note>
+</biblStruct>
+
+<biblStruct xml:id="b42">
+	<monogr>
+		<title level="m" type="main">Context aware credit card fraud detection</title>
+		<author>
+			<persName><forename type="first">Johannes</forename><surname>Jurgovsky</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">Thesis dissertation</note>
+	<note type="raw_reference">Johannes Jurgovsky. Context aware credit card fraud detection. Thesis disser- tation, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b43">
+	<analytic>
+		<title level="a" type="main">Sequence classification for credit-card fraud detection</title>
+		<author>
+			<persName><forename type="first">Johannes</forename><surname>Jurgovsky</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Michael</forename><surname>Granitzer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Konstantin</forename><surname>Ziegler</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Sylvie</forename><surname>Calabretto</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Pierre-Edouard</forename><surname>Portier</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Liyun</forename><surname>He-Guelton</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Olivier</forename><surname>Caelen</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Expert systems with applications</title>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Johannes Jurgovsky, Michael Granitzer, Konstantin Ziegler, Sylvie Calabretto, Pierre-Edouard Portier, Liyun He-Guelton, and Olivier Caelen. Sequence classification for credit-card fraud detection. Expert systems with applications, 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b44">
+	<analytic>
+		<title level="a" type="main">Decision tree-based feature ranking in concept drifting data streams</title>
+		<author>
+			<persName><forename type="first">Jean</forename><surname>Antonio</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Pereira</forename><surname>Karax</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Andreia</forename><surname>Malucelli</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jean</forename><forename type="middle">Paul</forename><surname>Barddal</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">34th ACM/SIGAPP Symposium on Applied Computing (SAC2019)</title>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Jean Antonio Pereira Karax, Andreia Malucelli, and Jean Paul Barddal. De- cision tree-based feature ranking in concept drifting data streams. 34th ACM/SIGAPP Symposium on Applied Computing (SAC2019), 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b45">
+	<analytic>
+		<title level="a" type="main">The impact of changing populations on classifier performance</title>
+		<author>
+			<persName><forename type="first">G</forename><surname>Mark</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">David</forename><forename type="middle">J</forename><surname>Kelly</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Niail</forename><forename type="middle">M</forename><surname>Hand</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Adams</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the fifth ACM SIGKDD international conference on Knowledge discovery and data mining ACM</title>
+		<meeting>the fifth ACM SIGKDD international conference on Knowledge discovery and data mining ACM</meeting>
+		<imprint>
+			<date type="published" when="1999">1999</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Mark G. Kelly, David J. Hand, and Niail M. Adams. The impact of changing populations on classifier performance. Proceedings of the fifth ACM SIGKDD international conference on Knowledge discovery and data mining ACM, 1999.</note>
+</biblStruct>
+
+<biblStruct xml:id="b46">
+	<analytic>
+		<title level="a" type="main">Learning drifting concepts: Example selection vs. example weighting</title>
+		<author>
+			<persName><forename type="first">Ralf</forename><surname>Klinkenberg</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Intelligent Data Analysis</title>
+		<imprint>
+			<biblScope unit="volume">8</biblScope>
+			<date type="published" when="2003">2003</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ralf Klinkenberg. Learning drifting concepts: Example selection vs. example weighting. Intelligent Data Analysis vol 8, 2003.</note>
+</biblStruct>
+
+<biblStruct xml:id="b47">
+	<analytic>
+		<title level="a" type="main">Dynamic weighted majority: A new ensemble method for tracking concept drift</title>
+		<author>
+			<persName><forename type="first">Jeremy</forename><forename type="middle">Z</forename><surname>Kolter</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Marcus</forename><forename type="middle">A</forename><surname>Maloof</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Third IEEE International conference on data mining</title>
+		<imprint>
+			<date type="published" when="2003">2003</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Jeremy Z. Kolter and Marcus A. Maloof. Dynamic weighted majority: A new ensemble method for tracking concept drift. Third IEEE International con- ference on data mining, 2003.</note>
+</biblStruct>
+
+<biblStruct xml:id="b48">
+	<monogr>
+		<title level="m" type="main">Supervised machine learning: A review of classification techniques</title>
+		<author>
+			<persName><forename type="first">Sotiris</forename><surname>Kotsiantis</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2007">2007</date>
+			<publisher>Informatica</publisher>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Sotiris Kotsiantis. Supervised machine learning: A review of classification tech- niques. Informatica, 2007.</note>
+</biblStruct>
+
+<biblStruct xml:id="b49">
+	<analytic>
+		<title level="a" type="main">A hybrid model for plastic card fraud detection systems</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Krivko</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/j.eswa.2010.02.119</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Expert Systems with Applications</title>
+		<idno type="ISSN">09574174</idno>
+		<imprint>
+			<biblScope unit="volume">37</biblScope>
+			<biblScope unit="issue">8</biblScope>
+			<biblScope unit="page" from="6070" to="6076" />
+			<date type="published" when="2010">2010</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">M. Krivko. A hybrid model for plastic card fraud detection systems. Expert Systems with Applications, 37(8):6070-6076, 2010. ISSN 09574174. doi: 10. 1016/j.eswa.2010.02.119.</note>
+</biblStruct>
+
+<biblStruct xml:id="b50">
+	<analytic>
+		<title level="a" type="main">Addressing the curse of imbalanced training sets: one-sided selection</title>
+		<author>
+			<persName><forename type="first">Miroslav</forename><surname>Kubat</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Stan</forename><surname>Matwin</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">ICML</title>
+		<imprint>
+			<date type="published" when="1997">1997</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Miroslav Kubat and Stan Matwin. Addressing the curse of imbalanced training sets: one-sided selection. ICML, 1997.</note>
+</biblStruct>
+
+<biblStruct xml:id="b51">
+	<analytic>
+		<title level="a" type="main">Cost-sensitive learning with neural networks</title>
+		<author>
+			<persName><forename type="first">Matjaz</forename><surname>Kukar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Igor</forename><surname>Kononenko</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">ECAI</title>
+		<imprint>
+			<date type="published" when="1998">1998</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Matjaz Kukar and Igor Kononenko. Cost-sensitive learning with neural net- works. ECAI, 1998.</note>
+</biblStruct>
+
+<biblStruct xml:id="b52">
+	<analytic>
+		<title level="a" type="main">Clustering Data of Mixed Categorical and Numerical Type With Unsupervised Feature Learning</title>
+		<author>
+			<persName><forename type="first">Dao</forename><surname>Lam</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mingzhen</forename><surname>Wei</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Donald</forename><surname>Wunsch</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/ACCESS.2015.2477216</idno>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Access</title>
+		<imprint>
+			<biblScope unit="volume">3</biblScope>
+			<biblScope unit="page" from="1605" to="1613" />
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Dao Lam, Mingzhen Wei, and Donald Wunsch. Clustering Data of Mixed Cat- egorical and Numerical Type With Unsupervised Feature Learning. IEEE Access, 3:1605-1613, 2015. doi: 10.1109/ACCESS.2015.2477216.</note>
+</biblStruct>
+
+<biblStruct xml:id="b53">
+	<analytic>
+		<title level="a" type="main">Approaches to online learing and concept drift for user identification in computer security</title>
+		<author>
+			<persName><forename type="first">Terran</forename><surname>Lane</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Carla</forename><forename type="middle">E</forename><surname>Brodley</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">KDD</title>
+		<imprint>
+			<date type="published" when="1998">1998</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Terran Lane and Carla E. Brodley. Approaches to online learing and concept drift for user identification in computer security. KDD, 1998.</note>
+</biblStruct>
+
+<biblStruct xml:id="b54">
+	<analytic>
+		<title level="a" type="main">Adaptive methods for classification in arbitrarily imbalanced and drifting data streams</title>
+		<author>
+			<persName><forename type="first">Ryan</forename><forename type="middle">N</forename><surname>Lichtenwalter</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Nitesh</forename><forename type="middle">V</forename><surname>Chawla</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Pacific-Asia Conference on Knowledge Discovery and Data Mining</title>
+		<imprint>
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ryan N. Lichtenwalter and Nitesh V. Chawla. Adaptive methods for classi- fication in arbitrarily imbalanced and drifting data streams. Pacific-Asia Conference on Knowledge Discovery and Data Mining, 2009.</note>
+</biblStruct>
+
+<biblStruct xml:id="b55">
+	<analytic>
+		<title level="a" type="main">Exploratory undersampling for class-imbalance learning</title>
+		<author>
+			<persName><forename type="first">Xu-Ying</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jianxin</forename><surname>Wu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Zhi-Hua</forename><surname>Zhou</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Systems, Man, and Cybernetics, part B</title>
+		<imprint>
+			<date type="published" when="2009">2009</date>
+			<publisher>Cybernetics</publisher>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Xu-Ying Liu, Jianxin Wu, and Zhi-Hua Zhou. Exploratory undersampling for class-imbalance learning. Systems, Man, and Cybernetics, part B: Cybernet- ics, 2009.</note>
+</biblStruct>
+
+<biblStruct xml:id="b56">
+	<monogr>
+		<title level="m" type="main">Credit card fraud detection using machine learning with integration of contextual knowledge</title>
+		<author>
+			<persName><forename type="first">Yvan</forename><surname>Lucas</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">PhD Thesis</note>
+	<note type="raw_reference">Yvan Lucas. Credit card fraud detection using machine learning with integration of contextual knowledge. PhD Thesis, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b57">
+	<analytic>
+		<title level="a" type="main">Multiple perspectives hmm-based feature engineering for credit card fraud detection</title>
+		<author>
+			<persName><forename type="first">Yvan</forename><surname>Lucas</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Pierre-Edouard</forename><surname>Portier</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Léa</forename><surname>Laporte</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Sylvie</forename><surname>Calabretto</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Olivier</forename><surname>Caelen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Liyun</forename><surname>He-Guelton</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Michael</forename><surname>Granitzer</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">th ACM/SIGAPP Symposium on Applied Computing</title>
+		<meeting><address><addrLine>SAC</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2019">2019. 2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Yvan Lucas, Pierre-Edouard Portier, Léa Laporte, Sylvie Calabretto, Olivier Caelen, Liyun He-Guelton, and Michael Granitzer. Multiple perspec- tives hmm-based feature engineering for credit card fraud detection. 34th ACM/SIGAPP Symposium on Applied Computing (SAC2019), 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b58">
+	<analytic>
+		<title level="a" type="main">Towards automated feature engineering for credit card fraud detection using multi-perspective hmms</title>
+		<author>
+			<persName><forename type="first">Yvan</forename><surname>Lucas</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Pierre-Edouard</forename><surname>Portier</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Léa</forename><surname>Laporte</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Sylvie</forename><surname>Calabretto</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Olivier</forename><surname>Caelen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Liyun</forename><surname>He-Guelton</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Michael</forename><surname>Granitzer</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Future Generations Computer Systems Special Issue on: Data Exploration in the Web</title>
+		<imprint>
+			<biblScope unit="volume">3</biblScope>
+			<biblScope unit="issue">0</biblScope>
+			<date type="published" when="2020">2020</date>
+			<pubPlace>Age</pubPlace>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Yvan Lucas, Pierre-Edouard Portier, Léa Laporte, Sylvie Calabretto, Olivier Caelen, Liyun He-Guelton, and Michael Granitzer. Towards automated fea- ture engineering for credit card fraud detection using multi-perspective hmms. Future Generations Computer Systems Special Issue on: Data Exploration in the Web 3.0 Age, 2020.</note>
+</biblStruct>
+
+<biblStruct xml:id="b59">
+	<analytic>
+		<title level="a" type="main">Long short term memory networks for anomaly detection in time series</title>
+		<author>
+			<persName><forename type="first">Pankaj</forename><surname>Malhotra</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Lovekesh</forename><surname>Vig</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Gautam</forename><surname>Shroff</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Puneet</forename><surname>Agarwal</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">European Symposium on Artificial Neural Networks, Computational Intelligence and Machine Learning</title>
+		<imprint>
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Pankaj Malhotra, Lovekesh Vig, Gautam Shroff, and Puneet Agarwal. Long short term memory networks for anomaly detection in time series. European Symposium on Artificial Neural Networks, Computational Intelligence and Machine Learning, 2015.</note>
+</biblStruct>
+
+<biblStruct xml:id="b60">
+	<analytic>
+		<title level="a" type="main">knn approach to unbalanced data distributions: a case study involving information extraction</title>
+		<author>
+			<persName><forename type="first">Inderjeet</forename><surname>Mani</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Zhang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of Workshop on Learning from Imbalanced Datasets</title>
+		<meeting>Workshop on Learning from Imbalanced Datasets</meeting>
+		<imprint>
+			<date type="published" when="2003">2003</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Inderjeet Mani and I Zhang. knn approach to unbalanced data distributions: a case study involving information extraction. Proceedings of Workshop on Learning from Imbalanced Datasets, 2003.</note>
+</biblStruct>
+
+<biblStruct xml:id="b61">
+	<analytic>
+		<title level="a" type="main">Empirical evaluation and combination of advanced language modeling techniques</title>
+		<author>
+			<persName><forename type="first">Tomas</forename><surname>Mikolov</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Anoop</forename><surname>Deoras</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Stefan</forename><surname>Kombrink</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Lukas</forename><surname>Burget</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jan</forename><surname>Cernocky</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">12th Annual Conference of the International Speech Communication Association</title>
+		<imprint>
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Tomas Mikolov, Anoop Deoras, Stefan Kombrink, Lukas Burget, and Jan Cer- nocky. Empirical evaluation and combination of advanced language modeling techniques. 12th Annual Conference of the International Speech Communica- tion Association, 2011.</note>
+</biblStruct>
+
+<biblStruct xml:id="b62">
+	<analytic>
+		<title level="a" type="main">A unifying view on dataset shift in classification</title>
+		<author>
+			<persName><forename type="first">T</forename><surname>Jg Moreno-Torres</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Raeder</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N V</forename><surname>Alaiz-Rodriguez</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Chawla</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Herrera</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Pattern recognition</title>
+		<imprint>
+			<date type="published" when="2012">2012</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">JG Moreno-Torres, T Raeder, R Alaiz-Rodriguez, N V Chawla, and F Herrera. A unifying view on dataset shift in classification. Pattern recognition, 2012.</note>
+</biblStruct>
+
+<biblStruct xml:id="b63">
+	<analytic>
+		<title level="a" type="main">Repairing fractures between data using genetic programming-based feature extraction: A case study in cancer diagnosis</title>
+		<author>
+			<persName><forename type="first">G</forename><surname>Jose</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Xavier</forename><surname>Moreno-Torres</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">David</forename><forename type="middle">E</forename><surname>Llora</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Rohit</forename><surname>Goldberg</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Bhargava</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Information Sciences</title>
+		<imprint>
+			<biblScope unit="volume">222</biblScope>
+			<date type="published" when="2013">2013</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Jose G. Moreno-Torres, Xavier Llora, David E. Goldberg, and Rohit Bhargava. Repairing fractures between data using genetic programming-based feature extraction: A case study in cancer diagnosis. Information Sciences 222, 2013.</note>
+</biblStruct>
+
+<biblStruct xml:id="b64">
+	<analytic>
+		<title level="a" type="main">Explaining black box models by means of local rules</title>
+		<author>
+			<persName><forename type="first">Eliana</forename><surname>Pastor</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Elena</forename><surname>Baralis</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">34th ACM/SIGAPP Symposium on Applied Computing</title>
+		<meeting><address><addrLine>SAC</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2019">2019. 2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Eliana Pastor and Elena Baralis. Explaining black box models by means of local rules. 34th ACM/SIGAPP Symposium on Applied Computing (SAC2019), 2019.</note>
+</biblStruct>
+
+<biblStruct xml:id="b65">
+	<analytic>
+		<title level="a" type="main">Evaluation: from precision, recall and f-measure to roc, informedness, markedness and correlation</title>
+		<author>
+			<persName><forename type="first">David</forename><surname>Power</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of machine learning technology</title>
+		<imprint>
+			<biblScope unit="volume">1</biblScope>
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">David Power. Evaluation: from precision, recall and f-measure to roc, informed- ness, markedness and correlation. Journal of machine learning technology (1), 2011.</note>
+</biblStruct>
+
+<biblStruct xml:id="b66">
+	<monogr>
+		<title level="m" type="main">Learned lessons in credit card fraud detection from a practitioner perspective</title>
+		<author>
+			<persName><forename type="first">O</forename><surname>Dal Pozzolo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Le</forename><surname>Caelen</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Borgne</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">Expert systems with applications</note>
+	<note type="raw_reference">A Dal Pozzolo, O Caelen, and YA Le Borgne. Learned lessons in credit card fraud detection from a practitioner perspective. Expert systems with applica- tions, 2014.</note>
+</biblStruct>
+
+<biblStruct xml:id="b67">
+	<monogr>
+		<title level="m" type="main">Adaptive machine learning for credit card fraud detection</title>
+		<author>
+			<persName><forename type="first">Andrea</forename><surname>Dal</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Pozzolo</forename></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">PhD Thesis</note>
+	<note type="raw_reference">Andrea Dal Pozzolo. Adaptive machine learning for credit card fraud detection. PhD Thesis, 2015.</note>
+</biblStruct>
+
+<biblStruct xml:id="b68">
+	<analytic>
+		<title level="a" type="main">Calibrating probability with undersampling for unbalanced classification</title>
+		<author>
+			<persName><forename type="first">Andrea</forename><surname>Dal Pozzolo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Olivier</forename><surname>Caelen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Reid</forename><forename type="middle">A</forename><surname>Johnson</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Gianluca</forename><surname>Bontempi</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/SSCI.2015</idno>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the IEEE Symposium Series on Computational Intelligence (SSCI)</title>
+		<meeting>the IEEE Symposium Series on Computational Intelligence (SSCI)</meeting>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2015">2015</date>
+			<biblScope unit="page" from="159" to="166" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Andrea Dal Pozzolo, Olivier Caelen, Reid A. Johnson, and Gianluca Bontempi. Calibrating probability with undersampling for unbalanced classification. In In Proceedings of the IEEE Symposium Series on Computational Intelligence (SSCI), pages 159-166. IEEE, 2015. ISBN 9781479975600. doi: 10.1109/ SSCI.2015.</note>
+</biblStruct>
+
+<biblStruct xml:id="b69">
+	<monogr>
+		<title level="m" type="main">Sequential fraud detection for prepaid cards using hidden markov model divergence</title>
+		<author>
+			<persName><forename type="first">William</forename><forename type="middle">N</forename><surname>Robinson</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Andrea</forename><surname>Aria</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">Expert Systems with Applications</note>
+	<note type="raw_reference">William N. Robinson and Andrea Aria. Sequential fraud detection for prepaid cards using hidden markov model divergence. Expert Systems with Applica- tions, 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b70">
+	<analytic>
+		<title level="a" type="main">Embeddings of categorical variables for sequential data in fraud context</title>
+		<author>
+			<persName><forename type="first">Yoan</forename><surname>Russac</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Olivier</forename><surname>Caelen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Liyun</forename><surname>He-Guelton</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference on Advanced Machine Learning Technologies and Applications</title>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Yoan Russac, Olivier Caelen, and Liyun He-Guelton. Embeddings of categorical variables for sequential data in fraud context. International Conference on Advanced Machine Learning Technologies and Applications, 2018.</note>
+</biblStruct>
+
+<biblStruct xml:id="b71">
+	<analytic>
+		<title level="a" type="main">A cost-sensitive decision tree approach for fraud detection</title>
+		<author>
+			<persName><forename type="first">Yusuf</forename><surname>Sahin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Serol</forename><surname>Bulkan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ekrem</forename><surname>Duman</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/j.eswa.2013.05.021</idno>
+		<ptr target="http://dx.doi.org/10.1016/j.eswa.2013.05.021" />
+	</analytic>
+	<monogr>
+		<title level="j">Expert Systems with Applications</title>
+		<idno type="ISSN">09574174</idno>
+		<imprint>
+			<biblScope unit="volume">40</biblScope>
+			<biblScope unit="issue">15</biblScope>
+			<biblScope unit="page" from="5916" to="5923" />
+			<date type="published" when="2013">2013</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Yusuf Sahin, Serol Bulkan, and Ekrem Duman. A cost-sensitive decision tree approach for fraud detection. Expert Systems with Applications, 40(15):5916- 5923, 2013. ISSN 09574174. doi: 10.1016/j.eswa.2013.05.021. URL http: //dx.doi.org/10.1016/j.eswa.2013.05.021.</note>
+</biblStruct>
+
+<biblStruct xml:id="b72">
+	<analytic>
+		<title level="a" type="main">The Precision-Recall Plot Is More Informative than the ROC Plot When Evaluating Binary Classifiers on Imbalanced Datasets</title>
+		<author>
+			<persName><forename type="first">Takaya</forename><surname>Saito</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Marc</forename><surname>Rehmsmeier</surname></persName>
+		</author>
+		<idno type="DOI">10.1371/journal.pone.0118432</idno>
+		<ptr target="https://doi.org/10.1371/journal.pone.0118432" />
+	</analytic>
+	<monogr>
+		<title level="j">PLOS ONE</title>
+		<imprint>
+			<biblScope unit="volume">10</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="1" to="21" />
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Takaya Saito and Marc Rehmsmeier. The Precision-Recall Plot Is More Infor- mative than the ROC Plot When Evaluating Binary Classifiers on Imbalanced Datasets. PLOS ONE, 10(3):1-21, 2015. doi: 10.1371/journal.pone.0118432. URL https://doi.org/10.1371/journal.pone.0118432.</note>
+</biblStruct>
+
+<biblStruct xml:id="b73">
+	<analytic>
+		<title level="a" type="main">Improving predictive inference under covariate shift by weighting the log-likelihood function</title>
+		<author>
+			<persName><forename type="first">Hidetoshi</forename><surname>Shimodaira</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of statistical planning and inference</title>
+		<imprint>
+			<biblScope unit="volume">90</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<date type="published" when="2000">2000</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Hidetoshi Shimodaira. Improving predictive inference under covariate shift by weighting the log-likelihood function. Journal of statistical planning and in- ference 90(2), 2000.</note>
+</biblStruct>
+
+<biblStruct xml:id="b74">
+	<analytic>
+		<title level="a" type="main">Risk minimization, probability elicitation and cost-sensitive svms</title>
+		<author>
+			<persName><forename type="first">Masnadi</forename><surname>Hamed</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Nuno</forename><surname>Shirazi</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Vasconcelos</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">ICML</title>
+		<imprint>
+			<date type="published" when="2010">2010</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Hamed Masnadi Shirazi and Nuno Vasconcelos. Risk minimization, probability elicitation and cost-sensitive svms. ICML, 2010.</note>
+</biblStruct>
+
+<biblStruct xml:id="b75">
+	<analytic>
+		<title level="a" type="main">Credit card fraud detection using hidden markov model</title>
+		<author>
+			<persName><forename type="first">Abhinav</forename><surname>Srivastava</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Amlan</forename><surname>Kundu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Shamik</forename><surname>Sural</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Arun</forename><forename type="middle">K</forename><surname>Majumdar</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on dependable and secure computing</title>
+		<imprint>
+			<date type="published" when="2008">2008</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Abhinav Srivastava, Amlan Kundu, Shamik Sural, and Arun K. Majumdar. Credit card fraud detection using hidden markov model. IEEE Transactions on dependable and secure computing, 2008.</note>
+</biblStruct>
+
+<biblStruct xml:id="b76">
+	<analytic>
+		<title level="a" type="main">When training and test sets are different: characterizing learning transfer</title>
+		<author>
+			<persName><forename type="first">Amos</forename><surname>Storkey</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Dataset shift in machine learning</title>
+		<imprint>
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Amos Storkey. When training and test sets are different: characterizing learning transfer. Dataset shift in machine learning, 2009.</note>
+</biblStruct>
+
+<biblStruct xml:id="b77">
+	<analytic>
+		<title level="a" type="main">Covariate shift adaptation by importance weighted cross validation</title>
+		<author>
+			<persName><forename type="first">Masashi</forename><surname>Sugiyama</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Matthias</forename><surname>Krauledat</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Klaus-Robert</forename><surname>Mazller</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Machine Learning Research</title>
+		<imprint>
+			<biblScope unit="volume">8</biblScope>
+			<date type="published" when="2007">2007</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Masashi Sugiyama, Matthias Krauledat, and Klaus-Robert Mazller. Covariate shift adaptation by importance weighted cross validation. Journal of Machine Learning Research 8, 2007.</note>
+</biblStruct>
+
+<biblStruct xml:id="b78">
+	<analytic>
+		<title level="a" type="main">Costsensitive boosting for classification of imbalanced data</title>
+		<author>
+			<persName><forename type="first">Yanmin</forename><surname>Sun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mohamed</forename><forename type="middle">S</forename><surname>Kamel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Andrew Kc</forename><surname>Wong</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yang</forename><surname>Wang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Pattern Recognition</title>
+		<imprint>
+			<date type="published" when="2007">2007</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Yanmin Sun, Mohamed S Kamel, Andrew KC Wong, and Yang Wang. Cost- sensitive boosting for classification of imbalanced data. Pattern Recognition, 2007.</note>
+</biblStruct>
+
+<biblStruct xml:id="b79">
+	<analytic>
+		<title level="a" type="main">Issues in mining imbalanced data sets: a review paper</title>
+		<author>
+			<persName><forename type="first">Sofia</forename><surname>Visa</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Anca</forename><surname>Ralescu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the sixteen midwest artificial intelligence and cognitive science conference</title>
+		<meeting>the sixteen midwest artificial intelligence and cognitive science conference</meeting>
+		<imprint>
+			<date type="published" when="2005">2005</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Sofia Visa and Anca Ralescu. Issues in mining imbalanced data sets: a review paper. Proceedings of the sixteen midwest artificial intelligence and cognitive science conference, 2005.</note>
+</biblStruct>
+
+<biblStruct xml:id="b80">
+	<analytic>
+		<title level="a" type="main">Apate: A novel approach for automated credit card transactions fraud detection using network-based extensions</title>
+		<author>
+			<persName><forename type="first">Veronique</forename><surname>Van Vlasselaer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Cristian</forename><surname>Bravo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Olivier</forename><surname>Caelen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Tina</forename><surname>Eliassirad</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Leman</forename><surname>Akoglu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Monique</forename><surname>Snoeck</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Bart</forename><surname>Baesens</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Decision support systems</title>
+		<imprint>
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Veronique Van Vlasselaer, Cristian Bravo, Olivier Caelen, TIna Eliassirad, Le- man Akoglu, Monique Snoeck, and Bart Baesens. Apate: A novel approach for automated credit card transactions fraud detection using network-based extensions. Decision support systems, 2015.</note>
+</biblStruct>
+
+<biblStruct xml:id="b81">
+	<analytic>
+		<title level="a" type="main">Mining changes of classification by correspondance tracing</title>
+		<author>
+			<persName><forename type="first">Ke</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Senqiang</forename><surname>Zhou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Chee</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ada</forename><surname>Fu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">X</forename><surname>Yu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 2003 SIAM International COnference on Data Mining</title>
+		<meeting>the 2003 SIAM International COnference on Data Mining</meeting>
+		<imprint>
+			<publisher>Society for Industrial and Applied Mathematics</publisher>
+			<date type="published" when="2003">2003</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ke Wang, Senqiang Zhou, Chee Ada Fu, and J.X. Yu. Mining changes of classification by correspondance tracing. Proceedings of the 2003 SIAM In- ternational COnference on Data Mining. Society for Industrial and Applied Mathematics, 2003.</note>
+</biblStruct>
+
+<biblStruct xml:id="b82">
+	<analytic>
+		<title level="a" type="main">Diversity exploration and negative correlation learning on imbalanced data sets</title>
+		<author>
+			<persName><forename type="first">Shuo</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ke</forename><surname>Tang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Xin</forename><surname>Yao</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Joint Conference on Neural Networks</title>
+		<imprint>
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Shuo Wang, Ke Tang, and Xin Yao. Diversity exploration and negative corre- lation learning on imbalanced data sets. International Joint Conference on Neural Networks, 2009.</note>
+</biblStruct>
+
+<biblStruct xml:id="b83">
+	<analytic>
+		<title level="a" type="main">On the application of roc analysis to predict classification performance under varying class distributions</title>
+		<author>
+			<persName><forename type="first">Geoffrey</forename><forename type="middle">I</forename><surname>Webb</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Kai</forename><forename type="middle">Ming</forename><surname>Ting</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Machine Learning</title>
+		<imprint>
+			<biblScope unit="volume">58</biblScope>
+			<date type="published" when="2005">2005</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Geoffrey I. Webb and Kai Ming Ting. On the application of roc analysis to predict classification performance under varying class distributions. Machine Learning 58, 2005.</note>
+</biblStruct>
+
+<biblStruct xml:id="b84">
+	<monogr>
+		<title level="m" type="main">The effect of class distribution on classifier learning: an empirical study</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Gary</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Foster</forename><surname>Weiss</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Provost</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2001">2001</date>
+		</imprint>
+		<respStmt>
+			<orgName>Rutgers Univ</orgName>
+		</respStmt>
+	</monogr>
+	<note type="raw_reference">Gary M Weiss and Foster Provost. The effect of class distribution on classifier learning: an empirical study. Rutgers Univ, 2001.</note>
+</biblStruct>
+
+<biblStruct xml:id="b85">
+	<analytic>
+		<title level="a" type="main">Transaction aggregation as a strategy for credit card fraud detection</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Whitrow</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">J</forename><surname>Hand</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Juszczak</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">J</forename><surname>Weston</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">M</forename><surname>Adams</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Data Mining and Knowledge Discovery</title>
+		<imprint>
+			<biblScope unit="volume">18</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<date type="published" when="2008">2008</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">C. Whitrow, D. J. Hand, P. Juszczak, D. J. Weston, and N. M. Adams. Trans- action aggregation as a strategy for credit card fraud detection. Data Mining and Knowledge Discovery 18(1), 2008.</note>
+</biblStruct>
+
+<biblStruct xml:id="b86">
+	<analytic>
+		<title level="a" type="main">Learning in the presence of context drift and hidden contexts</title>
+		<author>
+			<persName><forename type="first">Gerhard</forename><surname>Widmer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Miroslav</forename><surname>Kubat</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Machine Learning</title>
+		<imprint>
+			<biblScope unit="volume">23</biblScope>
+			<date type="published" when="1996">1996</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Gerhard Widmer and Miroslav Kubat. Learning in the presence of context drift and hidden contexts. Machine Learning 23, 1996.</note>
+</biblStruct>
+
+<biblStruct xml:id="b87">
+	<analytic>
+		<title level="a" type="main">Credit card transactions, fraud detection and machine learning: Modelling time with lstm recurrent neural networks</title>
+		<author>
+			<persName><forename type="first">B</forename><surname>Wiese</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Omlin</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Innovations in neural information paradigms and applications</title>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">B. Wiese and C. Omlin. Credit card transactions, fraud detection and machine learning: Modelling time with lstm recurrent neural networks. Innovations in neural information paradigms and applications, Springer, 2009.</note>
+</biblStruct>
+
+<biblStruct xml:id="b88">
+	<analytic>
+		<title level="a" type="main">Class-boundary alignment for imbalanced dataset learning</title>
+		<author>
+			<persName><forename type="first">Gang</forename><surname>Wu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Edward</forename><forename type="middle">Y</forename><surname>Chang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">ICML workshop on learning from imbalanced data sets II</title>
+		<imprint>
+			<date type="published" when="2003">2003</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Gang Wu and Edward Y Chang. Class-boundary alignment for imbalanced dataset learning. ICML workshop on learning from imbalanced data sets II, 2003.</note>
+</biblStruct>
+
+<biblStruct xml:id="b89">
+	<analytic>
+		<title level="a" type="main">On predicting rare classes with svm ensembles in scene classification</title>
+		<author>
+			<persName><forename type="first">Rong</forename><surname>Yan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yan</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Rong</forename><surname>Jin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Alex</forename><surname>Hauptmann</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">IEEE International Conference on Acoustics, Speech, and Signal Processing</title>
+		<imprint>
+			<date type="published" when="2003">2003</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Rong Yan, Yan Liu, Rong Jin, and Alex Hauptmann. On predicting rare classes with svm ensembles in scene classification. IEEE International Conference on Acoustics, Speech, and Signal Processing, 2003.</note>
+</biblStruct>
+
+<biblStruct xml:id="b90">
+	<analytic>
+		<title level="a" type="main">Injecting Semantic Background Knowledge into Neural Networks using Graph Embeddings</title>
+		<author>
+			<persName><forename type="first">O</forename><surname>Ziegler</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Caelen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Garchery</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Granitzer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>He-Guelton</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Jurgovsky</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Portier</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Zwicklbauer</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/WETICE.2017.36</idno>
+	</analytic>
+	<monogr>
+		<title level="m">26th IEEE International Conference on Enabling Technologies: Infrastructure for Collaborative Enterprises</title>
+		<imprint>
+			<publisher>WETICE</publisher>
+			<date type="published" when="2017">2017</date>
+			<biblScope unit="page" from="200" to="205" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">K Ziegler, O Caelen, M Garchery, M Granitzer, L He-Guelton, J Jurgovsky, P Portier, and S Zwicklbauer. Injecting Semantic Background Knowledge into Neural Networks using Graph Embeddings. In 26th IEEE International Conference on Enabling Technologies: Infrastructure for Collaborative Enter- prises. (WETICE)., pages 200-205, 2017. doi: 10.1109/WETICE.2017.36.</note>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

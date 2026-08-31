@@ -1,0 +1,1089 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">PRECISION-RECALL CURVE (PRC) CLASSIFICATION TREES A PREPRINT</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability  status="unknown">
+					<licence/>
+				</availability>
+				<date type="published" when="2020-11-17">November 17, 2020</date>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><forename type="first">Jiaju</forename><surname>Miao</surname></persName>
+							<email>jiaju.miao@stonybrook.edu</email>
+						</author>
+						<author>
+							<persName><forename type="first">Wei</forename><surname>Zhu</surname></persName>
+							<email>wei.zhu@stonybrook.edu</email>
+						</author>
+						<author>
+							<affiliation key="aff0">
+								<orgName type="department">Department of Applied Mathematics and Statistics Stony</orgName>
+								<orgName type="institution">Brook University Stony</orgName>
+								<address>
+									<postCode>11794</postCode>
+									<settlement>Brook</settlement>
+									<region>NY</region>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<affiliation key="aff1">
+								<orgName type="department">Department of Applied Mathematics and Statistics Stony</orgName>
+								<orgName type="institution">Brook University Stony</orgName>
+								<address>
+									<postCode>11794</postCode>
+									<settlement>Brook</settlement>
+									<region>NY</region>
+								</address>
+							</affiliation>
+						</author>
+						<title level="a" type="main">PRECISION-RECALL CURVE (PRC) CLASSIFICATION TREES A PREPRINT</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date type="published" when="2020-11-17">November 17, 2020</date>
+						</imprint>
+					</monogr>
+					<idno type="MD5">B5C112C6C02257151E835597B7B896F1</idno>
+					<idno type="arXiv">arXiv:2011.07640v1[stat.ML]</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.2-SNAPSHOT" ident="GROBID" when="2026-08-31T18:10+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<textClass>
+				<keywords>
+					<term>Precision-Recall curve</term>
+					<term>Imbalanced data</term>
+					<term>PRC random forest</term>
+					<term>PRC-ROC random forest</term>
+				</keywords>
+			</textClass>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>The classification of imbalanced data has presented a significant challenge for most well-known classification algorithms that were often designed for data with relatively balanced class distributions. Nevertheless skewed class distribution is a common feature in real world problems. It is especially prevalent in certain application domains with great need for machine learning and better predictive analysis such as disease diagnosis, fraud detection, bankruptcy prediction, and suspect identification. In this paper, we propose a novel tree-based algorithm based on the area under the precision-recall curve (AUPRC) for variable selection in the classification context. Our algorithm, named as the "Precision-Recall Curve classification tree", or simply the "PRC classification tree" modifies two crucial stages in tree building. The first stage is to maximize the area under the precision-recall curve in node variable selection. The second stage is to maximize the harmonic mean of recall and precision (F-measure) for threshold selection. We found the proposed PRC classification tree, and its subsequent extension, the PRC random forest, work well especially for class-imbalanced data sets. We have demonstrated that our methods outperform their classic counterparts, the usual CART and random forest for both synthetic and real data. Furthermore, the ROC classification tree proposed by our group previously has shown good performance in imbalanced data. The combination of them, the PRC-ROC tree, also shows great promise in identifying the minority class.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1">Introduction</head><p>Knowledge Discovery and Data Mining (KDD) is an interdisciplinary area focusing on methodologies for extracting useful information from data. Classification is a fundamental tool in this domain. In the terminology of machine learning <ref type="bibr" target="#b0">[1]</ref>, classification is considered an instance of supervised learning, i.e., learning where a training set of correctly identified observations is available. The task of the constructed classifier is to predict class labels given any input information such as financial crisis prediction <ref type="bibr" target="#b1">[2]</ref> <ref type="bibr" target="#b2">[3]</ref>. In this introductory section, we provide a brief overview of some well-developed classification algorithms to shed light on the complex issues of class imbalance. Decision trees can be used to visually and explicitly represent decisions and the decision making process. A typical tree consists of three components. The inner tree nodes represent features with thresholds leading to the branching of edges eventually ended up in terminal nodes called leaves labeled with class decisions. In tree building, the decision tree model is built by recursively splitting the training data set based on a locally optimal criterion (typically information gain or gini impurity until certain stopping criteria are met. After building the decision tree, a tree pruning step is performed to prevent overfitting by reducing the size of the tree. In the presence of the class imbalance, more branches may need to be built in order to identify the minority class. CART is a well-known tree algorithm <ref type="bibr" target="#b3">[4]</ref>. A random forest (RF) or random decision forest <ref type="bibr" target="#b4">[5]</ref> is an ensemble learning method obtained by generating many decision trees and then combine their decisions. RF is a popular bagging algorithm which incorporates those trees <ref type="bibr" target="#b5">[6]</ref>. Two types of randomness are built in the process. First, tree bagging is employed to select a bootstrap sample from original the original data for each decision tree. The bootstrap resampling method was introduced by Bradley Efrons <ref type="bibr" target="#b6">[7]</ref>. It is implemented by sampling with replacement from an existing sample data independently with same size and conducting experiments among them. Second, a subset of features is randomly selected to generate the best split in each tree building process. The reason in this is to decrease the correlation between trees and reduce overfitting problem. A Support Vector Machine (SVM) introduced by Cortes is a discriminative classifier based on a separating hyperplane <ref type="bibr" target="#b7">[8]</ref>. Given training data, for two-group (i.e., bi-class) classifications, the algorithm outputs an optimal hyperplane where the margin is maximal. Akbani <ref type="bibr" target="#b8">[9]</ref> illustrates that SVMs can be ineffective in determining the class boundary when the distribution is skewed. A neural network is a series of algorithms that aims to discover the underlying relationships in a set of training data through a process that mimics the way the human brain operates. It is a beautiful bio-inspired programming paradigm. However, some experimental results demonstrate that its performance when dealing with imbalanced data is not satisfactory. The principal reason is the minority class cannot be adequately weighted <ref type="bibr" target="#b9">[10]</ref>. Besides these arguably the most fundamental classifiers, there are still many other classification algorithms which we will not be able to introduce exhaustively here. Our goal is modest as we aim to develop a better decision tree algorithm, and on top of which, a better random forest algorithm, and them compare them to these four original and fundamental algorithms: CART, Random Forest (RF), SVM, and Neural Network, plus the weighted version of CART and RF that in a way reflect the current state-of-the-art on combing class-imbalance. In the next section, we shall introduce several common solutions to the class-imbalance problem.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2">Class imbalance problem</head><p>A number of solutions to the class imbalance problem have been presented in the literature. Basically they can be divided into 3 broad categories, i.e., cost-sensitive learning, data level and algorithm level approaches.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.1">Cost-sensitive learning</head><p>Cost-sensitive learning first introduced by Elkan <ref type="bibr" target="#b10">[11]</ref> has shown to be an effective technique for incorporating the different misclassification costs into the classification process. The goal of this type of learning is to minimize the total cost of misclassification. The key point is to assign different values to the false positives and negatives. If we focus on identifying the minority which is the common case, the cost for labeling a positive example as negative can be higher than the cost for labeling a negative example as positive. Weighted Random Forest is the extended version that makes random forest more suitable for learning from extremely imbalanced data based on the idea of cost sensitive learning <ref type="bibr" target="#b11">[12]</ref> <ref type="bibr" target="#b12">[13]</ref>. Kim <ref type="bibr" target="#b13">[14]</ref> proposed the weighted support vector machine which imposes weights to the loss term. Likewise, some other learning algorithms have their cost-sensitive correspondings, such as cost-sensitive decision tree, cost-sensitive neural network <ref type="bibr" target="#b14">[15]</ref>[16] <ref type="bibr">[17][18]</ref>[19], etc.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.2">Data level approaches</head><p>The data-level approaches can also be interpreted as resampling techniques. That is, we can either undersample the majority class or oversample the minority class to attain the balanced distribution (the ratio of class distribution is 1:1). Undersampling can be defined as removing some observations of the majority class. Some algorithms have been applied to alleviate the skewness, e.g., random undersampling and cluster-based undersampling <ref type="bibr" target="#b19">[20]</ref>. However an obvious drawback is that we are removing information that may be valuable which can then lead to an underfitting problem. Similarly, oversampling before splitting can achieve more minority observations. Well-known algorithms such as SMOTE <ref type="bibr" target="#b20">[21]</ref> and ADASYN <ref type="bibr" target="#b21">[22]</ref> have been widely implemented in dealing with imbalanced classification problems. However, it can cause overfitting and poor generalization.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.3">Algorithm level approaches</head><p>It is always a good rule of thumb to modify the training procedure of algorithms to boost its performance with uneven datasets. To develop an algorithmic solution, one needs in-depth knowledge of both the classifier learning algorithm and the application domain. Based on the receiver operating characteristics (ROC), our group had invented the ROC classification trees and the ROC random forest to identify the rare cases. Song suggested choosing the threshold with the largest harmonic mean of sensitivity and specificity as the node splitting criterion <ref type="bibr" target="#b22">[23]</ref> <ref type="bibr" target="#b23">[24]</ref>. Yan <ref type="bibr" target="#b24">[25]</ref> extended the bi-class classification ROC Tree and ROC RF <ref type="bibr" target="#b22">[23]</ref> to multiple classes. Our proposed algorithm PRC classification trees, and later the PRC random forest, are developed from a different perspective as will be introduced in details in the following chapter.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.4">Ensemble methods</head><p>It is well known that through combining classifiers one can improve the prediction accuracy. It is effective to embed the data level approaches in boosting procedure which is one of the most popular combination techniques. Sun <ref type="bibr" target="#b25">[26]</ref> introduced the cost items into the learning framework of AdaBoost for improving the classification of imbalanced data <ref type="bibr" target="#b26">[27]</ref>. Boosting has been proven to be a general and effective method for improving the accuracy of a given learning algorithm <ref type="bibr">[28][29]</ref>. Nitesh <ref type="bibr" target="#b29">[30]</ref> combined the SMOTE algorithm and the boosting procedure and WOTBoost <ref type="bibr" target="#b30">[31]</ref> adjusted its oversampling strategy at each round of boosting to synthesize more targeted minority data samples. Similarly, RUSBoost alleviated class imbalance by introducing random undersampling techniques into the standard boosting procedure <ref type="bibr" target="#b31">[32]</ref>. MEBoost mixed two different weak learners with boosting to improve the performance on imbalanced datasets <ref type="bibr" target="#b32">[33]</ref>. So far, many learning methods have had their boosting counter parts, such as DataBoost <ref type="bibr" target="#b33">[34]</ref>, EUSBoost <ref type="bibr" target="#b34">[35]</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.5">Performance evaluation</head><p>Performance metric plays a key role in evaluating the classifier. Additionally, it is a guideline for the modeling process of classifiers. Accuracy is a traditional measure to evaluate the performance. It may be misleading, however, for a data set with unbalanced class distribution. Suppose we give every observation the prevalent class label, the accuracy can be high but the performance for the rare class is very poor. The following is a brief summary on some commonly used performance metrics.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.5.1">Confusion matrix</head><p>In the bi-class scenario, positive and negative class samples can be categorized into four groups based on the classification process. This can be denoted as the confusion matrix shown in Tabel 1.</p><p>Several measures can be derived from this matrix:</p><p>T rue positive rate(Recall/Sensitivity) :</p><formula xml:id="formula_0">T P R = T P T P + F N<label>(1)</label></formula><p>F alse negative rate :</p><formula xml:id="formula_1">F N R = F N T P + F N<label>(2)</label></formula><p>T rue negative rate(Specif icity) :</p><formula xml:id="formula_2">T N R = T N T N + F P<label>(3)</label></formula><p>F alse positive rate :</p><formula xml:id="formula_3">F P R = F P T N + F P<label>(4)</label></formula><p>P ositive predictive value(P recision) : P P V = T P T P + F P</p><p>N egative predictive value :</p><formula xml:id="formula_5">N P V = T N T N + F N .<label>(6)</label></formula></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.5.2">F-measure</head><p>For situation where the performance of positive class is the priority, two measures of the indicators described earlier are crucial -the true positive rate and the positive predictive value. Specifically, the true positive rate is defined as recall referring to the percentage of positive class samples that are correctly classified. Correspondingly, the positive predictive value is defined as precision denoting the percentage of predictive positive class samples that are correctly classified. F-measure is devised to integrate these two measures. In principle, it is the harmonic mean of precision and recall:</p><formula xml:id="formula_6">F measure = 2 recall -1 + precision -1 .<label>(7)</label></formula><p>In general, F-measure tends to be closer to the smaller one of the measures. Additionally, a high value indicates that both two measures are reasonably high and convincing.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3">Methodology</head><p>3.1 ROC Curve and the area under the ROC curve (AUC)</p><p>ROC curve is a performance measurement for classification problem at various thresholds settings. The curve is plotted based on the ROC space with True positive rate (TPR) against the false positive rate (FPR) where TPR is on y-axis and FPR is on the x-axis. In the ROC space, a ROC curve is created by connecting all the pairs of TPR and FPR at each threshold for a specific classifier. It is a common method to calculate the area under the ROC curve (AUC) to compare the measurement of separability among different classifiers. The higher AUC refers to a stronger ability of distinguishing between classes. There are several methods to perform a computational analysis of AUC estimators.</p><p>The way we used in our analysis is to apply the trapezoidal estimators. The estimation is based on an approximation of the entire area by summing up all subareas and the formula is:</p><formula xml:id="formula_7">AU C trapezoid = 1 2 • n i=1 (f i+1 -f i ) • (t i+1 + t i )<label>(8)</label></formula><p>where f is the function of FPR and t is of TPR, the trajectory is partitioned in n-1 sections.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.2">PRC and the area under the precision-recall curve (AUPRC)</head><p>For the classification problem, the performance is typically defined with the confusion matrix generated by the associated classifier. It is possible to compute the recall (sensitivity), precision and specificity. Similar to ROC curves described in the previous chapter, we connect all the pair of measurements at each threshold to make the PRC plot. Precision-Recall curve plots Precision which is the fraction of observations with a positive predicted value that are truly positive versus Recall, measuring the fraction of the examples with positive labels that get a positive predicted result.</p><p>The perfect classifier will have a PRC that passes through the upper right corner (corresponding to 100% precision and 100% recall). In general, the closer a point is to that position, the better the test is. Figure <ref type="figure">1</ref> and<ref type="figure">2</ref> show PRC and ROC curve for a perfect test respectively. To compare two classifiers based on PRC, the reasonable measure is the area under precision-recall curve (AUPRC). The higher it is, the better the performance of the classifier is. If the area under ROC (AUC) is less than 0.5, representing the baseline value of random guessing, we should convert the negative predictions into positive ones to get a better result. For AUPRC, the corresponding baseline value is the ratio of positive cases in the distribution expressed as Baseline V alue = positive cases positive cases + negative cases .</p><p>Algorithm 1 below shows the process of calculating the AUPRC and the computation <ref type="bibr" target="#b35">[36]</ref> in the case of it less than the baseline value. For the estimation of AUPRC, we also applied the trapezoidal approach:</p><formula xml:id="formula_9">AU P RC trapezoid = 1 2 • n i=1 (r i+1 -r i ) • (p i+1 + p i ) (<label>10</label></formula><formula xml:id="formula_10">)</formula><p>where r is the function of recall and p is of precision, the trajectory is partitioned in n-1 sections. </p><formula xml:id="formula_11">indice ← which(X[f i ] ≤ uniq_values fi [j]) 11: recall_array ← length(which((X[fi],Y )[indice,"Y "]==1)) total_positives 12: precision_array ← length(which((X[fi],Y )[indice,"Y "]==1)) length(indice) 13:</formula><p>if precision_array[j] &lt; P RC baseline then 14: AU P RC fi ← AU P RC fi + 21:</p><formula xml:id="formula_12">recall_array[j] ← 1 -recall_array[j] 15: precision_array[j] ← total_positives-length(which((X[fi ],Y )[indice,"Y "]==1)) nrow(X[fi],Y )-length(indice) 16: end if 17: if j == 1 then 18: AU P RC fi ← recall_array[j]•(1+precision_array[j])</formula><formula xml:id="formula_13">(recall_array[j]-recall_array[j-1])•(precision_array[j]+precision_array[j-1])<label>2 22:</label></formula><p>end if 23: end for 24: return AU P RC fi 25: end</p><p>The Precision-recall curve is usually a tortuous curve, fluctuating up and down. Consequently, PRC tends to intersect each other much more often than the ROC curve. The main difference between them is that the number of truenegative results is not used for constructing the PRC. Ekelund <ref type="bibr" target="#b36">[37]</ref> illustrates that the precision-recall curves are not impacted by the addition of patients without disease which are the true-negative cases. Evaluation of classifiers via receiver operating characteristics (ROC) curve have been commonly used. However, for imbalanced data, the ROC may tend to give an optimistic view since the classifier is more likely to assign the observation as the majority class. In many real-life problems, we care more about the true positive cases, e.g., fraud detection and disease diagnosis. The Precision-Recall plot is more informative than the ROC Plot when evaluating binary classifiers on imbalanced datasets <ref type="bibr" target="#b37">[38]</ref>. Therefore, we propose the classification trees based on maximizing the area under the Precision-Recall curve.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.3">Feature selection</head><p>Feature selection is deciding which variable to include in the model. The data features that are used to train tree-based models have a huge influence on the performance we can achieve. In the case of the PRC classification tree, it is done by Algorithm 2. It lets AUPRC decide which feature variable is useful to include in every split of tree node. Typically, the feature that yields the largest AUPRC value should be selected. In Algorithm 2, the function "AUPRC_calculation" is implemented by Algorithm 1. The below pseudo code illustrates the process of generating the suitable feature with the largest AUPRC value.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Algorithm 2 Feature_Selection_by_AUPRC</head><p>Input: Training data (x 1 , y 1 ),. . . ,(x n , y n ), Feature set f i ∈ F , target vector y i ∈ {-1, +1}. Output: Feature f i with the largest AUPRC.</p><p>Require: AUPRC_calculation.</p><formula xml:id="formula_14">1: set M ax f ← N U LL 2: set M ax AUP RC ← 0 3: for each feature f i ∈ F do 4: T emp AUP RC ← AU P RC_calculation(X[f i ], Y ) 5: if T emp AUP RC &gt; M ax AUP RC then 6: M ax f ← f i 7: M ax AUP RC ← T emp AUP RC 8:</formula><p>end if 9: end for 10: return M ax f , M ax AUP RC 11: end</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.4">Threshold selection</head><p>It is important to calculate the optimum threshold for each split in the PRC Tree. This could be done by selecting the largest F1-score in the chosen feature variable. The F-score is a measure of accuracy which is the harmonic mean of precision and recall. Note that the F-score does not take the true negatives into account. That's the reason that it is more effective than other measures in the classification for imbalanced data. Algorithm 3 illustrates the procedure of threshold selection. The basic goal is to choose the cutoff point with the largest F1 after comparing all the scores for the threshold set of the feature achieved by Algorithm 2.</p><p>Algorithm 3 Threshold_Selection_by_F1-score Input: PRC matrix (recall_array, precison_array) of selected featuref i , where f i ∈ F ; Threshold set Θ. Output: Selected splitting threshold θ.</p><p>Require: function HarmonicM ean.</p><formula xml:id="formula_15">1: set M ax F 1 ← 0 2: set M ax θ ← N U LL 3: set uniq_split fj ← sort(unique(f i )) 4: for j = 1 to length(uniq_split fj ) do 5: T emp F 1 ← HarmonicM ean(recall_array[j], precison_array[j]) 6: if T emp F 1 &gt; M ax F 1 then 7: M ax F 1 ← T emp F 1 8: M ax θ ← uniq_split fj [j] 9:</formula><p>end if 10: end for 11: return M ax θ 12: end</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.5">PRC Tree algorithm</head><p>The following Algorithm 4 is employed to generate the PRC Tree. The previous Algorithm 2 and 3 complete a node split process in each stage. Instead of measuring by traditional Gini impurity or information gain, the features and threshold are selected by AUPRC and F1-score respectively. Algorithm 4 "PRC_Tree" integrates the previous algorithms to generate each split node until the corresponding stopping criteria is met. Each node has scores for different classes, measuring the percentage of each class in it. It is called nodescore in the algorithm. The corresponding nodelabel is the majority class of this node. By doing so, it could be easy to achieve the majority target label in the Terminal node. Below is the pseudo code to build PRC classification tree recursively. The prediction of a PRC Tree, T , with K terminal nodes and depth L, can be written as</p><formula xml:id="formula_16">g(x i ; ŷ, K, L) = K i=1 ŷk ½ {xi∈C k (L)} ,<label>(11)</label></formula><p>where C k (L) is one of the K partitions of the data. Each partition is a product of up to L indicator function of the features which are selected by AUPRC algorithm.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Algorithm 4 PRC_Tree</head><p>Input: Training data (x 1 , y 1 ),. . . ,(x n , y n ), Feature set f i ∈ F , target vector y i ∈ {-1, +1}; stopping criterion (maximum tree depth, minimum leaf size); N f , the number of features used in each split. Output: PRC tree.</p><p>Require: Feature_Selection_by_AUPRC and Threshold_Selection_by_F1-score 1: Do the nodescore and nodelabel for the root node. 2: if the stopping criterion is met then </p><formula xml:id="formula_17">(M ax f , M ax AUP RC ) ← F eature_Selection_by_AU P RC(X, Y, F ′ ) 8: M ax θ ← T hreshold_Selection_by_F 1 -score(M ax f , M ax AUP RC ) 9: {(X, Y ) lef t , (X, Y ) right } ← N ode_Split(M ax f , M ax θ ) 10:</formula><p>apply the function P RC_T ree (maximumtreedepth ← maximumtreedepth -1) to the subsets {(X, Y ) lef t , (X, Y ) right } recursively until resulting nodes are pure or the stopping criteria is met 11: end if 12: return PRC tree 13: end 3.6 PRC random forest algorithm Random forests are an ensemble learning method for classification by constructing a multiple of classification trees. We can build our PRC random forest by treating the PRC tree as the base classifier. The PRC random forest has competitive predictive performance and provides a reliable feature importance estimate. Algorithm 5 "PRC_Random_Forest" states how to build the forests based on the PRC tree. The parameter N t is used to decide the number of trees to form the "forest". As discussed before, the number of features N f for each node split is randomly chosen from the feature set F. It can decrease the prediction error of the model by doing so. Below is the procedure of our "forests".</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Algorithm 5 PRC_Random_Forest</head><p>Input: Training data (x 1 , y 1 ),. . . ,(x n , y n ), Feature set f i ∈ F , target vector y i ∈ {-1, +1}; Number of trees N t ;</p><p>Number of features for each node split N f . Output: PRC random forest ℜ.</p><p>Require: PRC_Tree</p><formula xml:id="formula_18">1: Set ℜ ← N U LL. 2: for j = 1 to N t do 3: generate bootstrap sample (X, Y ) j 4:</formula><p>for each node split, generate F ′ by randomly choosing N f features from F 5:</p><formula xml:id="formula_19">prc_tree j ← P RC_T ree((X, Y ) j , F ′ ) 6:</formula><p>append prc_tree j to ℜ 7: end for 8: return PRC random forest ℜ 9: end</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.7">PRC-ROC Classification Trees</head><p>Each evaluation approach has its own merits and demerits. As an aside, it is comprehensive to combine the PRC and ROC classification trees in meaningful and optimal ways. The following chapters will explore the method based on PRC and ROC curves in more detail.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.7.1">Feature selection</head><p>The one valuable feature of the RF is that we can use the out-of-bag (OOB) samples to make objective performance judgements based on the training data only. The OOB error is an error estimation technique often used to evaluate the accuracy of a random forest. We will use the weighted average of both areas to do the feature selection. Based on the training data and OOB accuracy score, we can tune the parameter to find the optimal weighted parameter for a given data. The parameter can be expressed as a =</p><p>(1 -</p><formula xml:id="formula_20">OOB_error P RCRF ) (1 -OOB_error P RCRF + 1 -OOB_error ROCRF ) .<label>(12)</label></formula><p>Hence, the weighted average of both areas becomes</p><formula xml:id="formula_21">Area weighted = a(AU P RC) + (1 -a)(AU C), where 0 ≤ a ≤ 1.<label>(13)</label></formula><p>In the case of the PRC-ROC classification tree, it is done by Algorithm 7. Instead of AUPRC, it lets the weighted average of AUPRC and AUC decide which feature variable is useful to include in every split of tree node. The feature that yields the largest mean value should be selected in a similar fashion. Algorithm 6 <ref type="bibr" target="#b24">[25]</ref> shows how the function "AUC_calculation" is implemented. Then we achieves the algorithm by integrating it to the previous feature selection Algorithm 2.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Algorithm 6 AUC_calculation</head><p>Input: Training data (x 1 , y 1 ),. . . ,(x n , y n ), Feature set f i ∈ F , target vector y i ∈ {-1, +1}.</p><p>Output: Area under curve (AUC) of feature f i . </p><formula xml:id="formula_22">indice ← which(X[f i ] ≤ uniq_values fi [j]) 10: tp_array ← length(which((X[fi],Y )[indice,"Y "]==1))</formula><p>total_positives 11:</p><formula xml:id="formula_23">f p_array ← length(which((X[fi],Y )[indice,"Y "]==-1))</formula><p>total_negatives)</p><p>12:</p><p>if j == 1 then 13: AU C fi ← AU C fi + 16:</p><formula xml:id="formula_24">AU C fi ← tp_array[j] * f p_array[j]</formula><formula xml:id="formula_25">(f p_array[j]-f p_array[j-1])•(tp_array[j]+tp_array[j-1])<label>2</label></formula><p>17:</p><p>end if </p><formula xml:id="formula_26">T emp AUP RC_AUC ← Area weighted (AU P RC_calculation(X[f i ], Y ), 5: AU C_calculation(X[f i ], Y )) 6: if T emp AUP RC_AUC &gt; M ax AUP RC_AUC then 7: M ax f ← f i 8: M ax AUP RC_AUC ← T emp AUP RC_AUC 9:</formula><p>end if 10: end for 11: return M ax f , M ax AUP RC_AUC 12: end</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.7.2">Threshold selection</head><p>To calculate the optimum threshold for each split in the PRC-ROC Tree, we select the largest harmonic mean of three performance metrics, i.e., recall, precision and specificity in the chosen feature variable. The F-score in this case becomes the harmonic mean of precision, recall and specificity:</p><formula xml:id="formula_27">F 3 = 3 recall -1 + precision -1 + specif icity -1 .<label>(14)</label></formula><p>Algorithm 8 illustrates the procedure of threshold selection. The main goal is to choose the cutoff point with the largest harmonic mean after comparing all the scores for the threshold set of the feature achieved by feature selection.</p><p>Algorithm 8 Threshold_Selection_by_F3-score Input: PRC_AUC matrix (recall_array, precison_array, f p_array) of selected featuref i , where f i ∈ F ; Threshold set Θ. Output: Selected splitting threshold θ.</p><p>Require: function HarmonicM ean. 1: set M ax F 3 ← 0 2: set M ax θ ← N U LL 3: set uniq_split fj ← sort(unique(f i )) 4: for j = 1 to length(uniq_split fj ) do 5:</p><formula xml:id="formula_28">T emp F 3 ← HarmonicM ean(recall_array[j], precison_array[j], f p_array[j]) 6: if T emp F 3 &gt; M ax F 3 then 7: M ax F 3 ← T emp F 3 8: M ax θ ← uniq_split fj [j] 9:</formula><p>end if 10: end for 11: return M ax θ 12: end</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.7.3">PRC-ROC Tree algorithm</head><p>The following Algorithm 9 is employed to generate the PRC-ROC Tree. The following algorithm "PRC-ROC_Tree" integrates the previous algorithms to generate each split node until the corresponding stopping criteria is met. Each node has scores for different classes, measuring the percentage of each class in it. It is called nodescore in the algorithm. The corresponding nodelabel is the majority class of this node. By doing so, it could be easy to achieve the majority target label in the Terminal node. Below is the pseudo code to build the classification tree recursively. The prediction of a PRC-ROC Tree, T , with K terminal nodes and depth L, can also be written as</p><formula xml:id="formula_29">g(x i ; ŷ, K, L) = K i=1 ŷk ½ {xi∈C k (L)} ,<label>(15)</label></formula><p>where C k (L) is one of the K partitions of the data. Each partition is a product of up to L indicator function of the features which are selected by AUPRC_AUC algorithm.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Algorithm 9 PRC-ROC_Tree</head><p>Input: Training data (x 1 , y 1 ),. . . ,(x n , y n ), Feature set f i ∈ F , target vector y i ∈ {-1, +1}; stopping criterion (maximum tree depth, minimum leaf size); N f , the number of features used in each split. Output: PRC-ROC tree.</p><p>Require: Feature_Selection_by_AUPRC_AUC and Threshold_Selection_by_F3-score 1: Do the nodescore and nodelabel for the root node. 2: if the stopping criterion is met then </p><formula xml:id="formula_30">(M ax f , M ax AUP RC_AUC ) ← F eature_Selection_by_AU P RC_AU C(X, Y.F ′ ) 8: M ax θ ← T hreshold_Selection_by_F 3 -score(M ax f , M ax AUP RC_AUC ) 9: {(X, Y ) lef t , (X, Y ) right } ← N ode_Split(M ax f , M ax θ ) 10:</formula><p>apply the function P RC -ROC_T ree (maximumtreedepth ← maximumtreedepth -1) to the subsets {(X, Y ) lef t , (X, Y ) right } recursively until resulting nodes are pure or the stopping criteria is met 11: end if 12: return PRC-ROC tree 13: end</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.7.4">PRC-ROC random forest algorithm</head><p>We can build our PRC-ROC random forest by treating the PRC-ROC tree as the base classifier in a similar way. The PRC-ROC random forest has competitive predictive performance and provides a reliable feature importance estimate. Algorithm 10 "PRC-ROC_Random_Forest" states how to build the forests based on the PRC-ROC tree. The parameter N t is used to decide the number of trees to form the "forest". As discussed before, the number of features N f for each node split is randomly chosen from the feature set F . It can decrease the prediction error of the model by doing so. </p><formula xml:id="formula_31">prc_tree j ← P RC -ROC_T ree((X, Y ) j , F ′ ) 6:</formula><p>append prc_tree j to ℜ 7: end for 8: return PRC-ROC random forest ℜ 9: end</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.8">Complexity of algorithm</head><p>Let us consider a dataset with input size n. Time complexity is the measurement of the speed of the algorithm when performing for the input data. Random Forest is the ensemble model of decision trees. The situation is same to our proposed algorithms. For each tree, it will take O(N f * nlog(n)), where N f is the number of features for each node split. For the random forest algorithm, the complexity would be O(N t * N f * nlog(n)) and N t is the number of the trees.</p><p>The experimental studies fall into two parts. Experiments in the first part are designed for simulation study. The goal is to evaluate the performance on classifying the imbalanced simulated data of binary classes. Experiments in the second part focus on several real-world data sets. The following step after implementing our proposed algorithm is to find out how effective the model is based on the metrics and datasets. Five performance metrics as follows are used to make evaluation between different algorithms in our analysis. Accuracy is the number of correct predictions made by the model over all kinds of predictions made. Specificity is a measure that tells us what proportion of the majority class, are predicted correctly. Precision shows us what proportion of the predicted minority class which is actually positive. Recall or sensitivity tells us the proportion of cases that actually belong to the minority class is identified by the algorithm as positive cases. F1-score, measuring both precision and recall, is the harmonic mean of them.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.1">Simulation study</head><p>In the simulation experimental setting, the number of simulated data sets for classifying binary cases is set to 5,000 each. The feature variables for each class are generated from multivariate Gaussian distribution with specific mean and standard deviation. For our simulation, we divide the class-imbalance extent into 3 categories, namely "Mild", "Moderate" and "Extreme", according to the proportion of minority class. In general, the data set whose minority proportion is between 20% and 40% should be placed in the mild category. The criterion for moderate category is from 1% to 20% and the extreme case is when the proportion is less than 1%. Similarly, the dimension of features set to be 5 is considered as low feature category and 20 for the higher dimension. Furthermore, the noisy data may also make it difficult to learn the rare class. In the real world, data contains various types of errors, either random or systematic. Random errors are often referred to as noise. To complete the simulation setting, we also give the scenarios with noisy features for comprehensive comparison. Overall, we have two categories (i.e., easy-to-classify and hard-to-classify) in the simulated data and the following sections will give more detail about setting. For the simulation study, we compared the performance of our proposed algorithms with that of CART, weighted CART and ROC Tree. The CART and weighted CART are implemented by functions in R package "rpart" <ref type="bibr" target="#b38">[39]</ref>. Furthermore, we also compared the performance with random forest algorithms such as standard random forest and weighted version. Random forest (RF) is fit by the function in package "randomForest" <ref type="bibr" target="#b39">[40]</ref> and weighted Random Forest (Weighted RF) is implemented in package "wsrf" <ref type="bibr" target="#b12">[13]</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.1.1">Easy to classify, mild imbalanced data set with low feature dimension</head><p>In this scenario, the degree of class-imbalance is set to be mild, i.e., 30% of the simulated data points belong to the minority class. Five features are generated randomly from multivariate Gaussian distribution with specifies standard deviation 1. The means of the features for the majority and minority class are set to 0 and 3 respectively. Figure <ref type="figure" target="#fig_5">3</ref> shows the distribution of the data with 2 features. Table <ref type="table" target="#tab_4">2</ref> shows the performance metrics of all compared algorithms and it is divided in two. The first block is for single classification tree and the other is for random forest. The best results are denoted in bold respectively. Both PRC algorithms have better performance in F1 score and accuracy than ROC. The PRC is slightly better than CART. In addition, the PRC-ROC tree achieves the best performance in all aspects in the first block. PRC-ROC RF yields the highest recall, accuracy and F1-score among the random forest algorithms.  In this scenario, the class-imbalance extent becomes moderate. The number of features changes from 5 to 15. Table <ref type="table" target="#tab_5">3</ref> shows the performance metrics of all the algorithms and the best results are denoted in bold correspondingly. The ROC Tree is perfect in specificity and precision, but the performance of recall is not ideal. We can conclude that the PRC still outperforms both CART in this scenario. Furthermore, PRC-ROC is better than PRC in the five-dimensional evaluation. In the second block, the weighted RF work better than other algorithms under this situation. Under this scenario, only 1% of the simulated data points belong to the minority class. The parameter setting of features remains the same as scenario 1. Table <ref type="table" target="#tab_6">4</ref> shows the performance metrics. The PRC achieves a higher number in recall than the weighted one. Both PRC methods apparently outclass than CART and ROC especially in recall.</p><p>PRC-ROC obtains larger values in specificity, precision and F1-score than other methods. Although the weighted RF achieves the best specificity and precision, PRC-ROC RF yields the highest recall, accuracy and F1-score among the random forest algorithms. In this hard-to-classify scenario, the degree of class-imbalance is set to be mild, i.e., 30% of the simulated data points belong to the minority class. Five features are generated randomly from multivariate Gaussian distribution with specifies standard deviation 1. The means of the features for the majority and minority class are set to 0 and -1 respectively. Figure <ref type="figure" target="#fig_6">4</ref> shows the distribution of the data with 2 features. We can see many overlaps compared to the previous setting. The setting for this scenario is with ten normal features and five noise features. We change their means to 1 to treat them as noisy features. Table <ref type="table" target="#tab_7">5</ref> summarizes the performance metrics of the algorithms mentioned and the best performance is denoted in the same way. The results obviously indicate that in this specific case PRC-ROC surpasses other tree-algorithms in every metrics except the recall value. For the comparison of the random forest methods, PRC-ROC RF outperforms others. In this extreme data set, the features' distribution is the same as scenario 4. Table <ref type="table" target="#tab_8">6</ref> summarizes the comparison of all mentioned methods and the best results are denoted in bold. The PRC-ROC tree attains the best performance in the last four dimensions and makes huge improvement in F1 score. The ROC RF achieves the highest F1-score in the second block.</p><p>To sum up, the comparisons under most of those cases illustrate that two PRC trees achieve better performance than the both CART trees when the data set is imbalanced in either easy-to-differentiate or hard-to-differentiate case. Especially in the case of the extreme data set, the PRC tree is more powerful to identify the minority class and achieves higher  score in precision and recall than traditional CART. The ROC and PRC Tree have different focuses when dealing with imbalanced data.The PRC Tree is better than the ROC Tree when the main goal is to identify the rare cases and achieve the satisfactory performance in F1 score. Moreover,PRC-ROC is slightly better than PRC in our 5-dimensional evaluation in most cases since it inherits the advantage of both classification trees. For the second block, the two PRC RFs also show some advantages in classifying the minority cases. The following section moves on to the hard-toclassify setting. The next section focuses on the evaluation in the real-world data set.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.2">Real-world data set experiment</head><p>The PRC and PRC-ROC Tree have shown their advantage in classifying the simulated data set which is severely skewed. In this section we choose several datasets from Kaggle competition and UCI Machine Learning Repository to testify the feasibility of PRC random forests. We will compare the performance with standard classification algorithms such as random forest, SVM and neural network. In addition, weighted CART and ROC random forest are all taken into account. Random forest is fit by the function in package "randomForest" <ref type="bibr" target="#b39">[40]</ref>. SVM fits in package "e1071" <ref type="bibr" target="#b40">[41]</ref> and the package "neuralnet" <ref type="bibr" target="#b41">[42]</ref> is for realizing neural network. Weighted Random Forest (Weighted RF) is implemented in package "wsrf" <ref type="bibr" target="#b12">[13]</ref>. The Table <ref type="table" target="#tab_9">7</ref> summarizes the basic information of the three selected data sets. The first two data sets are about financial distress prediction and default of clients. The remaining one is about breast cancer diagnosis. For the credit data, this study employed a binary variable, default payment (Yes = 1, No = 0), as the dependent variable. Besides, this data set used 23 features as the independent variables. Similarly, the target variable in the second data is denoted by "Financial Distress" if it is greater than -0.50 the company should be considered as healthy (0). Otherwise, it would be regarded as financially distressed (1). We have 83 explanatory variables for it. The binary outcome of interest for the cancer data set that contains 30 attributes is whether a tumor is benign (0) or malignant <ref type="bibr" target="#b0">(1)</ref>. The out-of-bag error is an error estimation technique often used to evaluate the accuracy of a random forest. We split Then we experiment with real-world data sets and summarize the performance comparison in Tables 9 to 11. The best performance is denoted in bold. Furthermore, we use green to highlight the best tree model and blue to color the best non-tree model. The results are quite consistent with the out-of-bag error rate table. In general, the proposed algorithm can achieve higher recall and F1-score than traditional random forest. PRC random forest achieves the largest accuracy, F1-score and PRC-ROC attains the highest precision in the first case. Despite random forest achieving a slightly higher specificity, the recall and F1-score are much lower than PRC random forest and PRC-ROC RF. This is even more confirmed in the Financial Distress Prediction Data. In this distress data, SVM tends to classify all the cases as the majority class. Weighted RF did a good job in the performance of precision and accuracy. However, PRC random </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5">Conclusion</head><p>In this paper, we investigate the PRC classification tree for dealing with class imbalance problem. We also extend this to the general PRC-ROC tree and random forest by setting an additional weight parameter which selects the best weighted combination of the AUPRC and the AUC based on the training data, for each problem at hand. Four new tree-based algorithms (i.e., PRC Tree, PRC RF, PRC-ROC Tree and PRC-ROC Tree RF) are studied along with several existing related algorithms. Table <ref type="table" target="#tab_5">31</ref> shows the F1-score performance of the proposed classifiers against other tree-based algorithms in all datasets. The results indicate that our methods are superior to other rivals for skewed classification problems. Several research issues are needed for in-depth investigation. Our current PRC tree/forest and PRC-ROC tree/forest are all designed for binary classifications. We shall extend them to accommodate multiple-class classifications arising naturally from many practical scenarios.</p><p>In our experimental study, we do not consider the interaction term. Hence another related task is to uncover interaction effects in the framework of PRC classification tree. There are absolutely many other potential possibilities about classification of imbalanced data and it will continue to gain increasingly attention in academia and industry.</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head>Figure 2 : 6 :</head><label>26</label><figDesc>Figure 1: PRC for a perfect test</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_2"><head></head><label></label><figDesc>N f features from the feature set F 6: set the selected features as F ′ 7:</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_5"><head>Figure 3 :</head><label>3</label><figDesc>Figure 3: Scatterplot of data in scenario 1 (Mild imbalanced extent with low feature dimension) for easy-to-classify setting</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_6"><head>Figure 4 :</head><label>4</label><figDesc>Figure 4: Scatterplot of data in scenario 4 (Mild imbalanced extent with low feature dimension) for hard-to-classify setting</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_0"><head>Table 1 :</head><label>1</label><figDesc>Confusion matrix Predicted as Positive Predicted as Negative</figDesc><table><row><cell>Actually Positive</cell><cell>True Positive (TP)</cell><cell>False Negative (FN)</cell></row><row><cell cols="2">Actually Negative False Positive (FP)</cell><cell>True Negative (TN)</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_2"><head></head><label></label><figDesc>18: end for 19: if AU C fi &lt; 0.5 then AU C fi ← 1 -AU C fi 21: end if 22: return AU C fi 23: end Algorithm 7 Feature_Selection_by_AUPRC_AUC Input: Training data (x 1 , y 1 ),. . . ,(x n , y n ), Feature set f i ∈ F , target vector y i ∈ {-1, +1}. Output: Feature f i with the largest weighted average of AUPRC and AUC. Require: AUPRC_calculation, AUC_calculation. 1: set M ax f ← N U LL 2: set M ax AUP RC_AUC ← 0 3: for each feature f i ∈ F do</figDesc><table><row><cell>4:</cell></row><row><cell>20:</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_3"><head></head><label></label><figDesc>Algorithm 10 PRC-ROC_Random_Forest Input: Training data (x 1 , y 1 ),. . . ,(x n , y n ), Feature set f i ∈ F , target vector y i ∈ {-1, +1}; Number of trees N t ; Number of features for each node split N f . Output: PRC-ROC random forest ℜ.</figDesc><table><row><cell>3:</cell><cell>generate bootstrap sample (X, Y ) j</cell></row><row><cell>4:</cell><cell>for each node split, generate F</cell></row></table><note><p>Require: PRC-ROC_Tree 1: Set ℜ ← N U LL. 2: for j = 1 to N t do ′ by randomly choosing N f features from F 5:</p></note></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_4"><head>Table 2 :</head><label>2</label><figDesc>Summary of classification results under scenario 1 (Mild imbalanced extent with low feature dimension)</figDesc><table><row><cell>Algorithms</cell><cell cols="4">Recall Specificity Precision Accuracy F1 Score</cell></row><row><cell>CART</cell><cell>0.9782 0.9933</cell><cell>0.9846</cell><cell>0.9887</cell><cell>0.9814</cell></row><row><cell cols="2">Weighted CART 0.9760 0.9722</cell><cell>0.9391</cell><cell>0.9733</cell><cell>0.9572</cell></row><row><cell>ROC Tree</cell><cell>0.9214 0.9942</cell><cell>0.9860</cell><cell>0.9720</cell><cell>0.9526</cell></row><row><cell>PRC Tree</cell><cell>0.9891 0.9904</cell><cell>0.9784</cell><cell>0.9900</cell><cell>0.9837</cell></row><row><cell>PRC-ROC Tree</cell><cell>0.9934 0.9952</cell><cell>0.9891</cell><cell>0.9947</cell><cell>0.9912</cell></row><row><cell>RF</cell><cell>0.9476 0.9981</cell><cell>0.9954</cell><cell>0.9827</cell><cell>0.9709</cell></row><row><cell>Weighted RF</cell><cell>0.9934 0.9923</cell><cell>0.9827</cell><cell>0.9927</cell><cell>0.9880</cell></row><row><cell>ROC RF</cell><cell>0.9476 0.9923</cell><cell>0.9819</cell><cell>0.9787</cell><cell>0.9644</cell></row><row><cell>PRC RF</cell><cell>1.0000 0.9904</cell><cell>0.9786</cell><cell>0.9933</cell><cell>0.9892</cell></row><row><cell>PRC-ROC RF</cell><cell>1.0000 0.9914</cell><cell>0.9807</cell><cell>0.9940</cell><cell>0.9903</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_5"><head>Table 3 :</head><label>3</label><figDesc>Summary of classification results under scenario 2 (Moderate imbalanced extent with higher feature dimension)</figDesc><table><row><cell>Algorithms</cell><cell cols="4">Recall Specificity Precision Accuracy F1 Score</cell></row><row><cell>CART</cell><cell>0.9556 0.9963</cell><cell>0.9627</cell><cell>0.9927</cell><cell>0.9591</cell></row><row><cell cols="2">Weighted CART 0.9259 0.9905</cell><cell>0.9058</cell><cell>0.9847</cell><cell>0.9157</cell></row><row><cell>ROC Tree</cell><cell>0.4667 1.0000</cell><cell>1.0000</cell><cell>0.9520</cell><cell>0.6364</cell></row><row><cell>PRC Tree</cell><cell>0.9704 0.9985</cell><cell>0.9850</cell><cell>0.9960</cell><cell>0.9776</cell></row><row><cell>PRC-ROC Tree</cell><cell>0.9778 0.9993</cell><cell>0.9925</cell><cell>0.9973</cell><cell>0.9851</cell></row><row><cell>RF</cell><cell>0.9556 0.9832</cell><cell>0.8487</cell><cell>0.9807</cell><cell>0.8990</cell></row><row><cell>Weighted RF</cell><cell>0.9259 1.0000</cell><cell>1.0000</cell><cell>0.9933</cell><cell>0.9615</cell></row><row><cell>ROC RF</cell><cell>1.0000 0.9875</cell><cell>0.8882</cell><cell>0.9887</cell><cell>0.9408</cell></row><row><cell>PRC RF</cell><cell>1.0000 0.9685</cell><cell>0.7584</cell><cell>0.9713</cell><cell>0.8626</cell></row><row><cell>PRC-ROC RF</cell><cell>1.0000 0.9817</cell><cell>0.8437</cell><cell>0.9833</cell><cell>0.9152</cell></row></table><note><p>4.1.3 Easy to classify, extreme imbalanced data set with low feature dimension</p></note></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_6"><head>Table 4 :</head><label>4</label><figDesc>Summary of classification results under scenario 3 (Extreme imbalanced extent with low feature dimension) Hard to classify, mild imbalanced data set with higher feature dimension and noise</figDesc><table><row><cell>Algorithms</cell><cell cols="4">Recall Specificity Precision Accuracy F1 Score</cell></row><row><cell>CART</cell><cell>0.5833 0.9980</cell><cell>0.7000</cell><cell>0.9947</cell><cell>0.6363</cell></row><row><cell cols="2">Weighted CART 0.8333 0.9919</cell><cell>0.4545</cell><cell>0.9907</cell><cell>0.5882</cell></row><row><cell>ROC Tree</cell><cell>0.3333 0.9980</cell><cell>0.5714</cell><cell>0.9927</cell><cell>0.4210</cell></row><row><cell>PRC Tree</cell><cell>0.9167 0.9973</cell><cell>0.7333</cell><cell>0.9967</cell><cell>0.8148</cell></row><row><cell>PRC-ROC Tree</cell><cell>0.7500 0.9993</cell><cell>0.9000</cell><cell>0.9973</cell><cell>0.8182</cell></row><row><cell>RF</cell><cell>0.7500 0.9993</cell><cell>0.9000</cell><cell>0.9973</cell><cell>0.8182</cell></row><row><cell>Weighted RF</cell><cell>0.5833 1.0000</cell><cell>1.0000</cell><cell>0.9967</cell><cell>0.7368</cell></row><row><cell>ROC RF</cell><cell>0.8333 0.9973</cell><cell>0.7143</cell><cell>0.9960</cell><cell>0.7692</cell></row><row><cell>PRC RF</cell><cell>1.0000 0.9966</cell><cell>0.7059</cell><cell>0.9967</cell><cell>0.8276</cell></row><row><cell>PRC-ROC RF</cell><cell>1.0000 0.9973</cell><cell>0.7500</cell><cell>0.9973</cell><cell>0.8571</cell></row><row><cell>4.1.4</cell><cell></cell><cell></cell><cell></cell><cell></cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_7"><head>Table 5 :</head><label>5</label><figDesc>Summary of classification results under scenario 4 (Mild imbalanced extent with higher feature dimension and noise)</figDesc><table><row><cell>Algorithms</cell><cell cols="4">Recall Specificity Precision Accuracy F1 Score</cell></row><row><cell>CART</cell><cell>0.6372 0.9141</cell><cell>0.7554</cell><cell>0.8327</cell><cell>0.6913</cell></row><row><cell cols="2">Weighted CART 0.7846 0.8036</cell><cell>0.6245</cell><cell>0.7980</cell><cell>0.6955</cell></row><row><cell>ROC Tree</cell><cell>0.6689 0.8687</cell><cell>0.6797</cell><cell>0.8100</cell><cell>0.6743</cell></row><row><cell>PRC Tree</cell><cell>0.7347 0.8820</cell><cell>0.7216</cell><cell>0.8387</cell><cell>0.7281</cell></row><row><cell>PRC-ROC Tree</cell><cell>0.7143 0.9056</cell><cell>0.7590</cell><cell>0.8493</cell><cell>0.7360</cell></row><row><cell>RF</cell><cell>0.5011 0.8971</cell><cell>0.6697</cell><cell>0.7807</cell><cell>0.5733</cell></row><row><cell>Weighted RF</cell><cell>0.7279 0.9452</cell><cell>0.8470</cell><cell>0.8813</cell><cell>0.7829</cell></row><row><cell>ROC RF</cell><cell>0.9297 0.8291</cell><cell>0.6937</cell><cell>0.8587</cell><cell>0.7945</cell></row><row><cell>PRC RF</cell><cell>0.9751 0.8263</cell><cell>0.7003</cell><cell>0.8700</cell><cell>0.8152</cell></row><row><cell>PRC-ROC RF</cell><cell>0.9478 0.8565</cell><cell>0.7333</cell><cell>0.8833</cell><cell>0.8269</cell></row><row><cell cols="5">4.1.5 Hard to classify, extreme imbalanced data set with higher feature dimension and noise</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_8"><head>Table 6 :</head><label>6</label><figDesc>Summary of classification results under scenario 5 (Extreme imbalanced extent with higher feature dimension and noise)</figDesc><table><row><cell>Algorithms</cell><cell cols="4">Recall Specificity Precision Accuracy F1 Score</cell></row><row><cell>CART</cell><cell>0.2000 0.9966</cell><cell>0.2857</cell><cell>0.9913</cell><cell>0.2353</cell></row><row><cell cols="2">Weighted CART 0.6000 0.9403</cell><cell>0.0632</cell><cell>0.9380</cell><cell>0.1144</cell></row><row><cell>ROC Tree</cell><cell>0.1000 0.9919</cell><cell>0.0769</cell><cell>0.9860</cell><cell>0.0869</cell></row><row><cell>PRC Tree</cell><cell>0.2000 0.9987</cell><cell>0.5000</cell><cell>0.9933</cell><cell>0.2857</cell></row><row><cell>PRC-ROC Tree</cell><cell>0.2000 0.9993</cell><cell>0.6667</cell><cell>0.9940</cell><cell>0.3077</cell></row><row><cell>RF</cell><cell>0.1000 0.9933</cell><cell>0.0909</cell><cell>0.9873</cell><cell>0.0952</cell></row><row><cell>Weighted RF</cell><cell>0.1000 0.9960</cell><cell>0.1429</cell><cell>0.9900</cell><cell>0.1177</cell></row><row><cell>ROC RF</cell><cell>0.7000 0.9322</cell><cell>0.0648</cell><cell>0.9307</cell><cell>0.1186</cell></row><row><cell>PRC RF</cell><cell>0.6000 0.9483</cell><cell>0.0723</cell><cell>0.9460</cell><cell>0.1290</cell></row><row><cell>PRC-ROC RF</cell><cell>0.6000 0.9523</cell><cell>0.0779</cell><cell>0.9500</cell><cell>0.1381</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_9"><head>Table 7 :</head><label>7</label><figDesc>Summary of selected real-world datasets training and testing and use the OOB to estimate the error rate of the training sample. The following table shows the out-of-bag error of all the corresponding random forests and the minimum values are colored in red. Then we still use the separate testing data to further validate our RF model built with the training data and the results are given in the last three tables.</figDesc><table><row><cell>Dataset Name</cell><cell cols="4">Data Sources Number of Observations Proportion of Minority Class Number of Features</cell></row><row><cell cols="2">Default of Credit Card Clients UCI</cell><cell>30000</cell><cell>3.7%</cell><cell>23</cell></row><row><cell>Financial Distress Prediction</cell><cell>Kaggle</cell><cell>3672</cell><cell>22%</cell><cell>83</cell></row><row><cell>Breast Cancer Wisconsin</cell><cell>UCI</cell><cell>569</cell><cell>37%</cell><cell>30</cell></row><row><cell>the data into</cell><cell></cell><cell></cell><cell></cell><cell></cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_10"><head>Table 8 :</head><label>8</label><figDesc>Summary of Out-of-bag error rate</figDesc><table><row><cell>Dataset Name</cell><cell>RF</cell><cell cols="3">Weighted RF ROC RF PRC RF</cell></row><row><cell cols="3">Default of Credit Card Clients 0.1900 0.2300</cell><cell>0.2446</cell><cell>0.1921</cell></row><row><cell>Financial Distress Prediction</cell><cell cols="2">0.0414 0.0500</cell><cell>0.0345</cell><cell>0.0000</cell></row><row><cell>Breast Cancer Wisconsin</cell><cell cols="2">0.1000 0.0912</cell><cell>0.0714</cell><cell>0.0455</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_11"><head>Table 9 :</head><label>9</label><figDesc>Summary of performance results for Default of Credit Card Clients Data</figDesc><table><row><cell>Algorithms</cell><cell cols="4">Recall Specificity Precision Accuracy F1 Score</cell></row><row><cell>SVM</cell><cell>0.3343 0.9628</cell><cell>0.7204</cell><cell>0.8229</cell><cell>0.4567</cell></row><row><cell cols="2">Neural Network 0.3947 0.9441</cell><cell>0.6692</cell><cell>0.8218</cell><cell>0.4965</cell></row><row><cell>CART</cell><cell>0.3378 0.9627</cell><cell>0.7218</cell><cell>0.8236</cell><cell>0.4602</cell></row><row><cell cols="2">Weighted CART 0.5788 0.8253</cell><cell>0.4870</cell><cell>0.7704</cell><cell>0.5289</cell></row><row><cell>ROC Tree</cell><cell>0.7061 0.5330</cell><cell>0.3022</cell><cell>0.5716</cell><cell>0.4233</cell></row><row><cell>PRC Tree</cell><cell>0.4187 0.9200</cell><cell>0.5997</cell><cell>0.8083</cell><cell>0.4931</cell></row><row><cell>PRC-ROC Tree</cell><cell>0.3353 0.9634</cell><cell>0.7241</cell><cell>0.8236</cell><cell>0.4584</cell></row><row><cell>RF</cell><cell>0.3493 0.9608</cell><cell>0.7187</cell><cell>0.7839</cell><cell>0.4701</cell></row><row><cell>Weighted RF</cell><cell>0.3558 0.9570</cell><cell>0.7032</cell><cell>0.8231</cell><cell>0.4968</cell></row><row><cell>ROC RF</cell><cell>0.6307 0.5850</cell><cell>0.3033</cell><cell>0.5952</cell><cell>0.4096</cell></row><row><cell>PRC RF</cell><cell>0.5744 0.8439</cell><cell>0.5132</cell><cell>0.8247</cell><cell>0.5432</cell></row><row><cell>PRC-ROC RF</cell><cell>0.5813 0.8340</cell><cell>0.5009</cell><cell>0.7778</cell><cell>0.5381</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_12"><head>Table 10 :</head><label>10</label><figDesc>Summary of performance results for Financial Distress Prediction Data</figDesc><table><row><cell>Algorithms</cell><cell cols="4">Recall Specificity Precision Accuracy F1 Score</cell></row><row><cell>SVM</cell><cell>0.0000 1.0000</cell><cell>NaN</cell><cell>0.9600</cell><cell>NaN</cell></row><row><cell cols="2">Neural Network 0.3100 0.9774</cell><cell>0.3514</cell><cell>0.9528</cell><cell>0.3294</cell></row><row><cell>CART</cell><cell>0.1951 0.9830</cell><cell>0.3077</cell><cell>0.9537</cell><cell>0.2388</cell></row><row><cell cols="2">Weighted CART 0.8049 0.8727</cell><cell>0.1964</cell><cell>0.8702</cell><cell>0.3158</cell></row><row><cell>ROC Tree</cell><cell>0.0730 0.9906</cell><cell>0.2308</cell><cell>0.9564</cell><cell>0.1110</cell></row><row><cell>PRC Tree</cell><cell>0.3902 0.9802</cell><cell>0.4324</cell><cell>0.9583</cell><cell>0.4102</cell></row><row><cell>PRC-ROC Tree</cell><cell>0.2439 0.9934</cell><cell>0.5882</cell><cell>0.9655</cell><cell>0.3448</cell></row><row><cell>RF</cell><cell>0.0244 0.9981</cell><cell>0.3333</cell><cell>0.9619</cell><cell>0.0455</cell></row><row><cell>Weighted RF</cell><cell>0.1951 0.9953</cell><cell>0.6154</cell><cell>0.9655</cell><cell>0.2963</cell></row><row><cell>ROC RF</cell><cell>0.9512 0.8021</cell><cell>0.1566</cell><cell>0.8076</cell><cell>0.2689</cell></row><row><cell>PRC RF</cell><cell>0.9024 0.8633</cell><cell>0.2033</cell><cell>0.8648</cell><cell>0.3318</cell></row><row><cell>PRC-ROC RF</cell><cell>0.9268 0.8681</cell><cell>0.2135</cell><cell>0.8702</cell><cell>0.3471</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_13"><head>Table 11 :</head><label>11</label><figDesc>Summary of performance results for Breast Cancer Data ROC RF achieve good performance in F1 score on average. To conclude, PRC Random Forest is superior to other algorithms especially traditional random forest in identifying the minority class which is exactly the goal of imbalanced classification. In the last two instances, the PRC-ROC Random Forest has higher accuracy and F1-score compared to other algorithms and PRC RF's behavior is close to it.</figDesc><table><row><cell>Algorithms</cell><cell cols="4">Recall Specificity Precision Accuracy F1 Score</cell></row><row><cell>SVM</cell><cell>0.9672 0.9909</cell><cell>0.9833</cell><cell>0.9616</cell><cell>0.9751</cell></row><row><cell cols="2">Neural Network 0.9672 0.9909</cell><cell>0.9833</cell><cell>0.9616</cell><cell>0.9751</cell></row><row><cell>CART</cell><cell>0.9016 0.9909</cell><cell>0.9821</cell><cell>0.9591</cell><cell>0.9401</cell></row><row><cell cols="2">Weighted CART 0.9344 0.9818</cell><cell>0.9661</cell><cell>0.9649</cell><cell>0.9500</cell></row><row><cell>ROC Tree</cell><cell>0.8197 0.9909</cell><cell>0.9804</cell><cell>0.9298</cell><cell>0.8929</cell></row><row><cell>PRC Tree</cell><cell>0.9180 0.9455</cell><cell>0.9032</cell><cell>0.9357</cell><cell>0.9105</cell></row><row><cell>PRC-ROC Tree</cell><cell>0.9344 0.9818</cell><cell>0.9661</cell><cell>0.9649</cell><cell>0.9476</cell></row><row><cell>RF</cell><cell>0.8689 0.9909</cell><cell>0.9814</cell><cell>0.9473</cell><cell>0.9217</cell></row><row><cell>Weighted RF</cell><cell>0.9180 1.0000</cell><cell>1.0000</cell><cell>0.9707</cell><cell>0.9572</cell></row><row><cell>ROC RF</cell><cell>0.8361 0.9099</cell><cell>0.9808</cell><cell>0.9357</cell><cell>0.9027</cell></row><row><cell>PRC RF</cell><cell>0.9836 0.9636</cell><cell>0.9375</cell><cell>0.9708</cell><cell>0.9600</cell></row><row><cell>PRC-ROC RF</cell><cell>0.9836 0.9727</cell><cell>0.9524</cell><cell>0.9766</cell><cell>0.9677</cell></row><row><cell>forest and PRC-</cell><cell></cell><cell></cell><cell></cell><cell></cell></row></table></figure>
+		</body>
+		<back>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<monogr>
+		<author>
+			<persName><forename type="first">Ethem</forename><surname>Alpaydin</surname></persName>
+		</author>
+		<title level="m">Introduction to Machine Learning</title>
+		<imprint>
+			<publisher>MIT Press</publisher>
+			<date type="published" when="2010">2010</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ethem Alpaydin, Introduction to Machine Learning. MIT Press (2010)</note>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<analytic>
+		<title level="a" type="main">Machine Learning in Financial Crisis Prediction: A Survey</title>
+		<author>
+			<persName><forename type="first">Wei-Yang</forename><surname>Lin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ya-Han</forename><surname>Hu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Chih-Fong</forename><surname>Tsai</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Systems, Man, and Cybernetics, Part C (Applications and Reviews)</title>
+		<imprint>
+			<biblScope unit="volume">42</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="421" to="436" />
+			<date type="published" when="2012">2012</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Wei-Yang Lin, Ya-Han Hu, Chih-Fong Tsai, Machine Learning in Financial Crisis Prediction: A Survey, IEEE Transactions on Systems, Man, and Cybernetics, Part C (Applications and Reviews),42(4), 421-436 (2012)</note>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<analytic>
+		<title level="a" type="main">Predicting financial distress and corporate failure: A review from the state-of-the-art definitions, modeling, sampling, and featuring approaches</title>
+		<author>
+			<persName><forename type="first">Jie</forename><surname>Sun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Hui</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Qinghua</forename><surname>Huang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Kaiyu</forename><surname>He</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Knowledge-Based Systems</title>
+		<imprint>
+			<biblScope unit="volume">57</biblScope>
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Jie Sun, Hui Li, Qinghua Huang, Kaiyu He, Predicting financial distress and corporate failure: A review from the state-of-the-art definitions, modeling, sampling, and featuring approaches, Knowledge-Based Systems, 57 (2014)</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<monogr>
+		<title level="m" type="main">Classification and Regression Trees</title>
+		<author>
+			<persName><forename type="first">Leo</forename><surname>Breiman</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jerome</forename><forename type="middle">H</forename><surname>Friedman</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Richard</forename><forename type="middle">A</forename><surname>Olshen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Charles</forename><forename type="middle">J</forename><surname>Stone</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="1984">1984</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Leo Breiman, Jerome H Friedman, Richard A Olshen, Charles J Stone, Classification and Regression Trees (1984)</note>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<analytic>
+		<title level="a" type="main">Random Decision Forests</title>
+		<author>
+			<persName><forename type="first">Tin</forename><surname>Ho</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Kam</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 3rd International Conference on Document Analysis and Recognition</title>
+		<meeting>the 3rd International Conference on Document Analysis and Recognition</meeting>
+		<imprint>
+			<date type="published" when="1995">1995</date>
+			<biblScope unit="page" from="278" to="282" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Ho, Tin Kam, Random Decision Forests, Proceedings of the 3rd International Conference on Document Analysis and Recognition, 278-282 (1995)</note>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<analytic>
+		<title level="a" type="main">Random Forests</title>
+		<author>
+			<persName><forename type="first">Leo</forename><surname>Breiman</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Machine Learning</title>
+		<imprint>
+			<biblScope unit="volume">45</biblScope>
+			<biblScope unit="page" from="5" to="32" />
+			<date type="published" when="2001">2001</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Leo Breiman, Random Forests, Machine Learning, 45, 5-32 (2001)</note>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<analytic>
+		<title level="a" type="main">Bootstrap Methods: Another Look at the Jackknife</title>
+		<author>
+			<persName><forename type="first">Bradley</forename><surname>Efron</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">The Annals of Statistics</title>
+		<imprint>
+			<biblScope unit="volume">7</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="1" to="26" />
+			<date type="published" when="1979">1979</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Bradley Efron, Bootstrap Methods: Another Look at the Jackknife, The Annals of Statistics, 7(1), 1-26 (1979)</note>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<analytic>
+		<title level="a" type="main">Support-vector networks</title>
+		<author>
+			<persName><forename type="first">Corinna</forename><surname>Cortes</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Vladimir</forename><surname>Vapnik</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Machine Learning</title>
+		<imprint>
+			<biblScope unit="volume">20</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="273" to="297" />
+			<date type="published" when="1995">1995</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Corinna Cortes, Vladimir Vapnik, Support-vector networks, Machine Learning, 20(3), 273-297 (1995)</note>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">Applying support vector machines to imbalanced datasets</title>
+		<author>
+			<persName><forename type="first">R</forename><surname>Akbani</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Kwek</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><surname>Jakowicz</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of 15th European Conference on Machine Learning</title>
+		<meeting>15th European Conference on Machine Learning</meeting>
+		<imprint>
+			<date type="published" when="2004">2004</date>
+			<biblScope unit="page" from="39" to="50" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">R. Akbani, S. Kwek, N. Jakowicz, Applying support vector machines to imbalanced datasets, Proceedings of 15th European Conference on Machine Learning, 39-50 (2004)</note>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<analytic>
+		<title level="a" type="main">Neural network method for failure detection with skewed class distribution</title>
+		<author>
+			<persName><forename type="first">K</forename><surname>Carvajal</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Chacon</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Mery</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Acuna</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Insight-Non-Destructive Testing and Condition Monitoring</title>
+		<imprint>
+			<biblScope unit="volume">46</biblScope>
+			<biblScope unit="issue">7</biblScope>
+			<biblScope unit="page" from="399" to="402" />
+			<date type="published" when="2004">2004</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">K. Carvajal, M. Chacon, D. Mery, G. Acuna, Neural network method for failure detection with skewed class distribution, Insight-Non-Destructive Testing and Condition Monitoring, 46(7), 399-402 (2004)</note>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<analytic>
+		<title level="a" type="main">The foundations of cost-sensitive learning</title>
+		<author>
+			<persName><forename type="first">Charles</forename><surname>Elkan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International joint conference on artificial intelligence</title>
+		<imprint>
+			<biblScope unit="volume">2</biblScope>
+			<biblScope unit="page" from="973" to="978" />
+			<date type="published" when="2001">2001</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Charles Elkan, The foundations of cost-sensitive learning. International joint conference on artificial intelligence, 2, 973-978 (2001)</note>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<analytic>
+		<title level="a" type="main">Using Random Forest to Learn Imbalanced Data</title>
+		<author>
+			<persName><forename type="first">Chao</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Andy</forename><surname>Liaw</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Leo</forename><surname>Breiman</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Research article UC Berkeley</title>
+		<imprint>
+			<biblScope unit="page" from="1" to="12" />
+			<date type="published" when="2004">2004</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Chao Chen, Andy Liaw, Leo Breiman, Using Random Forest to Learn Imbalanced Data, Research article UC Berkeley, 1-12 (2004)</note>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<analytic>
+		<title level="a" type="main">Weighted Subspace Random Forest for Classification</title>
+		<author>
+			<persName><forename type="first">He</forename><surname>Zhao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Graham</forename><forename type="middle">J</forename><surname>Williams</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Joshua</forename><forename type="middle">Zhexue</forename><surname>Huang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Qinghan</forename><surname>Meng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Baoxun</forename><surname>Xu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Data Warehousing and Mining</title>
+		<imprint>
+			<biblScope unit="volume">8</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="44" to="63" />
+			<date type="published" when="2012">2012</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">He Zhao, Graham J.ANU Williams, Joshua Zhexue Huang, Qinghan Meng, Baoxun Xu, Weighted Subspace Random Forest for Classification, International Journal of Data Warehousing and Mining, 8(2), 44-63 (2012)</note>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<monogr>
+		<title level="m" type="main">Weighted K-means support vector machine for cancer prediction</title>
+		<author>
+			<persName><forename type="first">Sunghwan</forename><surname>Kim</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="1162">1162. 2016</date>
+			<publisher>SpringerPlus</publisher>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">SungHwan Kim, Weighted K-means support vector machine for cancer prediction, 1162. SpringerPlus (2016)</note>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<analytic>
+		<title level="a" type="main">Cost-sensitive decision tree ensembles for effective imbalanced classification</title>
+		<author>
+			<persName><forename type="first">Bartosz</forename><surname>Krawczyk</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Michal</forename><surname>Wozniak</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Gerald</forename><surname>Schaefer</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Applied Soft Computing</title>
+		<imprint>
+			<biblScope unit="volume">14</biblScope>
+			<biblScope unit="page" from="554" to="562" />
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Bartosz Krawczyk, Michal Wozniak, Gerald Schaefer, Cost-sensitive decision tree ensembles for effective imbal- anced classification, Applied Soft Computing, 14, 554-562 (2014)</note>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<analytic>
+		<title level="a" type="main">Weighted Decision Trees</title>
+		<author>
+			<persName><forename type="first">Saumya</forename><surname>Debray</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Sampath</forename><surname>Kannan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mukul</forename><surname>Paithane</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the Joint International Conference and Symposium on Logic Programming</title>
+		<meeting>the Joint International Conference and Symposium on Logic Programming</meeting>
+		<imprint>
+			<date type="published" when="1992">1992</date>
+			<biblScope unit="page" from="654" to="668" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Saumya Debray, Sampath Kannan, Mukul Paithane, Weighted Decision Trees, Proceedings of the Joint Interna- tional Conference and Symposium on Logic Programming, 654-668 (1992)</note>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<analytic>
+		<title level="a" type="main">Cost-Sensitive Learning with Neural Networks</title>
+		<author>
+			<persName><forename type="first">Matjaz</forename><surname>Kukar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Igor</forename><surname>Kononenko</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 13th European Conference on Artificial Intelligence (ECAI-98)</title>
+		<meeting>the 13th European Conference on Artificial Intelligence (ECAI-98)</meeting>
+		<imprint>
+			<date type="published" when="1998">1998</date>
+			<biblScope unit="page" from="445" to="449" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Matjaz Kukar, Igor Kononenko, Cost-Sensitive Learning with Neural Networks, Proceedings of the 13th Euro- pean Conference on Artificial Intelligence (ECAI-98), 445-449 (1998)</note>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<monogr>
+		<title level="m" type="main">Optimizing Cost-Sensitive SVM for Imbalanced Data: Connecting Cluster to Classification</title>
+		<author>
+			<persName><forename type="first">Qiuyan</forename><surname>Yan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Shixiong</forename><surname>Xia</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Fanrong</forename><surname>Me</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">ArXiv</note>
+	<note type="raw_reference">Qiuyan Yan, Shixiong Xia, Fanrong Me, Optimizing Cost-Sensitive SVM for Imbalanced Data: Connecting Cluster to Classification, ArXiv (2017)</note>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<monogr>
+		<title level="m" type="main">Cost-sensitive Boosted ROC Classification Trees</title>
+		<author>
+			<persName><forename type="first">Long</forename><surname>Wang</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+		<respStmt>
+			<orgName>The Graduate School, Stony Brook University</orgName>
+		</respStmt>
+	</monogr>
+	<note type="report_type">Doctoral dissertation</note>
+	<note type="raw_reference">Long Wang, Cost-sensitive Boosted ROC Classification Trees, Doctoral dissertation, The Graduate School, Stony Brook University (2019)</note>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<analytic>
+		<title level="a" type="main">New Cluster Undersampling Technique for Class Imbalance Learning</title>
+		<author>
+			<persName><forename type="first">Robert</forename><forename type="middle">A</forename><surname>Sowah</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Moses</forename><forename type="middle">A</forename><surname>Agebure</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Godfrey</forename><forename type="middle">A</forename><surname>Mills</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Koudjo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Seth</forename><forename type="middle">Y</forename><surname>Koumadi</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Fiawoo</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Machine Learning and Computing</title>
+		<imprint>
+			<biblScope unit="volume">6</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Robert A. Sowah, Moses A. Agebure, Godfrey A. Mills, Koudjo M. Koumadi, Seth Y. Fiawoo, New Cluster Un- dersampling Technique for Class Imbalance Learning, International Journal of Machine Learning and Computing, 6(3) (2016)</note>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<analytic>
+		<title level="a" type="main">SMOTE: Synthetic Minority Over-sampling Technique</title>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">V</forename><surname>Chawla</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">W</forename><surname>Bowyer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><forename type="middle">O</forename><surname>Hall</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><forename type="middle">P</forename><surname>Kegelmeyer</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal Of Artificial Intelligence Research</title>
+		<imprint>
+			<biblScope unit="volume">16</biblScope>
+			<biblScope unit="page" from="321" to="357" />
+			<date type="published" when="2002">2002</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">N. V. Chawla, K. W. Bowyer, L. O. Hall, W. P. Kegelmeyer, SMOTE: Synthetic Minority Over-sampling Tech- nique, Journal Of Artificial Intelligence Research, 16, 321-357 (2002)</note>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<analytic>
+		<title level="a" type="main">ADASYN: Adaptive Synthetic Sampling Approach for Imbalanced Learning</title>
+		<author>
+			<persName><forename type="first">Haibo</forename><surname>He</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yang</forename><surname>Bai</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Edwardo</forename><forename type="middle">A</forename><surname>Garcia</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Shutao</forename><surname>Li</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Joint Conference on Neural Networks</title>
+		<imprint>
+			<date type="published" when="2008">2008</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Haibo He, Yang Bai, Edwardo A. Garcia, Shutao Li, ADASYN: Adaptive Synthetic Sampling Approach for Imbalanced Learning, International Joint Conference on Neural Networks (2008)</note>
+</biblStruct>
+
+<biblStruct xml:id="b22">
+	<monogr>
+		<title level="m" type="main">ROC Random Forest and Its Application</title>
+		<author>
+			<persName><forename type="first">Bowen</forename><surname>Song</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2015">2015</date>
+		</imprint>
+		<respStmt>
+			<orgName>The Graduate School, Stony Brook University</orgName>
+		</respStmt>
+	</monogr>
+	<note type="report_type">Doctoral dissertation</note>
+	<note type="raw_reference">Bowen Song, ROC Random Forest and Its Application. Doctoral dissertation, The Graduate School, Stony Brook University (2015)</note>
+</biblStruct>
+
+<biblStruct xml:id="b23">
+	<analytic>
+		<title level="a" type="main">ROC operating point selection for classification of imbalanced data with application to computer-aided polyp detection in CT colonography</title>
+		<author>
+			<persName><forename type="first">B</forename><surname>Song</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><surname>Zhu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Liang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Int J Comput Assist Radiol Surg</title>
+		<imprint>
+			<biblScope unit="volume">9</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="79" to="89" />
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Song B, Zhang G, Zhu W, Liang Z, ROC operating point selection for classification of imbalanced data with application to computer-aided polyp detection in CT colonography, Int J Comput Assist Radiol Surg, 9(1), 79-89 (2014)</note>
+</biblStruct>
+
+<biblStruct xml:id="b24">
+	<monogr>
+		<title level="m" type="main">Multi-Class ROC Random Forest for Imbalanced Classification</title>
+		<author>
+			<persName><forename type="first">Jiaju</forename><surname>Yan</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+		<respStmt>
+			<orgName>The Graduate School, Stony Brook University</orgName>
+		</respStmt>
+	</monogr>
+	<note type="report_type">Doctoral dissertation</note>
+	<note type="raw_reference">Jiaju Yan, Multi-Class ROC Random Forest for Imbalanced Classification. Doctoral dissertation, The Graduate School, Stony Brook University (2017)</note>
+</biblStruct>
+
+<biblStruct xml:id="b25">
+	<analytic>
+		<title level="a" type="main">Cost-sensitive boosting for classification of imbalanced data</title>
+		<author>
+			<persName><forename type="first">Yanmin</forename><surname>Sun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">S</forename><surname>Kamel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">K</forename><surname>Wong</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Wang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Pattern Recognition</title>
+		<imprint>
+			<biblScope unit="volume">40</biblScope>
+			<biblScope unit="issue">12</biblScope>
+			<biblScope unit="page" from="3358" to="3378" />
+			<date type="published" when="2007">2007</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Yanmin Sun, Kamel, M. S., Wong, A. K., Wang, Y, Cost-sensitive boosting for classification of imbalanced data, Pattern Recognition, 40(12), 3358-3378 (2007)</note>
+</biblStruct>
+
+<biblStruct xml:id="b26">
+	<monogr>
+		<title level="m" type="main">Cost-Sensitive Boosting for Classification of Imbalanced Data</title>
+		<author>
+			<persName><forename type="first">Yanmin</forename><surname>Sun</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2007">2007</date>
+		</imprint>
+		<respStmt>
+			<orgName>University of Waterloo</orgName>
+		</respStmt>
+	</monogr>
+	<note type="report_type">Doctoral dissertation</note>
+	<note type="raw_reference">Yanmin Sun, Cost-Sensitive Boosting for Classification of Imbalanced Data, Doctoral dissertation, University of Waterloo (2007)</note>
+</biblStruct>
+
+<biblStruct xml:id="b27">
+	<analytic>
+		<title level="a" type="main">A review of boosting methods for imbalanced data classification</title>
+		<author>
+			<persName><forename type="first">Qiujie</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yaobin</forename><surname>Mao</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Pattern Anal Applic</title>
+		<imprint>
+			<biblScope unit="volume">17</biblScope>
+			<biblScope unit="page" from="679" to="693" />
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Qiujie Li and Yaobin Mao, A review of boosting methods for imbalanced data classification, Pattern Anal Applic, 17, 679-693 (2014)</note>
+</biblStruct>
+
+<biblStruct xml:id="b28">
+	<analytic>
+		<title level="a" type="main">Cost-Sensitive Boosting</title>
+		<author>
+			<persName><forename type="first">Hamed</forename><surname>Masnadi-Shirazi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Nuno</forename><surname>Vasconcelos</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on pattern analysis and machine intelligence</title>
+		<imprint>
+			<biblScope unit="volume">33</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="294" to="309" />
+			<date type="published" when="2010">2010</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Hamed Masnadi-Shirazi, Nuno Vasconcelos, Cost-Sensitive Boosting, IEEE Transactions on pattern analysis and machine intelligence, 33(2), 294-309 (2010)</note>
+</biblStruct>
+
+<biblStruct xml:id="b29">
+	<analytic>
+		<title level="a" type="main">SMOTEBoost: Improving Prediction of the Minority Class in Boosting</title>
+		<author>
+			<persName><forename type="first">V</forename><surname>Nitesh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Aleksandar</forename><surname>Chawla</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Lawrence</forename><forename type="middle">O</forename><surname>Lazarevic</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Kevin</forename><surname>Hall</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Bowyer</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">PKDD</title>
+		<imprint>
+			<biblScope unit="page" from="107" to="119" />
+			<date type="published" when="2003">2003</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Nitesh V. Chawla, Aleksandar Lazarevic, Lawrence O. Hall, Kevin Bowyer, SMOTEBoost: Improving Prediction of the Minority Class in Boosting, PKDD, 107-119 (2003)</note>
+</biblStruct>
+
+<biblStruct xml:id="b30">
+	<analytic>
+		<title level="a" type="main">Weighted oversampling technique in boosting for balanced learning</title>
+		<author>
+			<persName><forename type="first">Wenhao</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ramin</forename><surname>Ramezani</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Arash</forename><surname>Naeim</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Wotboost</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE BigData</title>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Wenhao Zhang, Ramin Ramezani, Arash Naeim, WOTBoost: Weighted oversampling technique in boosting for balanced learning, IEEE BigData (2019)</note>
+</biblStruct>
+
+<biblStruct xml:id="b31">
+	<analytic>
+		<title level="a" type="main">RUSBoost: A Hybrid Approach to Alleviating Class Imbalance</title>
+		<author>
+			<persName><forename type="first">Chris</forename><surname>Seiffert</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Taghi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jason</forename><surname>Khoshgoftaar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Amri</forename><surname>Van Hulse</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Napolitano</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Systems, Man, and Cybernetics -Part A: Systems and Humans</title>
+		<imprint>
+			<biblScope unit="volume">40</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<date type="published" when="2010">2010</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Chris Seiffert, Taghi M. Khoshgoftaar, Jason Van Hulse, Amri Napolitano, RUSBoost: A Hybrid Approach to Alleviating Class Imbalance, IEEE Transactions on Systems, Man, and Cybernetics -Part A: Systems and Humans, 40(1) (2010)</note>
+</biblStruct>
+
+<biblStruct xml:id="b32">
+	<analytic>
+		<title level="a" type="main">Chowdhury Mofizur Rahman, MEBoost: Mixing Estimators with Boosting for Imbalanced Data Classification</title>
+		<author>
+			<persName><forename type="first">Farshid</forename><surname>Rayhan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Sajid</forename><surname>Ahmed</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Asif</forename><surname>Mahbub</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Md</forename><forename type="middle">Rafsan</forename><surname>Jani</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Swakkhar</forename><surname>Shatabda</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Dewan</forename><surname>Md</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Farid</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Pattern Recognition</title>
+		<imprint>
+			<biblScope unit="volume">46</biblScope>
+			<biblScope unit="issue">12</biblScope>
+			<biblScope unit="page" from="3460" to="3471" />
+			<date type="published" when="2013">2013</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Farshid Rayhan, Sajid Ahmed, Asif Mahbub, Md. Rafsan Jani, Swakkhar Shatabda, Dewan Md. Farid, Chowd- hury Mofizur Rahman, MEBoost: Mixing Estimators with Boosting for Imbalanced Data Classification, Pattern Recognition, 46(12), 3460-3471 (2013)</note>
+</biblStruct>
+
+<biblStruct xml:id="b33">
+	<analytic>
+		<title level="a" type="main">Learning from Imbalanced Data Sets with Boosting and Data Generation: The DataBoost-IM Approach</title>
+		<author>
+			<persName><forename type="first">Hongyu</forename><surname>Guo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Herna</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Viktor</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">ACM SIGKDD Explorations Newsletter</title>
+		<imprint>
+			<biblScope unit="volume">6</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<date type="published" when="2004">2004</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Hongyu Guo, Herna L Viktor, Learning from Imbalanced Data Sets with Boosting and Data Generation: The DataBoost-IM Approach, ACM SIGKDD Explorations Newsletter, 6(1) (2004)</note>
+</biblStruct>
+
+<biblStruct xml:id="b34">
+	<analytic>
+		<title level="a" type="main">Enhancing ensembles for highly imbalanced data-sets by evolutionary undersampling</title>
+		<author>
+			<persName><forename type="first">Mikel</forename><surname>Galar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Alberto</forename><surname>Fernández</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Edurne</forename><surname>Barrenechea</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Francisco</forename><surname>Herrera</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Eusboost</forename></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Pattern Recognition</title>
+		<imprint>
+			<biblScope unit="volume">46</biblScope>
+			<biblScope unit="issue">12</biblScope>
+			<biblScope unit="page" from="3460" to="3471" />
+			<date type="published" when="2013">2013</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Mikel Galar, Alberto Fernández, Edurne Barrenechea, Francisco Herrera, EUSBoost: Enhancing ensembles for highly imbalanced data-sets by evolutionary undersampling, Pattern Recognition, 46(12), 3460-3471 (2013)</note>
+</biblStruct>
+
+<biblStruct xml:id="b35">
+	<analytic>
+		<title level="a" type="main">Area Under the Precision-Recall Curve: Point Estimates and Confidence Intervals</title>
+		<author>
+			<persName><forename type="first">Kendrick</forename><surname>Boyd</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Kevin</forename><forename type="middle">H</forename><surname>Eng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">David</forename><surname>Page</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Machine Learning and Knowledge Discovery in Databases</title>
+		<imprint>
+			<date type="published" when="2013">2013</date>
+			<biblScope unit="page" from="451" to="466" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Kendrick Boyd, Kevin H. Eng, C. David Page, Area Under the Precision-Recall Curve: Point Estimates and Confidence Intervals, Machine Learning and Knowledge Discovery in Databases, 451-466 (2013)</note>
+</biblStruct>
+
+<biblStruct xml:id="b36">
+	<monogr>
+		<author>
+			<persName><forename type="first">Suzanne</forename><surname>Ekelund</surname></persName>
+		</author>
+		<title level="m">Precision-recall curves -what are they and how are they used? Information Management</title>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Suzanne Ekelund, Precision-recall curves -what are they and how are they used? Information Management (2017)</note>
+</biblStruct>
+
+<biblStruct xml:id="b37">
+	<analytic>
+		<title level="a" type="main">The Precision-Recall Plot Is More Informative than the ROC Plot When Evaluating Binary Classifiers on Imbalanced Datasets</title>
+		<author>
+			<persName><forename type="first">Takaya</forename><surname>Saito</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Marc</forename><surname>Rehmsmeier</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of PLOS ONE</title>
+		<imprint>
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Takaya Saito, Marc Rehmsmeier, The Precision-Recall Plot Is More Informative than the ROC Plot When Eval- uating Binary Classifiers on Imbalanced Datasets. Journal of PLOS ONE (2015)</note>
+</biblStruct>
+
+<biblStruct xml:id="b38">
+	<monogr>
+		<title level="m" type="main">rpart: Recursive Partitioning and Regression Trees</title>
+		<author>
+			<persName><forename type="first">Terry</forename><surname>Therneau</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Beth</forename><surname>Atkinson</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Brian</forename><surname>Ripley</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Terry Therneau, Beth Atkinson, Brian Ripley, rpart: Recursive Partitioning and Regression Trees (2019)</note>
+</biblStruct>
+
+<biblStruct xml:id="b39">
+	<monogr>
+		<title level="m" type="main">s Random Forests for Classification and Regression</title>
+		<author>
+			<persName><forename type="first">Andy</forename><surname>Liaw</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Matthew</forename><surname>Wiener</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Breiman</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Cutler</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Andy Liaw, Matthew Wiener, Breiman and Cutler&apos;s Random Forests for Classification and Regression (2018)</note>
+</biblStruct>
+
+<biblStruct xml:id="b40">
+	<analytic>
+		<title level="a" type="main">Functions for latent class analysis, short time Fourier transform, fuzzy clustering, support vector machines</title>
+		<author>
+			<persName><forename type="first">David</forename><surname>Meyer</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">shortest path computation, bagged clustering, naive Bayes classifier</title>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">David Meyer, et al, Functions for latent class analysis, short time Fourier transform, fuzzy clustering, support vector machines, shortest path computation, bagged clustering, naive Bayes classifier (2019)</note>
+</biblStruct>
+
+<biblStruct xml:id="b41">
+	<monogr>
+		<title level="m" type="main">Training of Neural Networks</title>
+		<author>
+			<persName><forename type="first">Stefan</forename><surname>Fritsch</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Stefan Fritsch, et al, Training of Neural Networks (2019)</note>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>
