@@ -65,3 +65,44 @@ query:
 Hold off on tuning k, the tokenizer, or fusion weights until the
 hand-written evaluation set exists -- these findings are motivation for
 what to test, not conclusions to act on from a single query.
+
+## Generation: faithful-but-lossy paraphrase, not hallucination
+
+Step 8's first real generation test (query: "How does SMOTE generate
+synthetic samples?", `qwen2.5:3b-instruct`, grounded on the reranked top-5)
+produced a correctly-cited, well-grounded answer. Both citations pointed to
+the chunk that actually supports the claim, and most of the answer was a
+close paraphrase of the source.
+
+One deviation worth flagging precisely: the source (`2402.17398_006`) says a
+*subset* of the K (or five) nearest neighbors is randomly chosen depending
+on the oversampling percentage (e.g., 3 of 5). The model's answer simplified
+this to "SMOTE randomly selects K neighbors from its set of closest
+neighbors" -- true in spirit, imprecise in detail. This is not a
+hallucination (it invents no fact, cites correctly, stays within the
+evidence's topic) -- it's a faithfulness/precision distinction: the claim is
+grounded but not exact.
+
+**How to apply:** this is a concrete, real example of a failure mode the
+Step 9 evaluation framework needs a way to *distinguish*, not just detect.
+A binary "grounded / hallucinated" check would score this answer as fully
+grounded and miss the simplification entirely. Worth designing a rubric
+dimension (or a "faithful but imprecise" category, separate from
+"unsupported claim") that can catch this kind of drift, since a 3B model
+doing this on a simple mechanical description suggests it'll happen more on
+harder questions.
+
+## Methodology reminder: Ollama cold-start vs. steady-state timing
+
+The first `qwen2.5:3b-instruct` call after `ollama pull` took 126s total
+(61.7s model load + 50.4s prompt eval for 196 tokens) -- alarmingly slow on
+its face. A second call on the warm model completed in under a second
+(0.34s prompt eval, ~50 tokens/sec generation), confirming the first call's
+latency was CUDA context/kernel warm-up plus disk load, not steady-state
+performance.
+
+**How to apply:** Step 9's latency measurements must warm up the model with
+a throwaway call before timing anything, and cold-start latency should be
+reported separately (if at all) rather than folded into averaged latency
+stats -- a single cold call would blow up any mean/percentile figure by two
+orders of magnitude and misrepresent real query latency.
