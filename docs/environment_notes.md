@@ -26,3 +26,32 @@ script that pulls a model from Hugging Face Hub on this machine (e.g.
 machine ever appears stuck, check the blob's `.incomplete` file size in the
 HF cache before assuming it's a network or code issue -- if it's not growing,
 this is very likely the cause.
+
+## CUDA PyTorch install for this environment
+
+Neither the CPU-only wheel (`/whl/cpu`, used deliberately in Step 4) nor the
+plain PyPI `torch` package has CUDA support for Python 3.14 on this machine
+-- the plain PyPI wheel installs as `torch==2.13.0+cpu` in disguise (no
+`+cpu` suffix shown, but `torch.cuda.is_available()` is `False`). Checked
+`download.pytorch.org`'s CUDA-variant indexes directly: `cu118`, `cu121`,
+and `cu124` have **no** `cp314` wheels at all; `cu126`, `cu128`, `cu129`, and
+`cu130` do.
+
+**Working install command, confirmed on this machine's GPU (NVIDIA GeForce
+RTX 3050 6GB Laptop GPU):**
+
+```
+pip uninstall -y torch
+pip install torch --index-url https://download.pytorch.org/whl/cu128
+```
+
+This resolves to `torch==2.11.0+cu128` and was verified end-to-end (CUDA
+matmul on-device, then a real fp16 model load + inference for
+`BAAI/bge-reranker-v2-m3` in Step 7). Note the version is 2.11.0, not the
+latest 2.13.x -- cu128 for cp314 hasn't caught up to the newest release yet,
+which is fine for our purposes.
+
+**How to apply:** use this exact index/command for any future GPU-dependent
+component on this machine -- next up is the LLM in Step 8. Don't assume a
+bare `pip install torch` gives you CUDA here; verify with
+`torch.cuda.is_available()` after installing.
