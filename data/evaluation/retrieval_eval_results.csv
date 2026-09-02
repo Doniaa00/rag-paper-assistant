@@ -1,0 +1,49 @@
+question_id,question,pillar,question_type,source_paper_id,source_section,stage,hit_at_5,hit_at_10,first_hit_rank,reciprocal_rank,exact_section_hit
+q001,How does SMOTE generate synthetic minority-class samples?,class_imbalance,factual,1106.1813,SMOTE,dense,True,True,5,0.2,True
+q001,How does SMOTE generate synthetic minority-class samples?,class_imbalance,factual,1106.1813,SMOTE,sparse,True,True,4,0.25,True
+q001,How does SMOTE generate synthetic minority-class samples?,class_imbalance,factual,1106.1813,SMOTE,fused,False,True,6,0.1667,True
+q001,How does SMOTE generate synthetic minority-class samples?,class_imbalance,factual,1106.1813,SMOTE,reranked,True,True,3,0.3333,True
+q002,What are the main challenges specific to credit card fraud detection?,fraud_detection,factual,1611.06439,Difficulties of Credit Card Fraud Detection,dense,True,True,2,0.5,True
+q002,What are the main challenges specific to credit card fraud detection?,fraud_detection,factual,1611.06439,Difficulties of Credit Card Fraud Detection,sparse,True,True,2,0.5,False
+q002,What are the main challenges specific to credit card fraud detection?,fraud_detection,factual,1611.06439,Difficulties of Credit Card Fraud Detection,fused,True,True,1,1.0,False
+q002,What are the main challenges specific to credit card fraud detection?,fraud_detection,factual,1611.06439,Difficulties of Credit Card Fraud Detection,reranked,False,False,,0.0,False
+q003,"What is anomaly detection, according to Chandola et al.'s survey?",anomaly_detection,factual,chandola2007_anomaly_survey,INTRODUCTION,dense,True,True,1,1.0,True
+q003,"What is anomaly detection, according to Chandola et al.'s survey?",anomaly_detection,factual,chandola2007_anomaly_survey,INTRODUCTION,sparse,True,True,5,0.2,True
+q003,"What is anomaly detection, according to Chandola et al.'s survey?",anomaly_detection,factual,chandola2007_anomaly_survey,INTRODUCTION,fused,True,True,1,1.0,True
+q003,"What is anomaly detection, according to Chandola et al.'s survey?",anomaly_detection,factual,chandola2007_anomaly_survey,INTRODUCTION,reranked,True,True,1,1.0,True
+q004,What ensemble learning techniques are commonly used to address class imbalance?,class_imbalance,factual,1712.04356,C. Ensemble Learning,dense,True,True,2,0.5,True
+q004,What ensemble learning techniques are commonly used to address class imbalance?,class_imbalance,factual,1712.04356,C. Ensemble Learning,sparse,True,True,1,1.0,True
+q004,What ensemble learning techniques are commonly used to address class imbalance?,class_imbalance,factual,1712.04356,C. Ensemble Learning,fused,True,True,1,1.0,True
+q004,What ensemble learning techniques are commonly used to address class imbalance?,class_imbalance,factual,1712.04356,C. Ensemble Learning,reranked,True,True,2,0.5,False
+q005,"How does the ""How SMOTE Works"" section describe the SMOTE mechanism?",class_imbalance,factual,2402.17398,How SMOTE Works,dense,True,True,1,1.0,True
+q005,"How does the ""How SMOTE Works"" section describe the SMOTE mechanism?",class_imbalance,factual,2402.17398,How SMOTE Works,sparse,True,True,2,0.5,False
+q005,"How does the ""How SMOTE Works"" section describe the SMOTE mechanism?",class_imbalance,factual,2402.17398,How SMOTE Works,fused,True,True,3,0.3333,True
+q005,"How does the ""How SMOTE Works"" section describe the SMOTE mechanism?",class_imbalance,factual,2402.17398,How SMOTE Works,reranked,True,True,2,0.5,True
+q006,How do undersampling and oversampling compare as approaches to handling class imbalance?,class_imbalance,comparative,1712.04356,III. DATA BALANCING METHODS,dense,True,True,1,1.0,True
+q006,How do undersampling and oversampling compare as approaches to handling class imbalance?,class_imbalance,comparative,1712.04356,III. DATA BALANCING METHODS,sparse,False,False,,0.0,False
+q006,How do undersampling and oversampling compare as approaches to handling class imbalance?,class_imbalance,comparative,1712.04356,III. DATA BALANCING METHODS,fused,False,True,9,0.1111,True
+q006,How do undersampling and oversampling compare as approaches to handling class imbalance?,class_imbalance,comparative,1712.04356,III. DATA BALANCING METHODS,reranked,True,True,2,0.5,True
+q008,How is reinforcement learning used within the GNN-CL fraud detection model?,fraud_detection,factual,2407.06529,Core node reinforcers,dense,True,True,1,1.0,True
+q008,How is reinforcement learning used within the GNN-CL fraud detection model?,fraud_detection,factual,2407.06529,Core node reinforcers,sparse,True,True,1,1.0,True
+q008,How is reinforcement learning used within the GNN-CL fraud detection model?,fraud_detection,factual,2407.06529,Core node reinforcers,fused,True,True,1,1.0,True
+q008,How is reinforcement learning used within the GNN-CL fraud detection model?,fraud_detection,factual,2407.06529,Core node reinforcers,reranked,True,True,1,1.0,False
+q009,How do autoencoders detect anomalies in data?,anomaly_detection,factual,1901.03407,Autoencoders,dense,True,True,1,1.0,True
+q009,How do autoencoders detect anomalies in data?,anomaly_detection,factual,1901.03407,Autoencoders,sparse,True,True,3,0.3333,True
+q009,How do autoencoders detect anomalies in data?,anomaly_detection,factual,1901.03407,Autoencoders,fused,True,True,1,1.0,True
+q009,How do autoencoders detect anomalies in data?,anomaly_detection,factual,1901.03407,Autoencoders,reranked,True,True,1,1.0,True
+q010,What are the three main conceptual paradigms in the deep anomaly detection taxonomy?,anomaly_detection,factual,2007.02500,Categorization of Deep Anomaly Detection,dense,True,True,1,1.0,True
+q010,What are the three main conceptual paradigms in the deep anomaly detection taxonomy?,anomaly_detection,factual,2007.02500,Categorization of Deep Anomaly Detection,sparse,True,True,1,1.0,True
+q010,What are the three main conceptual paradigms in the deep anomaly detection taxonomy?,anomaly_detection,factual,2007.02500,Categorization of Deep Anomaly Detection,fused,True,True,1,1.0,True
+q010,What are the three main conceptual paradigms in the deep anomaly detection taxonomy?,anomaly_detection,factual,2007.02500,Categorization of Deep Anomaly Detection,reranked,True,True,1,1.0,True
+q011,How does the paper define a static attributed graph for anomaly detection purposes?,anomaly_detection,factual,2106.07178,PRELIMINARIES,dense,True,True,1,1.0,True
+q011,How does the paper define a static attributed graph for anomaly detection purposes?,anomaly_detection,factual,2106.07178,PRELIMINARIES,sparse,True,True,1,1.0,True
+q011,How does the paper define a static attributed graph for anomaly detection purposes?,anomaly_detection,factual,2106.07178,PRELIMINARIES,fused,True,True,1,1.0,True
+q011,How does the paper define a static attributed graph for anomaly detection purposes?,anomaly_detection,factual,2106.07178,PRELIMINARIES,reranked,True,True,1,1.0,True
+q012,What are the trade-offs between supervised and unsupervised approaches to credit card fraud detection?,fraud_detection,comparative,1904.10604,Discussions,dense,True,True,1,1.0,True
+q012,What are the trade-offs between supervised and unsupervised approaches to credit card fraud detection?,fraud_detection,comparative,1904.10604,Discussions,sparse,True,True,2,0.5,True
+q012,What are the trade-offs between supervised and unsupervised approaches to credit card fraud detection?,fraud_detection,comparative,1904.10604,Discussions,fused,True,True,1,1.0,True
+q012,What are the trade-offs between supervised and unsupervised approaches to credit card fraud detection?,fraud_detection,comparative,1904.10604,Discussions,reranked,True,True,1,1.0,True
+q013,"What is the goal of unsupervised deep anomaly detection, and what technique underlies most unsupervised models?",anomaly_detection,factual,1901.03407,Unsupervised deep anomaly detection,dense,True,True,1,1.0,True
+q013,"What is the goal of unsupervised deep anomaly detection, and what technique underlies most unsupervised models?",anomaly_detection,factual,1901.03407,Unsupervised deep anomaly detection,sparse,True,True,2,0.5,False
+q013,"What is the goal of unsupervised deep anomaly detection, and what technique underlies most unsupervised models?",anomaly_detection,factual,1901.03407,Unsupervised deep anomaly detection,fused,True,True,1,1.0,True
+q013,"What is the goal of unsupervised deep anomaly detection, and what technique underlies most unsupervised models?",anomaly_detection,factual,1901.03407,Unsupervised deep anomaly detection,reranked,True,True,1,1.0,True
