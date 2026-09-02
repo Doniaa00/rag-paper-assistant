@@ -113,7 +113,7 @@ def main():
 
             per_stage_metrics[stage].append({
                 "hit5": hit5, "hit10": hit10, "rr": rr, "section_hit": section_hit,
-                "has_section": bool(source_section),
+                "has_section": bool(source_section), "question_type": q["question_type"].strip(),
             })
 
             per_question_rows.append({
@@ -176,6 +176,26 @@ def print_report(per_stage_metrics: dict, all_stages_missed: list):
     print("this is expected, not a bug. MRR is likewise computed only within each")
     print("stage's own candidate-pool depth (20/20/10/5), so it is not perfectly")
     print("apples-to-apples across stages with different pool sizes.")
+
+    question_types = sorted({r["question_type"] for r in per_stage_metrics[STAGES[0]]})
+    if len(question_types) > 1:
+        print("\n" + "-" * 78)
+        print("BREAKDOWN BY QUESTION TYPE")
+        print("-" * 78)
+        for qtype in question_types:
+            type_records = {stage: [r for r in per_stage_metrics[stage] if r["question_type"] == qtype] for stage in STAGES}
+            type_n = len(type_records[STAGES[0]])
+            print(f"\n{qtype} (n={type_n}):")
+            print(header)
+            print("-" * len(header))
+            for stage in STAGES:
+                records = type_records[stage]
+                hr5 = sum(r["hit5"] for r in records) / type_n
+                hr10 = sum(r["hit10"] for r in records) / type_n
+                mrr = sum(r["rr"] for r in records) / type_n
+                applicable = [r for r in records if r["has_section"]]
+                section_rate = (sum(r["section_hit"] for r in applicable) / len(applicable)) if applicable else float("nan")
+                print(f"{stage:<12}{hr5:>14.1%}{hr10:>14.1%}{mrr:>10.3f}{section_rate:>22.1%}")
 
     if all_stages_missed:
         print(f"\nFLAG -- questions where ALL FOUR stages failed to retrieve the correct paper ({len(all_stages_missed)}):")

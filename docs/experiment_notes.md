@@ -156,3 +156,75 @@ characteristic of RRF at k=60 on this corpus.
   a clean directional confirmation of the phrasing-proximity hypothesis, is
   meaningfully stronger evidence than the single-query anecdotes these notes
   started from.
+
+## Final retrieval baseline (n=24): reranking is load-bearing for comparative questions
+
+This is the final retrieval baseline snapshot, run against the complete
+30-question hand-written eval set (24 non-negative) -- distinct from the
+earlier n=12 and n=17 exploratory runs, which were run mid-construction to
+sanity-check the pipeline and catch phrasing-proximity bias as the set grew.
+This run's numbers are what should feed Table 2/3.
+
+**Headline finding: comparative questions cause severe degradation in every
+retrieval-only stage, and reranking fully compensates for it.**
+
+| | dense HR@5 | sparse HR@5 | fused HR@5 | reranked HR@5 |
+|---|---|---|---|---|
+| factual (n=15) | 100.0% | 93.3% | 93.3% | 93.3% |
+| comparative (n=9) | 77.8% | 66.7% | 55.6% | **100.0%** |
+
+Every retrieval-only stage drops sharply on comparative questions relative
+to factual (dense -22.2pp, sparse -26.6pp, fused -37.7pp -- fused is hit
+hardest, worse than either individual retriever it's built from). Reranking
+not only recovers all of this, it scores *higher* on comparative (100%) than
+on factual (93.3%) -- the only stage where that's true.
+
+This is not "reranking generally helps a bit" -- reranking is **specifically
+load-bearing for comparative-question performance**, compensating for a
+failure mode that's near-universal across dense, sparse, and fused
+retrieval on this question category. This gives the architecture doc's
+Experiment 3 rationale (justifying the reranking stage) a concrete number to
+cite instead of a general precision-improvement argument: without
+reranking, comparative-question retrieval would be badly degraded on this
+corpus; with it, comparative questions are actually the *strongest*
+category.
+
+**How to apply:** cite this table directly when writing up why reranking
+is in the pipeline, not just "it improves precision." If Experiment 3 ever
+considers dropping or downgrading the reranker to save latency/VRAM, this is
+the concrete cost -- a ~44pp Hit Rate@5 collapse on comparative questions
+specifically (fused 55.6% -> would-be-necessary reranked 100%), not a
+generic quality regression.
+
+## Known evaluation-methodology limitation: gold-label ambiguity (q002)
+
+While investigating `q002`'s reranked-stage miss (dense #2, sparse #2, fused
+#1 all found the labeled paper `1611.06439`; reranker's own re-scoring of
+the same 10 candidates dropped it out of its top-10 entirely), the cause
+turned out not to be a reranker defect. A *different* paper in the corpus,
+`2208.10943`, has a section literally titled "Challenges of Credit Card
+Fraud Detection" with genuinely substantive, on-topic content:
+
+> "Credit card fraud detection is extremely difficult due to its volume,
+> the adaptive and unique nature of each fraud and the need for real time
+> or near real time assessments... constraints such as lack of real data
+> sets due to sensitivity, confidentiality and privacy concerns and the
+> massively imbalanced highly skewed nature of the data makes the problem
+> challenging..."
+
+This is near-synonymous with the labeled source's own section title
+("Difficulties of Credit Card Fraud Detection"). The reranker promoted this
+second paper's chunk to rank #4 of its own ordering -- a defensible,
+arguably correct call, not an error. **The corpus contains at least two
+papers that legitimately answer this question, but the eval set's
+single-`source_paper_id` scheme can only credit one of them.**
+
+**How to apply:** this is a known constraint of the evaluation methodology,
+not a system defect -- note it in the final write-up's limitations section
+rather than reporting it as a retrieval or reranking failure. Don't
+"fix" this by re-labeling `q002` to the second paper (that would just move
+the same problem elsewhere); the honest framing is that single-gold-paper
+labeling under-credits genuinely correct retrievals whenever topical overlap
+exists across papers in the corpus, and a small number of scored misses
+should be read with that caveat rather than taken as proof of a retrieval
+weakness.
