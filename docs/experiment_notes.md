@@ -106,3 +106,53 @@ a throwaway call before timing anything, and cold-start latency should be
 reported separately (if at all) rather than folded into averaged latency
 stats -- a single cold call would blow up any mean/percentile figure by two
 orders of magnitude and misrepresent real query latency.
+
+## Retrieval eval n=12 -> n=17: dense's apparent perfection was phrasing-dependent
+
+The first retrieval eval run (12 questions, all from earlier batches phrased
+close to their source section titles) showed dense at 100% Hit Rate@5/@10.
+Growing the eval set to 17 -- adding questions deliberately paraphrased away
+from source vocabulary -- dropped dense to **94.1%**, entirely due to one
+question (`q015`, source `2503.13195`): a comparative question about
+traditional-vs-deep-learning anomaly detection paradigms, phrased with no
+lexical overlap with the source section's language. Dense missed it
+completely -- not just outside top-5, absent from its entire top-20
+(`reciprocal_rank = 0.0`).
+
+This confirms, with a concrete before/after number, what was previously
+only a design concern: **the n=12 dense numbers were inflated by phrasing
+proximity to source text**, not a true measure of dense retrieval's
+semantic-matching ceiling. Growing the eval set with intentionally-distant
+phrasing is doing its job -- it's surfacing a real weakness that easier
+questions hid.
+
+**q015 also inverts the corpus's usual retrieval story.** BM25 (sparse)
+found the correct paper at rank 4 on the same query where dense found
+nothing at all. Every prior finding in this file was "dense is strong,
+sparse is the weak link" -- q015 is the first concrete case of the reverse,
+and it's exactly the scenario hybrid retrieval is supposed to justify:
+BM25's literal term-matching caught something dense's semantic embedding
+missed. This is no longer a theoretical argument for keeping sparse in the
+pipeline -- it's one real, reproducible example.
+
+**RRF fusion dilution is now reproduced 3x independently**: the original
+SMOTE validation query (dense #1 -> fused #10), `q006` (fused rank 9), and
+now `q001` (fused rank 6). Three separate questions, same failure shape --
+this has crossed the line from "one query's fluke" to a real, repeatable
+characteristic of RRF at k=60 on this corpus.
+
+**How to apply:**
+- Don't treat any single-run retrieval metric (especially dense's) as
+  settled until the eval set is phrasing-diverse -- rerun this comparison
+  again as the set grows toward 30-50 to see if the trend continues.
+- The q015 inversion is concrete evidence (not just justification-by-design)
+  that the hybrid dense+sparse approach earns its complexity -- worth citing
+  directly when someone asks "why not just use dense retrieval alone."
+- RRF dilution at k=60 is now well-evidenced enough to formally test
+  alternatives (smaller k, dense-weighted fusion) in Experiment 2/3, once
+  the full eval set and generation-quality metrics exist -- not before.
+- Sample size caveat still applies (n=17, one dense miss) -- but three
+  independently-reproduced instances of the same fusion-dilution shape, plus
+  a clean directional confirmation of the phrasing-proximity hypothesis, is
+  meaningfully stronger evidence than the single-query anecdotes these notes
+  started from.
