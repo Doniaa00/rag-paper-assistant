@@ -7,9 +7,12 @@ directly -- everything else in the project goes through
 generation.interface.GenerationBackend.
 """
 
+import sys
+
 import requests
 
 from generation.interface import GenerationBackend
+from generation.citation_guard import validate_and_repair_citations, STRIPPED_NOTE
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
 REQUEST_TIMEOUT = 300
@@ -38,6 +41,25 @@ QUESTION: {query}
 ANSWER:"""
 
 
+def _guard_answer(raw_answer: str, evidence_chunks: list) -> str:
+    """Step 11: run every real answer through the citation-reliability
+    guard before it's returned, repairing citations whose paper_id is wrong
+    but whose section_title matches real evidence, and stripping citations
+    that don't resolve to anything in the evidence set at all. Applied here
+    (and in generate_with_metrics) rather than in generate_raw(), since
+    generate_raw is also used by the generation-quality judge
+    (evaluation/generation_judge.py) for non-citation-bearing judge prompts
+    -- running the guard there would be meaningless overhead at best and
+    would risk mangling judge output at worst."""
+    result = validate_and_repair_citations(raw_answer, evidence_chunks)
+    if result["actions_taken"]:
+        print(f"[citation_guard] {len(result['actions_taken'])} action(s) taken:", file=sys.stderr)
+        for action in result["actions_taken"]:
+            outcome = action.get("repaired_to", STRIPPED_NOTE)
+            print(f"  {action['action']}: {action['original']!r} -> {outcome!r} ({action['reason']})", file=sys.stderr)
+    return result["repaired_answer"]
+
+
 def _format_evidence_block(evidence_chunks: list) -> str:
     parts = []
     for i, chunk in enumerate(evidence_chunks, start=1):
@@ -56,7 +78,8 @@ class OllamaBackend(GenerationBackend):
     def generate(self, query: str, evidence_chunks: list) -> str:
         evidence_block = _format_evidence_block(evidence_chunks)
         prompt = PROMPT_TEMPLATE.format(evidence_block=evidence_block, query=query)
-        return self.generate_raw(prompt)
+        raw_answer = self.generate_raw(prompt)
+        return _guard_answer(raw_answer, evidence_chunks)
 
     def generate_raw(self, prompt: str) -> str:
         resp = requests.post(
@@ -104,8 +127,10 @@ class OllamaBackend(GenerationBackend):
         eval_s = data.get("eval_duration", 0) / 1e9
         eval_count = data.get("eval_count", 0)
 
+        guarded_answer = _guard_answer(data["response"].strip(), evidence_chunks)
+
         return {
-            "answer": data["response"].strip(),
+            "answer": guarded_answer,
             "ttft_seconds": load_s + prompt_eval_s,
             "generation_seconds": eval_s,
             "tokens_per_second": (eval_count / eval_s) if eval_s > 0 else 0.0,

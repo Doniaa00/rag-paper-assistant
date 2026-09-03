@@ -25,6 +25,9 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from generation.local_ollama import OllamaBackend  # noqa: E402
+from generation.citation_guard import (  # noqa: E402
+    _BRACKET_CONTENT_RE, _EVIDENCE_LABEL_RE, _is_citation_attempt, _extract_citation_paper_id,
+)
 
 FAITHFULNESS_RATINGS = {"fully_faithful", "faithful_but_imprecise", "unfaithful"}
 RELEVANCY_RATINGS = {"yes", "partial", "no"}
@@ -185,30 +188,14 @@ def check_false_refusal(generated_answer: str, question_type: str, retrieval_suc
 # the "[Evidence N]" markers used only in the evidence block shown to the
 # model. This is a rule-based structural check (not a judge call), since
 # it's testing exact prompt-format compliance, not a subjective quality.
-_BRACKET_CONTENT_RE = re.compile(r"\[([^\[\]]*)\]")
-_EVIDENCE_LABEL_RE = re.compile(r"\bEvidence\s+\d+\b", re.IGNORECASE)
-_ARXIV_ID_RE = re.compile(r"\b\d{4}\.\d{4,5}\b")
-_MANUAL_PAPER_ID_RE = re.compile(r"chandola2007_anomaly_survey", re.IGNORECASE)
-
-
-def _is_citation_attempt(text: str) -> bool:
-    """Heuristic: does this bracketed span look like an attempt at the
-    instructed [paper_id, section_title] citation format, as opposed to
-    incidental bracket content copied verbatim from the evidence text?
-    Evidence chunks are excerpts from real papers and routinely contain
-    their own in-text reference numbers (e.g. "[11]", "[76]") or bracketed
-    math notation (e.g. "[x_i]"), which the model can end up quoting
-    directly -- neither is a citation attempt, and both check_citation_format
-    and check_citation_accuracy would otherwise misflag them."""
-    if "," in text:
-        return True
-    if _EVIDENCE_LABEL_RE.search(text):
-        return True
-    if "paper_id" in text.lower():
-        return True
-    if _ARXIV_ID_RE.search(text) or _MANUAL_PAPER_ID_RE.search(text):
-        return True
-    return False
+#
+# The parsing primitives (_BRACKET_CONTENT_RE, _is_citation_attempt,
+# _extract_citation_paper_id) live in generation/citation_guard.py, not
+# here -- Step 11 turned this diagnostic logic into a runtime repair guard
+# wired into generation/local_ollama.py, and generation_judge.py already
+# imports OllamaBackend from local_ollama, so keeping the canonical
+# definitions here would create a circular import once local_ollama also
+# needs them. Imported above; re-used as-is, not re-implemented.
 
 
 def check_citation_format(generated_answer: str) -> dict:
@@ -249,33 +236,6 @@ def check_citation_format(generated_answer: str) -> dict:
         prev = text
 
     return {"valid": len(issues) == 0, "issues": issues}
-
-
-def _extract_citation_paper_id(bracket_text: str, evidence_chunks: list):
-    """Best-effort extraction of the paper_id a citation marker is pointing
-    at, tolerant of the malformed variants seen in practice -- so accuracy
-    can still be checked even when check_citation_format would flag the
-    same marker as invalid. Handles:
-      - bare format: "1901.03407, Autoencoders" -> "1901.03407"
-      - leaked field=value syntax: "paper_id=1901.03407, ..." -> "1901.03407"
-      - "[Evidence N]" index references -> resolved via evidence_chunks[N-1],
-        since that's the paper the model actually meant, even though citing
-        by internal evidence-slot number is itself a format violation.
-    """
-    field_match = re.search(r"paper_id\s*=\s*([^\s,\]]+)", bracket_text)
-    if field_match:
-        return field_match.group(1).strip("\"'")
-
-    first_field = bracket_text.split(",")[0].strip()
-
-    evidence_index_match = re.fullmatch(r"Evidence\s+(\d+)", first_field, re.IGNORECASE)
-    if evidence_index_match:
-        idx = int(evidence_index_match.group(1)) - 1
-        if 0 <= idx < len(evidence_chunks):
-            return evidence_chunks[idx]["paper_id"]
-        return None  # references an evidence slot that doesn't exist at all
-
-    return first_field or None
 
 
 def check_citation_accuracy(generated_answer: str, evidence_chunks: list) -> dict:
