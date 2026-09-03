@@ -1,0 +1,5 @@
+retrieval_stage,n_quality,hit_rate_at_5,stage_only_latency_ms,cumulative_latency_ms,peak_vram_gb,n_latency
+dense,24,0.917,1521.56,1521.56,3.439,30
+sparse,24,0.833,186.22,186.22,3.439,30
+fused,24,0.792,0.09,1707.88,3.439,30
+reranked,24,0.958,752.14,2460.02,3.439,30

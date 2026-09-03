@@ -1,0 +1,2 @@
+experiment_name,retrieval_stage_used,n_quality,hit_rate_at_5,mrr,faithfulness_fully_faithful_pct,faithfulness_faithful_but_imprecise_pct,faithfulness_unfaithful_pct,relevancy_yes_pct,relevancy_partial_pct,relevancy_no_pct,citation_accuracy_pct,refusal_correctness_combined_pct,n_refusal
+Experiment 0 (Baseline),reranked,24,0.958,0.783,79.2,12.5,8.3,50.0,41.7,8.3,87.5,93.3,30
