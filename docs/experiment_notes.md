@@ -228,3 +228,172 @@ labeling under-credits genuinely correct retrievals whenever topical overlap
 exists across papers in the corpus, and a small number of scored misses
 should be read with that caveat rather than taken as proof of a retrieval
 weakness.
+
+## Generation-quality judge pilot (Step 9c): three findings before trusting it at scale
+
+A 6-question pilot (2 factual, 2 comparative, 2 negative) was run before any
+full-scale generation-quality evaluation, specifically because judge output
+can't be trusted blindly -- and the pilot justified that caution.
+
+**1. Faithfulness judge false positives, fixed by teaching paraphrase
+tolerance, not leniency.** Round 1's judge prompt rated all 4 non-negative
+pilot answers "unfaithful," but manual review showed at least 3 of those 4
+were false positives -- the judge's own reasoning text quoted evidence that
+directly supported the claim it had just rejected, apparently penalizing
+any rewording rather than checking whether the *meaning* was supported.
+Round 2 revised the prompt to explicitly instruct that paraphrasing is not
+a faithfulness violation, with contrastive examples anchoring
+`fully_faithful` (accurate paraphrase) vs. `unfaithful` (fabrication). All 3
+false positives flipped to `fully_faithful`. Critically, this was not just
+loosened grading: the 4th case (`q027`) was correctly *downgraded* from
+`unfaithful` to `faithful_but_imprecise`, with reasoning that specifically
+identified an emphasis-shift/precision-loss the answer actually made --
+matching independent manual review exactly. **The revision taught the judge
+to discriminate between fabrication and imprecision, not to rubber-stamp
+everything** -- a real distinction to check for whenever this rubric is
+revised again, since a judge that just gets more lenient overall would be as
+useless as one that's falsely strict.
+
+**2. Citation formatting is a capability ceiling, not a prompting problem --
+evidence for Experiment 5, not more prompt iteration.** Three rounds of
+prompt work on `generation/local_ollama.py`'s citation instruction --
+including explicit right/wrong examples added directly in the prompt after
+round 2's findings -- only reliably fixed 1 of the 4 pilot cases' citation
+formatting, and that "fix" surfaced a worse problem (see finding 3). The
+other citations kept reproducing the exact malformed patterns the prompt
+now explicitly labels as WRONG (leaked `paper_id=`/`paper_title=` fields,
+bare `[Evidence N]` references), with no improvement between rounds 2 and 3
+despite the added examples. **This looks like `qwen2.5:3b-instruct` hitting
+a genuine instruction-following ceiling on this level of formatting
+precision, not a prompt-wording gap** -- diminishing returns from a third
+iteration is the signal, not a reason to try a fourth. This is concrete
+evidence for the architecture doc's Experiment 5 (local vs. hosted model
+comparison): if citation-format compliance matters for the final system, a
+larger/hosted model is a more promising lever than further local-prompt
+engineering. In the meantime, a programmatic citation validator/repair step
+is more likely to help than continued prompting.
+
+**3. `check_citation_accuracy`'s catch could not have been caught by either
+other check -- the three checks are complementary, not redundant.** While
+verifying the citation-format fix, `q017`'s regenerated answer cited
+`[1901.03407, Autoencoders]` -- a real paper, correctly formatted, that was
+never in `q017`'s own evidence set (it's `q009`'s source paper, about
+autoencoders, for a question about cost-sensitive learning). This is a
+genuine fabricated source attribution:
+- `check_citation_format` passed it -- the marker is syntactically clean,
+  exactly two comma-separated bare fields, no leaked labels.
+- `judge_faithfulness` rated the answer `fully_faithful` -- it checks
+  whether the answer's *prose claims* are grounded in evidence, and the
+  prose claims here were fine; it has no mechanism to check whether a
+  citation marker's paper_id is real.
+- Only `check_citation_accuracy` -- built specifically to cross-reference
+  each citation's claimed paper_id against the evidence_chunks actually
+  passed to the model for that query -- caught it, correctly, while also
+  correctly clearing two other pilot answers whose citations were
+  badly-formatted (`[Evidence N]` style) but pointed to genuinely correct
+  papers once resolved.
+
+**How to apply:** run all three checks (faithfulness, format, accuracy) on
+every generation-eval question going forward, not a subset -- each one
+catches a failure mode invisible to the other two. A format-valid citation
+is not evidence of a real citation; a content-faithful answer is not
+evidence of correct attribution. Don't assume a full-scale run only needs
+the faithfulness judge because it's the most expensive-sounding check.
+
+## Full-scale generation evaluation (n=24 non-negative + 6 negative)
+
+The full pipeline (retrieve -> rerank -> generate) plus all four
+generation-quality checks were run across the complete 30-question eval
+set. Aggregate numbers below are the corrected ones -- see the tooling-bug
+note at the end before trusting any citation-related figure computed
+before this run.
+
+**Aggregate numbers:**
+- Faithfulness: 79.2% fully_faithful, 12.5% faithful_but_imprecise, 8.3%
+  unfaithful (2/24).
+- Relevancy: 50.0% yes, 41.7% partial, 8.3% no (2/24).
+- Citation format: 12.5% pass (3/24) -- the failures are overwhelmingly
+  cosmetic (back-to-back duplicate citations, leaked `[Evidence N]` labels),
+  consistent with the Step 9c pilot's capability-ceiling finding rather than
+  a new problem.
+- Citation accuracy: 87.5% pass (21/24) -- 3 confirmed hallucinated
+  citations.
+- Refusal accuracy on true negatives: 100% (6/6) -- held steady from the
+  pilot, no regression.
+
+**Citation hallucination taxonomy -- 3 confirmed variants, not one:**
+1. **Wrong-paper-entirely** (`q017`, reproduced from the pilot): cites a
+   real paper that is simply the wrong one -- q009's autoencoders source,
+   for a question about cost-sensitive learning. No overlap with the
+   correct source at all.
+2. **Correct-section-wrong-paper_id** (`q018`, new): the cited
+   `section_title` is verbatim correct (it's really the true source's
+   section), but the `paper_id` attached to it belongs to a different
+   paper entirely. **This is the most concerning variant** -- a reader
+   checking the citation would see a real, correctly-worded section title
+   and have no surface-level reason to doubt the (wrong) paper_id next to
+   it. Wrong-paper-entirely and malformed-reference-copying are easier to
+   notice as broken; this one is the closest to being genuinely misleading.
+3. **Malformed-reference-copying** (`q014`, new): the model copies an
+   in-text reference number from the evidence's own citation style (e.g.
+   "[76]") and garbles it together with a large quoted span, producing a
+   citation that is both unparseable and inaccurate at once.
+
+**How to apply:** when reporting citation hallucination rates, report the
+taxonomy, not just a pass/fail rate -- variant 2 deserves separate,
+higher-priority attention than variants 1 and 3 precisely because it is
+hardest for a reader to catch unaided.
+
+**False refusals -- a new, symmetric failure mode to hallucination, and a
+real gap in current evaluation coverage.** 2/24 (8.3%) non-negative
+questions (`q015`, `q016`) were incorrectly declined ("The provided
+evidence does not contain sufficient information...") despite adequate
+evidence being present in retrieval:
+- `q015`: the real source (`2503.13195`) was in the retrieved evidence: the
+  model refused anyway. The faithfulness judge correctly caught this --
+  "the evidence does contain information about both traditional and deep
+  learning anomaly detection methods and their strengths and weaknesses."
+- `q016`: the source paper (`2009.13807`) appeared **four times** in the
+  retrieved evidence -- about as strong a retrieval signal as this eval set
+  produces -- and the model still refused. The likely trigger: the question
+  asks what "criticism" the paper raises, but the evidence's own framing
+  never uses that word, instead discussing dataset "flaws" directly. This
+  looks like the same phrasing-proximity sensitivity documented earlier in
+  these notes (the n=12->n=17 retrieval findings), now showing up at the
+  generation stage instead of retrieval.
+
+This is a real, user-facing risk distinct from -- and arguably more costly
+than -- an imprecise answer: a `faithful_but_imprecise` answer still gives
+the user something to work with and evaluate, while a false refusal
+silently withholds a correct answer the system actually had. A user has no
+way to distinguish "the corpus genuinely doesn't cover this" from "the
+system had the answer and declined anyway."
+
+**Methodology gap worth naming explicitly:** `check_refusal` as currently
+built only measures whether the system correctly refuses on true negative
+questions (where refusal is the correct behavior) -- it has no counterpart
+that measures false refusals on true positive questions (where refusal is
+a failure). The 100% refusal accuracy figure above is therefore only half
+the picture: it says nothing about q015/q016-style over-refusal, which was
+only caught here because judge_faithfulness happened to flag the refusal
+claim as unsupported. A dedicated check (e.g., flag any non-negative
+question whose answer matches the refusal pattern, cross-referenced against
+whether real evidence was actually retrieved) would make this failure mode
+visible without depending on the faithfulness judge catching it
+incidentally.
+
+**Methodology note: a tooling bug was self-caught and fixed mid-analysis.**
+The first pass of `check_citation_format`/`check_citation_accuracy` treated
+*any* `[...]` bracket as a citation attempt. Evidence chunks are excerpts
+from real papers and routinely contain their own in-text reference numbers
+(e.g. "[11]", "[76]") and bracketed math notation (e.g. "[x_i]"), which the
+model sometimes quotes verbatim while paraphrasing -- both were being
+misflagged as malformed or hallucinated citations. This inflated the raw
+citation-format failure rate and the hallucination count (6 flagged
+citations, only 3 genuine) before the fix. Both functions now require a
+bracket to contain a comma, an `Evidence N`/`paper_id` marker, or an
+arxiv-ID-shaped token before treating it as a citation attempt at all,
+verified against the known false-positive cases before recomputing. **The
+numbers in this entry are the corrected, post-fix numbers** -- any
+citation-format or citation-accuracy figure computed before this fix should
+be treated as unreliable.
