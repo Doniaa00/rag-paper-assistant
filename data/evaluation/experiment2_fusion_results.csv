@@ -1,0 +1,12 @@
+config_name,group,rrf_k,dense_weight,sparse_weight,per_retriever_depth,fused_top_n,n_questions,raw_hit_rate_at_5,raw_hit_rate_at_10,raw_mrr,reranked_hit_rate_at_5,reranked_hit_rate_at_10,reranked_mrr,note
+rrf_k10,rrf_k_sweep,10,1.0,1.0,20,10,24,0.7917,1.0,0.739,0.9583,0.9583,0.7826,
+rrf_k20,rrf_k_sweep,20,1.0,1.0,20,10,24,0.8333,1.0,0.7311,0.9583,0.9583,0.7826,
+rrf_k40,rrf_k_sweep,40,1.0,1.0,20,10,24,0.7917,1.0,0.7297,0.9583,0.9583,0.7826,
+rrf_k60_current_default,rrf_k_sweep,60,1.0,1.0,20,10,24,0.7917,1.0,0.7297,0.9583,0.9583,0.7826,
+rrf_k100,rrf_k_sweep,100,1.0,1.0,20,10,24,0.7917,1.0,0.7297,0.9583,0.9583,0.7826,
+weighted_dense2x_k60,weighted,60,2.0,1.0,20,10,24,0.8333,0.9583,0.7494,0.9167,0.9167,0.7722,
+weighted_dense3x_k60,weighted,60,3.0,1.0,20,10,24,0.8333,0.9583,0.7668,0.9167,0.9167,0.7722,
+dense_only,dense_only,,,,10,10,24,0.9167,0.9583,0.806,0.9583,0.9583,0.7792,no fusion -- dense top-10 straight into reranker
+depth10_rrf_k10,depth_sweep,10,1.0,1.0,10,10,24,0.875,1.0,0.726,0.9167,0.9167,0.7722,
+depth20_rrf_k10,depth_sweep,10,1.0,1.0,20,10,24,0.7917,1.0,0.739,0.9583,0.9583,0.7826,"= rrf_k10 (same depth, reused rather than recomputed)"
+depth30_rrf_k10,depth_sweep,10,1.0,1.0,30,10,24,0.8333,0.9583,0.7369,0.9167,0.9167,0.7562,

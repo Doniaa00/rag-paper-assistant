@@ -447,3 +447,72 @@ an observed, unexplained, non-recurring anomaly rather than dismissed --
 there isn't enough evidence here to name a specific cause, and it's worth
 watching for recurrence in any future systems-metrics run rather than
 assuming it was a fluke.
+
+## Experiment 2 resolution: fusion's raw-stage weakness is absorbed by reranking
+
+**Original finding (Step 9):** the final retrieval baseline showed raw RRF
+fusion underperforming dense-only at the pre-rerank stage -- 79.2% vs. 91.7%
+Hit Rate@5 -- the clearest instance yet of the fusion-dilution pattern
+documented earlier in this file (RRF rewarding cross-retriever consensus
+over a single strong dense signal). That baseline number was raw motivation
+to formally test alternatives, not a verdict on the pipeline as shipped,
+since reranking always runs afterward in production.
+
+**Sweep result (Step 10, `retrieval/experiment2_fusion_sweep.py`):** across
+5 RRF k-values (10/20/40/60/100), 2 weighted-fusion ratios (dense 2x/3x),
+a dense-only no-fusion arm, and a 3-depth candidate-pool sweep (top-10/20/30
+per retriever), **the current default (RRF k=60, depth=20) ties or beats
+every single alternative on post-rerank metrics -- the only metrics that
+actually reach the user**, since the production pipeline always reranks
+before generation. All five k-values produced *identical* post-rerank Hit
+Rate@5/@10/MRR (95.8%/95.8%/0.783). Weighted fusion and both off-default
+pool depths (10 and 30) each scored measurably *worse* post-rerank than the
+current default. Full comparison table in
+`data/evaluation/experiment2_fusion_results.csv`.
+
+**Verification finding -- the precise mechanism, not just the correlation
+(`retrieval/verify_rrf_k_tie.py`):** spot-checking 3 questions' actual top-10
+fused chunk_id sets across k=10/60/100 showed k's effect on the fused pool
+is real, not illusory -- 2 of 3 questions had genuinely different chunk_id
+sets at different k values. But the difference was structurally confined to
+**the tail of the ranking, around rank 9-10**, a direct consequence of RRF's
+`1/(k+rank)` formula flattening at higher k (k=60 and k=100 were byte-for-
+byte identical to each other in every case checked; only k=10, the steepest
+curve, ever diverged, and only at the bottom of the pool). That tail region
+never survives the reranker's top-5 cut, which is exactly why the sweep's
+post-rerank output is unaffected regardless of which k produced the pool --
+the ties are real, but not because RRF's ranking is k-invariant; they hold
+because k's k-dependent disagreement and the reranker's decision boundary
+don't overlap at this pool depth.
+
+**Two results flagged as close-but-not-actionable -- worth revisiting only
+if the corpus/eval set grows, not acted on now:**
+- **Dense-only** ties the current default's Hit Rate@5 (95.8%) and comes
+  within noise on MRR (0.779 vs. 0.783, smaller than one question's rank
+  shift on n=24). Dropping the sparse/BM25 arm on this evidence would risk
+  overfitting to a 24-question sample that simply doesn't happen to contain
+  a question needing BM25's exact-term matching -- this file already has one
+  concrete counterexample (`q015`'s dense-total-miss / BM25-rank-4 inversion,
+  documented above) showing that strength is real on this corpus, just not
+  exercised by every question.
+- **Weighted fusion** (dense 2x/3x) improves the *raw* fused-stage MRR (up
+  to 0.767 vs. 0.730 unweighted) but actively hurts post-rerank quality
+  (91.7% vs. 95.8% Hit Rate@5). This reproduces this file's very first
+  finding -- "reranking can mask a weak fusion stage" -- in reverse: here, a
+  fusion change that looks like an improvement pre-rerank changes *which*
+  candidates reach the reranker in a way that measurably hurts the final
+  output. A better raw score is not evidence of a better pipeline.
+
+**Conclusion: Experiment 2 is closed with no configuration change.** The
+current defaults (RRF, k=60, top-20 per-retriever depth, fused top-10 into
+the reranker) are now **validated against 11 concrete alternatives, not
+merely unchallenged** -- a meaningfully stronger claim than "no one has
+tried anything else yet."
+
+**How to apply:** don't re-open the k/weighting/depth question without new
+evidence -- specifically, a larger or more phrasing-diverse eval set (the
+dense-only and weighted-fusion caveats above are exactly where a bigger
+sample could flip the verdict). Any future retrieval-stage experiment should
+default to scoring the post-rerank output, not the raw fusion output, per
+this entry's mechanism finding -- a raw-stage-only comparison would have
+recommended weighted fusion, which is now demonstrated to be the wrong call.
