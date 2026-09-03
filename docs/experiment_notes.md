@@ -601,3 +601,88 @@ is deliberately excluded, since the generation-quality judge
 (`evaluation/generation_judge.py`) also calls it directly for
 non-citation-bearing judge prompts, where guarding would be meaningless at
 best.
+
+## Step 12: Human Validation Findings
+
+A blind human review of 9 questions sampled from the Step 9c full-scale
+generation eval (`data/evaluation/human_validation_sample.md`, judge output
+withheld until after independent review) surfaced three findings the
+automated checks either can't see by design or got imprecisely right.
+
+**1. Claim-to-evidence attribution gap (`q002`, `q011`).** No current
+check verifies that a specific cited chunk actually supports the specific
+claim it's attached to -- `check_citation_accuracy` only checks that the
+cited `paper_id` exists somewhere in the evidence set, and
+`judge_faithfulness` only checks that the answer's claims are supported
+somewhere in the evidence block as a whole. `q002`'s bullet-by-bullet
+`[Evidence N]` citations and `q011`'s citation to the wrong chunk of the
+right paper (see finding detail in `docs/known_limitations.md`) both pass
+every current check while leaving the actual claim-to-chunk correspondence
+unverified. Documented as a known limitation, not fixed here -- see
+`docs/known_limitations.md`, "Claim-level citation attribution gap."
+
+**2. The judge's miss on internal contradiction (`q012`).** `q012`'s
+answer states unsupervised learning "does not require balanced label
+data, making it suitable for credit card fraud detection" and, two lines
+later, that it "is not suitable for scenarios where labeled data is
+unavailable" -- a direct self-contradiction about the exact same
+condition. `judge_faithfulness` rated the answer `fully_faithful`, its
+reasoning explicitly noting the answer retains information "without
+contradicting" the evidence -- accurate claim-by-claim, but blind to the
+contradiction between the answer's own two claims. Faithfulness-to-
+evidence and internal coherence are different quality dimensions; the
+current judge only evaluates the former. Documented as a known limitation,
+not fixed here -- see `docs/known_limitations.md`, "Judge evaluates
+holistically, not clause-by-clause."
+
+**3. Corrected understanding of `q015`: a genuine retrieval granularity
+failure, not a clean false refusal.** Comparing `q015`'s reconstructed
+evidence (confirmed identical to what Step 9c's judge actually saw --
+same `evidence_paper_ids` sequence, same chunk content, cross-validated
+against Step 10's independent reconstruction of the same question) against
+the corpus shows the real comparative section (`2503.13195`, "A.
+Contrasting Traditional Models with Deep Learning Models") was never
+retrieved at all -- not even into the fused top-10 before reranking. Only
+an unrelated section of the same paper ("D. Summary and Insights") made it
+into evidence. The judge's faithfulness reasoning claimed "the evidence
+does contain information about both traditional and deep learning anomaly
+detection methods and their strengths and weaknesses" -- **overstated, not
+fabricated**: the evidence does contain three brief, incidental comparative
+clauses scattered across unrelated introductions (all noting a *weakness*
+of traditional methods relative to deep learning; none noting a *strength*
+of traditional methods), which the judge is not wrong to have noticed, but
+which don't add up to the structured "strengths and weaknesses" treatment
+the judge's wording implies. The model's refusal was closer to defensible
+than either the original false-refusal flag or the judge's own reasoning
+suggested.
+
+**Consequence: `check_false_refusal`'s retrieval-succeeded criterion was
+too coarse, and has been corrected.** The original criterion (paper-level
+`hit_at_5`) counted `q015` as "retrieval succeeded" because *a* chunk from
+the correct paper appeared in the top-5 -- exactly the granularity this
+finding shows is misleading. Updated `check_false_refusal` (see its
+docstring in `evaluation/generation_judge.py`) to require
+`exact_section_hit` instead, and recomputed
+`false_refusal` for all 24 non-negative questions
+(`evaluation/recompute_false_refusal.py`). Only questions where the model
+actually refused can change classification under a stricter criterion --
+across the 24, that's exactly `q015` and `q016`, and both flip from
+`True` to `False`: neither had its exact source section retrieved
+(`exact_section_hit=False` for both at the reranked stage, despite
+`hit_at_5=True`), so neither can be confidently called a *false* refusal
+under the corrected definition. The false-refusal count for the 24
+non-negative questions drops from 2 to 0, and the combined two-sided
+refusal correctness figure (Table 2's Experiment 0 row) recomputes from
+28/30 (93.3%) to 30/30 (100%) under the corrected criterion.
+
+**How to apply:** this is not evidence the system's refusal behavior
+quietly got better -- nothing about the pipeline or the model changed. It's
+evidence the original 93.3% figure was measuring false refusals at the
+wrong granularity, crediting retrieval success whenever the right paper
+showed up anywhere in top-5 regardless of section. Table 2 currently still
+shows 93.3% and needs updating to reflect this correction in a future
+pass. More generally: whenever a paper-level retrieval metric is used to
+gate a downstream correctness judgment (as `check_false_refusal` does),
+check whether paper-level is actually the right granularity for that
+judgment -- here it wasn't, and the human validation sample is what
+surfaced it, not the automated metrics themselves.

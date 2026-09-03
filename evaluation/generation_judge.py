@@ -168,10 +168,26 @@ def check_false_refusal(generated_answer: str, question_type: str, retrieval_suc
 
     Reuses check_refusal's phrase-matching for the "did it refuse" half.
     The "should it have refused" half is retrieval_succeeded, which the
-    caller derives from whether the correct source_paper_id appeared in the
-    reranked top-5 for this question (data/evaluation/retrieval_eval_results.csv,
-    stage="reranked", hit_at_5) -- not re-derived here, since retrieval
-    quality is Step 9b's concern, not this module's.
+    caller derives from data/evaluation/retrieval_eval_results.csv
+    (stage="reranked") -- not re-derived here, since retrieval quality is
+    Step 9b's concern, not this module's.
+
+    Step 12 update: retrieval_succeeded must be derived from
+    exact_section_hit, NOT paper-level hit_at_5. Paper-level Hit Rate@5
+    credits retrieval as "succeeded" whenever any chunk from the correct
+    paper appears in the top-5, regardless of which section -- and Step
+    12's human-validation investigation showed that granularity is
+    misleading: q015's reranked evidence contained the correct paper
+    (2503.13195) at rank 4, but not the actual section that answers the
+    question ("A. Contrasting Traditional Models with Deep Learning
+    Models"), only an unrelated section of the same paper. Under
+    hit_at_5, that counted as "retrieval succeeded, model refused
+    anyway" -- a false refusal. It shouldn't: the model was never
+    actually given the section it needed, so declining wasn't clearly
+    wrong. exact_section_hit is the correct granularity for "did this
+    question actually have the evidence it needed" -- hit_at_5 answers a
+    coarser, paper-level question that this check needs a finer answer
+    to.
 
     Only meaningful for non-negative questions: a negative question
     refusing is correct behavior (that's check_refusal's job), not a false
