@@ -516,3 +516,88 @@ sample could flip the verdict). Any future retrieval-stage experiment should
 default to scoring the post-rerank output, not the raw fusion output, per
 this entry's mechanism finding -- a raw-stage-only comparison would have
 recommended weighted fusion, which is now demonstrated to be the wrong call.
+
+## Step 11: citation-reliability layer -- repair before reject
+
+Step 9c's `check_citation_accuracy` could only diagnose hallucinated
+citations after the fact, in evaluation. Step 11
+(`generation/citation_guard.py`) turns that diagnosis into a runtime guard
+that repairs or strips bad citations before an answer is ever returned.
+
+**Design: repair-before-reject.** Every citation marker is resolved
+against the evidence set in a fixed priority order: (1) if `paper_id`
+already matches a real evidence chunk, leave it untouched; (2) if
+`paper_id` doesn't match but `section_title` matches a real chunk's
+section, **repair** it by swapping in that chunk's correct `paper_id` --
+this is the load-bearing case, since it directly targets the
+correct-section-wrong-paper_id failure mode documented as "the most
+concerning variant" in Step 9c's hallucination taxonomy (a citation that
+looks completely legitimate to a reader because the section title really
+is correct, only the paper_id is wrong); (3) only when *neither* matches
+anything in the evidence set is the citation **stripped** and replaced
+with `[source could not be verified]`. Repair is preferred over stripping
+whenever there's enough information to do it correctly -- stripping is the
+fallback for genuinely unrecoverable citations, not the default response
+to any mismatch.
+
+**Results on the full 24-question set: 2 repairs, 2 strips, 3/24 questions
+affected, 0 false positives or false negatives against Step 9c's already-
+known cases.** The guard was re-run against the exact same evidence sets
+the original Step 9c answers were generated against (retrieval
+reconstruction confirmed all 24 questions' evidence_paper_ids matched the
+stored CSV exactly, since retrieval is deterministic). It correctly:
+- **repaired** both duplicate citations in `q018` (`[1901.03407, Importance
+  of credit card fraud detection]` -> `[2208.10943, ...]`), the exact
+  correct-section-wrong-paper_id case the design was built around;
+- **stripped** `q017`'s wrong-paper-entirely citation
+  (`[1901.03407, Autoencoders]`, pointing to `q009`'s paper on a
+  cost-sensitive-learning question), correctly finding no repair target
+  since neither field matched anything in `q017`'s evidence;
+- and (see below) correctly identified `q014`'s malformed-reference-copying
+  case as unrecoverable, though the first implementation's *handling* of
+  that case needed a fix before it shipped.
+All 21 other questions -- confirmed clean in Step 9c -- passed through with
+zero actions taken, a clean 1:1 match to the known hallucination count.
+
+**The q014 finding: technically correct, actually harmful -- caught before
+shipping.** `q014`'s known malformed citation
+(`[76, "Inspection-L compares favorably against ... classifying illicit
+transactions.]`) is a single unclosed bracket that happens to swallow an
+entire informative sentence before the model's next stray `]` closes it.
+The first implementation correctly identified this as unresolvable (neither
+`76` nor the giant quoted span matches anything in evidence) and stripped
+it -- but stripping the *entire matched span* meant deleting the whole
+Inspection-L comparison sentence along with the malformed citation marker,
+replacing genuinely useful content with a bare "[source could not be
+verified]" note. The diagnosis was right; the repair action was
+disproportionate to the problem. **Fix: a length-based over-match guard**
+(`max_citation_words`, default 20) -- a real citation marker is a handful
+of words, so a matched span far longer than that is almost certainly the
+bracket regex spanning an earlier unclosed `[` through an unrelated later
+`]`, not an actual citation attempt, however comma-shaped its contents
+look. Over-long matches now only have a short, clearly-identifiable
+citation-shaped fragment removed from either edge (here, the leading `76`)
+-- the informative prose is preserved verbatim, with the unverified-source
+note appended after it rather than replacing it. Re-verified against all 24
+questions after the fix: `q014` now preserves its full comparison sentence
+with just the note attached, and `q017`/`q018` are byte-for-byte unchanged
+from before the fix -- confirming the guard is correctly scoped to the
+pathological long-match case, not a change to citation-stripping behavior
+generally.
+
+**How to apply:** this is the second time in this project a stripping/
+flagging mechanism's raw logic was correct but its blast radius wasn't (see
+the bracket-matching false-positive bug in Step 9c) -- worth treating
+"does the check correctly identify the problem" and "is the check's
+response to the problem proportionate" as two separate questions to verify,
+not one, whenever a new automated repair/strip mechanism is built.
+
+**This is now a permanent runtime safeguard, not a one-time analysis.**
+`generate()` and `generate_with_metrics()` in `generation/local_ollama.py`
+both run every real answer through `validate_and_repair_citations` before
+returning it -- this runs on every query through `OllamaBackend` in normal
+operation, not just when evaluation scripts are invoked. `generate_raw()`
+is deliberately excluded, since the generation-quality judge
+(`evaluation/generation_judge.py`) also calls it directly for
+non-citation-bearing judge prompts, where guarding would be meaningless at
+best.
