@@ -23,3 +23,16 @@ class GenerationBackend(ABC):
         citations per the backend's prompt design).
         """
         raise NotImplementedError
+
+    @abstractmethod
+    def generate_raw(self, prompt: str) -> str:
+        """Send an arbitrary prompt straight to the model, with no RAG
+        answer-generation template applied. Used by non-RAG consumers of the
+        backend -- e.g. the Step 9c LLM-judge, which needs its own judging
+        prompt shape rather than the query+evidence_chunks answer format.
+
+        Still goes through the backend abstraction (not a direct API call),
+        so a future hosted-API backend swap-in only needs to implement this
+        once here, not have every judge/caller special-cased.
+        """
+        raise NotImplementedError
