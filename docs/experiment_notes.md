@@ -397,3 +397,53 @@ verified against the known false-positive cases before recomputing. **The
 numbers in this entry are the corrected, post-fix numbers** -- any
 citation-format or citation-accuracy figure computed before this fix should
 be treated as unreliable.
+
+## Systems metrics (Step 9d): retrieval latency is question-type-invariant
+
+Full stage-level latency and resource-footprint instrumentation across all
+30 eval-set questions (`evaluation/systems_metrics.py`), warm-up-excluded
+per the Step 8 cold-start protocol.
+
+**Headline finding: retrieval-stage latency barely moves across question
+type, but total response time varies a lot -- and the variation is
+generation, not retrieval.** Dense search, sparse search, and reranking
+each stay within ~5% of their overall average regardless of whether the
+question is factual, comparative, or negative (e.g. dense search: 1517.6ms
+factual vs. 1558.3ms comparative vs. 1476.3ms negative -- an average, not a
+coincidence, across 15/9/6 questions respectively). All of the
+question-type variation in total response time traces to generation
+duration, which scales directly with how much the model actually writes:
+2.41s (factual, ~130 tokens) vs. 4.01s (comparative, ~220 tokens) vs. 0.245s
+(negative, ~14-token refusal). This is a clean confirmation of what Steps
+9b/9c already showed from a quality angle -- comparative questions are
+genuinely different downstream of retrieval, producing longer, more
+effortful answers -- now with a latency number attached: comparative
+questions cost roughly 1.6x a negative refusal's total response time, and
+essentially all of that gap is generation, not search.
+
+**How to apply:** if end-to-end latency ever needs optimizing, retrieval is
+not the lever -- it's already type-invariant and comparatively cheap next to
+generation. Generation duration is the dial that actually moves, and it
+moves with answer length/complexity rather than question type per se
+(comparative questions just happen to elicit longer answers).
+
+**VRAM stability: 3.438-3.439 GB across all 30 sequential queries, zero
+drift.** This matches Step 8's isolated reranker+LLM measurement almost
+exactly and confirms there's no memory leak or gradual accumulation across
+a full run of back-to-back queries -- the combined footprint is flat
+whether it's the 1st question or the 30th.
+
+**`q022`'s per-stage latency anomaly -- flagged, not explained away.**
+`q022` (negative) recorded the single slowest dense search (2,647ms, ~1.7x
+the run average) and the single slowest reranking (1,907ms, ~2.5x average)
+of all 30 questions -- yet its total response time (8,315ms) wasn't extreme
+enough to register on the aggregate outlier check (that check only looks at
+total time and peak VRAM), and its peak VRAM was the same 3.439GB as every
+other question, ruling out a memory-pressure explanation. No other question
+shows the same pattern, before or after. This looks like a one-off
+transient system-level contention event (OS scheduling, background
+process, etc.) rather than a systemic pipeline issue, but it's reported as
+an observed, unexplained, non-recurring anomaly rather than dismissed --
+there isn't enough evidence here to name a specific cause, and it's worth
+watching for recurrence in any future systems-metrics run rather than
+assuming it was a fluke.
